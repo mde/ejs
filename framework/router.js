@@ -1,3 +1,12 @@
+/*
+ * Simple router for Node -- setting up routes look like this:
+ *
+ * router = new Router();
+ * router.match('/').to({controller: 'Main', action: 'index'});
+ * router.match('/users/:userid/messages/:messageid').to({controller: 'Users', action: 'index'});
+ *
+ * Pretty familiar to anyone who's used Merb/Rails
+ */
 
 var Router = function () {
   // From BomberJS: http://bomber.obtdev.com/
@@ -9,30 +18,26 @@ var Router = function () {
   this.regExpEscape = function(str) {
     return str.replace(/(\/|\.)/g, "\\$1");
   };
-  
+
   this.match = function(p) {
     var keys = [];
     var pat;
     var route;
-    
-    var path = '^' + p;
-    if (path.lastIndexOf('/') != (path.length-1)) {
-      path += '/?';
-    }
-    path = path + '$';
+
+    var path = '^' + p + '$';
     path = this.regExpEscape(path);
     // full is ':foo' and submatch is 'foo'
     path = path.replace(KEY_PATTERN, function(full, submatch) {
         keys.push(submatch);
         return MATCH_PATTERN_STRING;
       });
-    
+
     pat = new RegExp(path);
     route = new Route(pat, keys);
     _routes.push(route);
     return route;
   };
-  
+
   this.find = function(path) {
     var count = _routes.length;
     for (var i = 0; i < count; i++) {
@@ -49,7 +54,7 @@ var Router = function () {
     }
     return null;
   };
-  
+
   this.name = function (n, r) {
     _namedRoutes[n] = r;
   }
