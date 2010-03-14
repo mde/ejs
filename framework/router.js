@@ -1,9 +1,9 @@
 /*
- * Simple router for Node -- setting up routes look like this:
+ * Simple router for Node -- setting up routes looks like this:
  *
- * router = new Router();
- * router.match('/').to({controller: 'Main', action: 'index'});
- * router.match('/users/:userid/messages/:messageid').to({controller: 'Users', action: 'index'});
+ * r = new Router();
+ * r.match('/').to({controller: 'Main', action: 'index'}).name('main');
+ * r.match('/users/:userid/messages/:messageid').to({controller: 'Users', action: 'index'});
  *
  * Pretty familiar to anyone who's used Merb/Rails
  */
@@ -35,7 +35,7 @@ var Router = function () {
     pat = new RegExp(path);
     route = new Route(pat, keys);
     _routes.push(route);
-    return route;
+    return route; // Return route to allow chainable of 'to' and 'name'
   };
 
   this.find = function(path) {
@@ -76,13 +76,13 @@ var Route = function (regex, keys, params, controller, action, name) {
 Route.prototype.to = function (obj) {
   this.controller = obj.controller;
   this.action = obj.action;
-  return this;
+  return this; // Chainable
 };
 
 Route.prototype.name = function (n) {
   _name = n;
   router.name(n, this);
-  return this;
+  return this; // Chainable
 }
 
 exports.Router = Router;
