@@ -1,4 +1,3 @@
-var sys = require('sys');
 
 var Users = function () {
   this.index = function (params) {
