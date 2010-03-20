@@ -5,7 +5,7 @@ var errors = new function () {
     401: 'Unauthorized',
     404: 'Not Found',
     406: 'Not Acceptable',
-    500: 'Internal Server Error'
+    500: 'Internal Server'
   };
   var errorType;
   var errorConstructor;

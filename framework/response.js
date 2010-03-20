@@ -3,6 +3,19 @@ var sys = require('sys');
 
 var response = new function () {
 
+  this.responseTypes = {
+    text: 'text/plain',
+    html: 'text/html',
+    json: 'application/json|text/json',
+    xml: 'application/xml|text/xml'
+  };
+  
+  this.responseTypePatterns = {};
+  for (var p in this.responseTypes) {
+    this.responseTypePatterns[p] = new RegExp(
+        this.responseTypes[p].replace(/(\/)/g, "\\$1"));
+  }
+  
   // From Paperboy, http://github.com/felixge/node-paperboy
   this.contentTypes = {
     "aiff": "audio/x-aiff",
@@ -208,5 +221,6 @@ Response.prototype = new function () {
 
 }();
 
+for (var p in response) { exports[p] = response[p]; }
 exports.Response = Response;
 

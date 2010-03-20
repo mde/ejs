@@ -1,7 +1,7 @@
 
 var Users = function () {
   this.index = function (params) {
-    this.render(JSON.stringify(params));
+    this.respond(JSON.stringify(params));
   };
 };
 

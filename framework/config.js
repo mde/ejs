@@ -17,6 +17,7 @@ var Config = function (dirname) {
   var controllers = {};
   var jsPat = /\.js$/;
 
+  // Dynamically create controller constructors from files in controllers/
   for (var i = 0; i < dirList.length; i++) {
     fileName = dirList[i];
     // Any files ending in '.js' -- e.g., 'neil_pearts.js'
