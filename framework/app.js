@@ -6,6 +6,7 @@ var fleegix = require('./fleegix');
 var errors = require('./errors');
 
 var Response = require('./response').Response;
+var Controller = require('./controller').Controller;
 
 var App = function (config) {
   var _this = this;
@@ -69,22 +70,5 @@ var App = function (config) {
      }
   }
 };
-
-var Controller = function (req, resp) {
-  this.request = req;
-  this.response = resp;
-  this.content = '';
-};
-
-Controller.prototype = new function () {
-  this.contentType = 'text/html'
-  this.render = function (content) {
-    if (typeof content != 'undefined') {
-      this.content = content;
-    }
-    var r = new Response(this.response);
-    r.send(this.content, this.contentType);
-  };
-}();
 
 exports.App = App;
