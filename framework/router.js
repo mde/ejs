@@ -1,3 +1,6 @@
+var fleegix = require('./fleegix');
+var sys = require('sys');
+
 /*
  * Simple router for Node -- setting up routes looks like this:
  *
@@ -14,19 +17,27 @@ var Router = function () {
   const MATCH_PATTERN_STRING = "([^\\\/.]+)";
   var _routes = [];
   var _namedRoutes = {};
-
-  this.regExpEscape = function(str) {
+  var _regExpEscape = function(str) {
     return str.replace(/(\/|\.)/g, "\\$1");
   };
+  // For creating resource-based routes
+  var _resourceTypes = [
+    {method: 'get', path: null, action: 'index'},
+    {method: 'get', path: '/add', action: 'add'},
+    {method: 'post', path: null, action: 'create'},
+    {method: 'get', path: '/:id', action: 'show'},
+    {method: 'put', path: '/:id', action: 'update'},
+    {method: 'delete', path: '/:id', action: 'remove'},
+  ];
 
-  this.match = function(p) {
+  this.match = function(pathDescription, method) {
     var keys = [];
     var pat;
     var route;
 
-    var path = '^' + p + '$';
-    path = this.regExpEscape(path);
-    // full is ':foo' and submatch is 'foo'
+    var path = '^' + pathDescription + '$';
+    path = _regExpEscape(path);
+    // full match is ':foo' and submatch is 'foo'
     path = path.replace(KEY_PATTERN, function(full, submatch) {
         keys.push(submatch);
         return MATCH_PATTERN_STRING;
@@ -34,16 +45,35 @@ var Router = function () {
 
     pat = new RegExp(path);
     route = new Route(pat, keys);
+    if (method) {
+      route.method = method;
+    }
     _routes.push(route);
     return route; // Return route to allow chainable of 'to' and 'name'
   };
 
-  this.find = function(path) {
+  this.resource = function (resource) {
+    var controllerName;
+    // Convert underscores to camelCase, e.g., 'neilPearts'
+    controllerName = fleegix.string.camelize(resource);
+    // Capitalize the first letter, e.g., 'NeilPearts'
+    controllerName = fleegix.string.capitalize(controllerName);
+    // Add a resource-based route for each type
+    var r;
+    for (var i = 0; i < _resourceTypes.length; i++) {
+      var r = _resourceTypes[i];
+      this.match('/' + resource + (r.path || ''), r.method).to(
+          { controller: controllerName, action: r.action});
+    }
+  };
+
+  this.parse = function(path, method) {
     var count = _routes.length;
+    var meth = method.toLowerCase();
     for (var i = 0; i < count; i++) {
       var route = _routes[i];
       var match = path.match(route.regex);
-      if (match) {
+      if (match && (!route.method || (route.method == meth))) {
         match.shift(); // First entry is the entire matched string
         for(var j = 0; j < route.keys.length; j++) {
           var key = route.keys[j];
@@ -61,11 +91,12 @@ var Router = function () {
 
 };
 
-var Route = function (regex, keys, params, controller, action, name) {
+var Route = function (regex, keys, params, method, controller, action, name) {
   var _name;
   this.regex =  regex || null;
   this.keys = keys || null;
   this.params = params || {};
+  this.method = null;
   this.controller = controller || null;
   this.action = action || null;
   if (name) {

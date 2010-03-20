@@ -23,7 +23,7 @@ var App = function (config) {
 
     var url = req.url;
     var base = fleegix.url.getBase(url);
-    var route = this.router.find(base);
+    var route = this.router.parse(base, req.method);
     
     try {
       // If the route is a match, run the matching controller/action
