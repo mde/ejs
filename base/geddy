@@ -1,0 +1,3 @@
+#!/bin/bash
+
+node ~/.node_libraries/geddy/base/runserv.js `pwd`
