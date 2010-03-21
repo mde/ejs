@@ -3,8 +3,8 @@
 if [ $1 = 'app' ]; then
   mkdir $2
   mkdir $2/config
-  cp ~/.node_libraries/geddy/base/router.js $2/config/
+  cp ~/.node_libraries/geddy/scripts/router.js $2/config/
   mkdir -p $2/app/controllers
-  cp ~/.node_libraries/geddy/base/main.js $2/app/controllers/
+  cp ~/.node_libraries/geddy/scripts/main.js $2/app/controllers/
   mkdir $2/public
 fi
