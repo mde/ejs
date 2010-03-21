@@ -4,8 +4,8 @@ var sys = require('sys');
 var fs = require('fs');
 var fleegix = require('./fleegix');
 var errors = require('./errors');
+var response = require('./response');
 
-var Response = require('./response').Response;
 var Controller = require('./controller').Controller;
 
 var App = function (config) {
@@ -35,7 +35,7 @@ var App = function (config) {
         // Instantiate the matching controller from the registry
         var constructor = this.controllers[route.controller];
         // Give it all the base Controller fu 
-        constructor.prototype = new Controller(req, resp);
+        constructor.prototype = new Controller(params, req, resp);
         var controller = new constructor();
 
         controller[route.action].call(controller, params);
@@ -48,11 +48,11 @@ var App = function (config) {
             // File not found, hand back the 404
             if (err) {
               var e = new errors.NotFoundError('Page ' + req.url + ' not found.');
-              var r = new Response(resp);
+              var r = new response.Response(resp);
               r.send(e.message, 'text/html', e.statusCode);
             }
             else {
-              var r = new Response(resp);
+              var r = new response.Response(resp);
               r.sendFile(path);
             }
           });
@@ -65,7 +65,7 @@ var App = function (config) {
      }
      // Catch all errors, respond with error page & HTTP error code 
      catch (e) {
-      var r = new Response(this.resp);
+      var r = new response.Response(this.resp);
       r.send(e.message, 'text/html', e.statusCode);
      }
   }

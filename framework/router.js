@@ -62,7 +62,7 @@ var Router = function () {
     var r;
     for (var i = 0; i < _resourceTypes.length; i++) {
       var r = _resourceTypes[i];
-      this.match('/' + resource + (r.path || ''), r.method).to(
+      this.match('/' + resource + (r.path || '') + '.:extension', r.method).to(
           { controller: controllerName, action: r.action});
     }
   };

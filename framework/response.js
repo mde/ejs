@@ -1,23 +1,31 @@
 var fs = require('fs');
 var sys = require('sys');
+var fleegix = require('./fleegix');
 
 var response = new function () {
 
-  this.responseTypes = {
+  this.formats = {
     text: 'text/plain',
     html: 'text/html',
     json: 'application/json|text/json',
     xml: 'application/xml|text/xml'
   };
   
-  this.responseTypePatterns = {};
-  for (var p in this.responseTypes) {
-    this.responseTypePatterns[p] = new RegExp(
-        this.responseTypes[p].replace(/(\/)/g, "\\$1"));
+  this.formatsReverseMap = {};
+  this.formatPatterns = {};
+  var formatTypes;
+  for (var p in this.formats) {
+    formatTypes = this.formats[p].split('|');
+    for (var i = 0; i < formatTypes.length; i++) {
+      this.formatsReverseMap[formatTypes[i]] = p;
+    }
+    this.formatPatterns[p] = new RegExp(
+        this.formats[p].replace(/(\/)/g, "\\$1"));
   }
   
   // From Paperboy, http://github.com/felixge/node-paperboy
   this.contentTypes = {
+    "txt": "text/plain",
     "aiff": "audio/x-aiff",
     "arj": "application/x-arj-compressed",
     "asf": "video/x-ms-asf",
@@ -173,9 +181,11 @@ Response.prototype = new function () {
 
   this.sendFile = function (filepath) {
     var _this = this;
-    var ext = filepath.split('.').slice(-1);
-    var contentType = response.contentTypes[filepath];
+    var ext = fleegix.url.getFileExtension(filepath);
+    var contentType = response.contentTypes[ext] || 'application/octet-stream';
     var encoding = 'binary';
+    
+
     this.writeHeaders({contentType: contentType});
 
     // From Paperboy, http://github.com/felixge/node-paperboy
