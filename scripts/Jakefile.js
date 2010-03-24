@@ -3,24 +3,25 @@ var sys = require('sys');
 exports.tasks = {
   'default': {
     'desc': 'Installs the Geddy Web-app development framework',
+    'deps': [],
     'task': function (env) {
-      sys.puts('Installing Geddy ...');
       var cmds = [
         'mkdir -p ~/.node_libraries/geddy',
-        'cp -R lib ~/.node_libraries/geddy/',
-        'cp -R scripts ~/.node_libraries/geddy/',
+        'cp -R ./dist/* ~/.node_libraries/geddy/',
         'cp scripts/geddy-gen /usr/local/bin/',
         'cp scripts/geddy /usr/local/bin/'
       ];
-      runCmds(cmds);
+      runCmds(cmds, function () {
+        sys.puts('Geddy installed.');
+      });
     }
   },
 
   'app': {
     'desc': 'Creates a new Geddy app scaffold.',
+    'deps': [],
     'task': function (env) {
       var dir = env.appName;
-      sys.puts('Creating app ' + dir);
       var cmds = [
         'mkdir -p ./' + dir,
         'mkdir -p ./' + dir + '/config',
@@ -29,13 +30,22 @@ exports.tasks = {
         'cp ~/.node_libraries/geddy/scripts/gen/router.js ' + dir + '/config/',
         'cp ~/.node_libraries/geddy/scripts/gen/main.js ' + dir + '/app/controllers/'
       ]
-      runCmds(cmds);
+      runCmds(cmds, function () {
+        sys.puts('Created app ' + dir + '.');
+      });
     }
+  },
+  
+  'resource': {
+    
   }
 
 };
 
-var runCmds = function (arr) {
+// Runs an array of shell commands asynchronously, calling the
+// next command off the queue inside the callback from sys.exec.
+// When the queue is done, call the final callback function.
+var runCmds = function (arr, callback) {
   var run = function (cmd) {
     sys.exec(cmd, function (err, stdout, stderr) {
       if (err) {
@@ -50,6 +60,7 @@ var runCmds = function (arr) {
           run(next);
         }
         else {
+          callback();
         }
       }
     });

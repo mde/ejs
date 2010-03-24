@@ -1,4 +1,4 @@
 #!/bin/bash
 
-node ~/.node_libraries/jake/jake.js -f ~/.node_libraries/geddy/scripts/Jakefile $1 appName=$2
+node ~/.node_libraries/geddy/scripts/jake.js -f ~/.node_libraries/geddy/scripts/Jakefile $1 appName=$2
 

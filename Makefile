@@ -1,13 +1,13 @@
-.PHONY: all install
+.PHONY: all build install clean
 
-all: install
+all: build
 
-#install:
-#	  mkdir -p ~/.node_libraries/geddy; cp -R lib ~/.node_libraries/geddy/; cp -R scripts ~/.node_libraries/geddy/; cp scripts/geddy-gen /usr/local/bin/; cp scripts/geddy /usr/local/bin/
+build:
+	@mkdir -p ./dist; cp -r -t dist lib scripts; echo 'Geddy built.'
 
 install:
-	  mkdir -p ~/.node_libraries/jake; cp ./scripts/jake.js ~/.node_libraries/jake/; cp ./scripts/jake /usr/local/bin; jake -f `pwd`/scripts/Jakefile default asdf:ASDF, foo=bar
+	@./scripts/jake -f `pwd`/scripts/Jakefile default
 
 clean:
-	  rm -fr ~/.node_libraries/geddy; rm /usr/local/bin/geddy*
+	@rm -fr dist; rm -fr ~/.node_libraries/geddy; rm -f /usr/local/bin/geddy*; echo 'Geddy uninstalled.'
 

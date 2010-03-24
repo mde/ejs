@@ -1,4 +1,3 @@
-var sys = require('sys');
 var args = process.argv.slice(2);
 
 var opts = {};

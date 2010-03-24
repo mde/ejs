@@ -1,4 +1,4 @@
 #!/bin/bash
 
-node ~/.node_libraries/jake/jake.js $@
+node ./scripts/jake.js $@
 
