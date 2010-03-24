@@ -1,5 +1,5 @@
 
-var Users = function () {
+var <%= controllerName %> = function () {
   this.respondsWith = ['text', 'json']
   
   this.index = function (params) {
@@ -28,5 +28,5 @@ var Users = function () {
 
 };
 
-exports.Users = Users;
+exports.<%= controllerName %> = <%= controllerName %>;
 

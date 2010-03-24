@@ -1,4 +1,5 @@
 var sys = require('sys');
+var fs = require('fs');
 
 exports.tasks = {
   'default': {
@@ -21,7 +22,7 @@ exports.tasks = {
     'desc': 'Creates a new Geddy app scaffold.',
     'deps': [],
     'task': function (env) {
-      var dir = env.appName;
+      var dir = env.firstArg;
       var cmds = [
         'mkdir -p ./' + dir,
         'mkdir -p ./' + dir + '/config',
@@ -37,7 +38,41 @@ exports.tasks = {
   },
   
   'resource': {
-    
+    'desc': '',
+    'deps': [],
+    'task': function (env) {
+      var text;
+      var filePath;
+      var fleegix = require('../lib/fleegix');
+      
+      // Add the controller file
+      // ----
+      var fileName = env.firstArg;
+      // Convert underscores to camelCase, e.g., 'neilPearts'
+      controllerName = fleegix.string.camelize(fileName);
+      // Capitalize the first letter, e.g., 'NeilPearts'
+      controllerName = fleegix.string.capitalize(controllerName);
+      // Grab the template text for the controller
+      text = fs.readFileSync(__dirname + '/gen/resource_controller.ejs', 'utf8');
+      // Stick in the controller name
+      var templ = new fleegix.ejs.Template({text: text});
+      templ.process({data: {controllerName: controllerName}});
+      filePath = './app/controllers/' + fileName + '.js';
+      fs.writeFileSync(filePath, templ.markup, 'utf8');
+      sys.puts('[ADDED] ' + filePath);
+
+      // Add the route
+      // ----
+      // Grab the config text
+      filePath = './config/router.js';
+      text = fs.readFileSync(filePath, 'utf8');
+      // Add the new resource route just above the export
+      routerArr = text.split('exports.router');
+      routerArr[0] += 'router.resource(\'' +  fileName + '\');\n';
+      text = routerArr.join('exports.router');
+      fs.writeFileSync(filePath, text, 'utf8');
+      sys.puts('resources ' + fileName + ' route added to ' + filePath);
+    }
   }
 
 };
