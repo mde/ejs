@@ -1,7 +1,7 @@
 
 var <%= controllerName %> = function () {
-  this.respondsWith = ['text', 'json']
-  
+  this.respondsWith = ['text', 'json'];
+
   this.index = function (params) {
     this.respond({method: 'index', params: params});
   };
@@ -17,7 +17,7 @@ var <%= controllerName %> = function () {
   this.show = function (params) {
     this.respond({method: 'show', params: params});
   };
-  
+
   this.update = function (params) {
     this.respond({method: 'update', params: params});
   };
