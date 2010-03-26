@@ -1,7 +1,7 @@
 
 var Main = function () {
   this.index = function (params) {
-    this.respond('{"message": "hello world"}');
+    this.respond('Attention all planets of the Solar Federation');
   };
 };
 
