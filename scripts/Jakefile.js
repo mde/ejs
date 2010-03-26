@@ -30,7 +30,8 @@ exports.tasks = {
         'mkdir -p ./' + dir + '/app/controllers',
         'mkdir -p ./' + dir + '/public',
         'cp ~/.node_libraries/geddy/scripts/gen/router.js ' + dir + '/config/',
-        'cp ~/.node_libraries/geddy/scripts/gen/main.js ' + dir + '/app/controllers/'
+        'cp ~/.node_libraries/geddy/scripts/gen/main.js ' + dir + '/app/controllers/',
+        'cp ~/.node_libraries/geddy/scripts/gen/application.js ' + dir + '/app/controllers/'
       ]
       runCmds(cmds, function () {
         sys.puts('Created app ' + dir + '.');
