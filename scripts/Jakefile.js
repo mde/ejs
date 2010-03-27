@@ -74,6 +74,14 @@ exports.tasks = {
       text = routerArr.join('exports.router');
       fs.writeFileSync(filePath, text, 'utf8');
       sys.puts('resources ' + fileName + ' route added to ' + filePath);
+      
+      var cmds = [
+        'mkdir -p ./app/views/' + fileName,
+        'cp ~/.node_libraries/geddy/scripts/gen/views/* ' + './app/views/' + fileName + '/'
+      ]
+      runCmds(cmds, function () {
+        sys.puts('Created view templates.');
+      });
     }
   }
 
