@@ -75,6 +75,67 @@ and you should see something like this:
 
 {"method":"index","params":{"extension":"json"}}
 
+### App layout
+
+After adding a resource, a Geddy app is laid out like this:
+
+    mde@localhost:~/work/bytor$ find .
+    .
+    ./config
+    ./config/config.js
+    ./config/router.js
+    ./app
+    ./app/controllers
+    ./app/controllers/snow_dogs.js
+    ./app/controllers/main.js
+    ./app/controllers/application.js
+    ./app/views
+    ./app/views/snow_dogs
+    ./app/views/snow_dogs/show.html.ejs
+    ./app/views/snow_dogs/add.html.ejs
+    ./app/views/snow_dogs/index.html.ejs
+    ./public
+
+### Resources and controllers
+
+Geddy's resource-based routes create url/request-method mappings
+for easy CRUD operations like this:
+
+GET */snow_dogs*<br/>
+(SnowDogs controller, index action)
+
+GET */snow_dogs/add*<br/>
+(SnowDogs controller, add action, for any new-resource template
+-- "new" is not usable as a JavaScript action name)
+
+POST */snow_dogs*<br/>
+(SnowDogs controller, create action)
+
+GET */snow_dogs/:id*<br/>
+(SnowDogs controller, show action)
+
+PUT */snow_dogs/:id*<br/>
+(SnowDogs controller, update action)
+
+DELETE */snow_dogs/:id*<br/>
+(SnowDogs controller, remove action)
+
+## Content-negotiation
+
+Geddy has built-in ability to perform content-negotiation
+based on the requested filename-extension.
+
+If you have a JSON-serializable JavaScript object you want
+to return in JSON format, pass your JavaScript object to the
+`respond` method in the action on that controller.
+
+    this.respondsWith = ['text', 'json'];
+
+    this.show = function (params) {
+      // (Fetch some item by params.id)
+        item = {foo: 'FOO', bar: 1, baz: false};
+          this.respond(item);
+    };
 
 - - -
 Geddy Web-app development framework copyright 2112
