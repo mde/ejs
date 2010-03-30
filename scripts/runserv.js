@@ -1,16 +1,22 @@
-var sys = require('sys');
-var http = require('http');
-var Config = require('geddy/lib/config').Config;
-var App = require('geddy/lib/app').App;
 var appDirname = process.argv[2];
 
-var runServ = function (config) {
-  http.createServer(function (req, resp) {
-    new App(config).run(req, resp);
-  }).listen(8000);
+var sys = require('sys');
+var http = require('http');
+var fleegix = require('geddy/lib/fleegix');
+var Config = require('geddy/lib/config').Config;
+var Init = require('geddy/lib/init').Init;
+var App = require('geddy/lib/app').App;
 
-  sys.puts('Server running at http://127.0.0.1:8000/');
+config = new Config(appDirname);
+config = fleegix.mixin(config, require(config.dirname + '/config/config'));
+
+var runServ = function (initData) {
+  http.createServer(function (req, resp) {
+    new App(initData).run(req, resp);
+  }).listen(config.port);
+
+  sys.puts('Server running at http://127.0.0.1:' + config.port + '/');
 };
 
-new Config(appDirname, runServ);
+new Init(config, runServ);
 
