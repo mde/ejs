@@ -32,9 +32,11 @@ Routes are similar to Merb or Rails routes.
   
     router.match('/moving/pictures/:id').to(
       {controller: 'Moving', action: 'pictures'});
+
     router.match('/farewells/:farewelltype/kings/:kingid').to(
        {controller: 'Farewells', action: 'kings'});
-    Can also match specific HTTP methods only
+
+    //Can also match specific HTTP methods only
     router.match('/xandadu', 'get').to(
       {controller: 'Xandadu', action: 'specialHandler'});
 
@@ -59,7 +61,8 @@ Go to http://localhost:8000/, and you should see:
 
 ### Adding resources
 
-Use `geddy-gen resource` in your app directory to create one.
+Use `geddy-gen resource` in your app directory to add a
+resource. The route will be set up automatically for you.
 
     mde@localhost:~/work/bytor$ geddy-gen resource snow_dogs
     [ADDED] ./app/controllers/snow_dogs.js
