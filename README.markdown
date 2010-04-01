@@ -57,7 +57,7 @@ create an app. Run `geddy` to start the server.
 
 Go to http://localhost:8000/, and you should see:
 
-"Attention all planets of the Solar Federation"
+Attention all planets of the Solar Federation
 
 ### Adding resources
 
