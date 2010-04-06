@@ -25,6 +25,18 @@ but still let you get under the hood and tinker if you want.
 
 Apache License, Version 2
 
+### Building and installing Geddy
+
+** Prerequisites**
+
+Geddy requires version 0.1.33 of Node.js.
+
+To get Geddy from GitHub and install it:
+
+    git clone git://github.com/mde/geddy.git
+    cd geddy
+    make && sudo make install
+
 ### Routes
 
 Routes are similar to Merb or Rails routes. 
