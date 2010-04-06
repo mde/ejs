@@ -28,6 +28,7 @@ exports.tasks = {
         'mkdir -p ./' + dir,
         'mkdir -p ./' + dir + '/config',
         'mkdir -p ./' + dir + '/app/controllers',
+        'mkdir -p ./' + dir + '/app/views',
         'mkdir -p ./' + dir + '/public',
         'cp ~/.node_libraries/geddy/scripts/gen/router.js ' + dir + '/config/',
         'cp ~/.node_libraries/geddy/scripts/gen/config.js ' + dir + '/config/',
