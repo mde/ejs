@@ -1,5 +1,5 @@
 var sys = require('sys');
-var child_process = require('child_process');
+//var child_process = require('child_process');
 var fs = require('fs');
 
 exports.tasks = {
@@ -93,7 +93,7 @@ exports.tasks = {
 // When the queue is done, call the final callback function.
 var runCmds = function (arr, callback) {
   var run = function (cmd) {
-    child_process.exec(cmd, function (err, stdout, stderr) {
+    sys.exec(cmd, function (err, stdout, stderr) {
       if (err) {
         sys.puts('Error: ' + JSON.stringify(err));
       }
