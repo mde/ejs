@@ -3,7 +3,7 @@
 all: build
 
 build:
-	@mkdir -p ./dist; cp -r lib scripts dist; echo 'Geddy built.'
+	@mkdir -p ./dist; cp -r lib plugins scripts dist; echo 'Geddy built.'
 
 install:
 	@./scripts/jake -f `pwd`/scripts/Jakefile default
