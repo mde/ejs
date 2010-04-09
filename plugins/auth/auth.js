@@ -5,16 +5,16 @@ var async = require('geddy/lib/async');
 var errors = require('geddy/lib/errors');
 var response = require('geddy/lib/response');
 
-var auth = new function () {
-}();
+var auth = {};
 
 auth.Auth = function (config) {
   var _this = this;
-  this.authTypes = config;
+  this.authTypes = config.authTypes;
+  this.htmlRedirect = config.htmlRedirect || '/';
   this.authenticators = {};
   this.controller = null;
 
-  this.requireAuth = function (controller, handleAuth) {
+  this.func = function (controller, callback) {
     var authed = false;
     var list = [];
     var types = _this.authTypes;
@@ -27,32 +27,37 @@ auth.Auth = function (config) {
 
     for (var i = 0; i < types.length; i++) {
       name = types[i];
-      list.push(
-        {
+      list.push({
           func: getFunc(name),
           args: [controller],
           callback: function (isAuthed) {
             if (isAuthed) {
-              sys.puts('isAuthed');
-              sys.puts(isAuthed);
               authed = true;
               arguments.callee.chain.shortCircuit(true);
             }
           },
-        }
-      );
+        });
     }
     var chain = new async.AsyncChain(list);
-    chain.last = function () { handleAuth(authed); };
+    chain.last = function () {
+      callback(authed);
+    };
     chain.run();
   };
 
-  this.handleAuth = function (isAuthed) {
+  this.callback = function (isAuthed) {
     if (!isAuthed) {
-      var e = new errors.UnauthorizedError('Authentication required.');
-      var r = new response.Response(_this.controller.response);
-      r.send(e.message, e.statusCode, {'Content-Type': 'text/html'});
       arguments.callee.chain.abort();
+      var params = _this.controller.params;
+      var r = new response.Response(_this.controller.response);
+      if (params.extension == 'html') {
+        _this.controller.redirect(_this.htmlRedirect);
+      }
+      else {
+        var e = new errors.UnauthorizedError('Authentication required.');
+        r = new response.Response(_this.controller.response);
+        r.send(e.message, e.statusCode, {'Content-Type': 'text/html'});
+      }
     }
   };
 
@@ -67,13 +72,9 @@ auth.Auth = function (config) {
     this.authenticators[constructorName] = new constructor();
   }
 
-
-  var hookData = {
-    func: this.requireAuth,
-    callback: this.handleAuth
-  };
-  sys.puts('registering requireAuth');
-  hooks.registerHook('requireAuth', hookData);
+  var hookCall = new async.AsyncCall(this.func, null, this.callback);
+  
+  hooks.registerHook('requireAuth', hookCall);
 };
 
 exports.Auth = auth.Auth;

@@ -2,7 +2,7 @@ var sys = require('sys');
 
 var Basic = function () {
   this.authenticate =  function(controller, callback) {
-    sys.puts('basic auth');
+    //sys.puts('basic auth');
     callback();
   };
 };
