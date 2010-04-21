@@ -21,7 +21,7 @@ var sys = require('sys');
 var fleegix = require('geddy-core/lib/fleegix');
 var errors = require('geddy-core/lib/errors');
 var response = require('geddy-core/lib/response');
-var async = require('geddy-async/lib/async');
+var async = require('geddy-util/lib/async');
 
 var auth = {};
 

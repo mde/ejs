@@ -23,7 +23,7 @@ var errors = require('geddy-core/lib/errors');
 var response = require('geddy-core/lib/response');
 var templates = require('geddy-core/lib/templates');
 var fleegix = require('geddy-core/lib/fleegix');
-var async = require('geddy-async/lib/async');
+var async = require('geddy-util/lib/async');
 
 var Controller = function (obj) {
 //var Controller = function (app, name, params, req, resp) {

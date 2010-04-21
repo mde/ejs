@@ -42,7 +42,7 @@ var model = new function () {
   // Handle differences between client and server environments
   if (typeof window == 'undefined') {
     var sys = require('sys');
-    var meta = require('geddy-core/lib/util/meta');
+    var meta = require('geddy-util/lib/meta');
     GLOBAL.fleegix = require('geddy-core/lib/fleegix');
   }
   else {

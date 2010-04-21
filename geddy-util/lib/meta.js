@@ -16,8 +16,6 @@
  *
 */
 
-var fleegix = require('geddy-core/lib/fleegix');
-
 var meta = new function () {
   this.registerConstructors = function (dirname, dirList) {
     var fileName, constructorName;
@@ -42,6 +40,31 @@ var meta = new function () {
       }
     }
     return constructors;
+  };
+
+  this.mixin = function (/* Target obj */ target,
+    /* Obj of props or constructor */ mixin, /* Deep-copy flag */ recurse) {
+    // Create an instance if we get a constructor
+    var m;
+    if (typeof mixin == 'function') {
+      m = new mixin();
+    }
+    else {
+      m = mixin;
+    }
+    var baseObj = {};
+    for (var p in m) {
+      // Don't copy anything from Object.prototype
+      if (typeof baseObj[p] == 'undefined' || baseObjj[p] != m[p]) {
+        if (recurse && typeof m[p] == 'object' && m[p] !== null && !m[p] instanceof Array) {
+          fleegix.mixin(target[p], m[p], recurse);
+        }
+        else {
+          target[p] = m[p];
+        }
+      }
+    }
+    return target;
   };
 
 }();

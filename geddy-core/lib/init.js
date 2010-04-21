@@ -21,10 +21,10 @@ var sys = require('sys');
 //var child_process = require('child_process');
 
 var fleegix = require('geddy-core/lib/fleegix');
-var meta = require('geddy-core/lib/util/meta');
 var session = require('geddy-core/lib/session');
 var hooks = require('geddy-core/lib/hooks');
-var async = require('geddy-async/lib/async');
+var meta = require('geddy-util/lib/meta');
+var async = require('geddy-util/lib/async');
 var model = require('geddy-model/lib/model');
 
 var Init = function (config, callback) {
