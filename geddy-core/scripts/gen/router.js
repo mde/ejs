@@ -16,7 +16,7 @@
  *
 */
 
-var Router = require('geddy/lib/router').Router;
+var Router = require('geddy-core/lib/router').Router;
 
 router = new Router();
 router.match('/').to({controller: 'Main', action: 'index'});

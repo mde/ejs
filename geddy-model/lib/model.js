@@ -46,8 +46,8 @@ var model = new function () {
   if (typeof window == 'undefined') {
     mode = SERVER;
     var sys = require('sys');
-    var meta = require('geddy/lib/util/meta');
-    GLOBAL.fleegix = require('geddy/lib/fleegix');
+    var meta = require('geddy-core/lib/util/meta');
+    GLOBAL.fleegix = require('geddy-core/lib/fleegix');
   }
   else {
     mode = CLIENT;

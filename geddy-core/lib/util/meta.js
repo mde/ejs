@@ -16,7 +16,7 @@
  *
 */
 
-var fleegix = require('geddy/lib/fleegix');
+var fleegix = require('geddy-core/lib/fleegix');
 
 var meta = new function () {
   this.registerConstructors = function (dirname, dirList) {

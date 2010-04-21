@@ -17,5 +17,5 @@
 
 #!/bin/bash
 
-node ~/.node_libraries/geddy/scripts/jake.js -f ~/.node_libraries/geddy/scripts/Jakefile $1 firstArg=$2
+node ~/.node_libraries/geddy-core/scripts/jake.js -f ~/.node_libraries/geddy-core/scripts/Jakefile $1 firstArg=$2
 

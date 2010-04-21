@@ -19,12 +19,11 @@
 var sys = require('sys');
 var fs = require('fs');
 
-var async = require('geddy/lib/async');
-var errors = require('geddy/lib/errors');
-var response = require('geddy/lib/response');
-var templates = require('geddy/lib/templates');
-var fleegix = require('geddy/lib/fleegix');
-var async = require('geddy/lib/async');
+var errors = require('geddy-core/lib/errors');
+var response = require('geddy-core/lib/response');
+var templates = require('geddy-core/lib/templates');
+var fleegix = require('geddy-core/lib/fleegix');
+var async = require('geddy-async/lib/async');
 
 var Controller = function (obj) {
 //var Controller = function (app, name, params, req, resp) {

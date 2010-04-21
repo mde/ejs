@@ -17,7 +17,7 @@
 */
 
 var sys = require('sys');
-var fleegix = require('geddy/lib/fleegix');
+var fleegix = require('geddy-core/lib/fleegix');
 
 var cookies = new function () {}();
 

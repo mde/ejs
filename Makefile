@@ -20,10 +20,10 @@
 all: build
 
 build:
-	@mkdir -p ./dist; cp -r lib plugins scripts dist; echo 'Geddy built.'
+	@mkdir -p ./dist; cp -r geddy-core geddy-async geddy-auth geddy-model dist; echo 'Geddy built.'
 
 install:
-	@./scripts/jake -f `pwd`/scripts/Jakefile default
+	@./geddy-core/scripts/jake -f `pwd`/geddy-core/scripts/Jakefile default
 
 clean:
 	@rm -fr dist

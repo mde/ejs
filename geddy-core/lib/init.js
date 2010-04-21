@@ -20,12 +20,12 @@ var fs = require('fs');
 var sys = require('sys');
 //var child_process = require('child_process');
 
-var fleegix = require('geddy/lib/fleegix');
-var meta = require('geddy/lib/util/meta');
-var async = require('geddy/lib/async');
-var model = require('geddy/lib/model/model');
-var session = require('geddy/lib/session');
-var hooks = require('geddy/lib/hooks');
+var fleegix = require('geddy-core/lib/fleegix');
+var meta = require('geddy-core/lib/util/meta');
+var session = require('geddy-core/lib/session');
+var hooks = require('geddy-core/lib/hooks');
+var async = require('geddy-async/lib/async');
+var model = require('geddy-model/lib/model');
 
 var Init = function (config, callback) {
 
@@ -112,6 +112,7 @@ var Init = function (config, callback) {
       callback: this.registerTemplates
     }
   ]);
+  
   group.last = _callback;
   group.run();
 

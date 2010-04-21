@@ -17,5 +17,5 @@
 
 #!/bin/bash
 
-node ./scripts/jake.js $@
+node ./geddy-core/scripts/jake.js $@
 

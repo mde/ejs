@@ -21,11 +21,11 @@ var appDirname = process.argv[2];
 var sys = require('sys');
 var http = require('http');
 
-var fleegix = require('geddy/lib/fleegix');
+var fleegix = require('geddy-core/lib/fleegix');
 
-var Config = require('geddy/lib/config').Config;
-var Init = require('geddy/lib/init').Init;
-var App = require('geddy/lib/app').App;
+var Config = require('geddy-core/lib/config').Config;
+var Init = require('geddy-core/lib/init').Init;
+var App = require('geddy-core/lib/app').App;
 
 var runServ = function () {
   http.createServer(function (req, resp) {

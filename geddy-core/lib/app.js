@@ -20,11 +20,11 @@ var http = require('http');
 var sys = require('sys');
 var fs = require('fs');
 
-var fleegix = require('geddy/lib/fleegix');
-var errors = require('geddy/lib/errors');
-var session = require('geddy/lib/session');
-var response = require('geddy/lib/response');
-var cookies = require('geddy/lib/cookies');
+var fleegix = require('geddy-core/lib/fleegix');
+var errors = require('geddy-core/lib/errors');
+var session = require('geddy-core/lib/session');
+var response = require('geddy-core/lib/response');
+var cookies = require('geddy-core/lib/cookies');
 
 var Controller = require('./controller').Controller;
 
@@ -100,8 +100,9 @@ var App = function (initData) {
      }
      // Catch all errors, respond with error page & HTTP error code
      catch (e) {
-      var r = new response.Response(resp);
-      r.send(e.message, e.statusCode, {'Content-Type': 'text/html'});
+      throw e;
+      //var r = new response.Response(resp);
+      //r.send(e.message, e.statusCode, {'Content-Type': 'text/html'});
      }
   }
 };

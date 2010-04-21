@@ -18,10 +18,10 @@
 
 var sys = require('sys');
 
-var fleegix = require('geddy/lib/fleegix');
-var async = require('geddy/lib/async');
-var errors = require('geddy/lib/errors');
-var response = require('geddy/lib/response');
+var fleegix = require('geddy-core/lib/fleegix');
+var errors = require('geddy-core/lib/errors');
+var response = require('geddy-core/lib/response');
+var async = require('geddy-async/lib/async');
 
 var auth = {};
 

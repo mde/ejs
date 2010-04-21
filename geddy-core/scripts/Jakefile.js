@@ -25,10 +25,10 @@ exports.tasks = {
     'deps': [],
     'task': function (env) {
       var cmds = [
-        'mkdir -p ~/.node_libraries/geddy',
-        'cp -R ./dist/* ~/.node_libraries/geddy/',
-        'cp scripts/geddy-gen /usr/local/bin/',
-        'cp scripts/geddy /usr/local/bin/'
+        'mkdir -p ~/.node_libraries',
+        'cp -R ./dist/* ~/.node_libraries/',
+        'cp geddy-core/scripts/geddy-gen /usr/local/bin/',
+        'cp geddy-core/scripts/geddy /usr/local/bin/'
       ];
       runCmds(cmds, function () {
         sys.puts('Geddy installed.');
@@ -44,13 +44,14 @@ exports.tasks = {
       var cmds = [
         'mkdir -p ./' + dir,
         'mkdir -p ./' + dir + '/config',
+        'mkdir -p ./' + dir + '/app/models',
         'mkdir -p ./' + dir + '/app/controllers',
         'mkdir -p ./' + dir + '/app/views',
         'mkdir -p ./' + dir + '/public',
-        'cp ~/.node_libraries/geddy/scripts/gen/router.js ' + dir + '/config/',
-        'cp ~/.node_libraries/geddy/scripts/gen/config.js ' + dir + '/config/',
-        'cp ~/.node_libraries/geddy/scripts/gen/main.js ' + dir + '/app/controllers/',
-        'cp ~/.node_libraries/geddy/scripts/gen/application.js ' + dir + '/app/controllers/'
+        'cp ~/.node_libraries/geddy-core/scripts/gen/router.js ' + dir + '/config/',
+        'cp ~/.node_libraries/geddy-core/scripts/gen/config.js ' + dir + '/config/',
+        'cp ~/.node_libraries/geddy-core/scripts/gen/main.js ' + dir + '/app/controllers/',
+        'cp ~/.node_libraries/geddy-core/scripts/gen/application.js ' + dir + '/app/controllers/'
       ]
       runCmds(cmds, function () {
         sys.puts('Created app ' + dir + '.');
@@ -96,7 +97,7 @@ exports.tasks = {
       
       var cmds = [
         'mkdir -p ./app/views/' + fileName,
-        'cp ~/.node_libraries/geddy/scripts/gen/views/* ' + './app/views/' + fileName + '/'
+        'cp ~/.node_libraries/geddy-core/scripts/gen/views/* ' + './app/views/' + fileName + '/'
       ]
       runCmds(cmds, function () {
         sys.puts('Created view templates.');

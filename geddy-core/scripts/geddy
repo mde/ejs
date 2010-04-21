@@ -17,4 +17,4 @@
 
 #!/bin/bash
 
-node ~/.node_libraries/geddy/scripts/runserv.js `pwd`
+node ~/.node_libraries/geddy-core/scripts/runserv.js `pwd`
