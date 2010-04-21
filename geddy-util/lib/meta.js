@@ -16,7 +16,9 @@
  *
 */
 
-var meta = new function () {
+if (typeof util == 'undefined') { var util = {}; }
+
+util.meta = new function () {
   this.registerConstructors = function (dirname, dirList) {
     var fileName, constructorName;
     var constructors = {};
@@ -56,7 +58,8 @@ var meta = new function () {
     for (var p in m) {
       // Don't copy anything from Object.prototype
       if (typeof baseObj[p] == 'undefined' || baseObjj[p] != m[p]) {
-        if (recurse && typeof m[p] == 'object' && m[p] !== null && !m[p] instanceof Array) {
+        if (recurse && (typeof m[p] == 'object') && (m[p] !== null) &&
+          !(m[p] instanceof Array)) {
           fleegix.mixin(target[p], m[p], recurse);
         }
         else {
@@ -69,5 +72,7 @@ var meta = new function () {
 
 }();
 
-for (var p in meta) { this[p] = meta[p]; }
+if (typeof exports != 'undefined') {
+  for (var p in util.meta) { exports[p] = util.meta[p]; }
+}
 

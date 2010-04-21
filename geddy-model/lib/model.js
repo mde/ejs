@@ -40,12 +40,7 @@ exports.User = User;
 var model = new function () {
   
   // Handle differences between client and server environments
-  if (typeof window == 'undefined') {
-    var sys = require('sys');
-    var meta = require('geddy-util/lib/meta');
-    GLOBAL.fleegix = require('geddy-core/lib/fleegix');
-  }
-  else {
+  if (typeof window != 'undefined') {
     window.GLOBAL = window;
   }
 
@@ -97,11 +92,11 @@ var model = new function () {
 
   this.registerModels = function (err, dirList) {
     if (err) {
-      sys.puts('Error: ' + JSON.stringify(err));
+      throw new Error('Error: ' + JSON.stringify(err));
     }
     else {
       // Introspect the list of constructors from app/models/*
-      var initList = meta.registerConstructors('/app/models/', dirList);
+      var initList = util.meta.registerConstructors('/app/models/', dirList);
       _constructorList = initList;
       for (var p in _constructorList) {
         model.registerModel(p);
@@ -118,7 +113,7 @@ var model = new function () {
     // Dummy constructor for instanceof check, e.g. model.User
     var modelFunc = _createModelItemConstructor(def);
     modelFunc.prototype = origPrototype;
-    modelFunc = fleegix.mixin(modelFunc, _createStaticMethods(p));
+    modelFunc = util.meta.mixin(modelFunc, _createStaticMethods(p));
     GLOBAL[p] = modelFunc;
   };
 
@@ -162,7 +157,7 @@ var model = new function () {
    */
   this.validateAttribute = function (attr, origParams) {
     // Make a copy of the params being passed in
-    var params = fleegix.mixin({}, origParams, true);
+    var params = util.meta.mixin({}, origParams, true);
 
     var name = attr.name;
     var val = params[name];
@@ -436,7 +431,7 @@ var ValidatedModelItemCreator = function (name) {
   };
 
   this.validates = function (condition, name, qual, opts) {
-    var rule = fleegix.mixin({}, opts, true);
+    var rule = util.meta.mixin({}, opts, true);
     rule.qualifier = qual;
     model.modelRegistry[this.name].attributes[name].validations[condition] = rule;
   };
@@ -444,7 +439,7 @@ var ValidatedModelItemCreator = function (name) {
   // For each of the validators, create a validatesFooBar from
   // validates('fooBar' ...
   for (var p in model.validators) {
-    this['validates' + fleegix.string.capitalize(p)] = _getValidator(p);
+    this['validates' + util.string.capitalize(p)] = _getValidator(p);
   }
 
   model.modelRegistry[name] = new model.Model(name);
