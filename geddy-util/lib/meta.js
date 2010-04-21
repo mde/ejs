@@ -15,8 +15,9 @@
  * limitations under the License.
  *
 */
-
 if (typeof util == 'undefined') { var util = {}; }
+
+util.string = require('geddy-util/lib/string');
 
 util.meta = new function () {
   this.registerConstructors = function (dirname, dirList) {
@@ -31,10 +32,8 @@ util.meta = new function () {
       if (jsPat.test(fileName)) {
         // Strip the '.js', e.g., 'neil_pearts'
         fileName = fileName.replace(jsPat, '');
-        // Convert underscores to camelCase, e.g., 'neilPearts'
-        constructorName = fleegix.string.camelize(fileName);
-        // Capitalize the first letter, e.g., 'NeilPearts'
-        constructorName = fleegix.string.capitalize(constructorName);
+        // Convert underscores to camelCase with initial cap, e.g., 'NeilPearts'
+        constructorName = util.string.camelize(fileName, true);
         // Registers as a constructor, e.g., constructors.NeilPearts =
         //    require('/path/to/geddy_app/<dirname>/neil_pearts').NeilPearts
         constructors[constructorName] = require(config.dirname +
@@ -60,7 +59,7 @@ util.meta = new function () {
       if (typeof baseObj[p] == 'undefined' || baseObjj[p] != m[p]) {
         if (recurse && (typeof m[p] == 'object') && (m[p] !== null) &&
           !(m[p] instanceof Array)) {
-          fleegix.mixin(target[p], m[p], recurse);
+          util.mixin(target[p], m[p], recurse);
         }
         else {
           target[p] = m[p];

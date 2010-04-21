@@ -32,6 +32,9 @@ var Init = function (config, callback) {
   var _this = this;
   var _callback = callback;
 
+  GLOBAL.util = {};
+  GLOBAL.util.meta = require('geddy-util/lib/meta');
+  GLOBAL.util.string = require('geddy-util/lib/string');
   GLOBAL.controllerRegistry = {};
   GLOBAL.templateRegistry = {};
   GLOBAL.pluginRegistry = {};
