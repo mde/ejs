@@ -17,17 +17,18 @@
 */
 if (typeof util == 'undefined') { var util = {}; }
 
-if (typeof util.string == 'undefined') {
-  if (typeof require != 'undefined') {
-    util.string = require('geddy-util/lib/string');
-  }
-  else {
-    throw new Error('This module depends on util.string');
-  }
-}
-
 util.meta = new function () {
   this.registerConstructors = function (dirname, dirList) {
+    
+    if (typeof util.string == 'undefined') {
+      if (typeof require != 'undefined') {
+        util.string = require('geddy-util/lib/string');
+      }
+      else {
+        throw new Error('This method depends on util.string');
+      }
+    }
+
     var fileName, constructorName;
     var constructors = {};
     var jsPat = /\.js$/;
