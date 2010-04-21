@@ -17,7 +17,14 @@
 */
 if (typeof util == 'undefined') { var util = {}; }
 
-util.string = require('geddy-util/lib/string');
+if (typeof util.string == 'undefined') {
+  if (typeof require != 'undefined') {
+    util.string = require('geddy-util/lib/string');
+  }
+  else {
+    throw new Error('This module depends on util.string');
+  }
+}
 
 util.meta = new function () {
   this.registerConstructors = function (dirname, dirList) {
