@@ -51,7 +51,7 @@ var model = new function () {
   }
   else {
     mode = CLIENT;
-    var GLOBAL = window;
+    window.GLOBAL = window;
   }
 
   GLOBAL.modelRegistry = {};
