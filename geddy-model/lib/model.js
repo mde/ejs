@@ -39,22 +39,18 @@ exports.User = User;
 
 var model = new function () {
   
-  var SERVER = 'server';
-  var CLIENT = 'client';
-  var mode;
-  
+  // Handle differences between client and server environments
   if (typeof window == 'undefined') {
-    mode = SERVER;
     var sys = require('sys');
     var meta = require('geddy-core/lib/util/meta');
     GLOBAL.fleegix = require('geddy-core/lib/fleegix');
   }
   else {
-    mode = CLIENT;
     window.GLOBAL = window;
   }
 
-  GLOBAL.modelRegistry = {};
+  this.dbAdapter = null;
+  this.modelRegistry = {};
   
   var _constructorList = GLOBAL;
 
@@ -132,7 +128,7 @@ var model = new function () {
    */
   this.createObject = function (typeName, params) {
     var obj = new GLOBAL[typeName](typeName);
-    var type = modelRegistry[typeName];
+    var type = model.modelRegistry[typeName];
     var attrList = type.attributes;
     var validated = null;
     var errs = null;
@@ -435,14 +431,14 @@ var ValidatedModelItemCreator = function (name) {
   this.name = name;
 
   this.property = function (name, datatype, o) {
-    modelRegistry[this.name].attributes[name] =
+    model.modelRegistry[this.name].attributes[name] =
       new model.Attribute(name, datatype, o);
   };
 
   this.validates = function (condition, name, qual, opts) {
     var rule = fleegix.mixin({}, opts, true);
     rule.qualifier = qual;
-    modelRegistry[this.name].attributes[name].validations[condition] = rule;
+    model.modelRegistry[this.name].attributes[name].validations[condition] = rule;
   };
 
   // For each of the validators, create a validatesFooBar from
@@ -451,7 +447,7 @@ var ValidatedModelItemCreator = function (name) {
     this['validates' + fleegix.string.capitalize(p)] = _getValidator(p);
   }
 
-  modelRegistry[name] = new model.Model(name);
+  model.modelRegistry[name] = new model.Model(name);
 };
 
 for (var p in model) { this[p] = model[p]; }
