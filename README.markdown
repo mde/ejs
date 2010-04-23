@@ -29,7 +29,7 @@ Apache License, Version 2
 
 ** Prerequisites**
 
-Geddy requires version 0.1.33 of Node.js.
+Geddy requires version 0.1.91 of Node.js.
 
 To get Geddy from GitHub and install it:
 
