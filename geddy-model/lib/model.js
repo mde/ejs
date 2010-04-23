@@ -128,6 +128,12 @@ var model = new function () {
    */
   this.createObject = function (typeName, params) {
     var obj = new GLOBAL[typeName](typeName);
+    
+    // Before-create hook
+    if (typeof obj.beforeCreate == 'function') {
+      obj.beforeCreate();
+    }
+    
     var type = model.modelRegistry[typeName];
     var attrList = type.attributes;
     var validated = null;
@@ -154,6 +160,11 @@ var model = new function () {
       obj.errors = errs;
     }
 
+    // After-create hook
+    if (typeof obj.afterCreate == 'function') {
+      obj.afterCreate();
+    }
+    
     return obj;
   };
 
