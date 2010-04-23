@@ -72,7 +72,7 @@ var requests = new function () {
   this.close = function () {
     if (this.finished()) {
       this.resp.write(this.content);
-      this.resp.close();
+      this.resp.end();
     }
   };
 }();

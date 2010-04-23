@@ -243,7 +243,7 @@ Response.prototype = new function () {
   };
 
   this.finish = function () {
-    this.resp.close();
+    this.resp.end();
   };
 
 }();
