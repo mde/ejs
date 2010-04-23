@@ -50,6 +50,8 @@ var model = new function () {
   var _constructorList = GLOBAL;
 
   var _createModelItemConstructor = function (def) {
+    
+    // Base constructor function for all model items
     return function () {
       this.type = def.name;
 
@@ -57,8 +59,8 @@ var model = new function () {
         return !!this.errors;
       };
 
+      // Callback should be in the format of function (err, result) {}
       this.save = function (callback) {
-
         if (this.errors) {
           if (callback) {
             callback(this.errors, null);
@@ -71,21 +73,24 @@ var model = new function () {
           }
         }
         else {
-          if (callback) {
-            callback(null, this);
-          }
-          return true;
+          return model.dbAdapter.save(this, callback);
         }
       };
 
     };
   };
 
-  var _createStaticMethods = function (name) {
+  var _createStaticMethodsMixin = function (name) {
     var obj = {};
+    
     obj.create = function (params) {
       return model.createObject(name, params);
-    }
+    };
+
+    obj.load = function (data, callback) {
+      return model.dbAdapter.load(name, data, callback);
+    };
+
     return obj;
   };
 
@@ -113,7 +118,7 @@ var model = new function () {
     // Dummy constructor for instanceof check, e.g. model.User
     var modelFunc = _createModelItemConstructor(def);
     modelFunc.prototype = origPrototype;
-    modelFunc = util.meta.mixin(modelFunc, _createStaticMethods(p));
+    modelFunc = util.meta.mixin(modelFunc, _createStaticMethodsMixin(p));
     GLOBAL[p] = modelFunc;
   };
 
@@ -242,7 +247,7 @@ model.datatypes = {
   'String': function (name, val) {
     return {
       err: null,
-      val: new String(val)
+      val: String(val)
     };
   },
 
@@ -255,7 +260,7 @@ model.datatypes = {
     };
     return {
       err: null,
-      val: new Number(val)
+      val: Number(val)
     };
   },
 
