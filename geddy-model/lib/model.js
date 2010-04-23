@@ -34,12 +34,20 @@ var User = function () {
   });
 };
 
+User.prototype.someMethod = function () {
+  // Do some stuff on a User instance
+};
+
+// Server-side, commonjs
 exports.User = User;
+// Client-side
+model.registerModel('User');
 */
 
+var sys = require('sys');
+
 var model = new function () {
-  
-  // Handle differences between client and server environments
+  // Client-side, create GLOBAL ref for top-level execution scope
   if (typeof window != 'undefined') {
     window.GLOBAL = window;
   }
@@ -50,7 +58,6 @@ var model = new function () {
   var _constructorList = GLOBAL;
 
   var _createModelItemConstructor = function (def) {
-    
     // Base constructor function for all model items
     return function () {
       this.type = def.name;
@@ -110,16 +117,29 @@ var model = new function () {
   };
 
   this.registerModel = function (p) {
-    var modelItemDefinition = _constructorList[p];
+    var ModelItemDefinition = _constructorList[p];
     // Ref to any original prototype, so we can copy stuff off it
-    var origPrototype = modelItemDefinition.prototype;
-    modelItemDefinition.prototype = new ValidatedModelItemCreator(p);
-    var def = new modelItemDefinition();
-    // Dummy constructor for instanceof check, e.g. model.User
-    var modelFunc = _createModelItemConstructor(def);
-    modelFunc.prototype = origPrototype;
-    modelFunc = util.meta.mixin(modelFunc, _createStaticMethodsMixin(p));
-    GLOBAL[p] = modelFunc;
+    var origPrototype = ModelItemDefinition.prototype;
+    ModelItemDefinition.prototype = new model.ModelItemDefinitionBase(p);
+    var def = new ModelItemDefinition();
+    // Create the constructor function to use when calling static
+    // ModalItem.create. Gives them the proper instanceof value,
+    // and .save, .valid, etc. instance-methods.
+    var ModelItem = _createModelItemConstructor(def);
+    // Mix any functions defined on the model-item definition 'constructor'
+    // into the original prototype, and set it as the prototype of the
+    // instance constructor
+    for (var attr in def) {
+      // Don't copy inherited stuff
+      if (def.hasOwnProperty(attr)) {
+        origPrototype[attr] = def[attr];
+      }
+    }
+    ModelItem.prototype = origPrototype;
+    // Mix in the static methods like .create and .load
+    ModelItem = util.meta.mixin(ModelItem, _createStaticMethodsMixin(p));
+    // Create a globally scoped constructor name
+    GLOBAL[p] = ModelItem;
   };
 
   /*
@@ -128,12 +148,6 @@ var model = new function () {
    */
   this.createObject = function (typeName, params) {
     var obj = new GLOBAL[typeName](typeName);
-    
-    // Before-create hook
-    if (typeof obj.beforeCreate == 'function') {
-      obj.beforeCreate();
-    }
-    
     var type = model.modelRegistry[typeName];
     var attrList = type.attributes;
     var validated = null;
@@ -428,17 +442,7 @@ model.validators = {
 
 };
 
-var ValidatedModelItemCreator = function (name) {
-  var _this = this;
-  // Create validatesLength( from validates('length' ...
-  var _getValidator = function (p) {
-    return function () {
-      var args = Array.prototype.slice.call(arguments);
-      args.unshift(p);
-      return _this.validates.apply(_this, args);
-    };
-  };
-
+model.ModelItemDefinitionBase = function (name) {
   this.name = name;
 
   this.property = function (name, datatype, o) {
@@ -454,6 +458,14 @@ var ValidatedModelItemCreator = function (name) {
 
   // For each of the validators, create a validatesFooBar from
   // validates('fooBar' ...
+  var _this = this;
+  var _getValidator = function (p) {
+    return function () {
+      var args = Array.prototype.slice.call(arguments);
+      args.unshift(p);
+      return _this.validates.apply(_this, args);
+    };
+  };
   for (var p in model.validators) {
     this['validates' + util.string.capitalize(p)] = _getValidator(p);
   }
