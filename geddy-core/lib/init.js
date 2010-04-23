@@ -18,7 +18,8 @@
 
 var fs = require('fs');
 var sys = require('sys');
-//var child_process = require('child_process');
+var child_process = require('child_process');
+//var chexec =
 
 var fleegix = require('geddy-core/lib/fleegix');
 var session = require('geddy-core/lib/session');
@@ -97,7 +98,7 @@ var Init = function (config, callback) {
     {
       func: session.createStore,
       args: [config.sessions.store],
-      callback: null,
+      callback: null
     },
     {
       func: fs.readdir,
@@ -110,7 +111,7 @@ var Init = function (config, callback) {
       callback: this.registerControllers
     },
     {
-      func: sys.exec,
+      func: child_process.exec,
       args: ['find ' + config.dirname + '/app/views'],
       callback: this.registerTemplates
     }
