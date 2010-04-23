@@ -20,7 +20,7 @@
 all: build
 
 build:
-	@mkdir -p ./dist; cp -r geddy-core geddy-util geddy-auth geddy-model dist; echo 'Geddy built.'
+	@mkdir -p ./dist; cp -r geddy-core geddy-auth geddy-model geddy-util dist; echo 'Geddy built.'
 
 install:
 	@./geddy-core/scripts/jake -f `pwd`/geddy-core/scripts/Jakefile default
