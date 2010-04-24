@@ -29,7 +29,9 @@ var Config = function (dirname) {
   this.plugins = {};
   
   this.sessions = {
-    store: 'memory'
+    store: 'memory',
+    key: 'sid',
+    expiry: 14 * 24 * 60 * 60
   };
   /*
   this.database = {
