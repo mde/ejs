@@ -133,6 +133,41 @@ PUT */snow_dogs/:id*<br/>
 DELETE */snow_dogs/:id*<br/>
 (SnowDogs controller, remove action)
 
+A simple controller that just responds with any
+form-post/query-string params looks like this:
+
+    var SnowDogs = function () {
+      this.respondsWith = ['text', 'json', 'html'];
+
+      this.index = function (params) {
+        this.respond({params: params});
+      };
+
+      this.add = function (params) {
+        this.respond({params: params});
+      };
+
+      this.create = function (params) {
+        this.respond({params: params});
+      };
+
+      this.show = function (params) {
+        this.respond({params: params});
+      };
+
+      this.update = function (params) {
+        this.respond({params: params});
+      };
+
+      this.remove = function (params) {
+        this.respond({params: params});
+      };
+
+    };
+
+    exports.SnowDogs = SnowDogs;
+
+
 ## Content-negotiation
 
 Geddy has built-in ability to perform content-negotiation
@@ -149,6 +184,76 @@ to return in JSON format, pass your JavaScript object to the
         item = {foo: 'FOO', bar: 1, baz: false};
           this.respond(item);
     };
+
+## Models and validations
+
+Geddy has an easy, intuitive way of defining models, with
+a full-featured set of data validations. The syntax is very
+similar to models in Ruby's ActiveRecord or DataMapper.
+
+The model module is coded with browser-based use in mind,
+so it's very easy to share model and input validation code in
+your app between client and server.
+
+Here is an example of a model with some validations:
+
+    var User = function () {
+      this.property('login', 'String', {required: true});
+      this.property('password', 'String', {required: true});
+      this.property('lastName', 'String');
+      this.property('firstName', 'String');
+
+      this.validatesPresent('login');
+      this.validatesFormat('login', /[a-z]+/, {message: 'Subdivisions!'});
+      this.validatesLength('login', {min: 3});
+      this.validatesConfirmed('password', 'confirmPassword');
+      this.validatesWithFunction('password', function (s) { 
+          // Something that returns true or false
+          return s.length > 0;
+      });
+
+      // Can define methods for instances like this
+      this.someMethod = function () {
+        // Do some stuff
+      };
+    };
+
+    // Can also define them on the prototype
+    User.prototype.someOtherMethod = function () {
+      // Do some other stuff
+    };
+
+    // Server-side, commonjs
+    exports.User = User;
+    // Client-side
+    // model.registerModel('User');
+
+Creating an instance of one of these models is easy:
+
+    var params = {
+      login: 'alex',
+      password: 'lerxst',
+      lastName: 'Lifeson',
+      firstName: 'Alex'
+    };
+    var user = User.create(params);
+
+Data-validation happens on the call to `create`, and any
+validation errors show up inside an `errors` property on
+the instance, keyed by field name. Instances have a `valid`
+method that returns a Boolean indicating whether the instance
+is valid.
+
+    // Leaving out the required password field
+    var params = {
+      login: 'alex',
+    };
+    var user = User.create(params);
+
+    // Prints 'false'
+    sys.puts(user.valid());
+    // Prints 'Field "password" is required'
+    sys.puts(user.errors.password);
 
 - - -
 Geddy Web-app development framework copyright 2112
