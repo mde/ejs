@@ -17,7 +17,6 @@
 */
 
 var sys = require('sys');
-var fleegix = require('geddy-core/lib/fleegix');
 
 var session = new function () {
   var KEY_LENGTH = 32;
@@ -38,7 +37,7 @@ var session = new function () {
   };
 
   this.createStore = function (type, callback) {
-    var key = fleegix.string.capitalize(type);
+    var key = util.string.capitalize(type);
     var constructor = require('geddy-core/lib/session_stores/' + type)[key];
     session.store = new constructor(callback);
   };
