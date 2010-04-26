@@ -66,8 +66,8 @@ util.meta = new function () {
       // Don't copy anything from Object.prototype
       if (typeof baseObj[p] == 'undefined' || baseObjj[p] != m[p]) {
         if (recurse && (typeof m[p] == 'object') && (m[p] !== null) &&
-          !(m[p] instanceof Array)) {
-          util.mixin(target[p], m[p], recurse);
+            !(m[p] instanceof Array)) {
+          util.meta.mixin(target[p], m[p], recurse);
         }
         else {
           target[p] = m[p];
