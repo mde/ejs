@@ -44,8 +44,6 @@ exports.User = User;
 model.registerModel('User');
 */
 
-var sys = require('sys');
-
 var model = new function () {
   // Client-side, create GLOBAL ref for top-level execution scope
   if (typeof window != 'undefined') {
@@ -63,7 +61,7 @@ var model = new function () {
       this.type = def.name;
 
       this.valid = function () {
-        return !!this.errors;
+        return !this.errors;
       };
 
       // Callback should be in the format of function (err, result) {}
@@ -185,9 +183,7 @@ var model = new function () {
   /*
    * Perform validation on each attribute on this model
    */
-  this.validateAttribute = function (attr, origParams) {
-    // Make a copy of the params being passed in
-    var params = util.meta.mixin({}, origParams, true);
+  this.validateAttribute = function (attr, params) {
 
     var name = attr.name;
     var val = params[name];
@@ -206,7 +202,7 @@ var model = new function () {
       // Value may have been modified in the datatype check -- e.g.,
       // 'false' changed to false, '8.0' changed to 8, '2112' changed to
       // 2112, etc.
-      params[name] = result.val;
+      val = result.val;
     }
 
     // Now go through all the base validations for this attribute
@@ -218,7 +214,7 @@ var model = new function () {
       if (typeof validator != 'function') {
         throw new Error(p + ' is not a valid validator');
       }
-      err = validator(name, params, validations[p]);
+      err = validator(name, val, params, validations[p]);
       // If there's an error for a validation, don't bother
       // trying to continue with more validations -- just return
       // this first error message
@@ -234,7 +230,7 @@ var model = new function () {
     // and no error
     return {
       err: null,
-      val: params[name]
+      val: val
     };
 
   };
@@ -268,15 +264,24 @@ model.Attribute = function (name, datatype, o) {
 /*
  * Datatype verification -- may modify the value by casting
  */
-model.datatypes = {
-  'String': function (name, val) {
+model.datatypes = new function () {
+
+  var _isArray = function (obj) {
+    return obj &&
+      typeof obj === 'object' &&
+      typeof obj.length === 'number' &&
+      typeof obj.splice === 'function' &&
+      !(obj.propertyIsEnumerable('length'));
+  };
+
+  this.String = function (name, val) {
     return {
       err: null,
       val: String(val)
     };
-  },
+  };
 
-  'Number': function (name, val) {
+  this.Number = function (name, val) {
     if (isNaN(val)) {
       return {
         err: 'Field "' + name + '" must be a Number.',
@@ -287,9 +292,9 @@ model.datatypes = {
       err: null,
       val: Number(val)
     };
-  },
+  };
 
-  'int': function (name, val) {
+  this.int = function (name, val) {
     // Allow decimal values like 10.0 and 3.0
     if (Math.round(val) != val) {
       return {
@@ -301,9 +306,9 @@ model.datatypes = {
       err: null,
       val: parseInt(val, 10)
     };
-  },
+  };
 
-  'Boolean': function (name, val) {
+  this.Boolean = function (name, val) {
     var validated;
     switch (typeof val) {
       case 'string':
@@ -339,10 +344,14 @@ model.datatypes = {
       err: null,
       val: validated
     };
-  },
+  };
 
-  'Object': function (name, val) {
-    if (!(typeof val == 'object')) {
+  this.Object = function (name, val) {
+    // Sure, Arrays are technically Objects, but we're treating Array as a
+    // separate datatype. Remember, instanceof Array fails across window
+    // boundaries, so let's also make sure the Object doesn't have a 'length'
+    // property.
+    if (typeof val != 'object' || _isArray(val)) {
       return {
         err: 'Field "' + name + '" must be an Object.',
         val: null
@@ -352,10 +361,12 @@ model.datatypes = {
       err: null,
       val: val
     };
-  },
+  };
 
-  'Array': function (name, val) {
-    if (!(val instanceof Array)) {
+  this.Array = function (name, val) {
+    // instanceof check can fail across window boundaries. Also check
+    // to make sure there's a length property
+    if (!_isArray(val)) {
       return {
         err: 'Field "' + name + '" must be an Array.',
         val: null
@@ -365,9 +376,9 @@ model.datatypes = {
       err: null,
       val: val
     };
-  }
+  };
 
-};
+}();
 
 /*
  * Basic validators -- name is the field name, params is the entire params
@@ -381,35 +392,34 @@ model.datatypes = {
  *    message: 'Something is wrong'}
  */
 model.validators = {
-  present: function (name, params, rule) {
-    if (!params[name]) {
+  present: function (name, val, params, rule) {
+    if (!val) {
       return rule.message || 'Field "' + name + '" is required.';
     }
   },
 
-  absent: function (name, params, rule) {
-    if (params[name]) {
+  absent: function (name, val, params, rule) {
+    if (val) {
       return rule.message || 'Field "' + name + '" must not be filled in.';
     }
   },
 
-  confirmed: function (name, params, rule) {
+  confirmed: function (name, val, params, rule) {
     var qual = rule.qualifier;
-    if (params[name] != params[qual]) {
+    if (val != params[qual]) {
       return rule.message || 'Field "' + name + '" and field "' + qual +
           '" must match.';
     }
   },
 
-  format: function (name, params, rule) {
-    if (!rule.qualifier.test(params[name])) {
+  format: function (name, val, params, rule) {
+    if (!rule.qualifier.test(val)) {
       return rule.message || 'Field "' + name + '" is not correctly formatted.';
     }
   },
 
-  length: function (name, params, rule) {
+  length: function (name, val, params, rule) {
     var qual = rule.qualifier;
-    var val = params[name];
     var err;
     if (typeof qual == 'number') {
       if (val.length != qual) {
@@ -429,13 +439,13 @@ model.validators = {
     }
   },
 
-  withFunction: function (name, params, rule) {
+  withFunction: function (name, val, params, rule) {
     var func = rule.qualifier;
     if (typeof func != 'function') {
       throw new Error('withFunction validator for field "' + name +
           '" must be a function.');
     }
-    if (!func(params[name], params)) {
+    if (!func(val, params)) {
       return rule.message || 'Field "' + name + '" is not valid.';
     }
   }
