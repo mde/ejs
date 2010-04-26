@@ -51,7 +51,7 @@ var App = function (initData) {
 
           var qs = fleegix.url.getQS(url);
           var qsParams = fleegix.url.qsToObject(qs);
-          var params = fleegix.mixin(route.params, qsParams);
+          var params = util.meta.mixin(route.params, qsParams);
 
           // Instantiate the matching controller from the registry
           var constructor = controllerRegistry[route.controller];
@@ -69,33 +69,26 @@ var App = function (initData) {
           // Mix in any user-defined Application methods
           var mixin = new controllerRegistry.Application();
           
-          controller = fleegix.mixin(controller, mixin);
+          controller = util.meta.mixin(controller, mixin);
 
           controller.handleAction(route.action, params);
         });
 
       }
       else {
-        // In dev mode, also serve static files
-        if (config.environment = 'development') {
-          var path = config.staticFilePath + req.url;
-          fs.stat(path, function (err, stats) {
-            // File not found, hand back the 404
-            if (err) {
-              var e = new errors.NotFoundError('Page ' + req.url + ' not found.');
-              var r = new response.Response(resp);
-              r.send(e.message, e.statusCode, {'Content-Type': 'text/html'});
-            }
-            else {
-              var r = new response.Response(resp);
-              r.sendFile(path);
-            }
-          });
-        }
-        // Otherwise shoot back the 404
-        else {
-          throw new errors.NotFoundError('Page ' + req.url + ' not found.');
-        }
+        var path = config.staticFilePath + req.url;
+        fs.stat(path, function (err, stats) {
+          // File not found, hand back the 404
+          if (err) {
+            var e = new errors.NotFoundError('Page ' + req.url + ' not found.');
+            var r = new response.Response(resp);
+            r.send(e.message, e.statusCode, {'Content-Type': 'text/html'});
+          }
+          else {
+            var r = new response.Response(resp);
+            r.sendFile(path);
+          }
+        });
       }
      }
      // Catch all errors, respond with error page & HTTP error code

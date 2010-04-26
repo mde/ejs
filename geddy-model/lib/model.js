@@ -483,5 +483,8 @@ model.ModelItemDefinitionBase = function (name) {
   model.modelRegistry[name] = new model.Model(name);
 };
 
-for (var p in model) { this[p] = model[p]; }
+// Server-side, add everything to exports
+if (typeof window == 'undefined') {
+  for (var p in model) { this[p] = model[p]; }
+}
 
