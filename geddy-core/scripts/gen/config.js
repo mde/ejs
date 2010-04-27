@@ -19,6 +19,7 @@
 var config = new function () {
   /*
   this.environment = 'development';
+  this.hostname: '127.0.0.1';
   this.port = 8000;
   this.plugins = [
     'auth/auth'

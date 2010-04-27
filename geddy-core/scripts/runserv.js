@@ -26,16 +26,17 @@ var fleegix = require('geddy-core/lib/fleegix');
 var Config = require('geddy-core/lib/config').Config;
 var Init = require('geddy-core/lib/init').Init;
 var App = require('geddy-core/lib/app').App;
+var config;
 
 var runServ = function () {
   http.createServer(function (req, resp) {
     new App().run(req, resp);
-  }).listen(config.port);
+  }).listen(config.port, config.hostname);
 
-  sys.puts('Server running at http://127.0.0.1:' + config.port + '/');
+  sys.puts('Server running at http://' + config.hostname + ':' + config.port + '/');
 };
 
-var config = new Config(appDirname);
+config = new Config(appDirname);
 // Initialize the app, passing in the config, and runServ at its callback
 new Init(config, runServ);
 
