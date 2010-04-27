@@ -29,11 +29,15 @@ var App = require('geddy-core/lib/app').App;
 var config;
 
 var runServ = function () {
+  var hostname;
+  if (config.hostname) { hostname = config.hostname; }
   http.createServer(function (req, resp) {
     new App().run(req, resp);
-  }).listen(config.port, config.hostname);
+  }).listen(config.port, hostname);
 
-  sys.puts('Server running at http://' + config.hostname + ':' + config.port + '/');
+  var msg = 'Server running at ';
+  msg += hostname ? 'http://' + hostname + ':' + config.port : 'port ' + config.port
+  sys.puts(msg);
 };
 
 config = new Config(appDirname);

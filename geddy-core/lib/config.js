@@ -23,7 +23,7 @@ var fleegix = require('geddy-core/lib/fleegix');
 var Config = function (dirname) {
   
   this.environment = 'development';
-  this.hostname: '127.0.0.1';
+  this.hostname = null;
   this.port = 8000;
   this.dirname = dirname;
   this.staticFilePath = dirname + '/public';
