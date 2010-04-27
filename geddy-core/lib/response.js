@@ -214,7 +214,7 @@ Response.prototype = new function () {
             function (err, chunk, bytesRead) {
           if (!chunk) {
             fs.close(fd);
-            _this.resp.close();
+            _this.resp.end();
             return;
           }
 
