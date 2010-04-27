@@ -56,9 +56,57 @@ var model = new function () {
   var _constructorList = GLOBAL;
 
   var _createModelItemConstructor = function (def) {
+
+      var createPropertyList = function (virtual) {
+        var listName = virtual ? 'virtualProperties' : 'properties';
+        var defBase = model.modelRegistry[def.name];
+        var props = defBase[listName];
+        var ret = {};
+        var fromItem;
+        var toItem;
+        for (var p in props) {
+          ret[p] = {};
+          fromItem = props[p];
+          toItem = ret[p];
+          for (var n in fromItem) {
+            if (n == 'validations') {
+              continue;
+            }
+            toItem[n] = fromItem[n];
+          }
+        }
+        return ret;
+      };
+
+    var createVirtualPropertyMethod = function (_this, virtualPropertyName, methodName, args) {
+      return function () {
+        model.dbAdapter.virtual(_this, virtualPropertyName, methodName, arguments);
+      }
+    };
+
+    var createVirtualProperty = function (_this, virtualPropertyName, obj) {
+      var prop = {};
+      var datatype = model.dbAdapter.virtualPropertyDatatypes[obj.datatype];
+      if (!datatype) {
+        throw new Error('No virtual-property datatypes defined in model.dbAdapter.');
+      };
+      var methodNames = datatype.methods;
+      var methodName;
+      for (var i = 0; i < methodNames.length; i++) {
+        var methodName = methodNames[i];
+        prop[methodName] = createVirtualPropertyMethod(_this, virtualPropertyName, methodName);
+      }
+      return prop;
+    };
+
     // Base constructor function for all model items
     return function () {
+      
       this.type = def.name;
+
+      this.properties = createPropertyList(false);
+      
+      this.virtualProperties = createPropertyList(true);
 
       this.valid = function () {
         return !this.errors;
@@ -81,6 +129,11 @@ var model = new function () {
           return model.dbAdapter.save(this, callback);
         }
       };
+
+      var virtuals = this.virtualProperties;
+      for (var p in virtuals) {
+        this[p] = createVirtualProperty(this, p, virtuals[p]);
+      }
 
     };
   };
@@ -127,10 +180,10 @@ var model = new function () {
     // Mix any functions defined on the model-item definition 'constructor'
     // into the original prototype, and set it as the prototype of the
     // instance constructor
-    for (var attr in def) {
+    for (var prop in def) {
       // Don't copy inherited stuff
-      if (def.hasOwnProperty(attr)) {
-        origPrototype[attr] = def[attr];
+      if (def.hasOwnProperty(prop)) {
+        origPrototype[prop] = def[prop];
       }
     }
     ModelItem.prototype = origPrototype;
@@ -140,29 +193,25 @@ var model = new function () {
     GLOBAL[p] = ModelItem;
   };
 
-  /*
-   * First basic CRUD action, create
-   * Next needs to pass off to desired datastore and save
-   */
   this.createObject = function (typeName, params) {
     var obj = new GLOBAL[typeName](typeName);
     var type = model.modelRegistry[typeName];
-    var attrList = type.attributes;
+    var validateProperties = type.properties;
     var validated = null;
     var errs = null;
     var val;
-    for (var p in attrList) {
+    for (var p in validateProperties) {
       val = params[p];
-      validated = this.validateAttribute(attrList[p], params);
+      validated = this.validateProperty(validateProperties[p], params);
       // If there are any failed validations, the errs param
       // contains an Object literal keyed by field name, and the
       // error message for the first failed validation for that
-      // attribute
+      // property
       if (validated.err) {
         errs = errs || {};
         errs[p] = validated.err;
       }
-      // Otherwise add this attribute the the return obj
+      // Otherwise add this property the the return obj
       else {
         obj[p] = validated.val;
       }
@@ -181,18 +230,18 @@ var model = new function () {
   };
 
   /*
-   * Perform validation on each attribute on this model
+   * Perform validation on each property on this model
    */
-  this.validateAttribute = function (attr, params) {
+  this.validateProperty = function (prop, params) {
 
-    var name = attr.name;
+    var name = prop.name;
     var val = params[name];
 
     // Validate for the base datatype only if there actually is a value --
     // e.g., undefined will fail the validation for Number, even if the
     // field is optional
     if (val) {
-      var result = model.datatypes[attr.datatype](attr.name, val);
+      var result = model.datatypes[prop.datatype](prop.name, val);
       if (result.err) {
         return {
           err: result.err,
@@ -205,8 +254,8 @@ var model = new function () {
       val = result.val;
     }
 
-    // Now go through all the base validations for this attribute
-    var validations = attr.validations;
+    // Now go through all the base validations for this property
+    var validations = prop.validations;
     var validator;
     var err;
     for (var p in validations) {
@@ -226,7 +275,7 @@ var model = new function () {
       }
     }
 
-    // If there weren't any errors, return the value for this attribute
+    // If there weren't any errors, return the value for this property
     // and no error
     return {
       err: null,
@@ -239,13 +288,15 @@ var model = new function () {
 
 model.Model = function (name) {
   this.name = name;
-  this.attributes = {};
+  this.properties = {};
+  this.virtualProperties = {};
 };
 
-model.Attribute = function (name, datatype, o) {
+model.Property = function (name, datatype, o) {
   var opts = o || {};
   this.name = name;
   this.datatype = datatype;
+  this.options = opts;
   var validations = {};
   for (var p in opts) {
     if (opts.required || opts.length) {
@@ -259,6 +310,13 @@ model.Attribute = function (name, datatype, o) {
     }
   }
   this.validations = validations;
+};
+
+model.VirtualProperty = function (name, datatype, o) {
+  var opts = o || {};
+  this.name = name;
+  this.datatype = datatype;
+  this.options = opts;
 };
 
 /*
@@ -456,14 +514,19 @@ model.ModelItemDefinitionBase = function (name) {
   this.name = name;
 
   this.property = function (name, datatype, o) {
-    model.modelRegistry[this.name].attributes[name] =
-      new model.Attribute(name, datatype, o);
+    model.modelRegistry[this.name].properties[name] =
+      new model.Property(name, datatype, o);
+  };
+
+  this.virtualProperty = function (name, datatype, o) {
+    model.modelRegistry[this.name].virtualProperties[name] =
+      new model.VirtualProperty(name, datatype, o);
   };
 
   this.validates = function (condition, name, qual, opts) {
     var rule = util.meta.mixin({}, opts, true);
     rule.qualifier = qual;
-    model.modelRegistry[this.name].attributes[name].validations[condition] = rule;
+    model.modelRegistry[this.name].properties[name].validations[condition] = rule;
   };
 
   // For each of the validators, create a validatesFooBar from
