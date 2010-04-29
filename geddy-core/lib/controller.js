@@ -146,8 +146,11 @@ Controller.prototype = new function () {
     this.session.close(function () {
       r.send('', 302, headers);
     });
-    
-  }
+  };
+
+  this.error = function (err) {
+    errors.respond(this.response, err);
+  };
 
   this.respond = function (content, format) {
     // format and contentType are set at the same time
@@ -156,7 +159,8 @@ Controller.prototype = new function () {
     this.contentType = negotiated.contentType;
 
     if (!this.contentType) {
-      throw new errors.NotAcceptableError('Not an acceptable media type.');
+      var err = new errors.NotAcceptableError('Not an acceptable media type.');
+      this.error(err);
     }
     
     this.formatContentAndFinish(content);
@@ -178,6 +182,8 @@ Controller.prototype = new function () {
     var types;
     var match;
     var params = this.params;
+    var err;
+    
     if (frmt) {
       types = [frmt];
     }
@@ -189,7 +195,8 @@ Controller.prototype = new function () {
         types = [f];
       }
       else {
-        throw new errors.NotAcceptableError('Not an acceptable media type.');
+        err = new errors.NotAcceptableError('Not an acceptable media type.');
+        this.error(err);
       }
     }
     else {
@@ -224,7 +231,8 @@ Controller.prototype = new function () {
       // If respondsWith contains an unknown format
       // TODO: Better error to tell devs how to set up new formats
       else {
-        throw new errors.InternalServerError('Unknown format');
+        err = new errors.InternalServerError('Unknown format');
+        this.error(err);
       }
       // Don't look at any more formats if there's a match
       if (match) {
@@ -242,7 +250,8 @@ Controller.prototype = new function () {
     }
    
     if (!(format && contentType)) {
-      throw new errors.InternalServerError('Unknown format');
+      err = new errors.InternalServerError('Unknown format');
+      this.error(err);
     }
     
     return {format: format, contentType: contentType};
@@ -258,7 +267,8 @@ Controller.prototype = new function () {
         this.formatContent(this.format, content);
       }
       else {
-        throw new errors.InternalServerError('Unknown format');
+        err = new errors.InternalServerError('Unknown format');
+        this.error(err);
       }
     }
   };
@@ -291,8 +301,7 @@ Controller.prototype = new function () {
     }
     if (!url) {
       var e = new errors.InternalServerError('Template path "' + key + '" not found');
-      var r = new response.Response(this.response);
-      r.send(e.message, e.statusCode, {'Content-Type': 'text/html'});
+      this.error(e);
       return;
     }
 

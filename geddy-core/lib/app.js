@@ -92,10 +92,9 @@ var App = function (initData) {
       }
      }
      // Catch all errors, respond with error page & HTTP error code
+     // Sadly, this doesn't catch errors in callbacks
      catch (e) {
-      throw e;
-      //var r = new response.Response(resp);
-      //r.send(e.message, e.statusCode, {'Content-Type': 'text/html'});
+      errors.respond(resp, e);
      }
   }
 };

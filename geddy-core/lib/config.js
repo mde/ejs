@@ -27,6 +27,7 @@ var Config = function (dirname) {
   this.port = 8000;
   this.dirname = dirname;
   this.staticFilePath = dirname + '/public';
+  this.detailedErrors = true;
   this.plugins = {};
   
   this.sessions = {

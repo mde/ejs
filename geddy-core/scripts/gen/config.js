@@ -21,16 +21,11 @@ var config = new function () {
   this.environment = 'development';
   this.hostname = null;
   this.port = 8000;
-  this.plugins = [
-    'auth/auth'
-  ];
+  this.detailedErrors = true;
   this.sessions = {
-    store: 'couchdb',
+    store: 'memory',
     key: 'sid',
-    expiry: 14 * 24 * 60 * 60,
-    dbHostname: 'localhost',
-    dbName: 'geddy_sessions',
-    dbPort: 5984
+    expiry: 14 * 24 * 60 * 60
   };
   */
 }();
