@@ -78,6 +78,9 @@ var tasks = require(opts.jakefile).tasks;
 var jake = new function () {
   this.runTask = function (name, args) {
     var task = tasks[name];
+    if (!task) {
+      throw new Error('Task "' + name + '" is not defined in the Jakefile.');
+    }
     var deps = task.deps;
     if (deps && deps instanceof Array) {
       for (var i = 0; i < deps.length; i++) {

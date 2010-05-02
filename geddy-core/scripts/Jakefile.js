@@ -40,7 +40,7 @@ exports.tasks = {
     'desc': 'Creates a new Geddy app scaffold.',
     'deps': [],
     'task': function (env) {
-      var dir = env.firstArg;
+      var dir = env[0];
       var cmds = [
         'mkdir -p ./' + dir,
         'mkdir -p ./' + dir + '/config',
@@ -63,23 +63,43 @@ exports.tasks = {
     'desc': '',
     'deps': [],
     'task': function (env) {
+      var util = {};
       var text;
       var filePath;
       var fleegix = require('../lib/fleegix');
+      util.string = require('../../geddy-util/lib/string');
       
       // Add the controller file
       // ----
-      var fileName = env.firstArg;
-      // Convert underscores to camelCase, e.g., 'neilPearts'
-      controllerName = fleegix.string.camelize(fileName);
-      // Capitalize the first letter, e.g., 'NeilPearts'
-      controllerName = fleegix.string.capitalize(controllerName);
-      // Grab the template text for the controller
+      var nameParam = env[0];
+      var names = nameParam.split(',');
+      var nameSingular = names[0];
+      // TODO: No fancy pluralization yet
+      var namePlural = names[1] || nameSingular + 's';
+      
+      // Convert underscores to camelCase, e.g., 'neilPeart'
+      var nameSingularConverted = util.string.camelize(nameSingular, true);
+      var namePluralConverted = util.string.camelize(namePlural, true);
+      
+      // Model
+      // ----
+      // Grab the template text
+      text = fs.readFileSync(__dirname + '/gen/resource_model.ejs', 'utf8');
+      // Stick in the model name
+      var templ = new fleegix.ejs.Template({text: text});
+      templ.process({data: {nameSingular: nameSingularConverted}});
+      filePath = './app/models/' + nameSingular + '.js';
+      fs.writeFileSync(filePath, templ.markup, 'utf8');
+      sys.puts('[ADDED] ' + filePath);
+
+      // Controller
+      // ----
+      // Grab the template text
       text = fs.readFileSync(__dirname + '/gen/resource_controller.ejs', 'utf8');
       // Stick in the controller name
       var templ = new fleegix.ejs.Template({text: text});
-      templ.process({data: {controllerName: controllerName}});
-      filePath = './app/controllers/' + fileName + '.js';
+      templ.process({data: {namePlural: namePluralConverted}});
+      filePath = './app/controllers/' + namePlural + '.js';
       fs.writeFileSync(filePath, templ.markup, 'utf8');
       sys.puts('[ADDED] ' + filePath);
 
@@ -90,14 +110,14 @@ exports.tasks = {
       text = fs.readFileSync(filePath, 'utf8');
       // Add the new resource route just above the export
       routerArr = text.split('exports.router');
-      routerArr[0] += 'router.resource(\'' +  fileName + '\');\n';
+      routerArr[0] += 'router.resource(\'' +  namePlural + '\');\n';
       text = routerArr.join('exports.router');
       fs.writeFileSync(filePath, text, 'utf8');
-      sys.puts('resources ' + fileName + ' route added to ' + filePath);
+      sys.puts('resources ' + namePlural + ' route added to ' + filePath);
       
       var cmds = [
-        'mkdir -p ./app/views/' + fileName,
-        'cp ~/.node_libraries/geddy-core/scripts/gen/views/* ' + './app/views/' + fileName + '/'
+        'mkdir -p ./app/views/' + namePlural,
+        'cp ~/.node_libraries/geddy-core/scripts/gen/views/* ' + './app/views/' + namePlural + '/'
       ]
       runCmds(cmds, function () {
         sys.puts('Created view templates.');
