@@ -77,7 +77,8 @@ Attention all planets of the Solar Federation
 Use `geddy-gen resource` in your app directory to add a
 resource. The route will be set up automatically for you.
 
-    mde@localhost:~/work/bytor$ geddy-gen resource snow_dogs
+    mde@localhost:~/work/bytor$ geddy-gen resource snow_dog
+    [ADDED] ./app/models/snow_dog.js
     [ADDED] ./app/controllers/snow_dogs.js
     resources snow_dogs route added to ./config/router.js
     Created view templates.
@@ -87,6 +88,21 @@ new route -- for example, http://localhost:8000/snow_dogs.json,
 and you should see something like this:
 
 {"method":"index","params":{"extension":"json"}}
+
+The geddy-gen utility doesn't handle fancy pluralization between
+model and controller -- the default is simply to add an "s"
+to your resource name to use for the plural in controller
+names and paths.
+
+However, you can specify different singular/plural names when
+generating your resource. Separate the singular and plural
+names by a comma, like this:
+
+    mde@localhost:~/work/bytor$ geddy-gen resource person,people
+    [ADDED] ./app/models/person.js
+    [ADDED] ./app/controllers/people.js
+    resources people route added to ./config/router.js
+    Created view templates.
 
 ### App layout
 
