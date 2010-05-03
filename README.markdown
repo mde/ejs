@@ -25,6 +25,12 @@ but still let you get under the hood and tinker if you want.
 
 Apache License, Version 2
 
+### Community
+
+Mailing list is at:
+
+http://groups.google.com/group/geddy
+
 ### Building and installing Geddy
 
 ** Prerequisites**
