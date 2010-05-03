@@ -27,7 +27,11 @@ Apache License, Version 2
 
 ### Community
 
-Mailing list is at:
+IRC:
+
+#geddy on freenode.net
+
+Mailing list:
 
 http://groups.google.com/group/geddy
 
