@@ -140,10 +140,10 @@ After adding a resource, a Geddy app is laid out like this:
 Geddy's resource-based routes create url/request-method mappings
 for easy CRUD operations like this:
 
-GET */snow_dogs*<br/>
+GET */snow_dogs[.extension]<br/>
 (SnowDogs controller, index action)
 
-GET */snow_dogs/add*<br/>
+GET */snow_dogs/add[.extension]<br/>
 (SnowDogs controller, add action, for any new-resource template
 -- "new" is not usable as a JavaScript action name)
 
