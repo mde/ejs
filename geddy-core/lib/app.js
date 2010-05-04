@@ -33,7 +33,9 @@ var App = function (initData) {
 
   this.run = function (req, resp) {
     var url = req.url;
-    var base = fleegix.url.getBase(url);
+    // Split only on question mark -- using semicolon delimiter for
+    // edit-flag hack in resource-routes
+    var base = url.split(/\?|=/)[0];
     var route = router.parse(base, req.method);
 
     try {
@@ -49,7 +51,9 @@ var App = function (initData) {
 
         sess.init(function () {
 
-          var qs = fleegix.url.getQS(url);
+          // Split only on question mark -- using semicolon delimiter for
+          // edit-flag hack in resource-routes
+          var qs = url.split('?')[1] || '';
           var qsParams = fleegix.url.qsToObject(qs);
           var params = util.meta.mixin({}, route.params);
           var params = util.meta.mixin(params, qsParams);

@@ -11,10 +11,15 @@ var <%= namePlural %> = function () {
   };
 
   this.create = function (params) {
-    this.respond({params: params});
+    // Save the resource, then redirect to index
+    this.redirect({action: 'index'});
   };
 
   this.show = function (params) {
+    this.respond({params: params});
+  };
+
+  this.edit = function (params) {
     this.respond({params: params});
   };
 

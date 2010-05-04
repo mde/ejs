@@ -16,7 +16,6 @@
  *
 */
 
-var fleegix = require('geddy-core/lib/fleegix');
 var sys = require('sys');
 
 /*
@@ -32,7 +31,7 @@ var sys = require('sys');
 var Router = function () {
   // From BomberJS: http://bomber.obtdev.com/
   const KEY_PATTERN = /:([a-zA-Z_][a-zA-Z0-9_]*)/g;
-  const MATCH_PATTERN_STRING = "([^\\\/.]+)";
+  const MATCH_PATTERN_STRING = "([^\\\/.;]+)";
   var _routes = [];
   var _namedRoutes = {};
   var _regExpEscape = function(str) {
@@ -44,6 +43,7 @@ var Router = function () {
     {method: 'get', path: '/add', action: 'add'},
     {method: 'post', path: null, action: 'create'},
     {method: 'get', path: '/:id', action: 'show'},
+    {method: 'get', path: '/:id', action: 'edit', specialFlag: true},
     {method: 'put', path: '/:id', action: 'update'},
     {method: 'delete', path: '/:id', action: 'remove'},
   ];
@@ -72,15 +72,14 @@ var Router = function () {
 
   this.resource = function (resource) {
     var controllerName;
-    // Convert underscores to camelCase, e.g., 'neilPearts'
-    controllerName = fleegix.string.camelize(resource);
-    // Capitalize the first letter, e.g., 'NeilPearts'
-    controllerName = fleegix.string.capitalize(controllerName);
+    // Convert underscores to CamelCase with initial cap, e.g., 'NeilPearts'
+    controllerName = util.string.camelize(resource, true);
     // Add a resource-based route for each type
     var r;
     for (var i = 0; i < _resourceTypes.length; i++) {
       var r = _resourceTypes[i];
-      this.match('/' + resource + (r.path || '') + '.:extension', r.method).to(
+      var editFlag = r.specialFlag ? ';:__editflag__' : '';
+      this.match('/' + resource + (r.path || '') + '.:extension' + editFlag, r.method).to(
           { controller: controllerName, action: r.action});
     }
   };
@@ -98,6 +97,7 @@ var Router = function () {
           var key = route.keys[j];
           route.params[key] = match[j];
         }
+        delete route.params.__editflag__;
         route.params.controller = route.controller;
         route.params.action = route.action;
         return route;

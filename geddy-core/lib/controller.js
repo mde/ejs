@@ -139,7 +139,18 @@ Controller.prototype = new function () {
     }
   };
 
-  this.redirect = function (url) {
+  this.redirect = function (redir) {
+    var url;
+    if (typeof redir == 'string') {
+      url = redir;
+    }
+    else {
+      var contr = redir.controller || this.name;
+      var act = redir.action;
+      var ext = redir.extension || this.params.extension;
+      contr = util.string.decamelize(contr);
+      url = '/' + contr + '/' + act + '.' + ext;
+    }
     var r = new response.Response(this.response);
     var headers = {'Location': url};
     headers['Set-Cookie'] = this.cookies.serialize();
