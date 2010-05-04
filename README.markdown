@@ -147,16 +147,16 @@ GET */snow_dogs/add*<br/>
 (SnowDogs controller, add action, for any new-resource template
 -- "new" is not usable as a JavaScript action name)
 
-POST */snow_dogs*<br/>
+POST */snow_dogs[.extension]<br/>
 (SnowDogs controller, create action)
 
-GET */snow_dogs/:id*<br/>
+GET */snow_dogs/:id[.extension]<br/>
 (SnowDogs controller, show action)
 
-PUT */snow_dogs/:id*<br/>
+PUT */snow_dogs/:id[.extension]<br/>
 (SnowDogs controller, update action)
 
-DELETE */snow_dogs/:id*<br/>
+DELETE */snow_dogs/:id[.extension]<br/>
 (SnowDogs controller, remove action)
 
 A simple controller that just responds with any

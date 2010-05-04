@@ -137,6 +137,24 @@ util.string = new function () {
     return s.substr(0, 1).toUpperCase() + s.substr(1);
   };
 
+  // From Math.uuid.js, http://www.broofa.com/Tools/Math.uuid.js
+  // Robert Kieffer (robert@broofa.com), MIT license
+  this.uuid = function () {
+    var chars = CHARS, uuid = [], rnd=0, r;
+    for (var i = 0; i < 36; i++) {
+      if (i==8 || i==13 ||  i==18 || i==23) {
+        uuid[i] = '-';
+      } else {
+        if (rnd <= 0x02) rnd = 0x2000000 + (Math.random()*0x1000000)|0;
+        r = rnd & 0xf;
+        rnd = rnd >> 4;
+        uuid[i] = chars[(i == 19) ? (r & 0x3) | 0x8 : r];
+      }
+    }
+    return uuid.join('');
+  };
+
+
 }();
 
 if (typeof exports != 'undefined') {
