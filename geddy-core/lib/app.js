@@ -51,7 +51,8 @@ var App = function (initData) {
 
           var qs = fleegix.url.getQS(url);
           var qsParams = fleegix.url.qsToObject(qs);
-          var params = util.meta.mixin(route.params, qsParams);
+          var params = util.meta.mixin({}, route.params);
+          var params = util.meta.mixin(params, qsParams);
 
           // Instantiate the matching controller from the registry
           var constructor = controllerRegistry[route.controller];
