@@ -29,7 +29,7 @@ Apache License, Version 2
 
 IRC:
 
-\#geddy on freenode.net
+\#node.js on freenode.net
 
 Mailing list:
 
