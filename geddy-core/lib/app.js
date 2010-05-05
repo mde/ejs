@@ -32,79 +32,106 @@ var App = function (initData) {
   var _this = this;
 
   this.run = function (req, resp) {
-    var url = req.url;
-    // Split only on question mark -- using semicolon delimiter for
-    // edit-flag hack in resource-routes
-    var base = url.split(/\?|=/)[0];
-    var qs = url.split('?')[1] || '';
-    var qsParams = fleegix.url.qsToObject(qs);
-    var method = (req.method == 'POST' && qsParams._method) ?
-        qsParams._method : req.method;
-    var route = router.parse(base, method);
 
-    try {
-      // If the route is a match, run the matching controller/action
-      if (route) {
-        var cook = new cookies.CookieCollection(req);
+    // Build the request body
+    // TODO: Wrap in some sort of abstraction
+    req.body = '';
+    req.addListener('data', function (data) {
+      req.body += data;
+    });
 
-        var sess = new session.Session({
-          app: this,
-          request: req,
-          cookies: cook
-        });
+    // Handle the request once it's finished
+    req.addListener('end', function () {
+      var url = req.url;
+      // Split only on question mark -- using semicolon delimiter for
+      // edit-flag hack in resource-routes
+      var base = url.split(/\?|=/)[0];
+      var qs = url.split('?')[1] || '';
+      var qsParams = fleegix.url.qsToObject(qs);
+      var method = (req.method == 'POST' && qsParams._method) ?
+          qsParams._method : req.method;
+      var route = router.parse(base, method);
 
-        sess.init(function () {
+      try {
+        // If the route is a match, run the matching controller/action
+        if (route) {
+          var cook = new cookies.CookieCollection(req);
 
-          // Split only on question mark -- using semicolon delimiter for
-          // edit-flag hack in resource-routes
-          var params;
-          params = util.meta.mixin({}, route.params);
-          params = util.meta.mixin(params, qsParams);
-
-          // Instantiate the matching controller from the registry
-          var constructor = controllerRegistry[route.controller];
-          // Give it all the base Controller fu
-          constructor.prototype = new Controller({
+          var sess = new session.Session({
+            app: this,
             request: req,
-            response: resp,
-            name: route.controller,
-            params: params,
-            cookies: cook,
-            session: sess
+            cookies: cook
           });
-          var controller = new constructor();
 
-          // Mix in any user-defined Application methods
-          var mixin = new controllerRegistry.Application();
-          
-          controller = util.meta.mixin(controller, mixin);
+          sess.init(function () {
 
-          controller.handleAction(route.action, params);
-        });
+            // Split only on question mark -- using semicolon delimiter for
+            // edit-flag hack in resource-routes
+            var params = mergeParams(req, route.params, qsParams);
 
-      }
-      else {
-        var path = config.staticFilePath + req.url;
-        fs.stat(path, function (err, stats) {
-          // File not found, hand back the 404
-          if (err) {
-            var e = new errors.NotFoundError('Page ' + req.url + ' not found.');
-            var r = new response.Response(resp);
-            r.send(e.message, e.statusCode, {'Content-Type': 'text/html'});
-          }
-          else {
-            var r = new response.Response(resp);
-            r.sendFile(path);
-          }
-        });
-      }
-     }
-     // Catch all errors, respond with error page & HTTP error code
-     // Sadly, this doesn't catch errors in callbacks
-     catch (e) {
-      errors.respond(resp, e);
-     }
+            sys.puts(JSON.stringify(params));
+
+            // Instantiate the matching controller from the registry
+            var constructor = controllerRegistry[route.controller];
+            // Give it all the base Controller fu
+            constructor.prototype = new Controller({
+              request: req,
+              response: resp,
+              name: route.controller,
+              params: params,
+              cookies: cook,
+              session: sess
+            });
+            var controller = new constructor();
+
+            // Mix in any user-defined Application methods
+            var mixin = new controllerRegistry.Application();
+
+            controller = util.meta.mixin(controller, mixin);
+
+            controller.handleAction(route.action, params);
+          });
+
+        }
+        else {
+          var path = config.staticFilePath + req.url;
+          fs.stat(path, function (err, stats) {
+            // File not found, hand back the 404
+            if (err) {
+              var e = new errors.NotFoundError('Page ' + req.url + ' not found.');
+              var r = new response.Response(resp);
+              r.send(e.message, e.statusCode, {'Content-Type': 'text/html'});
+            }
+            else {
+              var r = new response.Response(resp);
+              r.sendFile(path);
+            }
+          });
+        }
+       }
+       // Catch all errors, respond with error page & HTTP error code
+       // Sadly, this doesn't catch errors in callbacks
+       catch (e) {
+        errors.respond(resp, e);
+       }
+    });
+
+  };
+
+};
+
+var mergeParams = function (req, routeParams, qsParams) {
+  var p = {};
+  p = util.meta.mixin(p, routeParams);
+  p = util.meta.mixin(p, qsParams);
+  if ((req.method == 'POST' || req.method == 'PUT') &&
+      (req.headers['content-type'].indexOf('form-urlencoded') > -1)) {
+    // Deal with the retarded default encoding of spaces to plus-sign
+    var b = req.body.replace(/\+/g, '%20');
+    var bodyParams = fleegix.url.qsToObject(b, {arrayizeMulti: true});
+    p = util.meta.mixin(p, bodyParams);
   }
+  return p;
 };
 
 exports.App = App;
