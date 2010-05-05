@@ -77,7 +77,7 @@ exports.tasks = {
       // TODO: No fancy pluralization yet
       var namePlural = names[1] || nameSingular + 's';
       
-      // Convert underscores to camelCase, e.g., 'neilPeart'
+      // Convert underscores to camelCase, e.g., 'NeilPeart'
       var nameSingularConverted = util.string.camelize(nameSingular, true);
       var namePluralConverted = util.string.camelize(namePlural, true);
       

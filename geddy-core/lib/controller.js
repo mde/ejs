@@ -47,7 +47,7 @@ var Controller = function (obj) {
   this.respondsWith = ['text'];
   // The name, in lowercase_with_underscores, used for
   // picking the template if any to attempt to render
-  this.nameDeCamelized = null;
+  this.nameDecamelized = null;
   // Content to respond with -- can be an Object or String
   this.content = '';
   // High-level set of options which can represent multiple
@@ -71,7 +71,7 @@ var Controller = function (obj) {
     this[p] = obj[p];
   }
 
-  this.nameDeCamelized = fleegix.string.deCamelize(this.name);
+  this.nameDecamelized = util.string.decamelize(this.name);
 
 };
 
@@ -148,8 +148,12 @@ Controller.prototype = new function () {
       var contr = redir.controller || this.name;
       var act = redir.action;
       var ext = redir.extension || this.params.extension;
+      var id = redir.id;
       contr = util.string.decamelize(contr);
-      url = '/' + contr + '/' + act + '.' + ext;
+      url = '/' + contr;
+      url += act ? '/' + act : '';
+      url += id ? '/' + id : '';
+      url += '.' + ext;
     }
     var r = new response.Response(this.response);
     var headers = {'Location': url};
@@ -346,7 +350,7 @@ Controller.prototype = new function () {
   this.formatContent = function (format, content) {
     if (format == 'html') {
       var _this = this;
-      var name = this.nameDeCamelized;
+      var name = this.nameDecamelized;
       var act = this.params.action;
       // E.g., app/views/snow_dogs/index.html.ejs
       var path = 'app/views/' + name + '/' + act + '.html.ejs';

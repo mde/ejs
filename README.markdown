@@ -153,6 +153,9 @@ POST */snow_dogs[.extension]<br/>
 GET */snow_dogs/:id[.extension]<br/>
 (SnowDogs controller, show action)
 
+GET */snow_dogs/:id[.extension];edit<br/>
+(SnowDogs controller, edit action)
+
 PUT */snow_dogs/:id[.extension]<br/>
 (SnowDogs controller, update action)
 

@@ -100,6 +100,7 @@ var Router = function () {
         delete route.params.__editflag__;
         route.params.controller = route.controller;
         route.params.action = route.action;
+        route.params.method = method;
         return route;
       }
     }

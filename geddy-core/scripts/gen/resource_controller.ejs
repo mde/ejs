@@ -11,8 +11,8 @@ var <%= namePlural %> = function () {
   };
 
   this.create = function (params) {
-    // Save the resource, then redirect to index
-    this.redirect({action: 'index'});
+    // Save the resource, then display index page
+    this.redirect({controller: this.name});
   };
 
   this.show = function (params) {
@@ -24,7 +24,8 @@ var <%= namePlural %> = function () {
   };
 
   this.update = function (params) {
-    this.respond({params: params});
+    // Save the resource, then display the item page
+    this.redirect({controller: this.name, id: params.id});
   };
 
   this.remove = function (params) {

@@ -36,7 +36,11 @@ var App = function (initData) {
     // Split only on question mark -- using semicolon delimiter for
     // edit-flag hack in resource-routes
     var base = url.split(/\?|=/)[0];
-    var route = router.parse(base, req.method);
+    var qs = url.split('?')[1] || '';
+    var qsParams = fleegix.url.qsToObject(qs);
+    var method = (req.method == 'POST' && qsParams._method) ?
+        qsParams._method : req.method;
+    var route = router.parse(base, method);
 
     try {
       // If the route is a match, run the matching controller/action
@@ -53,10 +57,9 @@ var App = function (initData) {
 
           // Split only on question mark -- using semicolon delimiter for
           // edit-flag hack in resource-routes
-          var qs = url.split('?')[1] || '';
-          var qsParams = fleegix.url.qsToObject(qs);
-          var params = util.meta.mixin({}, route.params);
-          var params = util.meta.mixin(params, qsParams);
+          var params;
+          params = util.meta.mixin({}, route.params);
+          params = util.meta.mixin(params, qsParams);
 
           // Instantiate the matching controller from the registry
           var constructor = controllerRegistry[route.controller];
