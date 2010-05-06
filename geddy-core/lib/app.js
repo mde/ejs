@@ -25,6 +25,7 @@ var errors = require('geddy-core/lib/errors');
 var session = require('geddy-core/lib/session');
 var response = require('geddy-core/lib/response');
 var cookies = require('geddy-core/lib/cookies');
+var log = require('geddy-core/lib/log');
 
 var Controller = require('./controller').Controller;
 
@@ -32,6 +33,9 @@ var App = function (initData) {
   var _this = this;
 
   this.run = function (req, resp) {
+
+    // capture the request start time for reporting
+    var startTime = new Date().getTime();
 
     // Build the request body
     // TODO: Wrap in some sort of abstraction
@@ -51,6 +55,8 @@ var App = function (initData) {
       var method = (req.method == 'POST' && qsParams._method) ?
           qsParams._method : req.method;
       var route = router.parse(base, method);
+      
+      log.debug(req.method + ': ' + url)
 
       try {
         // If the route is a match, run the matching controller/action
@@ -62,6 +68,8 @@ var App = function (initData) {
             request: req,
             cookies: cook
           });
+          
+          log.debug('Routed to ' + route.controller + ' controller, ' + route.action + ' action');
 
           sess.init(function () {
 
@@ -69,7 +77,7 @@ var App = function (initData) {
             // edit-flag hack in resource-routes
             var params = mergeParams(req, route.params, qsParams);
 
-            sys.puts(JSON.stringify(params));
+            log.debug('params: ' + sys.inspect(params))
 
             // Instantiate the matching controller from the registry
             var constructor = controllerRegistry[route.controller];
@@ -90,6 +98,8 @@ var App = function (initData) {
             controller = util.meta.mixin(controller, mixin);
 
             controller.handleAction(route.action, params);
+            
+            log.debug('Finished handling request in ' + ( (new Date().getTime()) - startTime) + ' ms').flush();
           });
 
         }
@@ -101,19 +111,22 @@ var App = function (initData) {
               var e = new errors.NotFoundError('Page ' + req.url + ' not found.');
               var r = new response.Response(resp);
               r.send(e.message, e.statusCode, {'Content-Type': 'text/html'});
+              log.warn('ERROR: ' + req.url + ' not found.').flush();
             }
             else {
               var r = new response.Response(resp);
               r.sendFile(path);
+              log.debug('FILE: sent static file ' + path).flush();
             }
           });
         }
-       }
-       // Catch all errors, respond with error page & HTTP error code
-       // Sadly, this doesn't catch errors in callbacks
-       catch (e) {
+      }
+      // Catch all errors, respond with error page & HTTP error code
+      // Sadly, this doesn't catch errors in callbacks
+      catch (e) {
         errors.respond(resp, e);
-       }
+        log.warn('OOPS: ' + req.url + ' not found.').flush();
+      }
     });
 
   };
