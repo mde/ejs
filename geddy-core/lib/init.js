@@ -42,7 +42,8 @@ var Init = function (config, callback) {
   GLOBAL.config = config;
   GLOBAL.router = require(config.dirname + '/config/router').router;
   GLOBAL.hooks = hooks;
-
+  GLOBAL.log = require('geddy-util/lib/meta');
+  
   this.registerControllers = function (err, dirList) {
     if (err) {
       sys.puts('Error: ' + JSON.stringify(err));

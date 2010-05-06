@@ -25,14 +25,14 @@ var log = new function () {
   // default profiles
   var profiles = {
     production: {
-      //logFile: function(){ return(config.logFile || false) },
+      logFile: function(){ return(config.logFile || false) },
       debug: false,
       info: false,
       warn: false,
       fatal: true
     },
     development: {
-      //logFile: function(){ return(config.logFile || false) },
+      logFile: function(){ return(config.logFile || false) },
       debug: true,
       info: true,
       warn: true,
@@ -65,25 +65,26 @@ var log = new function () {
   
   this.flush = function () {
     if (msgs.length > 0) {
-      /* // file appending isn't working properly yet <------
+      // file appending isn't working properly yet <------
       file = profiles[config.environment].logFile()
       path = config.dirname + '/' + file
-      if(file) {
+
+      sys.puts(''); // newline (ugly)
+      sys.log(msgs.join("\n"));
+
+      if (file) {
         var fs = require('fs')
         fs.open(path,'a+', 0666, function(err,fd){
           if (err) return sys.puts(sys.inspect(err));
-          fs.write(fd,"\n\n" + (new Date().toString()) + " - " + msgs.join("\n"),function(err,data){
+          fs.write(fd,"\n\n" + (new Date().toString()) + " - " + msgs.join("\n"),null,'utf8',function(err,data){
             msgs = [];
             fs.close(fd);
             if (err) return sys.puts(sys.inspect(err));
           })
         })
-      }else{ // output to terminal
-      */
-        sys.puts(''); // newline (ugly)
-        sys.log(msgs.join("\n"));
+      }else{ // other must wait to delete the msgs
         msgs = [];
-      //}
+      }
     }
     return this;
   }
