@@ -19,6 +19,7 @@
 var fs = require('fs');
 var sys = require('sys');
 var fleegix = require('./fleegix');
+var log = require('geddy-core/lib/log');
 
 var response = new function () {
 
@@ -244,6 +245,8 @@ Response.prototype = new function () {
 
   this.finish = function () {
     this.resp.end();
+    log.debug('Finished handling request in ' +
+        ((new Date().getTime()) - this.resp.startTime) + ' ms').flush();
   };
 
 }();

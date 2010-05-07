@@ -19,7 +19,6 @@
 var fs = require('fs');
 var sys = require('sys');
 var child_process = require('child_process');
-//var chexec =
 
 var fleegix = require('geddy-core/lib/fleegix');
 var session = require('geddy-core/lib/session');
@@ -42,7 +41,8 @@ var Init = function (config, callback) {
   GLOBAL.config = config;
   GLOBAL.router = require(config.dirname + '/config/router').router;
   GLOBAL.hooks = hooks;
-
+  GLOBAL.log = require('geddy-util/lib/meta');
+  
   this.registerControllers = function (err, dirList) {
     if (err) {
       sys.puts('Error: ' + JSON.stringify(err));
