@@ -69,8 +69,6 @@ var App = function (initData) {
             // edit-flag hack in resource-routes
             var params = mergeParams(req, route.params, qsParams);
 
-            sys.puts(JSON.stringify(params));
-
             // Instantiate the matching controller from the registry
             var constructor = controllerRegistry[route.controller];
             // Give it all the base Controller fu
