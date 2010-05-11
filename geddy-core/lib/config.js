@@ -20,13 +20,13 @@ var sys = require('sys');
 
 var fleegix = require('geddy-core/lib/fleegix');
 
-var Config = function (dirname) {
+var Config = function (opts) {
   
   this.environment = 'development';
   this.hostname = null;
   this.port = 8000;
-  this.dirname = dirname;
-  this.staticFilePath = dirname + '/public';
+  this.dirname = opts.geddyRoot;
+  this.staticFilePath = this.dirname + '/public';
   this.detailedErrors = true;
   this.plugins = {};
   
@@ -65,7 +65,7 @@ var Config = function (dirname) {
   */
 
   // Override with app-level opts
-  var opts = require(dirname + '/config/config');
+  var opts = require(this.dirname + '/config/config');
   fleegix.mixin(this, opts, true);
 };
 

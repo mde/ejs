@@ -37,11 +37,12 @@ var taskName;
 var arg;
 var argName;
 var argItems;
+var passArgs = [];
+var passOpts = {};
+var pat = /:|=/;
+var hasOpts = false;
 
 while (args.length) {
-  if (taskName) {
-    break;
-  }
   arg = args.shift();
   if (arg.indexOf('--') == 0) {
     argItems = arg.split('=');
@@ -63,8 +64,24 @@ while (args.length) {
     }
   }
   else {
-    taskName = arg;
+    if (!taskName) {
+      taskName = arg;
+    }
+    else {
+      if (/:|=/.test(arg)) {
+        hasOpts = true;
+        argItems = arg.split(pat);
+        passOpts[argItems[0]] = argItems[1];
+      }
+      else {
+        passArgs.push(arg);
+      }
+    }
   }
+}
+
+if (hasOpts) {
+  passArgs.push(passOpts);
 }
 
 taskName = taskName || 'default';
@@ -87,7 +104,7 @@ var jake = new function () {
         this.runTask.call(this, deps[i], args);
       }
     }
-    task.task.call(task, this.processArgs(args));
+    task.task.apply(task, passArgs);
   };
 
   this.processArgs = function (args) {

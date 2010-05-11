@@ -17,4 +17,32 @@
 
 #!/bin/bash
 
-node ~/.node_libraries/geddy-core/scripts/runserv.js `pwd`
+SOURCE_DIR=""
+USE_SOURCE=0
+
+for x in $@
+do
+  if [ $USE_SOURCE = 1 ]
+  then
+    SOURCE_DIR="$x"
+    break
+  fi
+  if [ ${x:0:13} = "--server-root" ]
+  then
+    USE_SOURCE=1
+    # This doesn't expand ~/ paths, why not?
+    SOURCE_DIR="${x/--server-root=/}"
+    break
+  fi
+  if [ "$x" = "-x" ]
+  then
+    USE_SOURCE=1
+  fi
+done
+
+if [ $USE_SOURCE = 0 ]
+then
+  node ~/.node_libraries/geddy-core/scripts/runserv.js -r `pwd` $@
+else
+  export NODE_PATH=${SOURCE_DIR}; node ${SOURCE_DIR}/geddy-core/runserv.js -r `pwd` $@
+fi

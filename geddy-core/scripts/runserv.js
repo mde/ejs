@@ -20,13 +20,22 @@ var appDirname = process.argv[2];
 
 var sys = require('sys');
 var http = require('http');
-
-var fleegix = require('geddy-core/lib/fleegix');
+var parseopts = require('geddy-core/lib/parseopts');
+var config;
 
 var Config = require('geddy-core/lib/config').Config;
 var Init = require('geddy-core/lib/init').Init;
 var App;
-var config;
+
+var args = process.argv.slice(2);
+var optsReg = {
+  geddyRoot: ['-r', '--geddy-root'],
+  serverRoot: ['-x', '--server-root'],
+  host: ['-h', '--host'],
+  port: ['-p', '--port'],
+  environment: ['-e', '--environment']
+};
+var opts = parseopts.parse(args, optsReg);
 
 var runServ = function () {
   var hostname;
@@ -35,12 +44,14 @@ var runServ = function () {
     new App().run(req, resp);
   }).listen(config.port, hostname);
 
-  var msg = 'Server running at ';
+  var msg = '';
+  msg += opts.serverRoot ? 'Development server (' + opts.serverRoot + ')' : 'Server';
+  msg += ' running at ';
   msg += hostname ? 'http://' + hostname + ':' + config.port : 'port ' + config.port
   sys.puts(msg);
 };
 
-config = new Config(appDirname);
+config = new Config(opts);
 // Initialize the app, passing in the config, and runServ at its callback
 new Init(config, runServ);
 App = require('geddy-core/lib/app').App;

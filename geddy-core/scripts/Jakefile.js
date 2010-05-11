@@ -23,7 +23,7 @@ exports.tasks = {
   'default': {
     'desc': 'Installs the Geddy Web-app development framework',
     'deps': [],
-    'task': function (env) {
+    'task': function () {
       var cmds = [
         'mkdir -p ~/.node_libraries',
         'cp -R ./dist/* ~/.node_libraries/',
@@ -39,8 +39,8 @@ exports.tasks = {
   'app': {
     'desc': 'Creates a new Geddy app scaffold.',
     'deps': [],
-    'task': function (env) {
-      var dir = env[0];
+    'task': function (appName) {
+      var dir = appName;
       var cmds = [
         'mkdir -p ./' + dir,
         'mkdir -p ./' + dir + '/config',
@@ -62,7 +62,7 @@ exports.tasks = {
   'resource': {
     'desc': '',
     'deps': [],
-    'task': function (env) {
+    'task': function (nameParam) {
       var util = {};
       var text;
       var filePath;
@@ -71,7 +71,6 @@ exports.tasks = {
       
       // Add the controller file
       // ----
-      var nameParam = env[0];
       var names = nameParam.split(',');
       var nameSingular = names[0];
       // TODO: No fancy pluralization yet
