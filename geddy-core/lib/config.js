@@ -22,9 +22,9 @@ var fleegix = require('geddy-core/lib/fleegix');
 
 var Config = function (opts) {
   
-  this.environment = 'development';
-  this.hostname = null;
-  this.port = 4000;
+  this.environment = opts.environment || 'development';
+  this.hostname = opts.host || null;
+  this.port = parseInt(opts.port, 10) || 4000;
   this.dirname = opts.geddyRoot;
   this.staticFilePath = this.dirname + '/public';
   this.detailedErrors = true;

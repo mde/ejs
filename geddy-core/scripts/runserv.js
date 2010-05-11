@@ -44,9 +44,9 @@ var runServ = function () {
     new App().run(req, resp);
   }).listen(config.port, hostname);
 
-  var msg = '';
-  msg += opts.serverRoot ? 'Development server (' + opts.serverRoot + ')' : 'Server';
-  msg += ' running at ';
+  var msg = 'Geddy running ';
+  msg += opts.serverRoot ? 'from source (' + opts.serverRoot + ') ' : '';
+  msg += 'at ';
   msg += hostname ? 'http://' + hostname + ':' + config.port : 'port ' + config.port
   sys.puts(msg);
 };
