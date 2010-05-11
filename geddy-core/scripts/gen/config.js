@@ -20,7 +20,7 @@ var config = new function () {
   /*
   this.environment = 'development';
   this.hostname = null;
-  this.port = 8000;
+  this.port = 4000;
   this.detailedErrors = true;
   this.sessions = {
     store: 'memory',

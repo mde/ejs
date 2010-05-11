@@ -76,9 +76,9 @@ create an app. Run `geddy` to start the server.
     Created app bytor.
     mde@localhost:~/work$ cd bytor
     mde@localhost:~/work/bytor$ geddy
-    Server running at http://127.0.0.1:8000/
+    Server running at http://127.0.0.1:4000/
 
-Go to http://localhost:8000/, and you should see:
+Go to http://localhost:4000/, and you should see:
 
 Attention all planets of the Solar Federation
 
@@ -94,7 +94,7 @@ resource. The route will be set up automatically for you.
     Created view templates.
 
 Restart Geddy, and you'll see the new route working. Hit your
-new route -- for example, http://localhost:8000/snow_dogs.json,
+new route -- for example, http://localhost:4000/snow_dogs.json,
 and you should see something like this:
 
 {"method":"index","params":{"extension":"json"}}

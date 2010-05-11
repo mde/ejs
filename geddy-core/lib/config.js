@@ -24,7 +24,7 @@ var Config = function (opts) {
   
   this.environment = 'development';
   this.hostname = null;
-  this.port = 8000;
+  this.port = 4000;
   this.dirname = opts.geddyRoot;
   this.staticFilePath = this.dirname + '/public';
   this.detailedErrors = true;
