@@ -216,6 +216,8 @@ Response.prototype = new function () {
           if (!chunk) {
             fs.close(fd);
             _this.resp.end();
+            log.debug('FILE: sent static file ' + filepath + '\nFinished handling request in ' +
+                ((new Date().getTime()) - _this.resp.startTime) + ' ms').flush();
             return;
           }
 

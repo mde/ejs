@@ -44,6 +44,8 @@ exports.User = User;
 model.registerModel('User');
 */
 
+var sys = require('sys');
+
 var model = new function () {
   // Client-side, create GLOBAL ref for top-level execution scope
   if (typeof window != 'undefined') {
@@ -282,6 +284,10 @@ var model = new function () {
       val: val
     };
 
+  };
+
+  this.setDbAdapter = function (adapt) {
+    model.dbAdapter = adapt;
   };
 
 }();

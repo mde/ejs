@@ -32,6 +32,7 @@ util.string = new function () {
     '"': '&quot;',
     '\'': '&#39;'
   };
+  var _UUID_CHARS = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split('');
   // Builds the escape/unescape methods using a common
   // map of characters
   var _buildEscapes = function (direction) {
@@ -140,7 +141,7 @@ util.string = new function () {
   // From Math.uuid.js, http://www.broofa.com/Tools/Math.uuid.js
   // Robert Kieffer (robert@broofa.com), MIT license
   this.uuid = function () {
-    var chars = CHARS, uuid = [], rnd=0, r;
+    var chars = _UUID_CHARS, uuid = [], rnd=0, r;
     for (var i = 0; i < 36; i++) {
       if (i==8 || i==13 ||  i==18 || i==23) {
         uuid[i] = '-';

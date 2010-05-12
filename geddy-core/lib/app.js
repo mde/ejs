@@ -112,7 +112,6 @@ var App = function (initData) {
             else {
               var r = new response.Response(resp);
               r.sendFile(path);
-              log.debug('FILE: sent static file ' + path).flush();
             }
           });
         }
@@ -121,7 +120,7 @@ var App = function (initData) {
       // Sadly, this doesn't catch errors in callbacks
       catch (e) {
         errors.respond(resp, e);
-        log.warn('OOPS: ' + req.url + ' not found.').flush();
+        //log.warn('OOPS: ' + req.url + ' not found.').flush();
       }
     });
 

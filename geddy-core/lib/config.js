@@ -35,14 +35,21 @@ var Config = function (opts) {
     key: 'sid',
     expiry: 14 * 24 * 60 * 60
   };
+  
   /*
   this.database = {
-    adapter: 'couchdb'
-    dbHostname: 'localhost',
+    adapter: 'postgresql',
+    hostname: 'localhost',
+    dbName: 'geddy_db',
+    username: 'postgres',
+    password: null
+  };
+  this.database = {
+    adapter: 'couchdb',
+    hostname: 'localhost',
     dbName: 'geddy_db',
     dbPort: 5984
   };
-  
   this.sessions = {
     store: 'couchdb',
     key: 'sid',

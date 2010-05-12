@@ -41,6 +41,7 @@ var Init = function (config, callback) {
   GLOBAL.config = config;
   GLOBAL.router = require(config.dirname + '/config/router').router;
   GLOBAL.hooks = hooks;
+  GLOBAL.model = model;
   GLOBAL.log = require('geddy-util/lib/meta');
   
   this.registerControllers = function (err, dirList) {
@@ -75,6 +76,11 @@ var Init = function (config, callback) {
     }
   };
 
+  this.loadDBAdapter = function () {
+    var adapt = require('geddy-model/lib/adapters/' + config.database.adapter);
+    model.setDbAdapter(adapt);
+  };
+
   this.loadPlugins = function () {
     var plugins = config.plugins;
     var path;
@@ -90,6 +96,9 @@ var Init = function (config, callback) {
 
   // Synchronous actions
   // ----------
+  if (config.database) {
+    this.loadDBAdapter();
+  }
   this.loadPlugins();
 
   // Asynchronous actions

@@ -37,6 +37,8 @@ var optsReg = {
 };
 var opts = parseopts.parse(args, optsReg);
 
+require.paths.unshift(opts.geddyRoot + '/lib/');
+
 var runServ = function () {
   var hostname;
   if (config.hostname) { hostname = config.hostname; }
