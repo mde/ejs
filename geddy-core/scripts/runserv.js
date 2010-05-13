@@ -29,8 +29,6 @@ var App;
 
 var args = process.argv.slice(2);
 
-sys.p(args);
-
 var optsReg = {
   geddyRoot: ['-r', '--geddy-root'],
   serverRoot: ['-x', '--server-root'],
