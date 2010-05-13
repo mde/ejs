@@ -42,7 +42,7 @@ done
 
 if [ $USE_SOURCE = 0 ]
 then
-  node ~/.node_libraries/geddy-core/scripts/runserv.js -r `pwd` $@
+  node ~/.node_libraries/geddy-core/scripts/startserv.js -r `pwd` $@
 else
-  export NODE_PATH=${SOURCE_DIR}; node ${SOURCE_DIR}/geddy-core/runserv.js -r `pwd` $@
+  export NODE_PATH=${SOURCE_DIR}; node ${SOURCE_DIR}/geddy-core/startserv.js -r `pwd` $@
 fi

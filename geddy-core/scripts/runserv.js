@@ -28,12 +28,16 @@ var Init = require('geddy-core/lib/init').Init;
 var App;
 
 var args = process.argv.slice(2);
+
+sys.p(args);
+
 var optsReg = {
   geddyRoot: ['-r', '--geddy-root'],
   serverRoot: ['-x', '--server-root'],
   host: ['-h', '--host'],
   port: ['-p', '--port'],
-  environment: ['-e', '--environment']
+  environment: ['-e', '--environment'],
+  restart: ['-Q', '--restart']
 };
 var opts = parseopts.parse(args, optsReg);
 
@@ -46,16 +50,19 @@ var runServ = function () {
     new App().run(req, resp);
   }).listen(config.port, hostname);
 
-  var msg = 'Geddy running ';
-  msg += opts.serverRoot ? 'from source (' + opts.serverRoot + ') ' : '';
-  msg += 'at ';
-  msg += hostname ? 'http://' + hostname + ':' + config.port : 'port ' + config.port
-  sys.puts(msg);
+  if (!opts.restart) {
+    var msg = 'Geddy running ';
+    msg += opts.serverRoot ? 'from source (' + opts.serverRoot + ') ' : '';
+    msg += 'at ';
+    msg += hostname ? 'http://' + hostname + ':' + config.port : 'port ' + config.port
+    sys.puts(msg);
+  }
 };
 
 config = new Config(opts);
 // Initialize the app, passing in the config, and runServ at its callback
 new Init(config, runServ);
+// Get the app constructor, once init has completed
 App = require('geddy-core/lib/app').App;
 
 
