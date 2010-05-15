@@ -72,14 +72,18 @@ exports.tasks = {
       
       // Add the controller file
       // ----
-      var names = nameParam.split(',');
-      var nameSingular = names[0];
-      // TODO: No fancy pluralization yet
-      var namePlural = names[1] || nameSingular + 's';
+      var n = nameParam.split(',');
+      var names = {filename: {}, constructor: {}, property: {}};
+      names.filename.singular = n[0];
+      // TODO: No fancy inflections yet
+      names.filename.plural = n[1] || names.filename.singular + 's';
       
-      // Convert underscores to camelCase, e.g., 'NeilPeart'
-      var nameSingularConverted = util.string.camelize(nameSingular, true);
-      var namePluralConverted = util.string.camelize(namePlural, true);
+      // Convert underscores to camelCase, e.g., 'neilPeart'
+      names.property.singular = util.string.camelize(names.filename.singular, false);
+      names.property.plural = util.string.camelize(names.filename.plural, false);
+      // Convert underscores to camelCase with init cap, e.g., 'NeilPeart'
+      names.constructor.singular = util.string.camelize(names.filename.singular, true);
+      names.constructor.plural = util.string.camelize(names.filename.plural, true);
       
       // Model
       // ----
@@ -87,8 +91,8 @@ exports.tasks = {
       text = fs.readFileSync(__dirname + '/gen/resource_model.ejs', 'utf8');
       // Stick in the model name
       var templ = new fleegix.ejs.Template({text: text});
-      templ.process({data: {nameSingular: nameSingularConverted}});
-      filePath = './app/models/' + nameSingular + '.js';
+      templ.process({data: {names: names}});
+      filePath = './app/models/' + names.filename.singular + '.js';
       fs.writeFileSync(filePath, templ.markup, 'utf8');
       sys.puts('[ADDED] ' + filePath);
 
@@ -98,8 +102,8 @@ exports.tasks = {
       text = fs.readFileSync(__dirname + '/gen/resource_controller.ejs', 'utf8');
       // Stick in the controller name
       var templ = new fleegix.ejs.Template({text: text});
-      templ.process({data: {namePlural: namePluralConverted}});
-      filePath = './app/controllers/' + namePlural + '.js';
+      templ.process({data: {names: names}});
+      filePath = './app/controllers/' + names.filename.plural + '.js';
       fs.writeFileSync(filePath, templ.markup, 'utf8');
       sys.puts('[ADDED] ' + filePath);
 
@@ -110,14 +114,34 @@ exports.tasks = {
       text = fs.readFileSync(filePath, 'utf8');
       // Add the new resource route just above the export
       routerArr = text.split('exports.router');
-      routerArr[0] += 'router.resource(\'' +  namePlural + '\');\n';
+      routerArr[0] += 'router.resource(\'' +  names.filename.plural + '\');\n';
       text = routerArr.join('exports.router');
       fs.writeFileSync(filePath, text, 'utf8');
-      sys.puts('resources ' + namePlural + ' route added to ' + filePath);
+      sys.puts('resources ' + names.filename.plural + ' route added to ' + filePath);
+
+      // Add inflections map
+      // ----
+      var canon = names.constructor.singular;
+      try {
+        text = fs.readFileSync('./config/inflections.js', 'utf8');
+      }
+      catch (e) {
+        text = 'var inflections = {};\n';
+      }
+      text += 'var ' + canon + ' = ' + JSON.stringify(names) + ';\n';
+      text += "inflections['" + names.filename.singular + "'] = " + canon + ";\n"
+      text += "inflections['" + names.filename.plural + "'] = " + canon + ";\n"
+      text += "inflections['" + names.constructor.singular + "'] = " + canon + ";\n"
+      text += "inflections['" + names.constructor.plural + "'] = " + canon + ";\n"
+      text += "inflections['" + names.property.singular + "'] = " + canon + ";\n"
+      text += "inflections['" + names.property.plural + "'] = " + canon + ";\n"
+      text += 'for (var p in inflections) { exports[p] = inflections[p]; }\n';
+      fs.writeFileSync('./config/inflections.js', text, 'utf8');
+      sys.puts('Create inflections map.');
       
       var cmds = [
-        'mkdir -p ./app/views/' + namePlural,
-        'cp ~/.node_libraries/geddy-core/scripts/gen/views/* ' + './app/views/' + namePlural + '/'
+        'mkdir -p ./app/views/' + names.filename.plural,
+        'cp ~/.node_libraries/geddy-core/scripts/gen/views/* ' + './app/views/' + names.filename.plural + '/'
       ]
       runCmds(cmds, function () {
         sys.puts('Created view templates.');

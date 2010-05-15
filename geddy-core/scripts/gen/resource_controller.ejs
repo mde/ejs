@@ -1,5 +1,5 @@
 
-var <%= namePlural %> = function () {
+var <%= names.constructor.plural %> = function () {
   this.respondsWith = ['text', 'json', 'html'];
 
   this.index = function (params) {
@@ -34,5 +34,5 @@ var <%= namePlural %> = function () {
 
 };
 
-exports.<%= namePlural %> = <%= namePlural %>;
+exports.<%= names.constructor.plural %> = <%= names.constructor.plural %>;
 

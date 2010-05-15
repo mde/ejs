@@ -70,6 +70,7 @@ var model = new function () {
           ret[p] = {};
           fromItem = props[p];
           toItem = ret[p];
+          // Don't copy over the list of validations from the definition
           for (var n in fromItem) {
             if (n == 'validations') {
               continue;
@@ -80,6 +81,9 @@ var model = new function () {
         return ret;
       };
 
+    // FIXME: A better way to do this would be to map virtual properties
+    // to instances from constructors defined by the adapter --
+    // rather than just mapping a bunch of string keys to method names
     var createVirtualPropertyMethod = function (_this, virtualPropertyName, methodName, args) {
       return function () {
         model.dbAdapter.virtual(_this, virtualPropertyName, methodName, arguments);
@@ -101,14 +105,39 @@ var model = new function () {
       return prop;
     };
 
+    var createAssociations = function () {
+        var defBase = model.modelRegistry[def.name];
+        sys.p(defBase);
+        var assoc = defBase.associations;
+        var created;
+        for (var p in assoc) {
+          created = created || {};
+          created[p] = {};
+          for (var q in assoc[p]) {
+            created[p][q] = {ids: []};
+          }
+        }
+        return created;
+    };
+
     // Base constructor function for all model items
-    return function () {
+    return function (params) {
+
+      this.saved = params.saved || false;
       
       this.type = def.name;
 
-      this.properties = createPropertyList(false);
-      
-      this.virtualProperties = createPropertyList(true);
+      if (params.saved) {
+        this.id = params.id;
+        this.properties = params.properties;
+        this.virtualProperties = params.virtualProperties;
+        this.associations = params.associations;
+      }
+      else {
+        this.properties = createPropertyList(false);
+        this.virtualProperties = createPropertyList(true);
+        this.associations = createAssociations();
+      }
 
       this.valid = function () {
         return !this.errors;
@@ -132,6 +161,16 @@ var model = new function () {
         }
       };
 
+      this.toString = function () {
+        var obj = {};
+        obj.id = this.id;
+        obj.type = this.type;
+        for (var p in this.properties) {
+          obj[p] = this[p];
+        }
+        return JSON.stringify(obj);
+      }
+      
       var virtuals = this.virtualProperties;
       for (var p in virtuals) {
         this[p] = createVirtualProperty(this, p, virtuals[p]);
@@ -196,7 +235,7 @@ var model = new function () {
   };
 
   this.createObject = function (typeName, params) {
-    var obj = new GLOBAL[typeName](typeName);
+    var obj = new GLOBAL[typeName](params);
     var type = model.modelRegistry[typeName];
     var validateProperties = type.properties;
     var validated = null;
@@ -296,6 +335,7 @@ model.Model = function (name) {
   this.name = name;
   this.properties = {};
   this.virtualProperties = {};
+  this.associations = {};
 };
 
 model.Property = function (name, datatype, o) {
@@ -548,6 +588,30 @@ model.ModelItemDefinitionBase = function (name) {
   for (var p in model.validators) {
     this['validates' + util.string.capitalize(p)] = _getValidator(p);
   }
+
+  this.hasMany = function (datatype, opts) {
+    var key = inflections[datatype];
+    if (!key) {
+      throw new Error('Unknown model "' + datatype + '"')
+    }
+    key = key.constructor.plural;
+    var def = model.modelRegistry[this.name];
+    var assoc = def.associations.hasMany || {};
+    assoc[key] = {};
+    def.associations.hasMany = assoc;
+  };
+
+  this.belongsTo = function (datatype, opts) {
+    var key = inflections[datatype];
+    if (!key) {
+      throw new Error('Unknown model "' + datatype + '"')
+    }
+    key = key.constructor.plural;
+    var def = model.modelRegistry[this.name];
+    var assoc = def.associations.belongsTo || {};
+    assoc[key] = {};
+    def.associations.belongsTo = assoc;
+  };
 
   model.modelRegistry[name] = new model.Model(name);
 };
