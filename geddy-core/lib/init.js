@@ -43,7 +43,7 @@ var Init = function (config, callback) {
   GLOBAL.hooks = hooks;
   GLOBAL.model = model;
   GLOBAL.log = require('geddy-util/lib/meta');
-  GLOBAL.inflections = require(config.dirname + '/config/inflections');
+  //GLOBAL.inflections = require(config.dirname + '/config/inflections');
   
   this.registerControllers = function (err, dirList) {
     if (err) {
