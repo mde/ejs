@@ -132,9 +132,16 @@ Controller.prototype = new function () {
   
   this.formatters = {
     json: function (content) {
+      var toJson = content.toJson || content.toJSON;
+      if (typeof toJson == 'function') {
+        return toJson.call(content);
+      }
       return JSON.stringify(content);
     },
     text: function (content) {
+      if (typeof content.toString == 'function') {
+        return content.toString();
+      }
       return JSON.stringify(content);
     }
   };
@@ -299,7 +306,7 @@ Controller.prototype = new function () {
     // Curry the partial method to use the current node as the
     // parent in subsequent calls
     params.partial = function (part, parm) {
-      return _this.partial.call(_this, part, parm, node);
+      return _this.partial.call(_this, part, {params: parm}, node);
     };
    
     if (!url) {

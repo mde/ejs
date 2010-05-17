@@ -107,7 +107,6 @@ var model = new function () {
 
     var createAssociations = function () {
         var defBase = model.modelRegistry[def.name];
-        sys.p(defBase);
         var assoc = defBase.associations;
         var created;
         for (var p in assoc) {
@@ -169,7 +168,9 @@ var model = new function () {
           obj[p] = this[p];
         }
         return JSON.stringify(obj);
-      }
+      };
+
+      this.toJson = this.toString;
       
       var virtuals = this.virtualProperties;
       for (var p in virtuals) {
@@ -182,12 +183,22 @@ var model = new function () {
   var _createStaticMethodsMixin = function (name) {
     var obj = {};
     
-    obj.create = function (params) {
-      return model.createObject(name, params);
+    obj.create = function () {
+      var args = Array.prototype.slice.call(arguments);
+      args.unshift(name);
+      return model.createObject.apply(model, args);
     };
 
-    obj.load = function (data, callback) {
-      return model.dbAdapter.load(name, data, callback);
+    obj.find = function () {
+      var args = Array.prototype.slice.call(arguments);
+      args.unshift(name);
+      return model.dbAdapter.find.apply(model.dbAdapter, args);
+    };
+
+    obj.all = function () {
+      var args = Array.prototype.slice.call(arguments);
+      args.unshift(name);
+      return model.dbAdapter.all.apply(model.dbAdapter, args);
     };
 
     return obj;

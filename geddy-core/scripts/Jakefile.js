@@ -21,9 +21,9 @@ var fs = require('fs');
 
 exports.tasks = {
   'default': {
-    'desc': 'Installs the Geddy Web-app development framework',
-    'deps': [],
-    'task': function () {
+    'desc': 'Installs the Geddy Web-app development framework'
+    , 'deps': []
+    , 'task': function () {
       var cmds = [
         'mkdir -p ~/.node_libraries',
         'cp -R ./dist/* ~/.node_libraries/',
@@ -34,12 +34,12 @@ exports.tasks = {
         sys.puts('Geddy installed.');
       });
     }
-  },
+  }
 
-  'app': {
-    'desc': 'Creates a new Geddy app scaffold.',
-    'deps': [],
-    'task': function (appName) {
+  , 'app': {
+    'desc': 'Creates a new Geddy app scaffold.'
+    , 'deps': []
+    , 'task': function (appName) {
       var dir = appName;
       var cmds = [
         'mkdir -p ./' + dir,
@@ -58,12 +58,12 @@ exports.tasks = {
         sys.puts('Created app ' + dir + '.');
       });
     }
-  },
+  }
   
-  'resource': {
-    'desc': '',
-    'deps': [],
-    'task': function (nameParam) {
+  , 'resource': {
+    'desc': ''
+    , 'deps': []
+    , 'task': function (nameParam) {
       var util = {};
       var text;
       var filePath;
@@ -145,6 +145,74 @@ exports.tasks = {
       ]
       runCmds(cmds, function () {
         sys.puts('Created view templates.');
+      });
+    }
+  }
+
+  , 'scaffold': {
+    'desc': 'Creates a scaffold for CRUD operations on a resource.'
+    , 'deps': []
+    , 'task': function (nameParam) {
+      var def, props, prop, modelKey, modelDirName, fileName;
+      var text = '';
+      // Set up a minimal environment for intepreting the model
+      GLOBAL.util = {};
+      GLOBAL.util.meta = require('geddy-util/lib/meta');
+      GLOBAL.util.string = require('geddy-util/lib/string');
+      GLOBAL.config = {dirname: process.cwd()};
+      GLOBAL.inflections = require(config.dirname + '/config/inflections');
+      var model = require('geddy-model/lib/model');
+
+      fs.readdir('./app/models', function (err, res) {
+
+        modelKey = inflections[nameParam].constructor.singular;
+        modelDirName = inflections[nameParam].filename.plural;
+        
+        model.registerModels(err, res);
+        def = model.modelRegistry[modelKey];
+        props = def.properties;
+        text += '<form method="post" action="<%= params.formAction %>">\n';
+        for (p in props) {
+          prop = props[p];
+          text += '<div>' + util.string.capitalize(p);
+          switch (prop.datatype) {
+            case 'String':
+              text += '</div>\n'
+              text += '<div><input type="text" id="' + p + '" name="' + p + '" value="<%= params.' + p + ' || \'\' %>" size="24"/></div>\n';
+              break;
+            case 'Number':
+            case 'int':
+              text += '</div>\n'
+              text += '<div><input type="text" id="' + p + '" name="' + p + '" value="<%= params.' + p + ' || \'\' %>" size="8"/></div>\n';
+              break;
+            case 'Boolean':
+              text += '&nbsp;<input type="checkbox" id="' + p + '" name="' + p + '" value="true"/></div>\n';
+              break;
+          }
+        }
+        text += '<input type="submit" value="Submit"/>\n'
+        text += '</form>\n'
+        
+        fileName = config.dirname + '/app/views/' +
+            modelDirName + '/_form.html.ejs';
+        fs.writeFileSync(fileName, text, 'utf8');
+
+        text = fs.readFileSync(__dirname + '/gen/views/add_scaffold.html.ejs', 'utf8');
+        fileName = config.dirname + '/app/views/' +
+            modelDirName + '/add.html.ejs';
+        fs.writeFileSync(fileName, text, 'utf8');
+
+        text = fs.readFileSync(__dirname + '/gen/views/edit_scaffold.html.ejs', 'utf8');
+        fileName = config.dirname + '/app/views/' +
+            modelDirName + '/edit.html.ejs';
+        fs.writeFileSync(fileName, text, 'utf8');
+
+        text = fs.readFileSync(__dirname + '/gen/views/index_scaffold.html.ejs');
+        text = text.replace(/###controller###/g, modelDirName);
+        fileName = config.dirname + '/app/views/' +
+            modelDirName + '/index.html.ejs';
+        fs.writeFileSync(fileName, text, 'utf8');
+
       });
     }
   }
