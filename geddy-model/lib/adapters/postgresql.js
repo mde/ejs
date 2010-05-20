@@ -62,9 +62,12 @@ var adapter = new function () {
     });
   };
 
-  this.remove = function (modelItem, callback) {
-    conn.query("DELETE FROM geddy_data WHERE uuid = '" +
-        uuid + "';", function (err, rows) {
+  this.remove = function (dataType, uuidParam, callback) {
+    uuids = typeof uuidParam == 'string' ? [uuidParam] : uuidParam;
+    uuids = "'" + uuids.join("', '") + "'";
+    sql = "DELETE FROM geddy_data WHERE uuid in (" + uuids + ");";
+    sys.puts(sql);
+    conn.query(sql, function (err, rows) {
         callback(err, rows);
     });
   };
@@ -195,6 +198,13 @@ var adapter = new function () {
     _fetchItems(params, true);
   };
 
+  this.update = function (dataType, uuidParam, params, callback) {
+    this.find(dataType, uuidParam, function (err, items) {
+      if (err) throw err;
+      var item = items[0];
+      item.updateAttributes(params, callback);
+    });
+  };
 
 }();
 

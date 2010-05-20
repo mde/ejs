@@ -174,6 +174,11 @@ Controller.prototype = new function () {
     errors.respond(this.response, err);
   };
 
+  this.transfer = function (act) {
+    this.params.action = act;
+    this[act](this.params);
+  };
+
   this.respond = function (content, format) {
     // format and contentType are set at the same time
     var negotiated = this.negotiateContent(format);
@@ -306,7 +311,7 @@ Controller.prototype = new function () {
     // Curry the partial method to use the current node as the
     // parent in subsequent calls
     params.partial = function (part, parm) {
-      return _this.partial.call(_this, part, {params: parm}, node);
+      return _this.partial.call(_this, part, parm, node);
     };
    
     if (!url) {

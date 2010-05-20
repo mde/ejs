@@ -44,12 +44,15 @@ exports.User = User;
 model.registerModel('User');
 */
 
-var sys = require('sys');
+var sys;
 
 var model = new function () {
   // Client-side, create GLOBAL ref for top-level execution scope
   if (typeof window != 'undefined') {
     window.GLOBAL = window;
+  }
+  else {
+    sys = require('sys');
   }
 
   this.dbAdapter = null;
@@ -121,7 +124,6 @@ var model = new function () {
 
     // Base constructor function for all model items
     return function (params) {
-
       this.saved = params.saved || false;
       
       this.type = def.name;
@@ -160,6 +162,11 @@ var model = new function () {
         }
       };
 
+      this.updateAttributes = function (params, callback) {
+        model.updateItem(this, params);
+        this.save(callback);
+      };
+
       this.toString = function () {
         var obj = {};
         obj.id = this.id;
@@ -186,19 +193,43 @@ var model = new function () {
     obj.create = function () {
       var args = Array.prototype.slice.call(arguments);
       args.unshift(name);
-      return model.createObject.apply(model, args);
+      return model.createItem.apply(model, args);
     };
 
     obj.find = function () {
+      if (!model.dbAdapter) {
+        throw new Error('dbAdapter is not defined.');
+      }
       var args = Array.prototype.slice.call(arguments);
       args.unshift(name);
       return model.dbAdapter.find.apply(model.dbAdapter, args);
     };
 
     obj.all = function () {
+      if (!model.dbAdapter) {
+        throw new Error('dbAdapter is not defined.');
+      }
       var args = Array.prototype.slice.call(arguments);
       args.unshift(name);
       return model.dbAdapter.all.apply(model.dbAdapter, args);
+    };
+
+    obj.update = function () {
+      if (!model.dbAdapter) {
+        throw new Error('dbAdapter is not defined.');
+      }
+      var args = Array.prototype.slice.call(arguments);
+      args.unshift(name);
+      return model.dbAdapter.update.apply(model.dbAdapter, args);
+    };
+
+    obj.remove = function () {
+      if (!model.dbAdapter) {
+        throw new Error('dbAdapter is not defined.');
+      }
+      var args = Array.prototype.slice.call(arguments);
+      args.unshift(name);
+      return model.dbAdapter.remove.apply(model.dbAdapter, args);
     };
 
     return obj;
@@ -245,16 +276,59 @@ var model = new function () {
     GLOBAL[p] = ModelItem;
   };
 
-  this.createObject = function (typeName, params) {
-    var obj = new GLOBAL[typeName](params);
-    var type = model.modelRegistry[typeName];
-    var validateProperties = type.properties;
+  this.createItem = function (typeName, params) {
+    var item = new GLOBAL[typeName](params);
+    
+    this.updateFromParams(item, params);
+    
+    // Have to pass the full params to validation so we can
+    // do validations like the password confirmation that involve
+    // multiple fields
+    item = this.validateItem(item, params);
+    
+    // After-create hook
+    if (typeof item.afterCreate == 'function') {
+      item.afterCreate();
+    }
+    return item;
+  };
+
+  this.updateItem = function (item, params) {
+    this.updateFromParams(item, params);
+    
+    // Have to pass the full params to validation so we can
+    // do validations like the password confirmation that involve
+    // multiple fields
+    item = this.validateItem(item, params);
+    
+    // After-update hook
+    if (typeof item.afterUpdate == 'function') {
+      item.afterUpdate();
+    }
+    return item;
+
+  };
+
+  this.updateFromParams = function (item, params) {
+    for (p in item.properties) {
+      item[p] = params[p];
+    }
+    return this;
+  };
+  
+  this.validateItem = function (item, params) {
+    var type = model.modelRegistry[item.type];
+    var properties = type.properties;
     var validated = null;
     var errs = null;
     var val;
-    for (var p in validateProperties) {
-      val = params[p];
-      validated = this.validateProperty(validateProperties[p], params);
+    
+    // May be revalidating, clear errors
+    delete item.errors;
+
+    for (var p in properties) {
+      val = item[p];
+      validated = this.validateProperty(properties[p], params);
       // If there are any failed validations, the errs param
       // contains an Object literal keyed by field name, and the
       // error message for the first failed validation for that
@@ -263,22 +337,17 @@ var model = new function () {
         errs = errs || {};
         errs[p] = validated.err;
       }
-      // Otherwise add this property the the return obj
+      // Otherwise add this property the the return item 
       else {
-        obj[p] = validated.val;
+        item[p] = validated.val;
       }
     }
 
     if (errs) {
-      obj.errors = errs;
+      item.errors = errs;
     }
 
-    // After-create hook
-    if (typeof obj.afterCreate == 'function') {
-      obj.afterCreate();
-    }
-    
-    return obj;
+    return item;
   };
 
   /*

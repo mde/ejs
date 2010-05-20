@@ -51,6 +51,7 @@ exports.tasks = {
         'mkdir -p ./' + dir + '/lib',
         'cp ~/.node_libraries/geddy-core/scripts/gen/router.js ' + dir + '/config/',
         'cp ~/.node_libraries/geddy-core/scripts/gen/config.js ' + dir + '/config/',
+        'cp ~/.node_libraries/geddy-core/scripts/gen/inflections.js ' + dir + '/config/',
         'cp ~/.node_libraries/geddy-core/scripts/gen/main.js ' + dir + '/app/controllers/',
         'cp ~/.node_libraries/geddy-core/scripts/gen/application.js ' + dir + '/app/controllers/'
       ]
@@ -65,7 +66,7 @@ exports.tasks = {
     , 'deps': []
     , 'task': function (nameParam) {
       var util = {};
-      var text;
+      var text, contents;
       var filePath;
       var fleegix = require('../lib/fleegix');
       util.string = require('../../geddy-util/lib/string');
@@ -122,12 +123,10 @@ exports.tasks = {
       // Add inflections map
       // ----
       var canon = names.constructor.singular;
-      try {
-        text = fs.readFileSync('./config/inflections.js', 'utf8');
-      }
-      catch (e) {
-        text = 'var inflections = {};\n';
-      }
+      contents = fs.readFileSync('./config/inflections.js', 'utf8');
+      var last = 'for (var p in inflections) { exports[p] = inflections[p]; }';
+      contents = contents.replace(last, '');
+      text = '';
       text += 'var ' + canon + ' = ' + JSON.stringify(names) + ';\n';
       text += "inflections['" + names.filename.singular + "'] = " + canon + ";\n"
       text += "inflections['" + names.filename.plural + "'] = " + canon + ";\n"
@@ -135,9 +134,10 @@ exports.tasks = {
       text += "inflections['" + names.constructor.plural + "'] = " + canon + ";\n"
       text += "inflections['" + names.property.singular + "'] = " + canon + ";\n"
       text += "inflections['" + names.property.plural + "'] = " + canon + ";\n"
-      text += 'for (var p in inflections) { exports[p] = inflections[p]; }\n';
-      fs.writeFileSync('./config/inflections.js', text, 'utf8');
-      sys.puts('Create inflections map.');
+      contents += text;
+      contents += last;
+      fs.writeFileSync('./config/inflections.js', contents, 'utf8');
+      sys.puts('Updated inflections map.');
       
       var cmds = [
         'mkdir -p ./app/views/' + names.filename.plural,
@@ -186,7 +186,7 @@ exports.tasks = {
               text += '<div><input type="text" id="' + p + '" name="' + p + '" value="<%= params.' + p + ' || \'\' %>" size="8"/></div>\n';
               break;
             case 'Boolean':
-              text += '&nbsp;<input type="checkbox" id="' + p + '" name="' + p + '" value="true"/></div>\n';
+              text += '&nbsp;<input type="checkbox" id="' + p + '" name="' + p + '" value="true" <%= if (params.' + p + ') { \'checked\'; }  %>/></div>\n';
               break;
           }
         }
