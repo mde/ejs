@@ -293,12 +293,12 @@ var model = new function () {
   this.createItem = function (typeName, params) {
     var item = new GLOBAL[typeName](params);
     
-    this.updateFromParams(item, params);
+    this.simpleUpdateFromParams(item, params);
     
     // Have to pass the full params to validation so we can
     // do validations like the password confirmation that involve
     // multiple fields
-    item = this.validateItem(item, params);
+    item = this.validateAndUpdateFromParams(item, params);
     
     // After-create hook
     if (typeof item.afterCreate == 'function') {
@@ -308,12 +308,12 @@ var model = new function () {
   };
 
   this.updateItem = function (item, params) {
-    this.updateFromParams(item, params);
+    this.simpleUpdateFromParams(item, params);
     
     // Have to pass the full params to validation so we can
     // do validations like the password confirmation that involve
     // multiple fields
-    item = this.validateItem(item, params);
+    item = this.validateAndUpdateFromParams(item, params);
     
     // After-update hook
     if (typeof item.afterUpdate == 'function') {
@@ -323,14 +323,14 @@ var model = new function () {
 
   };
 
-  this.updateFromParams = function (item, params) {
+  this.simpleUpdateFromParams = function (item, params) {
     for (p in item.properties) {
       item[p] = params[p];
     }
     return this;
   };
   
-  this.validateItem = function (item, params) {
+  this.validateAndUpdateFromParams = function (item, params) {
     var type = model.modelRegistry[item.type];
     var properties = type.properties;
     var validated = null;
@@ -341,7 +341,6 @@ var model = new function () {
     delete item.errors;
 
     for (var p in properties) {
-      val = item[p];
       validated = this.validateProperty(properties[p], params);
       // If there are any failed validations, the errs param
       // contains an Object literal keyed by field name, and the
@@ -370,7 +369,7 @@ var model = new function () {
   this.validateProperty = function (prop, params) {
 
     var name = prop.name;
-    var val = prop[name];
+    var val = params[name];
 
     // Validate for the base datatype only if there actually is a value --
     // e.g., undefined will fail the validation for Number, even if the
