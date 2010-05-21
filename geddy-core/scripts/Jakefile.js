@@ -177,18 +177,21 @@ exports.tasks = {
         for (p in props) {
           prop = props[p];
           text += '<div>' + util.string.capitalize(p);
-          switch (prop.datatype) {
-            case 'String':
+          switch (prop.datatype.toLowerCase()) {
+            case 'string':
               text += '</div>\n'
-              text += '<div><input type="text" id="' + p + '" name="' + p + '" value="<%= params.' + p + ' || \'\' %>" size="24"/></div>\n';
+              text += '<div><input type="text" id="' + p + '" name="' + p +
+                  '" value="<%= params.' + p + ' || \'\' %>" size="24"/></div>\n';
               break;
-            case 'Number':
+            case 'number':
             case 'int':
               text += '</div>\n'
-              text += '<div><input type="text" id="' + p + '" name="' + p + '" value="<%= params.' + p + ' || \'\' %>" size="8"/></div>\n';
+              text += '<div><input type="text" id="' + p + '" name="' + p +
+                  '" value="<%= params.' + p + ' || \'\' %>" size="8"/></div>\n';
               break;
-            case 'Boolean':
-              text += '&nbsp;<input type="checkbox" id="' + p + '" name="' + p + '" value="true" <%= if (params.' + p + ') { \'checked\'; }  %>/></div>\n';
+            case 'boolean':
+              text += '&nbsp;<input type="checkbox" id="' + p + '" name="' + p +
+                  '" value="true" <%= if (params.' + p + ') { \'checked\'; }  %>/></div>\n';
               break;
           }
         }

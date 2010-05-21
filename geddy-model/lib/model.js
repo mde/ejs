@@ -20,10 +20,10 @@
 // Example model file, would be app/models/user.js:
 
 var User = function () {
-  this.property('login', 'String', {required: true});
-  this.property('password', 'String', {required: true});
-  this.property('lastName', 'String');
-  this.property('firstName', 'String');
+  this.property('login', 'string', {required: true});
+  this.property('password', 'string', {required: true});
+  this.property('lastName', 'string');
+  this.property('firstName', 'string');
 
   this.validatesPresent('login');
   this.validatesFormat('login', /[a-z]+/, {message: 'Subdivisions!'});
@@ -370,13 +370,13 @@ var model = new function () {
   this.validateProperty = function (prop, params) {
 
     var name = prop.name;
-    var val = params[name];
+    var val = prop[name];
 
     // Validate for the base datatype only if there actually is a value --
     // e.g., undefined will fail the validation for Number, even if the
     // field is optional
     if (val) {
-      var result = model.datatypes[prop.datatype](prop.name, val);
+      var result = model.datatypes[prop.datatype.toLowerCase()](prop.name, val);
       if (result.err) {
         return {
           err: result.err,
@@ -472,14 +472,14 @@ model.datatypes = new function () {
       !(obj.propertyIsEnumerable('length'));
   };
 
-  this.String = function (name, val) {
+  this.string = function (name, val) {
     return {
       err: null,
       val: String(val)
     };
   };
 
-  this.Number = function (name, val) {
+  this.number = function (name, val) {
     if (isNaN(val)) {
       return {
         err: 'Field "' + name + '" must be a Number.',
@@ -506,7 +506,7 @@ model.datatypes = new function () {
     };
   };
 
-  this.Boolean = function (name, val) {
+  this.boolean = function (name, val) {
     var validated;
     switch (typeof val) {
       case 'string':
@@ -544,7 +544,7 @@ model.datatypes = new function () {
     };
   };
 
-  this.Object = function (name, val) {
+  this.object = function (name, val) {
     // Sure, Arrays are technically Objects, but we're treating Array as a
     // separate datatype. Remember, instanceof Array fails across window
     // boundaries, so let's also make sure the Object doesn't have a 'length'
@@ -561,7 +561,7 @@ model.datatypes = new function () {
     };
   };
 
-  this.Array = function (name, val) {
+  this.array = function (name, val) {
     // instanceof check can fail across window boundaries. Also check
     // to make sure there's a length property
     if (!_isArray(val)) {
