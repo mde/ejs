@@ -66,7 +66,6 @@ var adapter = new function () {
     uuids = typeof uuidParam == 'string' ? [uuidParam] : uuidParam;
     uuids = "'" + uuids.join("', '") + "'";
     sql = "DELETE FROM geddy_data WHERE uuid in (" + uuids + ");";
-    sys.puts(sql);
     conn.query(sql, function (err, rows) {
         callback(err, rows);
     });

@@ -28,16 +28,7 @@ var Init = require('geddy-core/lib/init').Init;
 var App;
 
 var args = process.argv.slice(2);
-
-var optsReg = {
-  geddyRoot: ['-r', '--geddy-root'],
-  serverRoot: ['-x', '--server-root'],
-  host: ['-h', '--host'],
-  port: ['-p', '--port'],
-  environment: ['-e', '--environment'],
-  restart: ['-Q', '--restart']
-};
-var opts = parseopts.parse(args, optsReg);
+var opts = parseopts.parse(args);
 
 require.paths.unshift(opts.geddyRoot + '/lib/');
 

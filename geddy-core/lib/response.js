@@ -19,6 +19,7 @@
 var fs = require('fs');
 var sys = require('sys');
 var fleegix = require('./fleegix');
+var errors = require('geddy-core/lib/errors');
 var log = require('geddy-core/lib/log');
 
 var response = new function () {
@@ -192,11 +193,12 @@ var Response = function (resp) {
 
 Response.prototype = new function () {
   this.send = function (content, statusCode, headers) {
+    var success = !errors.errorTypes[statusCode];
     var s = statusCode || 200;
     var h = headers || {};
     this.writeHeaders(s, h);
     this.writeBody(content);
-    this.finish();
+    this.finish(success);
   };
 
   this.sendFile = function (filepath) {
@@ -245,10 +247,12 @@ Response.prototype = new function () {
     this.resp.write(content);
   };
 
-  this.finish = function () {
+  this.finish = function (success) {
     this.resp.end();
-    log.debug('Finished handling request in ' +
-        ((new Date().getTime()) - this.resp.startTime) + ' ms').flush();
+    if (success) {
+      log.debug('Finished handling request in ' +
+          ((new Date().getTime()) - this.resp.startTime) + ' ms').flush();
+    }
   };
 
 }();

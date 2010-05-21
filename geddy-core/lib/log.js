@@ -81,7 +81,6 @@ var log = new function () {
       file = config.logFile;
       path = config.dirname + '/' + file
 
-      sys.puts(''); // newline (ugly)
       sys.log(msgs.join("\n"));
 
       if (file) {

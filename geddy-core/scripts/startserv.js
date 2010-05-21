@@ -8,16 +8,7 @@ var args = process.argv.slice(2);
 var Config = require('geddy-core/lib/config').Config;
 util.meta = require('geddy-util/lib/meta');
 
-var optsReg = {
-  geddyRoot: ['-r', '--geddy-root'],
-  serverRoot: ['-x', '--server-root'],
-  host: ['-h', '--host'],
-  port: ['-p', '--port'],
-  environment: ['-e', '--environment'],
-  restart: ['-Q', '--restart']
-};
-
-var opts = parseopts.parse(args.slice(), optsReg);
+var opts = parseopts.parse(args.slice());
 config = new Config(opts);
 var serverRoot;
 if (opts.serverRoot) {
@@ -31,13 +22,13 @@ var child;
 
 var startServ = function (restart) {
   passArgs = restart ? args.concat('-Q', 'true') : args;
-  child  = spawn('node', args);
+  child  = spawn('node', passArgs);
   child.stdout.addListener('data', function (data) {
-    sys.print(data);
+    sys.puts(data);
   });
   child.stderr.addListener('data', function (data) {
-    //throw new Error(data);
-    sys.print(data);
+    process.kill(child.pid);
+    throw new Error(data);
   });
   child.addListener('exit', function (code) {
     //sys.puts('child process exited with code ' + code);

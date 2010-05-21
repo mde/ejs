@@ -19,13 +19,16 @@ var response = require('geddy-core/lib/response');
 var sys = require('sys');
 
 var errors = new function () {
-  var _errorTypes = {
+  
+  var _this = this;
+  this.errorTypes = {
     400: 'Bad Request',
     401: 'Unauthorized',
     404: 'Not Found',
     406: 'Not Acceptable',
     500: 'Internal Server Error'
   };
+  
   var errorType;
   var errorConstructor;
   var createConstructor = function (code, errorType) {
@@ -38,9 +41,9 @@ var errors = new function () {
     errorConstructor.prototype = new Error();
     return errorConstructor; 
   };
-  for (var code in _errorTypes) {
+  for (var code in this.errorTypes) {
     // Strip spaces
-    errorType = _errorTypes[code].replace(/ /g, '');
+    errorType = this.errorTypes[code].replace(/ /g, '');
     this[errorType + 'Error'] = createConstructor(code, errorType);
   }
   // For repetitively redundant name
@@ -58,7 +61,7 @@ var errors = new function () {
       msg = e.stack || e.message || String(e);
       msg = msg.replace(/\n/g, '<br/>');
     }
-    msg = '<h3>Error: ' + code + ' ' +  _errorTypes[code] + '</h3>' + msg;
+    msg = '<h3>Error: ' + code + ' ' +  _this.errorTypes[code] + '</h3>' + msg;
     r.send(msg, code, {'Content-Type': 'text/html'});
   };
 

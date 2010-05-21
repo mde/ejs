@@ -162,11 +162,13 @@ exports.tasks = {
       GLOBAL.config = {dirname: process.cwd()};
       GLOBAL.inflections = require(config.dirname + '/config/inflections');
       var model = require('geddy-model/lib/model');
+      var fleegix = require('../lib/fleegix');
 
       fs.readdir('./app/models', function (err, res) {
 
-        modelKey = inflections[nameParam].constructor.singular;
-        modelDirName = inflections[nameParam].filename.plural;
+        var names = inflections[nameParam]; 
+        modelKey = names.constructor.singular;
+        modelDirName = names.filename.plural;
         
         model.registerModels(err, res);
         def = model.modelRegistry[modelKey];
@@ -212,6 +214,16 @@ exports.tasks = {
         fileName = config.dirname + '/app/views/' +
             modelDirName + '/index.html.ejs';
         fs.writeFileSync(fileName, text, 'utf8');
+
+        // Scaffold version of Controller
+        // ----
+        // Grab the template text
+        text = fs.readFileSync(__dirname + '/gen/resource_controller_scaffold.ejs', 'utf8');
+        // Stick in the controller name
+        var templ = new fleegix.ejs.Template({text: text});
+        templ.process({data: {names: names}});
+        filePath = './app/controllers/' + names.filename.plural + '.js';
+        fs.writeFileSync(filePath, templ.markup, 'utf8');
 
       });
     }

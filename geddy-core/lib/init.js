@@ -32,18 +32,18 @@ var Init = function (config, callback) {
   var _this = this;
   var _callback = callback;
 
-  GLOBAL.util = {};
-  GLOBAL.util.meta = require('geddy-util/lib/meta');
-  GLOBAL.util.string = require('geddy-util/lib/string');
-  GLOBAL.controllerRegistry = {};
-  GLOBAL.templateRegistry = {};
-  GLOBAL.pluginRegistry = {};
-  GLOBAL.config = config;
-  GLOBAL.router = require(config.dirname + '/config/router').router;
-  GLOBAL.hooks = hooks;
-  GLOBAL.model = model;
-  GLOBAL.log = require('geddy-util/lib/meta');
-  GLOBAL.inflections = require(config.dirname + '/config/inflections');
+  global.util = {};
+  global.util.meta = require('geddy-util/lib/meta');
+  global.util.string = require('geddy-util/lib/string');
+  global.controllerRegistry = {};
+  global.templateRegistry = {};
+  global.pluginRegistry = {};
+  global.config = config;
+  global.router = require(config.dirname + '/config/router').router;
+  global.hooks = hooks;
+  global.model = model;
+  global.log = require('geddy-util/lib/meta');
+  global.inflections = require(config.dirname + '/config/inflections');
   
   this.registerControllers = function (err, dirList) {
     if (err) {

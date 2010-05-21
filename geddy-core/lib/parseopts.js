@@ -1,6 +1,16 @@
 
 var parseopts = new function () {
-  this.parse = function (args, optsReg) {
+
+  var optsReg = {
+    geddyRoot: ['-r', '--geddy-root']
+    , serverRoot: ['-x', '--server-root']
+    , host: ['-h', '--host']
+    , port: ['-p', '--port']
+    , environment: ['-e', '--environment']
+    , restart: ['-Q', '--restart']
+  };
+
+  this.parse = function (args) {
     var opts = {};
     var optsReverseMap = {};
     var optsItem;
