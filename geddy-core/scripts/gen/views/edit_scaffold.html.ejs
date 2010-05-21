@@ -1,0 +1,22 @@
+<%
+var infl = inflections[params.controller];
+params.formAction = '/' + infl.filename.plural + '/' + params.id + '.html?_method=put';
+%>
+<html>
+  <body>
+    <h3>
+      Edit <%= inflections[params.controller].constructor.singular %> <%= params.id %>
+    </h3>
+    <% if (params.errors) { %>
+    <p>
+      <div>Errors:</div>
+      <% for (var p in params.errors) { %>
+      <div><%=  p %>: <%= params.errors[p] %></div>
+      <% } %>
+      <% } %>
+    </p>
+    <%= partial('_form', {params: params}); %>
+  </body>
+</html>
+
+

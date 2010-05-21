@@ -1,0 +1,34 @@
+<% var items = params.items; %>
+<html>
+  <body>
+    <p>
+      <a href="/###controller###/add.html">Create new item</a>
+    <p>
+    <h3>
+      <%= inflections[params.controller].constructor.plural %>
+    </h3>
+    <ul>
+    <% if (!items.length) { %>
+      (No items)
+    <% } else { %>
+    <% 
+      var item;
+      for (var i = 0, ii = items.length; i < ii; i++) {
+      item = items[i];
+    %>
+      <li>
+        <%= item.toString(); %>
+        <a href="/###controller###/<%= item.id %>.html">[show]</a>
+        <a href="/###controller###/<%= item.id %>.html;edit">[edit]</a>
+        <form method="post" action="/###controller###/<%= item.id %>.html?_method=delete"
+            style="display: inline;"
+            onclick="if (!window.confirm('Delete?')) {return false;}">
+          <input type="submit" value="delete"/>
+        </form>
+      </li>
+    <% } %>
+    <% } %>
+    </ul>
+  </body>
+</html>
+
