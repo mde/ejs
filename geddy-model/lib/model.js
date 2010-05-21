@@ -89,7 +89,7 @@ var model = new function () {
     // rather than just mapping a bunch of string keys to method names
     var createVirtualPropertyMethod = function (_this, virtualPropertyName, methodName, args) {
       return function () {
-        model.dbAdapter.virtual(_this, virtualPropertyName, methodName, arguments);
+        return model.dbAdapter.virtual(_this, virtualPropertyName, methodName, arguments);
       }
     };
 
@@ -231,7 +231,20 @@ var model = new function () {
       args.unshift(name);
       return model.dbAdapter.remove.apply(model.dbAdapter, args);
     };
+    
+    // Singleton usage -- only one possible instance, and the
+    // dbAdapter knows how to get it
+    obj.getInstance = function () {
+      if (!model.dbAdapter) {
+        throw new Error('dbAdapter is not defined.');
+      }
+      var args = Array.prototype.slice.call(arguments);
+      args.unshift(name);
+      return model.dbAdapter.getInstance.apply(model.dbAdapter, args);
+    };
 
+    obj.load = obj.find;
+    
     return obj;
   };
 
@@ -255,6 +268,7 @@ var model = new function () {
     // Ref to any original prototype, so we can copy stuff off it
     var origPrototype = ModelItemDefinition.prototype;
     ModelItemDefinition.prototype = new model.ModelItemDefinitionBase(p);
+    model.modelRegistry[p] = new model.Model(p);
     var def = new ModelItemDefinition();
     // Create the constructor function to use when calling static
     // ModalItem.create. Gives them the proper instanceof value,
@@ -693,7 +707,6 @@ model.ModelItemDefinitionBase = function (name) {
     def.associations.belongsTo = assoc;
   };
 
-  model.modelRegistry[name] = new model.Model(name);
 };
 
 // Server-side, add everything to exports
