@@ -151,13 +151,13 @@ util.date = new function () {
       this.getSupportedFormats() + ']{1}', 'g');
 
   this.strftime = function (dt, format) {
-    var d = null;
+    if (!dt) { return '' }
+    
+    var d = dt;
     var pats = [];
     var dts = [];
     var str = format;
 
-    // If no dt, use current date
-    d = dt ? dt : new Date();
     // Allow either Date obj or UTC stamp
     d = typeof dt == 'number' ? new Date(dt) : dt;
 

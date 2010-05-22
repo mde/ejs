@@ -73,6 +73,7 @@ var Config = function (opts) {
 
   this.dateFormat = '%m/%d/%Y';
   //this.dateFormat = '%F';
+  this.timeFormat = '%T';
 
   // Override with app-level opts
   var opts = require(this.dirname + '/config/config');

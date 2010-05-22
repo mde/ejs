@@ -172,8 +172,11 @@ var model = new function () {
         var obj = {};
         obj.id = this.id;
         obj.type = this.type;
-        for (var p in this.properties) {
-          obj[p] = this[p];
+        var props = this.properties;
+        var formatter; 
+        for (var p in props) {
+          formatter = model.formatters[props[p].datatype];
+          obj[p] = typeof formatter == 'function' ? formatter(this[p]) : this[p];
         }
         return JSON.stringify(obj);
       };
@@ -448,8 +451,8 @@ model.VirtualProperty = function (name, datatype, o) {
  */
 model.datatypes = new function () {
   
-  var _DATE_PAT = /^(\d{4})(?:\-|\/|\.)(\d{1,2})(?:\-|\/|\.)(\d{1,2})$/;
-  var _US_DATE_PAT = /^(\d{1,2})(?:\-|\/|\.)(\d{1,2})(?:\-|\/|\.)(\d{4})$/;
+  var _DATE_PAT = /^(\d{4})(?:\-|\/|\.)(\d{1,2})(?:\-|\/|\.)(\d{1,2})/;
+  var _US_DATE_PAT = /^(\d{1,2})(?:\-|\/|\.)(\d{1,2})(?:\-|\/|\.)(\d{4})/;
   var _DATETIME_PAT = /^(\d{4})(?:\-|\/|\.)(\d{1,2})(?:\-|\/|\.)(\d{1,2})(?:T| )?(\d{2})?(?::)?(\d{2})?(?::)?(\d{2})?(?:\.)?(\d+)?$/;
   var _TIME_PAT = /^(\d{2})?(?::)?(\d{2})?(?::)?(\d{2})?(?:\.)?(\d+)?$/;
 
@@ -781,6 +784,17 @@ model.validators = {
   }
 
 };
+
+model.formatters = new function () {
+  this.date = function (val) {
+    return util.date.strftime(val, config.dateFormat);
+  };
+
+  this.time = function (val) {
+    return util.date.strftime(val, config.timeFormat);
+  };
+
+}();
 
 model.ModelItemDefinitionBase = function (name) {
   this.name = name;
