@@ -1,9 +1,9 @@
 
 var ByTor = function () {
-  this.property('rush', 'Number');
+  this.property('rush', 'number');
   this.property('flyByNight', 'int');
-  this.property('caressOfSteel', 'Object');
-  this.property('farewellToKings', 'Array');
+  this.property('caressOfSteel', 'object');
+  this.property('farewellToKings', 'array');
 };
 
 model.registerModel('ByTor');
@@ -65,7 +65,7 @@ var testDatatypes = new function () {
     byTor = ByTor.create({caressOfSteel: []});
     jum.assertNotUndefined(byTor.errors.caressOfSteel);
 
-    // String, should fail
+    // string, should fail
     byTor = ByTor.create({caressOfSteel: 'As gray traces of dawn ...'});
     jum.assertNotUndefined(byTor.errors.caressOfSteel);
 
@@ -81,7 +81,7 @@ var testDatatypes = new function () {
     byTor = ByTor.create({farewellToKings: {}});
     jum.assertNotUndefined(byTor.errors.farewellToKings);
 
-    // String, should fail
+    // string, should fail
     byTor = ByTor.create({farewellToKings: 'As gray traces of dawn ...'});
     jum.assertNotUndefined(byTor.errors.farewellToKings);
 

@@ -1,9 +1,9 @@
 
 var User = function () {
-  this.property('login', 'String', {required: true});
-  this.property('password', 'String', {required: true});
-  this.property('lastName', 'String');
-  this.property('firstName', 'String');
+  this.property('login', 'string', {required: true});
+  this.property('password', 'string', {required: true});
+  this.property('lastName', 'string');
+  this.property('firstName', 'string');
 
   this.validatesPresent('login');
   this.validatesFormat('login', /[a-z]+/, {message: 'Subdivisions!'});

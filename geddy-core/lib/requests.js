@@ -22,7 +22,7 @@ var requests = new function () {
   this.idIncr = 0;
   
   this.addRequest = function (param) {
-    var reqId = new String(this.idIncr);
+    var reqId = String(this.idIncr);
     this.outstanding[reqId] = {
       method: param.method || 'GET',
       url: param.url,
