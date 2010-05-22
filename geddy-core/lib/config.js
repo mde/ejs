@@ -36,6 +36,7 @@ var Config = function (opts) {
     expiry: 14 * 24 * 60 * 60
   };
   
+  /*
   this.database = {
     adapter: 'postgresql',
     hostname: 'localhost',
@@ -43,7 +44,6 @@ var Config = function (opts) {
     username: 'postgres',
     password: null
   };
-  /*
   this.database = {
     adapter: 'couchdb',
     hostname: 'localhost',
