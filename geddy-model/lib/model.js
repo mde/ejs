@@ -448,9 +448,10 @@ model.VirtualProperty = function (name, datatype, o) {
  */
 model.datatypes = new function () {
   
-  var _DATE_PAT = /(\d{4})(?:\-|\/|\.)(\d{1,2})(?:\-|\/|\.)(\d{1,2})/;
-  var _US_DATE_PAT = /(\d{1,2})(?:\-|\/|\.)(\d{1,2})(?:\-|\/|\.)(\d{4})/;
-  var _DATETIME_PAT = /(\d{4})(?:\-|\/|\.)(\d{1,2})(?:\-|\/|\.)(\d{1,2})(?:T| )?(\d{2})?(?::)?(\d{2})?(?::)?(\d{2})?(?:\.)?(\d+)?/; 
+  var _DATE_PAT = /^(\d{4})(?:\-|\/|\.)(\d{1,2})(?:\-|\/|\.)(\d{1,2})$/;
+  var _US_DATE_PAT = /^(\d{1,2})(?:\-|\/|\.)(\d{1,2})(?:\-|\/|\.)(\d{4})$/;
+  var _DATETIME_PAT = /^(\d{4})(?:\-|\/|\.)(\d{1,2})(?:\-|\/|\.)(\d{1,2})(?:T| )?(\d{2})?(?::)?(\d{2})?(?::)?(\d{2})?(?:\.)?(\d+)?$/;
+  var _TIME_PAT = /^(\d{2})?(?::)?(\d{2})?(?::)?(\d{2})?(?:\.)?(\d+)?$/;
 
   var _isArray = function (obj) {
     return obj &&
@@ -661,6 +662,47 @@ model.datatypes = new function () {
     else {
       return {
         err: 'Field "' + name + '" must be in a valid datetime format.',
+        val: null
+      };
+    }
+  };
+
+  this.time = function (name, val) {
+    var dt;
+    var h, mi, s, ms;
+    var matches;
+    if (val instanceof Date || typeof val.getFullYear == 'function') {
+      dt = val;
+    }
+    // Value preparsed, looks like [hh, mi, ss, ms]
+    else if (_isArray(val)) {
+      h = parseInt(val[3], 10) || 0;
+      mi = parseInt(val[4], 10) || 0;
+      s = parseInt(val[5], 10) || 0;
+      ms = parseInt(val[6], 10) || 0;
+      dt = new Date(0, 0, 0, h, mi, s, ms);
+    }
+    else if (typeof val == 'string') {
+      matches = val.match(_TIME_PAT);
+      if (matches) {
+        matches.shift(); // First match is entire match
+        h = parseInt(matches.shift(), 10) || 0;
+        mi = parseInt(matches.shift(), 10) || 0;
+        s = parseInt(matches.shift(), 10) || 0;
+        ms = parseInt(matches.shift(), 10) || 0;
+        dt = new Date(0, 0, 0, h, mi, s, ms);
+      }
+    }
+
+    if (dt) {
+      return {
+        err: null,
+        val: dt
+      };
+    }
+    else {
+      return {
+        err: 'Field "' + name + '" must be in a valid time format.',
         val: null
       };
     }
