@@ -159,6 +159,7 @@ exports.tasks = {
       GLOBAL.util = {};
       GLOBAL.util.meta = require('geddy-util/lib/meta');
       GLOBAL.util.string = require('geddy-util/lib/string');
+      GLOBAL.util.date = require('geddy-util/lib/date');
       GLOBAL.config = {dirname: process.cwd()};
       GLOBAL.inflections = require(config.dirname + '/config/inflections');
       var model = require('geddy-model/lib/model');
@@ -179,10 +180,15 @@ exports.tasks = {
           text += '<div>' + util.string.capitalize(p);
           switch (prop.datatype.toLowerCase()) {
             case 'string':
-            case 'date':
               text += '</div>\n'
               text += '<div><input type="text" id="' + p + '" name="' + p +
                   '" value="<%= params.' + p + ' || \'\' %>" size="24"/></div>\n';
+              break;
+            case 'date':
+              text += '</div>\n'
+              text += '<div><input type="text" id="' + p + '" name="' + p +
+                  '" value="<%= util.date.strftime(params.' + p +
+                  ', config.dateFormat) || \'\' %>" size="24"/></div>\n';
               break;
             case 'number':
             case 'int':

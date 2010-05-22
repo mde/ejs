@@ -35,6 +35,7 @@ var Init = function (config, callback) {
   global.util = {};
   global.util.meta = require('geddy-util/lib/meta');
   global.util.string = require('geddy-util/lib/string');
+  global.util.date = require('geddy-util/lib/date');
   global.controllerRegistry = {};
   global.templateRegistry = {};
   global.pluginRegistry = {};

@@ -36,7 +36,6 @@ var Config = function (opts) {
     expiry: 14 * 24 * 60 * 60
   };
   
-  /*
   this.database = {
     adapter: 'postgresql',
     hostname: 'localhost',
@@ -44,6 +43,7 @@ var Config = function (opts) {
     username: 'postgres',
     password: null
   };
+  /*
   this.database = {
     adapter: 'couchdb',
     hostname: 'localhost',
@@ -70,6 +70,9 @@ var Config = function (opts) {
     }
   };
   */
+
+  this.dateFormat = '%m/%d/%Y';
+  //this.dateFormat = '%F';
 
   // Override with app-level opts
   var opts = require(this.dirname + '/config/config');
