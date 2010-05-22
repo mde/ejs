@@ -179,6 +179,7 @@ exports.tasks = {
           text += '<div>' + util.string.capitalize(p);
           switch (prop.datatype.toLowerCase()) {
             case 'string':
+            case 'date':
               text += '</div>\n'
               text += '<div><input type="text" id="' + p + '" name="' + p +
                   '" value="<%= params.' + p + ' || \'\' %>" size="24"/></div>\n';

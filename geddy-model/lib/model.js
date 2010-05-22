@@ -47,6 +47,7 @@ model.registerModel('User');
 var sys;
 
 var model = new function () {
+  
   // Client-side, create GLOBAL ref for top-level execution scope
   if (typeof window != 'undefined') {
     window.GLOBAL = window;
@@ -293,11 +294,6 @@ var model = new function () {
   this.createItem = function (typeName, params) {
     var item = new GLOBAL[typeName](params);
     
-    this.simpleUpdateFromParams(item, params);
-    
-    // Have to pass the full params to validation so we can
-    // do validations like the password confirmation that involve
-    // multiple fields
     item = this.validateAndUpdateFromParams(item, params);
     
     // After-create hook
@@ -308,11 +304,7 @@ var model = new function () {
   };
 
   this.updateItem = function (item, params) {
-    this.simpleUpdateFromParams(item, params);
     
-    // Have to pass the full params to validation so we can
-    // do validations like the password confirmation that involve
-    // multiple fields
     item = this.validateAndUpdateFromParams(item, params);
     
     // After-update hook
@@ -323,13 +315,6 @@ var model = new function () {
 
   };
 
-  this.simpleUpdateFromParams = function (item, params) {
-    for (p in item.properties) {
-      item[p] = params[p];
-    }
-    return this;
-  };
-  
   this.validateAndUpdateFromParams = function (item, params) {
     var type = model.modelRegistry[item.type];
     var properties = type.properties;
@@ -462,6 +447,10 @@ model.VirtualProperty = function (name, datatype, o) {
  * Datatype verification -- may modify the value by casting
  */
 model.datatypes = new function () {
+  
+  var _DATE_PAT = /(\d{4})(?:\-|\/|\.)(\d{1,2})(?:\-|\/|\.)(\d{1,2})/;
+  var _US_DATE_PAT = /(\d{1,2})(?:\-|\/|\.)(\d{1,2})(?:\-|\/|\.)(\d{4})/;
+  var _DATETIME_PAT = /(\d{4})(?:\-|\/|\.)(\d{1,2})(?:\-|\/|\.)(\d{1,2})(T| )?(\d{2})?(?::)?(\d{2})?(?::)?(\d{2})?(\.\d+)?/;
 
   var _isArray = function (obj) {
     return obj &&
@@ -573,6 +562,58 @@ model.datatypes = new function () {
       err: null,
       val: val
     };
+  };
+  
+  this.date = function (name, val) {
+    var dt;
+    var y, m, d;
+    var matches;
+    if (val instanceof Date || typeof val.getFullYear == 'function') {
+      dt = val;
+    }
+    // Value preparsed, looks like [yyyy, mm, dd]
+    else if (_isArray(val)) {
+      y = parseInt(val[0], 10);
+      m = parseInt(val[1], 10) - 1;
+      d = parseInt(val[2]);
+      dt = new Date(y, m, d);
+    }
+    else if (typeof val == 'string') {
+      matches = val.match(_DATE_PAT);
+      if (matches) {
+        matches.shift(); // First match is entire match
+        y = parseInt(matches.shift(), 10);
+        m = parseInt(matches.shift(), 10) - 1;
+        d = parseInt(matches.shift(), 10);
+        dt = new Date(y, m, d);
+      }
+      else {
+        matches = val.match(_US_DATE_PAT);
+        if (matches) {
+          matches.shift(); // First match is entire match
+          m = parseInt(matches.shift(), 10) - 1;
+          y = parseInt(matches.shift(), 10);
+          d = parseInt(matches.shift(), 10);
+          dt = new Date(y, m, d);
+        }
+      }
+    }
+    else if (typeof val == 'number') {
+      dt = new Date(val);
+    }
+
+    if (dt) {
+      return {
+        err: null,
+        val: dt
+      };
+    }
+    else {
+      return {
+        err: 'Field "' + name + '" must be in a valid date format.',
+        val: null
+      };
+    }
   };
 
 }();
