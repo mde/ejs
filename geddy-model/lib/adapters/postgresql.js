@@ -43,20 +43,57 @@ var adapter = new function () {
   this.save = function (modelItem, callback) {
     var uuid;
     var item;
+    var fields = {};
+    var keys = [];
+    var vals = [];
+    var sql = '';
+
+    // Update track
     if (modelItem.saved) {
       uuid = modelItem.id;
       item = JSON.stringify(modelItem);
-      sql = "UPDATE geddy_data SET updated_at = now(), data = '" +
-          item + "' WHERE uuid = '" + uuid + "';"
+
+      fields = {
+        updated_at: JSON.stringify(modelItem.updatedAt)
+        , data: item
+      };
+      for (var p in fields) {
+        vals.push(p + " = '" + fields[p] + "'");
+      }
+
+      sql += 'UPDATE geddy_data SET';
+      sql += ' ' + vals.join(', ');
+      sql += " WHERE uuid = '" + uuid + "';";
     }
+    // Create track
     else {
+      // Responsibilities of the adapter include:
+      // 1. Setting the UUID on the item
+      // 2. setting the saved flag before saving
       uuid = util.string.uuid();
       modelItem.id = uuid;
       modelItem.saved = true;
+
+      // Serialize item after setting saved flag
       item = JSON.stringify(modelItem);
-      sql = "INSERT INTO geddy_data (uuid, type, created_at, data) VALUES ('" +
-          uuid + "', '" + modelItem.type + "', now(), '" + item + "');"
+
+      fields = {
+        uuid: uuid
+        , type: modelItem.type
+        , created_at: JSON.stringify(modelItem.createdAt)
+        , data: item
+      };
+      for (var p in fields) {
+        keys.push(p);
+        vals.push("'" + fields[p] + "'");
+      }
+
+      sql += 'INSERT INTO geddy_data';
+      sql += ' (' + keys.join(', ') + ')';
+      sql += ' VALUES';
+      sql += ' (' + vals.join(', ') + ');';
     }
+
     conn.query(sql, function (err, rows) {
         callback(err, modelItem);
     });
@@ -107,7 +144,7 @@ var adapter = new function () {
           if (base) {
             _rows.push(data);
           }
-          
+
           // Pull out ids for any items this item owns
           many = data.associations && data.associations.hasMany;
           if (many) {

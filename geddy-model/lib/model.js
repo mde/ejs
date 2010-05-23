@@ -159,6 +159,9 @@ var model = new function () {
           }
         }
         else {
+          if (this.saved) {
+            this.updatedAt = new Date();
+          }
           return model.dbAdapter.save(this, callback);
         }
       };
@@ -271,8 +274,8 @@ var model = new function () {
     var ModelItemDefinition = _constructorList[p];
     // Ref to any original prototype, so we can copy stuff off it
     var origPrototype = ModelItemDefinition.prototype;
-    ModelItemDefinition.prototype = new model.ModelItemDefinitionBase(p);
     model.modelRegistry[p] = new model.Model(p);
+    ModelItemDefinition.prototype = new model.ModelItemDefinitionBase(p);
     var def = new ModelItemDefinition();
     // Create the constructor function to use when calling static
     // ModalItem.create. Gives them the proper instanceof value,
@@ -298,6 +301,8 @@ var model = new function () {
     var item = new GLOBAL[typeName](params);
     
     item = this.validateAndUpdateFromParams(item, params);
+
+    item.createdAt = new Date();
     
     // After-create hook
     if (typeof item.afterCreate == 'function') {
@@ -337,6 +342,9 @@ var model = new function () {
       if (validated.err) {
         errs = errs || {};
         errs[p] = validated.err;
+        // FIXME: Is there something better to do than just emptying
+        // out the param item when it fails validation?
+        params[p] = null;
       }
       // Otherwise add this property the the return item 
       else {
