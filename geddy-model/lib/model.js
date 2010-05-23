@@ -333,6 +333,16 @@ var model = new function () {
     // May be revalidating, clear errors
     delete item.errors;
 
+    // User-input should never contain these -- but to allow them
+    // to be displayed and manipulated as normal properties, run
+    // them through the normal validation process
+    if (typeof item.createdAt != 'undefined') {
+      params.createdAt = item.createdAt;
+    }
+    if (typeof item.updatedAt != 'undefined') {
+      params.updatedAt = item.updatedAt;
+    }
+
     for (var p in properties) {
       validated = this.validateProperty(properties[p], params);
       // If there are any failed validations, the errs param
@@ -351,6 +361,10 @@ var model = new function () {
         item[p] = validated.val;
       }
     }
+
+    // Again, these should never be incuded in user input
+    delete params.createdAt;
+    delete params.updatedAt;
 
     if (errs) {
       item.errors = errs;
@@ -461,7 +475,7 @@ model.datatypes = new function () {
   
   var _DATE_PAT = /^(\d{4})(?:\-|\/|\.)(\d{1,2})(?:\-|\/|\.)(\d{1,2})/;
   var _US_DATE_PAT = /^(\d{1,2})(?:\-|\/|\.)(\d{1,2})(?:\-|\/|\.)(\d{4})/;
-  var _DATETIME_PAT = /^(\d{4})(?:\-|\/|\.)(\d{1,2})(?:\-|\/|\.)(\d{1,2})(?:T| )?(\d{2})?(?::)?(\d{2})?(?::)?(\d{2})?(?:\.)?(\d+)?$/;
+  var _DATETIME_PAT = /^(\d{4})(?:\-|\/|\.)(\d{1,2})(?:\-|\/|\.)(\d{1,2})(?:T| )?(\d{2})?(?::)?(\d{2})?(?::)?(\d{2})?(?:\.)?(\d+)?/;
   var _TIME_PAT = /^(\d{2})?(?::)?(\d{2})?(?::)?(\d{2})?(?:\.)?(\d+)?$/;
 
   var _isArray = function (obj) {
@@ -860,6 +874,10 @@ model.ModelItemDefinitionBase = function (name) {
     assoc[key] = {};
     def.associations.belongsTo = assoc;
   };
+
+  // Add the base model properties -- these should not be handled by user input
+  this.property('createdAt', 'datetime');
+  this.property('updatedAt', 'datetime');
 
 };
 
