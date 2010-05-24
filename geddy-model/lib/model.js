@@ -48,17 +48,20 @@ var sys;
 
 var model = new function () {
   
+  this.dbAdapter = null;
+  this.modelRegistry = {};
+  this.useTimestamps = true;
+  
   // Client-side, create GLOBAL ref for top-level execution scope
   if (typeof window != 'undefined') {
     window.GLOBAL = window;
+    this.useTimestamps = false;
   }
+  // Server-side
   else {
     sys = require('sys');
   }
 
-  this.dbAdapter = null;
-  this.modelRegistry = {};
-  
   var _constructorList = GLOBAL;
 
   var _createModelItemConstructor = function (def) {
@@ -159,7 +162,7 @@ var model = new function () {
           }
         }
         else {
-          if (this.saved) {
+          if (model.useTimestamps && this.saved) {
             this.updatedAt = new Date();
           }
           return model.dbAdapter.save(this, callback);
@@ -302,7 +305,9 @@ var model = new function () {
     
     item = this.validateAndUpdateFromParams(item, params);
 
-    item.createdAt = new Date();
+    if (this.useTimestamps) {
+      item.createdAt = new Date();
+    }
     
     // After-create hook
     if (typeof item.afterCreate == 'function') {
@@ -876,8 +881,10 @@ model.ModelItemDefinitionBase = function (name) {
   };
 
   // Add the base model properties -- these should not be handled by user input
-  this.property('createdAt', 'datetime');
-  this.property('updatedAt', 'datetime');
+  if (model.useTimestamps) {
+    this.property('createdAt', 'datetime');
+    this.property('updatedAt', 'datetime');
+  }
 
 };
 
