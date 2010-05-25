@@ -1,5 +1,8 @@
 <% var items = params.items; %>
 <html>
+  <head>
+    <link type="text/css" rel="stylesheet" href="/css/master.css"/>
+  </head>
   <body>
     <p>
       <a href="/###controller###/add.html">Create new item</a>
@@ -7,28 +10,44 @@
     <h3>
       <%= inflections[params.controller].constructor.plural %>
     </h3>
-    <ul>
-    <% if (!items.length) { %>
-      (No items)
-    <% } else { %>
-    <% 
-      var item;
-      for (var i = 0, ii = items.length; i < ii; i++) {
-      item = items[i];
-    %>
-      <li>
-        <%= item.toString(); %>
-        <a href="/###controller###/<%= item.id %>.html">[show]</a>
-        <a href="/###controller###/<%= item.id %>.html;edit">[edit]</a>
-        <form method="post" action="/###controller###/<%= item.id %>.html?_method=delete"
-            style="display: inline;"
-            onclick="if (!window.confirm('Delete?')) {return false;}">
-          <input type="submit" value="delete"/>
-        </form>
-      </li>
-    <% } %>
-    <% } %>
-    </ul>
+      <% if (!items.length) { %>
+        (No items)
+      <% } else { %>
+        <table>
+        <tr>
+        <% for (var p in items[0].properties) { %>
+          <th>
+            <%= p; %> 
+          </th>
+        <% } %>
+          <th>
+            &nbsp;
+          </th>
+        </tr>
+        <% 
+          var item;
+          for (var i = 0, ii = items.length; i < ii; i++) {
+          item = items[i];
+        %>
+          <tr>  
+            <% for (var p in item.properties) { %>
+              <td>
+                <%= item[p] || '&nbsp;'; %> 
+              </td>
+            <% } %>
+              <td>
+                <a href="/###controller###/<%= item.id %>.html">[show]</a>
+                <a href="/###controller###/<%= item.id %>.html;edit">[edit]</a>
+                <form method="post" action="/###controller###/<%= item.id %>.html?_method=delete"
+                    style="display: inline;"
+                    onclick="if (!window.confirm('Delete?')) {return false;}">
+                  <input type="submit" value="delete"/>
+                </form>
+              </td>
+          </tr>
+        <% } %>
+        </table>
+      <% } %>
   </body>
 </html>
 

@@ -45,18 +45,21 @@ exports.tasks = {
     , 'task': function (appName) {
       var dir = appName;
       var cmds = [
-        'mkdir -p ./' + dir,
-        'mkdir -p ./' + dir + '/config',
-        'mkdir -p ./' + dir + '/app/models',
-        'mkdir -p ./' + dir + '/app/controllers',
-        'mkdir -p ./' + dir + '/app/views',
-        'mkdir -p ./' + dir + '/public',
-        'mkdir -p ./' + dir + '/lib',
-        'cp ~/.node_libraries/geddy-core/scripts/gen/router.js ' + dir + '/config/',
-        'cp ~/.node_libraries/geddy-core/scripts/gen/config.js ' + dir + '/config/',
-        'cp ~/.node_libraries/geddy-core/scripts/gen/inflections.js ' + dir + '/config/',
-        'cp ~/.node_libraries/geddy-core/scripts/gen/main.js ' + dir + '/app/controllers/',
-        'cp ~/.node_libraries/geddy-core/scripts/gen/application.js ' + dir + '/app/controllers/'
+        'mkdir -p ./' + dir
+        , 'mkdir -p ./' + dir + '/config'
+        , 'mkdir -p ./' + dir + '/app/models'
+        , 'mkdir -p ./' + dir + '/app/controllers'
+        , 'mkdir -p ./' + dir + '/app/views'
+        , 'mkdir -p ./' + dir + '/public'
+        , 'mkdir -p ./' + dir + '/public/js'
+        , 'mkdir -p ./' + dir + '/public/css'
+        , 'mkdir -p ./' + dir + '/lib'
+        , 'cp ~/.node_libraries/geddy-core/scripts/gen/router.js ' + dir + '/config/'
+        , 'cp ~/.node_libraries/geddy-core/scripts/gen/config.js ' + dir + '/config/'
+        , 'cp ~/.node_libraries/geddy-core/scripts/gen/inflections.js ' + dir + '/config/'
+        , 'cp ~/.node_libraries/geddy-core/scripts/gen/main.js ' + dir + '/app/controllers/'
+        , 'cp ~/.node_libraries/geddy-core/scripts/gen/application.js ' + dir + '/app/controllers/'
+        , 'cp ~/.node_libraries/geddy-core/scripts/gen/master.css ' + dir + '/public/css/'
       ]
       runCmds(cmds, function () {
         sys.puts('Created app ' + dir + '.');
@@ -179,6 +182,7 @@ exports.tasks = {
         props = def.properties;
         text += '<form method="post" action="<%= params.formAction %>">\n';
         for (p in props) {
+          // Ignore timestamp fields -- they are owned by the system
           if (p == 'createdAt' || p == 'updatedAt') {
             continue;
           }
@@ -186,8 +190,10 @@ exports.tasks = {
           text += '<div>' + util.string.capitalize(p);
           switch (prop.datatype.toLowerCase()) {
             case 'string':
+              var inputType = (p.toLowerCase().indexOf('password') > -1) ? 'password' : 'text';
               text += '</div>\n'
-              text += '<div><input type="text" id="' + p + '" name="' + p +
+              
+              text += '<div><input type="' + inputType + '" id="' + p + '" name="' + p +
                   '" value="<%= params.' + p + ' || \'\' %>" size="24"/></div>\n';
               break;
             case 'date':

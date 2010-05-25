@@ -3,6 +3,9 @@ var infl = inflections[params.controller];
 params.formAction = '/' + infl.filename.plural + '.html';
 %>
 <html>
+  <head>
+    <link type="text/css" rel="stylesheet" href="/css/master.css"/>
+  </head>
   <body>
     <h3>
       New <%= inflections[params.controller].constructor.singular %>

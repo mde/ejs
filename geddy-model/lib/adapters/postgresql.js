@@ -6,7 +6,7 @@ try {
 catch (e) {
   // createdb -U postgres geddy_db
   // CREATE TABLE geddy_data (uuid VARCHAR(255), type VARCHAR(255), created_at TIMESTAMP, updated_at TIMESTAMP, data TEXT);
-  throw new Error('Postgres adapter requires node_postgres, http://github.com/ry/node_postgres, in lib/');
+  throw new Error('Postgres adapter requires node_postgres, http://github.com/ry/node_postgres');
 }
 
 var sys = require('sys');

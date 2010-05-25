@@ -27,6 +27,13 @@ var config = new function () {
     key: 'sid',
     expiry: 14 * 24 * 60 * 60
   };
+  this.database = {
+    adapter: 'postgresql',
+    hostname: 'localhost',
+    dbName: 'geddy_db',
+    username: 'postgres',
+    password: null
+  };
   */
 }();
 
