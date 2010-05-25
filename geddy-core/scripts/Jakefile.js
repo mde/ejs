@@ -24,9 +24,12 @@ exports.tasks = {
     'desc': 'Installs the Geddy Web-app development framework'
     , 'deps': []
     , 'task': function () {
+      var uid = process.env.SUDO_UID;
+      var gid = process.env.SUDO_GID;
       var cmds = [
         'mkdir -p ~/.node_libraries',
         'cp -R ./dist/* ~/.node_libraries/',
+        'chown -R ' + uid + ':' + gid + ' ~/.node_libraries',
         'cp geddy-core/scripts/geddy-gen /usr/local/bin/',
         'cp geddy-core/scripts/geddy /usr/local/bin/'
       ];
