@@ -179,6 +179,9 @@ exports.tasks = {
         props = def.properties;
         text += '<form method="post" action="<%= params.formAction %>">\n';
         for (p in props) {
+          if (p == 'createdAt' || p == 'updatedAt') {
+            continue;
+          }
           prop = props[p];
           text += '<div>' + util.string.capitalize(p);
           switch (prop.datatype.toLowerCase()) {
@@ -237,7 +240,8 @@ exports.tasks = {
         templ.process({data: {names: names}});
         filePath = './app/controllers/' + names.filename.plural + '.js';
         fs.writeFileSync(filePath, templ.markup, 'utf8');
-
+        
+        sys.puts('Created controller and views for ' + nameParam + '.');
       });
     }
   }
