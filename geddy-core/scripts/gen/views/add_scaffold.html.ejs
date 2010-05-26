@@ -1,24 +1,51 @@
-<%
-var infl = inflections[params.controller];
-params.formAction = '/' + infl.filename.plural + '.html';
-%>
+<@ params.formAction = '/<%= names.filename.plural %>.html'; @>
 <html>
   <head>
+    <script type="text/javascript" src="/js/util/date.js"></script>
+    <script type="text/javascript" src="/js/util/form.js"></script>
+    <script type="text/javascript" src="/js/util/meta.js"></script>
+    <script type="text/javascript" src="/js/util/string.js"></script>
+    <script type="text/javascript" src="/js/util/url.js"></script>
+    <script type="text/javascript" src="/js/models/model.js"></script>
+    <script type="text/javascript" src="/js/models/<%= names.filename.singular %>.js"></script>
+    <script type="text/javascript">
+      var displayErrors = function (err) {
+        var str = '';
+        for (var p in err) {
+          str += p + ':' + err[p] + '\\\\n';
+        }
+        alert(str);
+      };
+
+      var validateSubmit = function () {
+        var form = document.getElementById('modelItemForm');
+        var params = util.form.toObject(form);
+        var item = <%= names.constructor.singular %>.create(params);
+        console.log(item);
+        if (item.valid()) {
+          form.submit();
+        }
+        else {
+          displayErrors(item.errors);
+        }
+      };
+
+    </script>
     <link type="text/css" rel="stylesheet" href="/css/master.css"/>
   </head>
   <body>
     <h3>
-      New <%= inflections[params.controller].constructor.singular %>
+      New <%= names.constructor.singular %>
     </h3>
-    <% if (params.errors) { %>
+    <@ if (params.errors) { @>
     <p>
       <div>Errors:</div>
-      <% for (var p in params.errors) { %>
-      <div><%=  p %>: <%= params.errors[p] %></div>
-      <% } %>
-      <% } %>
+      <@ for (var p in params.errors) { @>
+      <div><@=  p @>: <@= params.errors[p] @></div>
+      <@ } @>
     </p>
-    <%= partial('_form', {params: params}); %>
+    <@ } @>
+    <@= partial('_form', {params: params}); @>
   </body>
 </html>
 

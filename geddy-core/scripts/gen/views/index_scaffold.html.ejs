@@ -1,53 +1,53 @@
-<% var items = params.items; %>
+<@ var items = params.items; @>
 <html>
   <head>
     <link type="text/css" rel="stylesheet" href="/css/master.css"/>
   </head>
   <body>
     <p>
-      <a href="/###controller###/add.html">Create new item</a>
+      <a href="/<%= names.filename.plural %>/add.html">Create new item</a>
     <p>
     <h3>
-      <%= inflections[params.controller].constructor.plural %>
+      <%= names.constructor.plural %>
     </h3>
-      <% if (!items.length) { %>
+      <@ if (!items.length) { @>
         (No items)
-      <% } else { %>
+      <@ } else { @>
         <table>
         <tr>
-        <% for (var p in items[0].properties) { %>
+        <@ for (var p in items[0].properties) { @>
           <th>
-            <%= p; %> 
+            <@= p; @> 
           </th>
-        <% } %>
+        <@ } @>
           <th>
             &nbsp;
           </th>
         </tr>
-        <% 
+        <@ 
           var item;
           for (var i = 0, ii = items.length; i < ii; i++) {
           item = items[i];
-        %>
+        @>
           <tr>  
-            <% for (var p in item.properties) { %>
+            <@ for (var p in item.properties) { @>
               <td>
-                <%= item[p] || '&nbsp;'; %> 
+                <@= item[p] || '&nbsp;'; @> 
               </td>
-            <% } %>
+            <@ } @>
               <td>
-                <a href="/###controller###/<%= item.id %>.html">[show]</a>
-                <a href="/###controller###/<%= item.id %>.html;edit">[edit]</a>
-                <form method="post" action="/###controller###/<%= item.id %>.html?_method=delete"
+                <a href="/<%= names.filename.plural %>/<@= item.id @>.html">[show]</a>
+                <a href="/<%= names.filename.plural %>/<@= item.id @>.html;edit">[edit]</a>
+                <form method="post" action="/<%= names.filename.plural %>/<@= item.id @>.html?_method=delete"
                     style="display: inline;"
                     onclick="if (!window.confirm('Delete?')) {return false;}">
                   <input type="submit" value="delete"/>
                 </form>
               </td>
           </tr>
-        <% } %>
+        <@ } @>
         </table>
-      <% } %>
+      <@ } @>
   </body>
 </html>
 

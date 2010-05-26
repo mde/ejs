@@ -146,8 +146,8 @@ exports.tasks = {
       sys.puts('Updated inflections map.');
       
       var cmds = [
-        'mkdir -p ./app/views/' + names.filename.plural,
-        'cp ~/.node_libraries/geddy-core/scripts/gen/views/* ' + './app/views/' + names.filename.plural + '/'
+        'mkdir -p ./app/views/' + names.filename.plural
+        , 'cp ~/.node_libraries/geddy-core/scripts/gen/views/* ' + './app/views/' + names.filename.plural + '/'
       ]
       runCmds(cmds, function () {
         sys.puts('Created view templates.');
@@ -159,96 +159,133 @@ exports.tasks = {
     'desc': 'Creates a scaffold for CRUD operations on a resource.'
     , 'deps': []
     , 'task': function (nameParam) {
-      var def, props, prop, modelKey, modelDirName, fileName;
-      var text = '';
-      // Set up a minimal environment for intepreting the model
-      GLOBAL.util = {};
-      GLOBAL.util.meta = require('geddy-util/lib/meta');
-      GLOBAL.util.string = require('geddy-util/lib/string');
-      GLOBAL.util.date = require('geddy-util/lib/date');
-      GLOBAL.config = {dirname: process.cwd()};
-      GLOBAL.inflections = require(config.dirname + '/config/inflections');
-      var model = require('geddy-model/lib/model');
-      var fleegix = require('../lib/fleegix');
 
-      fs.readdir('./app/models', function (err, res) {
+      // Does the work of creating the scaffold -- runs after creating
+      // the client-side model JS files
+      var createScaffold = function () {
+        var def, props, prop, modelKey, viewsDirName, fileName, tmpl;
+        var text = '';
+        // Set up a minimal environment for intepreting the model
+        GLOBAL.util = {};
+        GLOBAL.util.meta = require('geddy-util/lib/meta');
+        GLOBAL.util.string = require('geddy-util/lib/string');
+        GLOBAL.util.date = require('geddy-util/lib/date');
+        GLOBAL.config = {dirname: process.cwd()};
+        GLOBAL.inflections = require(config.dirname + '/config/inflections');
+        var model = require('geddy-model/lib/model');
+        var fleegix = require('../lib/fleegix');
 
-        var names = inflections[nameParam]; 
-        modelKey = names.constructor.singular;
-        modelDirName = names.filename.plural;
-        
-        model.registerModels(err, res);
-        def = model.modelRegistry[modelKey];
-        props = def.properties;
-        text += '<form method="post" action="<%= params.formAction %>">\n';
-        for (p in props) {
-          // Ignore timestamp fields -- they are owned by the system
-          if (p == 'createdAt' || p == 'updatedAt') {
-            continue;
+        fs.readdir(config.dirname + '/app/models', function (err, res) {
+
+          var names = inflections[nameParam];
+          modelKey = names.constructor.singular;
+          modelFileName = names.filename.singular;
+          viewsDirName = names.filename.plural;
+          // Load up the model definition
+          model.registerModels(err, res);
+          def = model.modelRegistry[modelKey];
+          props = def.properties;
+         
+          // Client-side file for client-side validation
+          text = fs.readFileSync(config.dirname + '/app/models/' + modelFileName + '.js', 'utf8');
+          // Use client-side registration instead of server-side export
+          text = text.replace('exports.' + modelKey + ' = ' + modelKey + ';',
+              'model.registerModel(\'' + modelKey + '\');');
+          fileName = config.dirname + '/public/js/models/' + modelFileName + '.js';
+          fs.writeFileSync(fileName, text, 'utf8');
+          sys.puts('Created client-side model JavaScript files.');
+          
+          text = '<form id="modelItemForm" method="post" action="<%= params.formAction %>"' +
+              ' onsubmit="validateSubmit(); return false;">\n';
+          for (p in props) {
+            // Ignore timestamp fields -- they are owned by the system
+            if (p == 'createdAt' || p == 'updatedAt') {
+              continue;
+            }
+            prop = props[p];
+            text += '<div>' + util.string.capitalize(p);
+            switch (prop.datatype.toLowerCase()) {
+              case 'string':
+                var inputType = (p.toLowerCase().indexOf('password') > -1) ? 'password' : 'text';
+                text += '</div>\n'
+                
+                text += '<div><input type="' + inputType + '" id="' + p + '" name="' + p +
+                    '" value="<%= params.' + p + ' || \'\' %>" size="24"/></div>\n';
+                break;
+              case 'date':
+                text += '</div>\n'
+                text += '<div><input type="text" id="' + p + '" name="' + p +
+                    '" value="<%= util.date.strftime(params.' + p +
+                    ', config.dateFormat) || \'\' %>" size="24"/></div>\n';
+                break;
+              case 'number':
+              case 'int':
+                text += '</div>\n'
+                text += '<div><input type="text" id="' + p + '" name="' + p +
+                    '" value="<%= params.' + p + ' || \'\' %>" size="8"/></div>\n';
+                break;
+              case 'boolean':
+                text += '&nbsp;<input type="checkbox" id="' + p + '" name="' + p +
+                    '" value="true" <%= if (params.' + p + ') { \'checked\'; }  %>/></div>\n';
+                break;
+            }
           }
-          prop = props[p];
-          text += '<div>' + util.string.capitalize(p);
-          switch (prop.datatype.toLowerCase()) {
-            case 'string':
-              var inputType = (p.toLowerCase().indexOf('password') > -1) ? 'password' : 'text';
-              text += '</div>\n'
-              
-              text += '<div><input type="' + inputType + '" id="' + p + '" name="' + p +
-                  '" value="<%= params.' + p + ' || \'\' %>" size="24"/></div>\n';
-              break;
-            case 'date':
-              text += '</div>\n'
-              text += '<div><input type="text" id="' + p + '" name="' + p +
-                  '" value="<%= util.date.strftime(params.' + p +
-                  ', config.dateFormat) || \'\' %>" size="24"/></div>\n';
-              break;
-            case 'number':
-            case 'int':
-              text += '</div>\n'
-              text += '<div><input type="text" id="' + p + '" name="' + p +
-                  '" value="<%= params.' + p + ' || \'\' %>" size="8"/></div>\n';
-              break;
-            case 'boolean':
-              text += '&nbsp;<input type="checkbox" id="' + p + '" name="' + p +
-                  '" value="true" <%= if (params.' + p + ') { \'checked\'; }  %>/></div>\n';
-              break;
-          }
-        }
-        text += '<input type="submit" value="Submit"/>\n'
-        text += '</form>\n'
-        
-        fileName = config.dirname + '/app/views/' +
-            modelDirName + '/_form.html.ejs';
-        fs.writeFileSync(fileName, text, 'utf8');
+          text += '<input type="submit" value="Submit"/>\n'
+          text += '</form>\n'
+          
+          fileName = config.dirname + '/app/views/' +
+              viewsDirName + '/_form.html.ejs';
+          fs.writeFileSync(fileName, text, 'utf8');
 
-        text = fs.readFileSync(__dirname + '/gen/views/add_scaffold.html.ejs', 'utf8');
-        fileName = config.dirname + '/app/views/' +
-            modelDirName + '/add.html.ejs';
-        fs.writeFileSync(fileName, text, 'utf8');
+          text = fs.readFileSync(__dirname + '/gen/views/add_scaffold.html.ejs');
+          templ = new fleegix.ejs.Template({text: text});
+          templ.process({data: {names: names}});
+          text = templ.markup.replace(/<@/g, '<%').replace(/@>/g, '%>');
+          fileName = config.dirname + '/app/views/' +
+              viewsDirName + '/add.html.ejs';
+          fs.writeFileSync(fileName, text, 'utf8');
 
-        text = fs.readFileSync(__dirname + '/gen/views/edit_scaffold.html.ejs', 'utf8');
-        fileName = config.dirname + '/app/views/' +
-            modelDirName + '/edit.html.ejs';
-        fs.writeFileSync(fileName, text, 'utf8');
+          text = fs.readFileSync(__dirname + '/gen/views/edit_scaffold.html.ejs');
+          templ = new fleegix.ejs.Template({text: text});
+          templ.process({data: {names: names}});
+          text = templ.markup.replace(/<@/g, '<%').replace(/@>/g, '%>');
+          fileName = config.dirname + '/app/views/' +
+              viewsDirName + '/edit.html.ejs';
+          fs.writeFileSync(fileName, text, 'utf8');
 
-        text = fs.readFileSync(__dirname + '/gen/views/index_scaffold.html.ejs');
-        text = text.replace(/###controller###/g, modelDirName);
-        fileName = config.dirname + '/app/views/' +
-            modelDirName + '/index.html.ejs';
-        fs.writeFileSync(fileName, text, 'utf8');
+          text = fs.readFileSync(__dirname + '/gen/views/index_scaffold.html.ejs');
+          templ = new fleegix.ejs.Template({text: text});
+          templ.process({data: {names: names}});
+          text = templ.markup.replace(/<@/g, '<%').replace(/@>/g, '%>');
+          fileName = config.dirname + '/app/views/' +
+              viewsDirName + '/index.html.ejs';
+          fs.writeFileSync(fileName, text, 'utf8');
 
-        // Scaffold version of Controller
-        // ----
-        // Grab the template text
-        text = fs.readFileSync(__dirname + '/gen/resource_controller_scaffold.ejs', 'utf8');
-        // Stick in the controller name
-        var templ = new fleegix.ejs.Template({text: text});
-        templ.process({data: {names: names}});
-        filePath = './app/controllers/' + names.filename.plural + '.js';
-        fs.writeFileSync(filePath, templ.markup, 'utf8');
-        
-        sys.puts('Created controller and views for ' + nameParam + '.');
+          // Scaffold version of Controller
+          // ----
+          // Grab the template text
+          text = fs.readFileSync(__dirname + '/gen/resource_controller_scaffold.ejs', 'utf8');
+          // Stick in the controller name
+          templ = new fleegix.ejs.Template({text: text});
+          templ.process({data: {names: names}});
+          filePath = './app/controllers/' + names.filename.plural + '.js';
+          fs.writeFileSync(filePath, templ.markup, 'utf8');
+          
+          sys.puts('Created controller and views for ' + nameParam + '.');
+        });
+      };
+      
+      // Create the client-side model files, then do the scaffold setup
+      var cmds = [
+        'mkdir -p ./public/js/models' 
+        , 'cp ~/.node_libraries/geddy-model/lib/model.js ./public/js/models/'
+        , 'mkdir -p ./public/js/util' 
+        , 'cp ~/.node_libraries/geddy-util/lib/* ./public/js/util/'
+      ]
+      runCmds(cmds, function () {
+        createScaffold(); 
       });
+
     }
   }
 
