@@ -44,6 +44,9 @@ var runServ = function () {
     msg += opts.serverRoot ? 'from source (' + opts.serverRoot + ') ' : '';
     msg += 'at ';
     msg += hostname ? 'http://' + hostname + ':' + config.port : 'port ' + config.port
+    if (config.environment == 'development') {
+      msg += ' (development mode)'
+    }
     sys.puts(msg);
   }
 };
