@@ -292,6 +292,89 @@ exports.tasks = {
     }
   }
 
+  , 'db:create': {
+    'desc': 'Creates data repositories to be used with a Geddy app.'
+    , 'deps': []
+    , 'task': function () {
+      fs.readdir('./config/environments', function (err, res) {
+        var config;
+        var dirname = process.cwd();
+        var filename;
+        var dbConfig;
+        var cmds;
+        var jsPat = /\.js$/;
+        var create = 'CREATE TABlE geddy_data (uuid VARCHAR(255), type VARCHAR(255), created_at TIMESTAMP, updated_at TIMESTAMP, data TEXT);'
+        for (var i = 0, ii = res.length; i < ii; i++) {
+          cmds = [];
+          filename = res[i];
+          if (!jsPat.test(filename)) {
+            continue;
+          }
+          config = require(dirname + '/config/environments/' + filename.replace(jsPat, ''));
+          dbConfig = config.database;
+          if (dbConfig) {
+            sys.puts('Creating DB for ' + filename + '...');
+            // Postgres only for now
+            if (dbConfig.adapter == 'postgresql') {
+              if (dbConfig.password) {
+                cmds.push("export PGPASS='" + dbConfig.password + "'");
+              }
+              cmds.push('createdb -U ' + dbConfig.username + ' -w ' + dbConfig.dbName);
+              cmds.push('echo "db created"');
+              cmds.push('psql -U ' + dbConfig.username + ' -d ' + dbConfig.dbName + ' -w -c "' + create + '"');
+              if (dbConfig.password) {
+                cmds.push("unset PGPASS");
+              }
+            }
+          }
+          if (cmds.length) {
+            runCmds(cmds, function () {
+            });
+          }
+        }
+      });
+    }
+  }
+
+  , 'db:drop': {
+    'desc': 'Drops all data repositories for a Geddy app.'
+    , 'deps': []
+    , 'task': function () {
+      fs.readdir('./config/environments', function (err, res) {
+        var config;
+        var dirname = process.cwd();
+        var filename;
+        var dbConfig;
+        var cmds = [];
+        var jsPat = /\.js$/;
+        for (var i = 0, ii = res.length; i < ii; i++) {
+          filename = res[i];
+          if (!jsPat.test(filename)) {
+            continue;
+          }
+          config = require(dirname + '/config/environments/' + filename.replace(jsPat, ''));
+          dbConfig = config.database;
+          if (dbConfig) {
+            // Postgres only for now
+            if (dbConfig.adapter == 'postgresql') {
+              if (dbConfig.password) {
+                cmds.push("export PGPASS='" + dbConfig.password + "'");
+              }
+              cmds.push('dropdb -U ' + dbConfig.username + ' -w ' + dbConfig.dbName);
+              if (dbConfig.password) {
+                cmds.push("unset PGPASS");
+              }
+            }
+          }
+          if (cmds.length) {
+            runCmds(cmds, function () {
+            });
+          }
+        }
+      });
+    }
+  }
+
 };
 
 // Runs an array of shell commands asynchronously, calling the
