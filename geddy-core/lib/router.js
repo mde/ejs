@@ -29,8 +29,7 @@ var sys = require('sys');
  */
 
 var Router = function () {
-  // From BomberJS: http://bomber.obtdev.com/
-  const KEY_PATTERN = /:([a-zA-Z_][a-zA-Z0-9_]*)/g;
+  const KEY_PATTERN = /:([a-zA-Z_]\w*)/g;
   const MATCH_PATTERN_STRING = "([^\\\/.;]+)";
   var _routes = [];
   var _namedRoutes = {};
