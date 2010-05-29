@@ -1,3 +1,4 @@
+var sys = require('sys');
 
 try {
   // Expects node_postgres in the lib/ dir of the running app
@@ -8,8 +9,6 @@ catch (e) {
   // CREATE TABLE geddy_data (uuid VARCHAR(255), type VARCHAR(255), created_at TIMESTAMP, updated_at TIMESTAMP, data TEXT);
   throw new Error('Postgres adapter requires node_postgres, http://github.com/ry/node_postgres');
 }
-
-var sys = require('sys');
 
 var cfg = config.database;
 var conn = postgres.createConnection(
@@ -109,18 +108,7 @@ var adapter = new function () {
   };
 
   var _fetchItems = function (params, base) {
-
-    var i, ii;
-    var j, jj;
-    var p;
-    var sql;
-    var uuids;
-    var many, manyIds = [];
-    var belongs;
-    var key;
-    var items, item, manyData;
-    var type = '';
-    var include;
+    var sql, uuids;
 
     if(!params.ids || params.ids[0] == 'all') {
       sql = "SELECT data FROM geddy_data WHERE type = '" + params.dataType + "';";
@@ -131,10 +119,29 @@ var adapter = new function () {
     }
 
     conn.query(sql, function (err, rows) {
-      if (err) throw err;
+      if (err) {
+        throw err;
+      }
+      else if (!rows) {
+        throw new Error('No data returned from SQL query');  
+      }
+      
+      var i, ii, j, jj, p,
+          rowData,
+          data,
+          many, 
+          manyIds = [],
+          belongs,
+          key,
+          items,
+          item, 
+          manyData,
+          type = '',
+          include;
+      
       for (i = 0, ii = rows.length; i < ii; i++) {
-        data = rows[i].data;
-        data = JSON.parse(data);
+        rowData = rows[i].data;
+        data = JSON.parse(rowData);
         data = GLOBAL[data.type].create(data);
 
         if (!params.conditions || _matched(data, params.conditions)) {
@@ -180,6 +187,7 @@ var adapter = new function () {
             }
           }
         }
+        
       }
 
       if (manyIds.length) {
@@ -188,8 +196,11 @@ var adapter = new function () {
         });
       }
       else {
+        // TODO: Use for identity list for possible DM pattern
         _map = null;
-        _callback(null, _rows);
+        process.nextTick(function () {
+          _callback(null, _rows);
+        });
       }
     });
 

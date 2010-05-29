@@ -1,27 +1,31 @@
 
-var util = {};
-var sys = require("sys");
-var fs = require("fs");
-var spawn = require("child_process").spawn;
-var parseopts = require('geddy-core/lib/parseopts');
-var args = process.argv.slice(2);
-var Config = require('geddy-core/lib/config').Config;
+var args = process.argv.slice(2),
+    child,
+    opts,
+    log,
+    util = {},
+    sys = require("sys"),
+    fs = require("fs"),
+    spawn = require("child_process").spawn,
+    parseopts = require('geddy-core/lib/parseopts'),
+    Config = require('geddy-core/lib/config').Config,
+    serverRoot;
+
 util.meta = require('geddy-util/lib/meta');
+opts = parseopts.parse(args.slice());
 
-var opts = parseopts.parse(args.slice());
-config = new Config(opts);
+global.config = new Config(opts);
 
-var serverRoot;
 if (opts.serverRoot) {
   serverRoot = opts.serverRoot + '/geddy-core/runserv.js';
 }
 else {
   serverRoot = __dirname + '/runserv.js';
 }
+
 args.unshift(serverRoot);
 
-var child;
-var log = require('geddy-core/lib/log');
+log = require('geddy-core/lib/log');
 
 var jsPat = /\.js$/;
 // Recursively watch files with a callback

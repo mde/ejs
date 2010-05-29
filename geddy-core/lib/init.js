@@ -46,6 +46,12 @@ var Init = function (config, callback) {
   global.log = require('geddy-util/lib/meta');
   global.inflections = require(config.dirname + '/config/inflections');
   
+  // Load anything in from the app's local init
+  var localInit = require(config.dirname + '/config/init');
+  for (var p in localInit) {
+    global[p] = localInit[p];
+  }
+
   this.registerControllers = function (err, dirList) {
     if (err) {
       sys.puts('Error: ' + JSON.stringify(err));
@@ -79,7 +85,8 @@ var Init = function (config, callback) {
   };
 
   this.loadDBAdapter = function () {
-    var adapt = require('geddy-model/lib/adapters/' + config.database.adapter);
+    var adapterPath = 'geddy-model/lib/adapters/' + config.database.adapter;
+    var adapt = require(adapterPath);
     model.setDbAdapter(adapt);
   };
 

@@ -17,11 +17,10 @@
 */
 
 var config = new function () {
+  this.detailedErrors = false;
   /*
-  this.environment = 'development';
   this.hostname = null;
   this.port = 4000;
-  this.detailedErrors = true;
   this.sessions = {
     store: 'memory',
     key: 'sid',
@@ -38,3 +37,5 @@ var config = new function () {
 }();
 
 for (var p in config) { this[p] = config[p]; }
+
+

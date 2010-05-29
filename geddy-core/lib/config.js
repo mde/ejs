@@ -76,7 +76,7 @@ var Config = function (opts) {
   this.timeFormat = '%T';
 
   // Override with app-level opts
-  var opts = require(this.dirname + '/config/config');
+  var opts = require(this.dirname + '/config/environments/' + this.environment);
   fleegix.mixin(this, opts, true);
 };
 

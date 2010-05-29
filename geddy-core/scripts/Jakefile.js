@@ -43,10 +43,11 @@ exports.tasks = {
     'desc': 'Creates a new Geddy app scaffold.'
     , 'deps': []
     , 'task': function (appName) {
-      var dir = appName;
-      var cmds = [
+      var dir = appName,
+          cmds = [
         'mkdir -p ./' + dir
         , 'mkdir -p ./' + dir + '/config'
+        , 'mkdir -p ./' + dir + '/config/environments'
         , 'mkdir -p ./' + dir + '/app/models'
         , 'mkdir -p ./' + dir + '/app/controllers'
         , 'mkdir -p ./' + dir + '/app/views'
@@ -55,12 +56,14 @@ exports.tasks = {
         , 'mkdir -p ./' + dir + '/public/css'
         , 'mkdir -p ./' + dir + '/lib'
         , 'cp ~/.node_libraries/geddy-core/scripts/gen/router.js ' + dir + '/config/'
-        , 'cp ~/.node_libraries/geddy-core/scripts/gen/config.js ' + dir + '/config/'
+        , 'cp ~/.node_libraries/geddy-core/scripts/gen/init.js ' + dir + '/config/'
+        , 'cp ~/.node_libraries/geddy-core/scripts/gen/development.js ' + dir + '/config/environments/'
+        , 'cp ~/.node_libraries/geddy-core/scripts/gen/production.js ' + dir + '/config/environments/'
         , 'cp ~/.node_libraries/geddy-core/scripts/gen/inflections.js ' + dir + '/config/'
         , 'cp ~/.node_libraries/geddy-core/scripts/gen/main.js ' + dir + '/app/controllers/'
         , 'cp ~/.node_libraries/geddy-core/scripts/gen/application.js ' + dir + '/app/controllers/'
         , 'cp ~/.node_libraries/geddy-core/scripts/gen/master.css ' + dir + '/public/css/'
-      ]
+      ];
       runCmds(cmds, function () {
         sys.puts('Created app ' + dir + '.');
       });
