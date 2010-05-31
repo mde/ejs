@@ -36,6 +36,6 @@ var config = new function () {
   */
 }();
 
-for (var p in config) { this[p] = config[p]; }
+module.exports = config;
 
 
