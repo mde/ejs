@@ -1,0 +1,192 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+  <script type="text/javascript" src="js/syntax/scripts/shCore.js"></script>
+  <script type="text/javascript" src="js/syntax/scripts/shBrushBash.js"></script>
+  <script type="text/javascript" src="js/syntax/scripts/shBrushJScript.js"></script>
+  <script type="text/javascript">
+    SyntaxHighlighter.defaults.gutter = false;
+    SyntaxHighlighter.all();
+  </script>
+  <link href="css/main.css" media="screen" rel="stylesheet" type="text/css" />
+  <link href="js/syntax/styles/shCore.css" media="screen" rel="stylesheet" type="text/css" />
+  <link href="js/syntax/styles/shThemeMidnight.css" media="screen" rel="stylesheet" type="text/css" />
+  <title>Geddy -- webapp-development framework for Node.js</title>
+</head>
+<body>
+  <div id="page">
+    <div id="header">
+      <a href="/"><h1 id="logo">Geddy</h1></a>
+      <ul id="primary-nav">
+        <li class="nav-item">
+          <a href="http://www.github.com/mde/geddy">
+            source
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="http://wiki.github.com/mde/geddy/">
+            documentation
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="#community">
+            community
+          </a>
+        </li>
+      </ul>
+    </div>
+    
+    <div id="masthead">
+      <h3 id="logline">
+        web framework for node.js
+      </h3>
+      <div id="masthead-content">
+        <ul>
+          <li>
+            A modular, full-service web framework for Node.js.
+          </li>
+          <li>
+            Similar to web frameworks like Merb, Rails, Pylons, or Django. 
+          </li>
+          <li>
+            Built on Node.js, so it's wicked fast.
+          </li>
+        </ul>
+      </div>
+    </div>
+    
+    <div id="main-content" class="content">
+      <ul id="feature-list">
+        <li class="feature">
+          <h4 class="feature-subtitle sprite-generators">Generators</h4>
+          <p class="feature-content">
+            The <code>geddy-gen</code> utility is
+            your friend. Creating an app is a snap with
+            <code>geddy-gen app</code>. Create resources and models
+            for your app with <code>geddy-gen resource</code> and
+            <code>geddy-gen model</code>.
+          </p>
+        </li>
+
+        <li class="feature">
+          <h4 class="feature-subtitle sprite-router">Flexible DSL for routes</h4>
+          <p class="feature-content">
+            Intuitive syntax for creating routes &#8212; just
+            <code>match</code> paths and params <code>to</code>
+            controllers and actions. Set up resource-based
+            routes with the uber-simple <code>resource</code>,
+            or let <code>geddy-gen</code> do it
+            for you.
+          </p>
+        </li>
+
+        <li class="feature">
+          <h4 class="feature-subtitle sprite-content">Content negotiation</h4>
+          <p class="feature-content">
+            Serve out your RESTful resources in whatever format
+            you want &#8212; HTML, JSON, even XML (if you're
+            into that type of thing). Geddy looks at the file
+            extension and the accept-header, and does the
+            right thing.
+          </p>
+        </li>
+
+        <li class="feature">
+          <h4 class="feature-subtitle sprite-resources">Templates and partials</h4>
+          <p class="feature-content">
+            Geddy does EJS templating, with recursive partials
+            support. Templates and sub-templates load and
+            render asynchronously. Yes, pluggable templates
+            are on the way for you fans of 'stache, Haml, et al.
+          </p>
+        </li>
+
+        <li class="feature">
+          <h4 class="feature-subtitle sprite-session">Models and validations</h4>
+          <p class="feature-content">
+            Should look familiar to users of
+            DataMapper or SQLAlchemy. A simple, intuitive
+            syntax for defining properties and validations
+            &#8212; but the code is pure JS, which allows
+            sweet, sweet code-reuse in the browser.
+          </p>
+        </li>
+
+        <li class="feature">
+          <h4 class="feature-subtitle sprite-templating">JavaScripty goodness</h4>
+          <p class="feature-content">
+            Geddy is built on Node.js, a JavaScript I/O
+            system that uses Google's V8 engine. Node.js is
+            very fast &#8212; but you get to use the JavaScript
+            we all know and love (okay, maybe that's stretching
+            it) from the browser.
+          </p>
+        </li>
+      </ul>
+
+      <h3>Get started</h3>
+      <p>
+        Geddy is a web framework for Node.js. Geddy requires <a
+        href="http://nodejs.org/dist/node-v0.1.96.tar.gz">version
+        0.1.96</a> of <a href="http://www.nodejs.org">Node.js</a>.
+      </p>
+
+      <p>
+        Get Geddy from GitHub and install it:
+      </p>
+
+<pre class="brush: bash">
+$ ~/work$ git clone git://github.com/mde/geddy.git
+$ ~/work$ cd geddy
+$ ~/work$ make && sudo make install
+</pre>
+
+      <h3>
+        Create a Geddy app
+      </h3>
+      <p>
+        Geddy comes with a utility called <code>geddy-gen</code>
+        you can use to create an app. Run <code>geddy</code>
+        to start the server.
+      </p>
+
+<pre class="brush: bash">
+$ ~/work$ geddy-gen app bytor
+Created app bytor.
+$ ~/work$ cd bytor
+$ ~/work/bytor$ geddy
+Server running at http://127.0.0.1:4000/
+</pre>
+      
+      <h3 id="community">
+        Community
+      </h3>
+      <p>
+        Geddy is very new, so now is a great time to get involved in the community. You can find Geddy peeps in a variety of places online:
+      </p>
+      <ul>
+        <li>
+          <strong>Twitter:</strong>  <a href="http://www.twitter.com/geddyjs">geddyjs</a>
+        </li>
+        <li>
+          <strong>IRC:</strong> #node.js on Freenode.net
+        </li>
+        <li>
+          <strong>GitHub:</strong> <a href="http://www.github.com/mde/geddy">geddy</a>
+        </li>
+        <!-- <li>
+          <strong>Mailing list: </strong> <a href="http://groups.google.com/group/geddy">http://groups.google.com/group/geddy</a>
+        </li> -->
+      </ul>
+    </div>
+  </div>
+  <div id="footer">
+    <p class="copyright">
+      Geddy webapp-development framework &#169;2112 Matthew Eernisse.
+    </p>
+  </div>
+</body>
+</html>
+
+
