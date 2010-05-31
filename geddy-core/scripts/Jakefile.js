@@ -169,12 +169,12 @@ exports.tasks = {
         var def, props, prop, modelKey, viewsDirName, fileName, tmpl;
         var text = '';
         // Set up a minimal environment for intepreting the model
-        GLOBAL.util = {};
-        GLOBAL.util.meta = require('geddy-util/lib/meta');
-        GLOBAL.util.string = require('geddy-util/lib/string');
-        GLOBAL.util.date = require('geddy-util/lib/date');
-        GLOBAL.config = {dirname: process.cwd()};
-        GLOBAL.inflections = require(config.dirname + '/config/inflections');
+        global.util = {};
+        global.util.meta = require('geddy-util/lib/meta');
+        global.util.string = require('geddy-util/lib/string');
+        global.util.date = require('geddy-util/lib/date');
+        global.config = {dirname: process.cwd()};
+        global.inflections = require(config.dirname + '/config/inflections');
         var model = require('geddy-model/lib/model');
         var fleegix = require('../lib/fleegix');
 
@@ -297,34 +297,45 @@ exports.tasks = {
     , 'deps': []
     , 'task': function () {
       fs.readdir('./config/environments', function (err, res) {
-        var config;
+        var appConfig;
         var dirname = process.cwd();
         var filename;
-        var dbConfig;
+        var config;
         var cmds;
         var jsPat = /\.js$/;
-        var create = 'CREATE TABlE geddy_data (uuid VARCHAR(255), type VARCHAR(255), created_at TIMESTAMP, updated_at TIMESTAMP, data TEXT);'
+        var createStatement = 'CREATE TABlE geddy_data (uuid VARCHAR(255), ' +
+            'type VARCHAR(255), created_at TIMESTAMP, updated_at TIMESTAMP, data TEXT);'
         for (var i = 0, ii = res.length; i < ii; i++) {
           cmds = [];
           filename = res[i];
           if (!jsPat.test(filename)) {
             continue;
           }
-          config = require(dirname + '/config/environments/' + filename.replace(jsPat, ''));
-          dbConfig = config.database;
-          if (dbConfig) {
+          appConfig = require(dirname + '/config/environments/' + filename.replace(jsPat, ''));
+          config = appConfig.database;
+          if (config) {
             sys.puts('Creating DB for ' + filename + '...');
-            // Postgres only for now
-            if (dbConfig.adapter == 'postgresql') {
-              if (dbConfig.password) {
-                cmds.push("export PGPASS='" + dbConfig.password + "'");
-              }
-              cmds.push('createdb -U ' + dbConfig.username + ' -w ' + dbConfig.dbName);
-              cmds.push('echo "db created"');
-              cmds.push('psql -U ' + dbConfig.username + ' -d ' + dbConfig.dbName + ' -w -c "' + create + '"');
-              if (dbConfig.password) {
-                cmds.push("unset PGPASS");
-              }
+            switch (config.adapter) {
+              // Postgres, the DB of many names
+              case 'postgresql':
+              case 'postgres':
+              case 'psql':
+                if (config.password) {
+                  cmds.push("export PGPASS='" + config.password + "'");
+                }
+                cmds.push('createdb -U ' + config.username + ' -w ' + config.dbName);
+                cmds.push('echo "db created"');
+                cmds.push('psql -U ' + config.username + ' -d ' + config.dbName + ' -w -c "' + createStatement + '"');
+                if (config.password) {
+                  cmds.push("unset PGPASS");
+                }
+                break;
+              case 'sqlite':
+                cmds.push("sqlite3 -line " + config.dbName + ".db '" + createStatement + "'");
+                break;
+              default:
+                // Do nothing
+
             }
           }
           if (cmds.length) {
@@ -341,10 +352,10 @@ exports.tasks = {
     , 'deps': []
     , 'task': function () {
       fs.readdir('./config/environments', function (err, res) {
-        var config;
+        var appConfig;
         var dirname = process.cwd();
         var filename;
-        var dbConfig;
+        var config;
         var cmds = [];
         var jsPat = /\.js$/;
         for (var i = 0, ii = res.length; i < ii; i++) {
@@ -352,18 +363,29 @@ exports.tasks = {
           if (!jsPat.test(filename)) {
             continue;
           }
-          config = require(dirname + '/config/environments/' + filename.replace(jsPat, ''));
-          dbConfig = config.database;
-          if (dbConfig) {
-            // Postgres only for now
-            if (dbConfig.adapter == 'postgresql') {
-              if (dbConfig.password) {
-                cmds.push("export PGPASS='" + dbConfig.password + "'");
-              }
-              cmds.push('dropdb -U ' + dbConfig.username + ' -w ' + dbConfig.dbName);
-              if (dbConfig.password) {
-                cmds.push("unset PGPASS");
-              }
+          appConfig = require(dirname + '/config/environments/' + filename.replace(jsPat, ''));
+          config = appConfig.database;
+          if (config) {
+            
+            switch (config.adapter) {
+              // Postgres, the DB of many names
+              case 'postgresql':
+              case 'postgres':
+              case 'psql':
+                if (config.password) {
+                  cmds.push("export PGPASS='" + config.password + "'");
+                }
+                cmds.push('dropdb -U ' + config.username + ' -w ' + config.dbName);
+                if (config.password) {
+                  cmds.push("unset PGPASS");
+                }
+                break;
+              case 'sqlite':
+                cmds.push("rm " + config.dbName + ".db");
+                break;
+              default:
+                // Do nothing
+
             }
           }
           if (cmds.length) {
