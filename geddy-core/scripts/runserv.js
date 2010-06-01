@@ -16,29 +16,65 @@
  *
 */
 
-var appDirname = process.argv[2];
+var req, resp, errors, appDirname, config, http,
+    parseopts, Config, Init, App, args, opts, sys;
 
-var sys = require('sys');
-var http = require('http');
-var parseopts = require('geddy-core/lib/parseopts');
-var config;
+// Start grabbing errors first thing -- we need to be able
+// to report the entire stack, not just what the child process
+// gets on stderr
+// FIXME: Need to find out why errors thrown inside the local
+// function below don't get caught, but still get suppressed.
+// This is why we need the try/catch inside runServ
+process.addListener('uncaughtException', function (err) {
+  // If the app is running and there's a request in-process,
+  // Dump the error into the browser as an HTTP error page
+  if (resp) {
+    errors.respond(resp, err);
+  }
+  // If the app is in the process of starting up, display
+  // the entire stack, then send the parent process the
+  // signal to shut down
+  else {
+    var msg = '';
+    msg += 'Error starting up application.\n';
+    msg += err.stack.toString();
+    sys.puts(msg);
+    // FIXME: This is a hack -- figure out a better way to
+    // tell the parent to shut down
+    sys.debug('###shutdown###');
+  }
+});
+  
+sys = require('sys');
+appDirname = process.argv[2];
+http = require('http');
+parseopts = require('geddy-core/lib/parseopts');
+Config = require('geddy-core/lib/config').Config;
+Init = require('geddy-core/lib/init').Init;
+args = process.argv.slice(2);
+opts = parseopts.parse(args);
 
-var Config = require('geddy-core/lib/config').Config;
-var Init = require('geddy-core/lib/init').Init;
-var App;
-
-var args = process.argv.slice(2);
-var opts = parseopts.parse(args);
-
+// Add the local lib/ dir in the app as a require-lookup path
 require.paths.unshift(opts.geddyRoot + '/lib/');
 
 var runServ = function () {
   var hostname;
   if (config.hostname) { hostname = config.hostname; }
-  http.createServer(function (req, resp) {
-    new App().run(req, resp);
+  http.createServer(function (request, response) { req = request;
+    resp = response;
+    // Errors thrown here don't get caught by uncaughtExceptions listener
+    // FIXME: figure out why, try to unify error-handling in one place
+    try {
+      new App().run(req, resp);
+    }
+    catch (e) {
+      errors.respond(resp, e);
+    }
+
   }).listen(config.port, hostname);
 
+  // Report server-start in initial startup -- don't report on
+  // bounces from file-changes in dev-mode
   if (!opts.restart) {
     var msg = 'Geddy running ';
     msg += opts.serverRoot ? 'from source (' + opts.serverRoot + ') ' : '';
@@ -56,5 +92,8 @@ config = new Config(opts);
 new Init(config, runServ);
 // Get the app constructor, once init has completed
 App = require('geddy-core/lib/app').App;
+// Errors consumes logs, logs needs config to be set up
+// so do this last
+errors = require('geddy-core/lib/errors');
 
 

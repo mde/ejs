@@ -53,18 +53,21 @@ var watchTree = function (path, func) {
 var startServ = function (restart) {
   passArgs = restart ? args.concat('-Q', 'true') : args;
   child  = spawn('node', passArgs);
+  
   child.stdout.addListener('data', function (data) {
     sys.puts(data);
   });
+
   child.stderr.addListener('data', function (data) {
-    process.kill(child.pid);
-    if (data instanceof Error) {
-      throw data;
+    if (data == 'DEBUG: ###shutdown###\n') {
+      process.kill(child.pid);
+      process.exit();
     }
     else {
-      throw new Error(data);
+      sys.puts(data);
     }
   });
+  
   child.addListener('exit', function (code) {
     //sys.puts('child process exited with code ' + code);
   });
