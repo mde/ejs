@@ -63,6 +63,7 @@ exports.tasks = {
         , 'cp ~/.node_libraries/geddy-core/scripts/gen/main.js ' + dir + '/app/controllers/'
         , 'cp ~/.node_libraries/geddy-core/scripts/gen/application.js ' + dir + '/app/controllers/'
         , 'cp ~/.node_libraries/geddy-core/scripts/gen/master.css ' + dir + '/public/css/'
+        , 'cp ~/.node_libraries/geddy-core/scripts/gen/favicon.ico ' + dir + '/public/'
       ];
       runCmds(cmds, function () {
         sys.puts('Created app ' + dir + '.');
