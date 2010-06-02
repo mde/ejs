@@ -1,0 +1,339 @@
+<html>
+ <head>
+  <style type="text/css">
+    body {
+      font-family: "lucida grande", verdana, sans-serif;
+      padding: 1em;
+    }
+    td {
+      padding: 0.2em;
+    }
+    code {
+      font-size: 1.2em;
+    }
+  </style>
+ </head>
+ <body>
+   <h1>
+      JS Styleguide
+   </h1>
+   <p>
+      These are merely guidelines. They should not be adhered to
+      mechanically, especially if a deviation would make your code
+      more readable.
+   </p>
+   <h2>
+      General
+   </h2>
+   <ol>
+     <li>
+        Code SHOULD be indented with spaces only.
+     </li>
+     <li>
+        Each level of indentation SHOULD consist of 2 spaces.
+     </li>
+     <li>
+        Lines SHOULD be 80 characters max.
+     </li>
+   </ol>
+   <h2><a name="Naming"></a>Naming</h2>
+   <h3><a name="Overview"></a>Overview</h3>
+   <table>
+     <tr>
+       <th>
+          Construct
+       </th>
+       <th>
+          Convention
+       </th>
+       <th>
+          Examples
+       </th>
+     </tr>
+     <tr>
+       <td>Pseudoclass name (i.e., constructor function)</td>
+       <td>CamelCase with an initial capital letter</td>
+       <td><code>MightyBalrog, MagicWeapon</code>
+       </td>
+     </tr>
+     <tr>
+       <td>Namespace name</td>
+       <td>camelCase with an initial lowercase letter</td>
+       <td><code>clericSpells, savingThrows</code>
+       </td>
+     </tr>
+     <tr>
+       <td>Public method</td>
+       <td>camelCase with an initial lowercase letter</td>
+       <td><code>castDimensionalDoorway, rollForInitiative</code>
+       </td>
+     </tr>
+     <tr>
+       <td>Public variable</td>
+       <td>camelCase with an initial lowercase letter</td>
+       <td><code>materialComponents, hasTrackingAbilities</code></td>
+     </tr>
+     <tr>
+       <td>Private method</td>
+       <td>camelCase with an initial lowercase letter and underscore</td>
+       <td><code>_getHealth</code></td>
+     </tr>
+     <tr>
+       <td>Private variable</td>
+       <td>camelCase with an initial lowercase letter and underscore</td>
+       <td><code>_backstabAbility</code></td>
+     </tr>
+     <tr>
+       <td>Method arguments</td>
+       <td>camelCase with an initial lowercase letter</td>
+       <td><code>halfOrcArmy</code></td>
+     </tr>
+     <tr>
+       <td>Local variables</td>
+       <td>camelCase with an initial lowercase letter</td>
+       <td><code>isHumanoid, levelCount</code></td>
+     </tr>
+     <tr>
+       <td>'Constants'</td>
+       <td>Uppercase with underscores</td>
+       <td><code>CLERIC_PLAYER, GAME_MASTER</code></td>
+     </tr>
+     <tr>
+       <td>Ennumeration keys</td>
+       <td>Uppercase with underscores</td>
+       <td><code>characterClass.MAGIC_USER, armorTypes.PLATE_MAIL</code></td>
+     </tr>
+   </table>
+  <h3>
+    Notes
+  </h3>
+  <ol>
+    <li>Variable/method names in all lowercase with underscores SHOULD NOT be used unless mimicking another API.
+      <ul>
+        <li>Incorrect:<pre><code>wizard_hat, vorpal_blade</code></pre></li>
+        <li>Correct:<pre><code>wizardHat, vorpalBlade</code></pre></li>
+      </ul>
+    </li>
+    <li>Acronyms in variable/method names SHOULD NOT be upppercased.
+      <ul>
+        <li>Incorrect:<pre><code>bartenderNPC, newRPG</code></pre></li>
+        <li>Correct:<pre><code>bartenderNpc, newRpg</code></pre></li>
+      </ul>
+    </li>
+    <li>Variable/method names SHOULD be written in English.
+      <ul>
+        <li>Incorrect:<pre><code>dekaiKatana</code></pre></li>
+        <li>Correct:<pre><code>giganticSword</code></pre></li>
+      </ul>
+    </li>
+    <li>Variable/method names SHOULD NOT be abbreviated to the point of being unclear.
+      <ul>
+        <li>Incorrect:<pre><code>wndMnstr[3]</code></pre></li>
+        <li>Correct:<pre><code>wanderingMonster[3]</code></pre></li>
+      </ul>
+    </li>
+  </ol>
+  <h2>
+    Variables
+  </h2>
+  <ol>
+    <li>Variables SHOULD be initialized where they are declared, if possible in a way that indicates what type of value they will hold. Null initializations are acceptable.
+      <ul>
+        <li>Incorrect:<pre><code>var magicItemCount;
+var wizardNpc;</code></pre></li>
+        <li>Correct:<pre><code>var magicItemCount = 0;
+var wizardNpc = null;</code></pre></li>
+      </ul>
+    </li>
+    <li>Variable declarations SHOULD NOT include extra spaces before the equals sign to align the variable values.
+      <ul>
+        <li>Incorrect:<pre><code>var currentThiefLevel = 8;
+var canBackstab       = true;
+var isNpc             = true;</code></pre></li>
+        <li>Correct:<pre><code>var currentThiefLevel = 8;
+var canBackstab = true;
+var isNpc = true;</code></pre></li>
+      </ul>
+    </li>
+    <li>Variable names SHOULD NOT include 'temp' or 'tmp'. -- all local variables are by definition temporary.
+      <ul>
+        <li>Incorrect:<pre><code>tempString, tmpDate</code></pre></li>
+        <li>Correct:<pre><code>str, dt</code></pre></li>
+      </ul>
+    </li>
+    <li>Magic numbers SHOULD NOT be used. Use a constant instead.
+      <ul>
+        <li>Incorrect:<pre><code>42</code></pre></li>
+        <li>Correct:<pre><code>ANSWER_TO_THE_QUESTION_OF_LIFE</code></pre></li>
+      </ul>
+    </li>
+  </ol>
+  <h2>
+    Coding Style
+  </h2>
+  <h3>
+    Overview
+  </h3>
+  <ol>
+    <li> Function declaration:<pre><code>function checkForTraps(dexterity, level) {
+// Do stuff to check for traps here
+}
+var checkForSecretDoors = function (race, level) {
+  // Stuff for check here
+};</code></pre> 
+    </li>
+    <li>If statements:<pre><code>if (gotInitiative) {
+  attackDragon();
+}
+else if (speaksDragon) {
+  tryNegotiating();
+}
+else {
+  runAway();
+}</code></pre> 
+    </li>
+    <li>For statements:<pre><code>for (var i = 0; i < guards.length; i++) {
+  rollTwentySided(guards[i]);
+}</code></pre> 
+    </li>
+    <li>While statements:<pre><code>while (charactersInjured) {
+  castCureLightWounds();
+  charactersInjured = checkCharacterHealth();
+}</code></pre> 
+    </li>
+    <li>Switch statements:<pre><code>switch (characterClass) {
+  case 'ranger':
+    // Ranger special stuff here
+    // Fallthrough
+  case 'fighter':
+    // Do fighter stuff
+    break;
+  case 'magicUser':
+    // Do mage-specific stuff
+    break;
+  default:
+    // do nothing
+}</code></pre> 
+    </li>
+    <li>Try-catch-finally statements:<pre><code>try {
+  pickPocket();
+}
+catch (e) {
+  lookInconspicuous();
+  reportBack(e);
+}
+finally {
+    runLikeHell();
+}</code></pre> 
+    </li>  
+    <li>Object literal:<pre><code>var obj = {
+  spellName: 'Invisible Stalker',
+  numberOfFighters: 3,
+  checkForTraps = function() {
+    // Do trap checking
+  } 
+};
+     
+var obj = { staff: 'Staff of the Magi', wand: 
+  'Wand of Negation', misc: 'Boots of Elvenkind' };
+    </code></pre></li>
+  </ol>
+  <h3>
+    Notes
+  </h3>
+  <ol>
+    <li>
+      Function literals MUST include a space between the word 'function' and the parentheses. (Otherwise it appears to be a function with the name of 'function.')
+      <ul>
+        <li>Incorrect:<pre><code>var rollInitiative = function() { // Roll die here };</code></pre></li>
+        <li>Incorrect:<pre><code>var rollInitiative = function () { // Roll die here };</code></pre></li>
+      </ul>
+    </li>
+    <li>
+      Line continuations should be indicated by double indentation.
+      <ul>
+        <li>Incorrect:<pre><code>var localMonsterRumors = getLocalGossip(inkeeper,
+                                        localInn,
+                                        numberOfClerics,
+                                        pintsOfAlePurchased,
+                                        charismaAjustment);</code></pre></li>
+        <li>Correct:<pre><code>var localMonsterRumors = getLocalGossip(inkeeper,
+    localInn, numberOfClerics, pintsOfAlePurchased,
+    charismaAjustment);</code></pre></li>
+      </ul>
+    </li>
+    <li>If-else statements (also while, et al) MAY be written on a single line, but MUST use brackets.
+      <ul>
+        <li>Incorrect:<pre><code>if (isUndead) grabFire();</code></pre></li>
+        <li>Correct:<pre><code>if (isUndead) { grabFire(); }</code></pre></li>
+      </ul>
+    </li>
+    <li>Parenthesis in conditional statements (if, while, for, etc.) SHOULD have a space before them.
+      <ul>
+        <li>Incorrect:<pre><code>if(isNpc) { 
+  ignoreTalk(); 
+}</code></pre></li>
+        <li>Correct:<pre><code>if (isNpc) { 
+  ignoreTalk(); 
+}</code></pre></li>
+      </ul>
+    </li>
+    <li>Parenthesis in function declarations SHOULD NOT have a space before them.
+      <ul>
+        <li>Incorrect:<pre><code>function getArmorClass (armorType, dexterity) {
+  // Get AC stuff here
+}</code></pre></li>
+        <li>Correct:<pre><code>function getArmorClass(armorType, dexterity) {
+  // Get AC stuff here
+}</code></pre></li>
+      </ul>
+    </li>
+    <li>Commas SHOULD be followed by spaces.
+      <ul>
+        <li>Incorrect:<pre><code>getExperiencePoints(monster,hitPoints);</code></pre></li>
+        <li>Correct:<pre><code>getExperiencePoints(monster, hitPoints);</code></pre></li>
+      </ul>
+    </li>
+    <li>The colon in object literal notation SHOULD have no space in front of it, and be followed by a single space.
+      <ul>
+        <li>Incorrect:<pre><code>var newCharacter = {
+  race:'gnome',
+  class:'figheter'
+  isNpc:false;
+};</code></pre></li>
+        <li>Also incorrect:<pre><code>var newCharacter = {
+  race : 'gnome',
+  class : 'figheter'
+  isNpc : false;
+};</code></pre></li>
+        <li>Correct:<pre><code>var newCharacter = {
+  race: 'gnome',
+  class: 'figheter'
+  isNpc: false;
+};</code></pre></li>
+      </ul>
+    </li>
+    <li>Operators SHOULD both have a space before and after.
+      <ul>
+        <li>Incorrect:<pre><code>var message = speaksDrow? getMessageinDrow():'You do not speak Drow.';</code></pre></li>
+        <li>Correct:<pre><code>var message = speaksDrow ? getMessageinDrow() : 'You do not speak Drow.';</code></pre></li>
+        <li>Incorrect:<pre><code>var thaco = hit+adjustment-randomFactor;</code></pre></li>
+        <li>Correct:<pre><code>var thaco = hit + adjustment - randomFactor;</code></pre></li>
+      </ul>
+    </li>
+    <li>Lengthy DOM element IDs or other string parameters SHOULD be placed into variables before using.
+      <ul>
+        <li>Incorrect:<pre><code>var elem = document.getElementById('charClass-' + charClass + 
+    + '_combatStats-' + armorClass + '-' + toHitBonus);</code></pre></li>
+        <li>Correct:<pre><code>var char = 'charClass-' + charClass;
+var combat = 'combatStatus-' + armorClass + '-' + toHitBonus;
+var elem = document.getElementById(char + '_' + combat);</code></pre></li>
+      </ul>
+    </li>
+  </ol>
+ </body>
+</html>
+
+
+
+
