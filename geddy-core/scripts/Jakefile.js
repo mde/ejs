@@ -222,6 +222,12 @@ exports.tasks = {
                     '" value="<%= util.date.strftime(params.' + p +
                     ', config.dateFormat) || \'\' %>" size="24"/></div>\n';
                 break;
+              case 'time':
+                text += '</div>\n'
+                text += '<div><input type="text" id="' + p + '" name="' + p +
+                    '" value="<%= util.date.strftime(params.' + p +
+                    ', config.timeFormat) || \'\' %>" size="12"/></div>\n';
+                break;
               case 'number':
               case 'int':
                 text += '</div>\n'
