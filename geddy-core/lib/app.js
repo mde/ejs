@@ -49,18 +49,19 @@ var App = function (initData) {
       var url = req.url;
       // Split only on question mark -- using semicolon delimiter for
       // edit-flag hack in resource-routes
-      var base = url.split(/\?|=/)[0];
-      var qs = url.split('?')[1] || '';
-      var qsParams = fleegix.url.qsToObject(qs);
+      //var base = url.split(/\?|=/)[0];
+      //var qs = url.split('?')[1] || '';
+      //var qsParams = fleegix.url.qsToObject(qs);
       var method = (req.method == 'POST' && qsParams._method) ?
           qsParams._method : req.method;
-      var route = router.parse(base, method);
-      
-      log.debug(req.method + ': ' + url)
+      //var route = router.parse(base, method);
+
+      var params = router.first( url, method );      
+      log.debug(method + ': ' + url)
 
       try {
         // If the route is a match, run the matching controller/action
-        if (route) {
+        if (params) {
           var cook = new cookies.CookieCollection(req);
 
           var sess = new session.Session({
@@ -69,22 +70,22 @@ var App = function (initData) {
             cookies: cook
           });
           
-          log.debug('Routed to ' + route.controller + ' controller, ' + route.action + ' action');
+          log.debug('Routed to ' + params.controller + ' controller, ' + params.action + ' action');
 
           sess.init(function () {
 
             // Split only on question mark -- using semicolon delimiter for
             // edit-flag hack in resource-routes
-            var params = mergeParams(req, route.params, qsParams);
+            //var params = mergeParams(req, route.params, qsParams);
             log.debug('params: ' + JSON.stringify(params))
 
             // Instantiate the matching controller from the registry
-            var constructor = controllerRegistry[route.controller];
+            var constructor = controllerRegistry[params.controller];
             // Give it all the base Controller fu
             constructor.prototype = new Controller({
               request: req,
               response: resp,
-              name: route.controller,
+              name: params.controller,
               params: params,
               cookies: cook,
               session: sess
@@ -95,7 +96,7 @@ var App = function (initData) {
             var mixin = new controllerRegistry.Application();
 
             controller = util.meta.mixin(controller, mixin);
-            controller.handleAction(route.action, params);
+            controller.handleAction(params.action, params);
           });
 
         }
@@ -127,7 +128,7 @@ var App = function (initData) {
   };
 
 };
-
+/*
 var mergeParams = function (req, routeParams, qsParams) {
   var p = {};
   p = util.meta.mixin(p, routeParams);
@@ -141,5 +142,5 @@ var mergeParams = function (req, routeParams, qsParams) {
   }
   return p;
 };
-
+*/
 exports.App = App;
