@@ -151,7 +151,14 @@ exports.tasks = {
       
       var cmds = [
         'mkdir -p ./app/views/' + names.filename.plural
-        , 'cp ~/.node_libraries/geddy-core/scripts/gen/views/* ' + './app/views/' + names.filename.plural + '/'
+        , 'cp ~/.node_libraries/geddy-core/scripts/gen/views/add.html.ejs ' +
+            './app/views/' + names.filename.plural + '/'
+        , 'cp ~/.node_libraries/geddy-core/scripts/gen/views/edit.html.ejs ' +
+            './app/views/' + names.filename.plural + '/'
+        , 'cp ~/.node_libraries/geddy-core/scripts/gen/views/index.html.ejs ' +
+            './app/views/' + names.filename.plural + '/'
+        , 'cp ~/.node_libraries/geddy-core/scripts/gen/views/show.html.ejs ' +
+            './app/views/' + names.filename.plural + '/'
       ]
       runCmds(cmds, function () {
         sys.puts('Created view templates.');
