@@ -278,16 +278,31 @@ util.date = new function () {
   };
 
   // Constants for use in this.add
-  this.dateParts = {
-    YEAR: 0, MONTH: 1, DAY: 2, HOUR: 3, MINUTE: 4, SECOND: 5,
-      MILLISECOND: 6, QUARTER: 7, WEEK: 8, WEEKDAY: 9
+  var dateParts = {
+    YEAR: 'year'
+    , MONTH: 'month'
+    , DAY: 'day'
+    , HOUR: 'hour'
+    , MINUTE: 'minute'
+    , SECOND: 'second'
+    , MILLISECOND: 'millisecond'
+    , QUARTER: 'quarter'
+    , WEEK: 'week'
+    , WEEKDAY: 'weekday'
   };
+  // Create a map for singular/plural lookup, e.g., day/days
+  var datePartsMap = {};
+  for (var p in dateParts) {
+    datePartsMap[dateParts[p]] = dateParts[p];
+    datePartsMap[dateParts[p] + 's'] = dateParts[p];
+  }
+  this.dateParts = dateParts;
 
   /**
    * Add to a Date in intervals of different size, from
    * milliseconds to years
    * @param dt -- Date (or timestamp Number), date to increment
-   * @param interv -- Number, a constant representing the interval,
+   * @param interv -- String, a constant representing the interval,
    *    e.g. YEAR, MONTH, DAY.  See this.dateParts
    * @param incr -- Number, how much to add to the date
    * @return Integer day number for 1-7 base week
@@ -299,89 +314,88 @@ util.date = new function () {
         sum.setDate(0);
       }
     }
+    var key = datePartsMap[interv];
     var sum = new Date(dt);
-    with (this.dateParts) {
-      switch(interv){
-        case YEAR:
-          sum.setFullYear(dt.getFullYear()+incr);
-          // Keep increment/decrement from 2/29 out of March
-          fixOvershoot();
-          break;
-        case QUARTER:
-          // Naive quarter is just three months
-          incr*=3;
-          // fallthrough...
-        case MONTH:
-          sum.setMonth(dt.getMonth()+incr);
-          // Reset to last day of month if you overshoot
-          fixOvershoot();
-          break;
-        case WEEK:
-          incr*=7;
-          // fallthrough...
-        case DAY:
-          sum.setDate(dt.getDate() + incr);
-          break;
-        case WEEKDAY:
-          //FIXME: assumes Saturday/Sunday weekend, but even this is not fixed.
-          // There are CLDR entries to localize this.
-          var dat = dt.getDate();
-          var weeks = 0;
-          var days = 0;
-          var strt = 0;
-          var trgt = 0;
-          var adj = 0;
-          // Divide the increment time span into weekspans plus leftover days
-          // e.g., 8 days is one 5-day weekspan / and two leftover days
-          // Can't have zero leftover days, so numbers divisible by 5 get
-          // a days value of 5, and the remaining days make up the number of weeks
-          var mod = incr % 5;
-          if (mod == 0) {
-            days = (incr > 0) ? 5 : -5;
-            weeks = (incr > 0) ? ((incr-5)/5) : ((incr+5)/5);
-          }
-          else {
-            days = mod;
-            weeks = parseInt(incr/5);
-          }
-          // Get weekday value for orig date param
-          strt = dt.getDay();
-          // Orig date is Sat / positive incrementer
-          // Jump over Sun
-          if (strt == 6 && incr > 0) {
-            adj = 1;
-          }
-          // Orig date is Sun / negative incrementer
-          // Jump back over Sat
-          else if (strt == 0 && incr < 0) {
-            adj = -1;
-          }
-          // Get weekday val for the new date
-          trgt = strt + days;
-          // New date is on Sat or Sun
-          if (trgt == 0 || trgt == 6) {
-            adj = (incr > 0) ? 2 : -2;
-          }
-          // Increment by number of weeks plus leftover days plus
-          // weekend adjustments
-          sum.setDate(dat + (7*weeks) + days + adj);
-          break;
-        case HOUR:
-          sum.setHours(sum.getHours()+incr);
-          break;
-        case MINUTE:
-          sum.setMinutes(sum.getMinutes()+incr);
-          break;
-        case SECOND:
-          sum.setSeconds(sum.getSeconds()+incr);
-          break;
-        case MILLISECOND:
-          sum.setMilliseconds(sum.getMilliseconds()+incr);
-          break;
-        default:
-          // Do nothing
-          break;
-      }
+    switch(key) {
+      case dateParts.YEAR:
+        sum.setFullYear(dt.getFullYear()+incr);
+        // Keep increment/decrement from 2/29 out of March
+        fixOvershoot();
+        break;
+      case dateParts.QUARTER:
+        // Naive quarter is just three months
+        incr*=3;
+        // fallthrough...
+      case dateParts.MONTH:
+        sum.setMonth(dt.getMonth()+incr);
+        // Reset to last day of month if you overshoot
+        fixOvershoot();
+        break;
+      case dateParts.WEEK:
+        incr*=7;
+        // fallthrough...
+      case dateParts.DAY:
+        sum.setDate(dt.getDate() + incr);
+        break;
+      case dateParts.WEEKDAY:
+        //FIXME: assumes Saturday/Sunday weekend, but even this is not fixed.
+        // There are CLDR entries to localize this.
+        var dat = dt.getDate();
+        var weeks = 0;
+        var days = 0;
+        var strt = 0;
+        var trgt = 0;
+        var adj = 0;
+        // Divide the increment time span into weekspans plus leftover days
+        // e.g., 8 days is one 5-day weekspan / and two leftover days
+        // Can't have zero leftover days, so numbers divisible by 5 get
+        // a days value of 5, and the remaining days make up the number of weeks
+        var mod = incr % 5;
+        if (mod == 0) {
+          days = (incr > 0) ? 5 : -5;
+          weeks = (incr > 0) ? ((incr-5)/5) : ((incr+5)/5);
+        }
+        else {
+          days = mod;
+          weeks = parseInt(incr/5);
+        }
+        // Get weekday value for orig date param
+        strt = dt.getDay();
+        // Orig date is Sat / positive incrementer
+        // Jump over Sun
+        if (strt == 6 && incr > 0) {
+          adj = 1;
+        }
+        // Orig date is Sun / negative incrementer
+        // Jump back over Sat
+        else if (strt == 0 && incr < 0) {
+          adj = -1;
+        }
+        // Get weekday val for the new date
+        trgt = strt + days;
+        // New date is on Sat or Sun
+        if (trgt == 0 || trgt == 6) {
+          adj = (incr > 0) ? 2 : -2;
+        }
+        // Increment by number of weeks plus leftover days plus
+        // weekend adjustments
+        sum.setDate(dat + (7*weeks) + days + adj);
+        break;
+      case dateParts.HOUR:
+        sum.setHours(sum.getHours()+incr);
+        break;
+      case dateParts.MINUTE:
+        sum.setMinutes(sum.getMinutes()+incr);
+        break;
+      case dateParts.SECOND:
+        sum.setSeconds(sum.getSeconds()+incr);
+        break;
+      case dateParts.MILLISECOND:
+        sum.setMilliseconds(sum.getMilliseconds()+incr);
+        break;
+      default:
+        // Do nothing
+        break;
     }
     return sum; // Date
   };
@@ -391,7 +405,7 @@ util.date = new function () {
    * of months, weeks, days, etc.) between two dates.
    * @param date1 -- Date (or timestamp Number)
    * @param date2 -- Date (or timestamp Number)
-   * @param interv -- Number, a constant representing the interval,
+   * @param interv -- String, a constant representing the interval,
    *    e.g. YEAR, MONTH, DAY.  See this.dateParts
    * @return Integer, number of (interv) units apart that
    *    the two dates are
@@ -419,130 +433,131 @@ util.date = new function () {
     var weeDiff = dayDiff/7;
     var delta = 0; // Integer return value
 
-    with (this.dateParts) {
-      switch (interv) {
-        case YEAR:
-          delta = yeaDiff;
-          break;
-        case QUARTER:
-          var m1 = date1.getMonth();
-          var m2 = date2.getMonth();
-          // Figure out which quarter the months are in
-          var q1 = Math.floor(m1/3) + 1;
-          var q2 = Math.floor(m2/3) + 1;
-          // Add quarters for any year difference between the dates
-          q2 += (yeaDiff * 4);
-          delta = q2 - q1;
-          break;
-        case MONTH:
-          delta = monDiff;
-          break;
-        case WEEK:
-          // Truncate instead of rounding
-          // Don't use Math.floor -- value may be negative
-          delta = parseInt(weeDiff);
-          break;
-        case DAY:
-          delta = dayDiff;
-          break;
-        case WEEKDAY:
-          var days = Math.round(dayDiff);
-          var weeks = parseInt(days/7);
-          var mod = days % 7;
+    var key = datePartsMap[interv];
+    switch (key) {
+      case dateParts.YEAR:
+        delta = yeaDiff;
+        break;
+      case dateParts.QUARTER:
+        var m1 = date1.getMonth();
+        var m2 = date2.getMonth();
+        // Figure out which quarter the months are in
+        var q1 = Math.floor(m1/3) + 1;
+        var q2 = Math.floor(m2/3) + 1;
+        // Add quarters for any year difference between the dates
+        q2 += (yeaDiff * 4);
+        delta = q2 - q1;
+        break;
+      case dateParts.MONTH:
+        delta = monDiff;
+        break;
+      case dateParts.WEEK:
+        // Truncate instead of rounding
+        // Don't use Math.floor -- value may be negative
+        delta = parseInt(weeDiff);
+        break;
+      case dateParts.DAY:
+        delta = dayDiff;
+        break;
+      case dateParts.WEEKDAY:
+        var days = Math.round(dayDiff);
+        var weeks = parseInt(days/7);
+        var mod = days % 7;
 
-          // Even number of weeks
-          if(mod == 0){
-            days = weeks*5;
-          }else{
-            // Weeks plus spare change (< 7 days)
-            var adj = 0;
-            var aDay = date1.getDay();
-            var bDay = date2.getDay();
+        // Even number of weeks
+        if (mod == 0) {
+          days = weeks*5;
+        }
+        else {
+          // Weeks plus spare change (< 7 days)
+          var adj = 0;
+          var aDay = date1.getDay();
+          var bDay = date2.getDay();
 
-            weeks = parseInt(days/7);
-            mod = days % 7;
-            // Mark the date advanced by the number of
-            // round weeks (may be zero)
-            var dtMark = new Date(date1);
-            dtMark.setDate(dtMark.getDate()+(weeks*7));
-            var dayMark = dtMark.getDay();
+          weeks = parseInt(days/7);
+          mod = days % 7;
+          // Mark the date advanced by the number of
+          // round weeks (may be zero)
+          var dtMark = new Date(date1);
+          dtMark.setDate(dtMark.getDate()+(weeks*7));
+          var dayMark = dtMark.getDay();
 
-            // Spare change days -- 6 or less
-            if(dayDiff > 0){
-              switch(true){
-                // Range starts on Sat
-                case aDay == 6:
-                  adj = -1;
-                  break;
-                // Range starts on Sun
-                case aDay == 0:
-                  adj = 0;
-                  break;
-                // Range ends on Sat
-                case bDay == 6:
-                  adj = -1;
-                  break;
-                // Range ends on Sun
-                case bDay == 0:
-                  adj = -2;
-                  break;
-                // Range contains weekend
-                case (dayMark + mod) > 5:
-                  adj = -2;
-                  break;
-                default:
-                  // Do nothing
-                  break;
-              }
-            }else if(dayDiff < 0){
-              switch (true) {
-                // Range starts on Sat
-                case aDay == 6:
-                  adj = 0;
-                  break;
-                // Range starts on Sun
-                case aDay == 0:
-                  adj = 1;
-                  break;
-                // Range ends on Sat
-                case bDay == 6:
-                  adj = 2;
-                  break;
-                // Range ends on Sun
-                case bDay == 0:
-                  adj = 1;
-                  break;
-                // Range contains weekend
-                case (dayMark + mod) < 0:
-                  adj = 2;
-                  break;
-                default:
-                  // Do nothing
-                  break;
-              }
+          // Spare change days -- 6 or less
+          if (dayDiff > 0) {
+            switch (true) {
+              // Range starts on Sat
+              case aDay == 6:
+                adj = -1;
+                break;
+              // Range starts on Sun
+              case aDay == 0:
+                adj = 0;
+                break;
+              // Range ends on Sat
+              case bDay == 6:
+                adj = -1;
+                break;
+              // Range ends on Sun
+              case bDay == 0:
+                adj = -2;
+                break;
+              // Range contains weekend
+              case (dayMark + mod) > 5:
+                adj = -2;
+                break;
+              default:
+                // Do nothing
+                break;
             }
-            days += adj;
-            days -= (weeks*2);
           }
-          delta = days;
+          else if (dayDiff < 0) {
+            switch (true) {
+              // Range starts on Sat
+              case aDay == 6:
+                adj = 0;
+                break;
+              // Range starts on Sun
+              case aDay == 0:
+                adj = 1;
+                break;
+              // Range ends on Sat
+              case bDay == 6:
+                adj = 2;
+                break;
+              // Range ends on Sun
+              case bDay == 0:
+                adj = 1;
+                break;
+              // Range contains weekend
+              case (dayMark + mod) < 0:
+                adj = 2;
+                break;
+              default:
+                // Do nothing
+                break;
+            }
+          }
+          days += adj;
+          days -= (weeks*2);
+        }
+        delta = days;
 
-          break;
-        case HOUR:
-          delta = houDiff;
-          break;
-        case MINUTE:
-          delta = minDiff;
-          break;
-        case SECOND:
-          delta = secDiff;
-          break;
-        case MILLISECOND:
-          delta = msDiff;
-          break;
-        default:
-          // Do nothing
-          break;
-      }
+        break;
+      case dateParts.HOUR:
+        delta = houDiff;
+        break;
+      case dateParts.MINUTE:
+        delta = minDiff;
+        break;
+      case dateParts.SECOND:
+        delta = secDiff;
+        break;
+      case dateParts.MILLISECOND:
+        delta = msDiff;
+        break;
+      default:
+        // Do nothing
+        break;
     }
     // Round for fractional values and DST leaps
     return Math.round(delta); // Number (integer)
