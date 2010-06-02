@@ -164,13 +164,14 @@ var Router = function () {
    */
   this.url = function (params) {
     var url = false;
+        
     // iterate through the existing routes until a suitable match is found
     for ( var i in this.routes ) {
       // do the controller & acton match?
       if ( typeof(this.routes[i].params.controller) != 'undefined' && this.routes[i].params.controller != params.controller ) continue;
       if ( typeof(this.routes[i].params.action) != 'undefined' && this.routes[i].params.action != params.action ) continue;
       // attempt the stringification with defaults mixed in
-      params = util.meta.mixin( params, {controller:'Application', action:'index' } )
+      params = util.meta.mixin( {controller:'Application', action:'index' }, params )
       url = this.routes[i].stringify(params)
       if ( url != false ) break;
     } 
@@ -298,7 +299,7 @@ var Router = function () {
         if ( part instanceof Key ) {
           if ( typeof(params[part.name]) != 'undefined' && part.regex.test(params[part.name]) ){
             // there's a param named this && the param matches the key's regex
-            url.push( params[part.name] ); // push it onto the stack 
+            url.push( part.url(params[part.name]) ); // push it onto the stack 
             delete params[part.name]; // and remove from list of params              
           } else if (this.optional) {
             // (sub)route doesn't match, move on
@@ -411,8 +412,12 @@ var Router = function () {
           }
         }
         j+=1;
-      } 
-            
+      }
+      
+      // camelize the controller
+      if ( params.controller ) params.controller = util.string.camelize(params.controller,true);
+
+      
       return util.meta.mixin(params,qs);
     }
 
@@ -462,7 +467,11 @@ var Router = function () {
       };
 
       this.url = function ( string ) {
-        if ( this.test(string) ) return string;
+        if ( this.test(string) ) {
+          // snake_caseify the controller, if there is one
+          if ( this.name == 'controller' ) return util.string.decamelize(string);
+          return string;
+        }
         return false; // doesn't match, let it go
       }
 
