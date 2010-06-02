@@ -26,9 +26,14 @@ var <%= names.constructor.singular %> = function () {
 
 /*
 // Can also define them on the prototype
-User.prototype.someOtherMethod = function () {
+<%= names.constructor.singular %>.prototype.someOtherMethod = function () {
   // Do some other stuff
 };
+// Can also define static methods and properties
+<%= names.constructor.singular %>.someStaticMethod = function () {
+  // Do some other stuff
+};
+<%= names.constructor.singular %>.someStaticProperty = 'YYZ';
 */
 
 exports.<%= names.constructor.singular %> = <%= names.constructor.singular %>;

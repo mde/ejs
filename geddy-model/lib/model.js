@@ -296,6 +296,12 @@ var model = new function () {
     ModelItem.prototype = origPrototype;
     // Mix in the static methods like .create and .load
     ModelItem = util.meta.mixin(ModelItem, _createStaticMethodsMixin(p));
+    // Mix in any static methods defined directly on the original constructor
+    // People might be retarded and overwrite save, find, et al, but that's
+    // the JavaScripty way
+    for (var prop in ModelItemDefinition) {
+      ModelItem[prop] = ModelItemDefinition[prop]
+    }
     // Create a globally scoped constructor name
     GLOBAL[p] = ModelItem;
   };
