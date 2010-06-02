@@ -37,7 +37,7 @@
             <@ } @>
               <td>
                 <a href="/<%= names.filename.plural %>/<@= item.id @>.html">[show]</a>
-                <a href="/<%= names.filename.plural %>/<@= item.id @>.html;edit">[edit]</a>
+                <a href="/<%= names.filename.plural %>/<@= item.id @>/edit.html">[edit]</a>
                 <form method="post" action="/<%= names.filename.plural %>/<@= item.id @>.html?_method=delete"
                     style="display: inline;"
                     onclick="if (!window.confirm('Delete?')) {return false;}">

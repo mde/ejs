@@ -33,54 +33,73 @@ var App = function (initData) {
   var _this = this;
 
   this.run = function (req, resp) {
+    
+    try {
+      // capture the request start time for reporting
+      resp.startTime = new Date().getTime();
 
-    // capture the request start time for reporting
-    resp.startTime = new Date().getTime();
+      // Build the request body
+      // FIXME: Wrap in some sort of abstraction instead of just
+      // appending an arbitrary new property to the request object
+      // I mean, this is JS and all, but we should have some manners here
+      req.body = '';
+      req.addListener('data', function (data) {
+        req.body += data;
+      });
 
-    // Build the request body
-    // TODO: Wrap in some sort of abstraction
-    req.body = '';
-    req.addListener('data', function (data) {
-      req.body += data;
-    });
+      // Handle the request once it's finished
+      req.addListener('end', function () {
+        
+        var url, base, qs, qsParams, method, params, cook, sess,
+            constructor, controller, mixin, path, e, r
+        
+        // Let's start with the URL
+        url = req.url;
 
-    // Handle the request once it's finished
-    req.addListener('end', function () {
-      var url = req.url;
-      // Split only on question mark -- using semicolon delimiter for
-      // edit-flag hack in resource-routes
-      //var base = url.split(/\?|=/)[0];
-      //var qs = url.split('?')[1] || '';
-      //var qsParams = fleegix.url.qsToObject(qs);
-      var method = (req.method == 'POST' && qsParams._method) ?
-          qsParams._method : req.method;
-      //var route = router.parse(base, method);
+        // Get the QS params, so we can check to see if there's a method override
+        qs = fleegix.url.getQS(url);
+        qsParams = fleegix.url.qsToObject(qs);
+        
+        // The method may be overridden by the _method param
+        // TODO: Look for the x-http-method-override header
+        method = (req.method.toUpperCase() == 'POST' && qsParams._method) ?
+            qsParams._method : req.method;
+        // Okay, let's be anal and force all the HTTP verbs to uppercase
+        method = method.toUpperCase();
+        
+        // The base path -- the router doesn't need to know about QS params
+        base = fleegix.url.getBase(url);
 
-      var params = router.first( url, method );      
-      log.debug(method + ': ' + url)
+        // =====
+        // All the routing magic happens right here
+        // =====
+        params = router.first(base, method);      
+        log.debug(method + ': ' + url);
 
-      try {
-        // If the route is a match, run the matching controller/action
+        // The route matches -- we have a winner!
         if (params) {
-          var cook = new cookies.CookieCollection(req);
+          log.debug('Routed to ' + params.controller + ' controller, ' + params.action + ' action');
 
-          var sess = new session.Session({
+          // Set up the cookies for this request so we can do the session thing
+          cook = new cookies.CookieCollection(req);
+          // Empty session object, ready to be initialized
+          sess = new session.Session({
             app: this,
             request: req,
             cookies: cook
           });
-          
-          log.debug('Routed to ' + params.controller + ' controller, ' + params.action + ' action');
-
+          // Session init may involve async I/O (e.g., DB access, etc.)
+          // so the actual action invocation and response happens
+          // in the callback from session.init
           sess.init(function () {
 
-            // Split only on question mark -- using semicolon delimiter for
-            // edit-flag hack in resource-routes
-            //var params = mergeParams(req, route.params, qsParams);
+            // Construct the full set of params from:
+            // 1. Any request body 2. URL params 3. query-string params
+            params = mergeParams(req, params, qsParams);
             log.debug('params: ' + JSON.stringify(params))
 
             // Instantiate the matching controller from the registry
-            var constructor = controllerRegistry[params.controller];
+            constructor = controllerRegistry[params.controller];
             // Give it all the base Controller fu
             constructor.prototype = new Controller({
               request: req,
@@ -90,45 +109,55 @@ var App = function (initData) {
               cookies: cook,
               session: sess
             });
-            var controller = new constructor();
+            controller = new constructor();
 
             // Mix in any user-defined Application methods
-            var mixin = new controllerRegistry.Application();
-
+            mixin = new controllerRegistry.Application();
             controller = util.meta.mixin(controller, mixin);
+            
+            // All righty, let's handle the action
             controller.handleAction(params.action, params);
           });
 
         }
+
+        // No route -- serve up the ol' 404
         else {
-          var path = config.staticFilePath + req.url;
+          path = config.staticFilePath + req.url;
           fs.stat(path, function (err, stats) {
             // File not found, hand back the 404
             if (err) {
-              var e = new errors.NotFoundError('Page ' + req.url + ' not found.');
-              var r = new response.Response(resp);
+              e = new errors.NotFoundError('Page ' + req.url + ' not found.');
+              r = new response.Response(resp);
               r.send(e.message, e.statusCode, {'Content-Type': 'text/html'});
               log.warn('ERROR: ' + req.url + ' not found.').flush();
             }
             else {
-              var r = new response.Response(resp);
+              r = new response.Response(resp);
               r.sendFile(path);
             }
           });
         }
-      }
-      // Catch all errors, respond with error page & HTTP error code
-      // Sadly, this doesn't catch errors in callbacks
-      catch (e) {
-        errors.respond(resp, e);
-        //log.warn('OOPS: ' + req.url + ' not found.').flush();
-      }
-    });
+
+      });
+
+    } // End try 
+    
+    // Catch all errors, respond with error page & HTTP error code
+    // Errors in callback should be caught by the uncaughtException listener
+    // in runserv.js
+    catch (e) {
+      errors.respond(resp, e);
+      //log.warn('OOPS: ' + req.url + ' not found.').flush();
+    }
 
   };
 
 };
-/*
+
+// I'm sure there's a better place for this
+// This parses form input, and merges it with params from
+// the URL and the query-string to produce a Grand Unified Params object
 var mergeParams = function (req, routeParams, qsParams) {
   var p = {};
   p = util.meta.mixin(p, routeParams);
@@ -142,5 +171,5 @@ var mergeParams = function (req, routeParams, qsParams) {
   }
   return p;
 };
-*/
+
 exports.App = App;

@@ -41,10 +41,6 @@ RegExp.escape = (function() {
 
 /*
  * Router - it routes.
- *
- *
- *
- *
  */
 var Router = function () {
   this.routes = [];
@@ -52,7 +48,7 @@ var Router = function () {
   /*
    * Router.match()
    *
-   * r.match('/:controller/:action(/:id)(.:format)','GET',{ id:/\d+/ }).to(......)
+   * r.match('/:controller/:action(/:id)(.:extension)','GET',{ id:/\d+/ }).to(......)
    *
    * path is mandatory (duh)
    * method is optional, routes without a method will apply in all cases
@@ -96,13 +92,13 @@ var Router = function () {
     var controller = util.string.camelize(res, true);
     var cslug = util.string.decamelize(res);
     return [
-      this.match('/'+cslug+'(.:format)','GET').to({ controller: controller, action: 'index' }),
-      this.match('/'+cslug+'/add(.:format)','GET').to({ controller: controller, action: 'add' }),
-      this.match('/'+cslug+'/:id(.:format)','GET').to({ controller: controller, action: 'show' }),
-      this.match('/'+cslug+'/:id/edit(.:format)','GET').to({ controller: controller, action: 'edit' }),
-      this.match('/'+cslug+'(.:format)','POST').to({ controller: controller, action: 'create' }),
-      this.match('/'+cslug+'/:id(.:format)','PUT').to({ controller: controller, action: 'update' }),
-      this.match('/'+cslug+'/:id(.:format)','DELETE').to({ controller: controller, action: 'remove' })
+      this.match('/'+cslug+'(.:extension)','GET').to({ controller: controller, action: 'index' }),
+      this.match('/'+cslug+'/add(.:extension)','GET').to({ controller: controller, action: 'add' }),
+      this.match('/'+cslug+'/:id(.:extension)','GET').to({ controller: controller, action: 'show' }),
+      this.match('/'+cslug+'/:id/edit(.:extension)','GET').to({ controller: controller, action: 'edit' }),
+      this.match('/'+cslug+'(.:extension)','POST').to({ controller: controller, action: 'create' }),
+      this.match('/'+cslug+'/:id(.:extension)','PUT').to({ controller: controller, action: 'update' }),
+      this.match('/'+cslug+'/:id(.:extension)','DELETE').to({ controller: controller, action: 'remove' })
     ]
   }
   
@@ -156,7 +152,7 @@ var Router = function () {
   /*
    * router.url( { controller: 'SnowDogs', action: 'show', id: 5 } ) => '/snow_dogs/5'
    *  
-   * router.url( { controller: 'SnowDogs', action: 'show', id: 5, format: 'json' } ) => '/snow_dogs/5.json'
+   * router.url( { controller: 'SnowDogs', action: 'show', id: 5, extension: 'json' } ) => '/snow_dogs/5.json'
    *  
    * generates a URL from a params hash
    *
@@ -192,10 +188,10 @@ var Router = function () {
   /*
    * Route - turns strings into magical ponies that come when you call them
    *
-   * ex: route = Route( '/:controller/:action/:id(.:format)' )
-   * ex: route = Route( '/:controller/:action(/:id)(.:format)', 'GET' )
-   * ex: route = Route( '/:controller/:action(/:id)(.:format)', { controller:'snow_dogs', acton:'show' } )
-   * ex: route = Route( '/:controller/:action/:id(.:format)', 'GET', { id:/\d+/ } )
+   * ex: route = Route( '/:controller/:action/:id(.:extension)' )
+   * ex: route = Route( '/:controller/:action(/:id)(.:extension)', 'GET' )
+   * ex: route = Route( '/:controller/:action(/:id)(.:extension)', { controller:'snow_dogs', acton:'show' } )
+   * ex: route = Route( '/:controller/:action/:id(.:extension)', 'GET', { id:/\d+/ } )
    *
    * Pretty familiar to anyone who's used Merb/Rails - called by Router.match()
    */
@@ -210,7 +206,7 @@ var Router = function () {
     // parse th'args
     var path;
     var opts = {};
-    this.optional = false; // for nested optional url segments like (.:format)
+    this.optional = false; // for nested optional url segments like (.:extension)
     
     for ( var i in arguments ) {
       var arg = arguments[i];
@@ -377,7 +373,6 @@ var Router = function () {
       // let's chop off the QS to make life easier
       var url = require('url').parse(url);
       var path = url.pathname;
-      var qs = require('querystring').parse(url.query) || {};
       var params = {method:method};
       
       for (var key in this.params ) { params[key] = this.params[key] } 
@@ -417,8 +412,7 @@ var Router = function () {
       // camelize the controller
       if ( params.controller ) params.controller = util.string.camelize(params.controller,true);
 
-      
-      return util.meta.mixin(params,qs);
+      return params;
     }
 
     
