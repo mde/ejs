@@ -19,6 +19,28 @@ if (typeof util == 'undefined') { var util = {}; }
 
 util.date = new function () {
   var _this = this;
+  
+  var _US_DATE_PAT = /^(\d{1,2})(?:\-|\/|\.)(\d{1,2})(?:\-|\/|\.)(\d{4})/;
+  var _DATETIME_PAT = /^(\d{4})(?:\-|\/|\.)(\d{1,2})(?:\-|\/|\.)(\d{1,2})(?:T| )?(\d{2})?(?::)?(\d{2})?(?::)?(\d{2})?(?:\.)?(\d+)?(Z|[+-]\d{4}|[+-]\d{2}:\d{2}|[+-]\d{2})?/;
+  var _TIME_PAT = /^(\d{2})?(?::)?(\d{2})?(?::)?(\d{2})?(?:\.)?(\d+)?$/;
+  
+  var _dateMethods = [
+    'FullYear'
+    , 'Month'
+    , 'Date'
+    , 'Hours'
+    , 'Minutes'
+    , 'Seconds'
+    , 'Milliseconds'
+  ];
+
+  var _isArray = function (obj) {
+    return obj &&
+      typeof obj === 'object' &&
+      typeof obj.length === 'number' &&
+      typeof obj.splice === 'function' &&
+      !(obj.propertyIsEnumerable('length'));
+  };
 
   this.weekdayLong = ['Sunday', 'Monday', 'Tuesday',
     'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -562,6 +584,91 @@ util.date = new function () {
     // Round for fractional values and DST leaps
     return Math.round(delta); // Number (integer)
   };
+
+  this.parse = function (val) {
+    var dt, prefix, curr, matches, reordered, off, curr, stamp;
+    
+    // Yay, we have a date, use it as-is
+    if (val instanceof Date || typeof val.getFullYear == 'function') {
+      dt = val;
+    }
+    
+    // Timestamp?
+    else if (typeof val == 'number') {
+      dt = new Date(val);
+    }
+    
+    // String or Array
+    else {
+      // Value preparsed, looks like [yyyy, mo, dd, hh, mi, ss, ms, (offset?)]
+      if (_isArray(val)) {
+        matches = val;
+      }
+
+      // Oh, crap, it's a string -- parse this bitch
+      else if (typeof val == 'string') {
+        matches = val.match(_DATETIME_PAT);
+        
+        // Stupid US-only format?
+        if (!matches) {
+          val.match(_US_DATE_PAT);
+          if (matches) {
+            reordered = [matches[2], matches[0], matches[1]];
+            // Pad the results to the same length as ISO8601
+            reordered[8] = null;
+            matches = reordered;
+          }
+        }
+
+        // Time-stored-in Date hack?
+        if (!matches) {
+          val.match(_TIME_PAT);
+          if (matches) {
+            reordered = [0, 0, 0, matches[0], matches[1], matches[2], matches[3], null];
+            matches = reordered;
+          }
+        }
+
+      }
+      
+      // Sweet, the regex actually parsed it into something useful
+      if (matches) {
+        matches.shift(); // First match is entire match, DO NOT WANT
+        
+        off = matches.pop();
+        // If there's an offset, and it's GMT, we know to use
+        // UTC methods to set everything
+        if (off && off == 'Z') {
+          prefix = 'UTC';
+        }
+
+        dt = new Date(0);
+        
+        // Stupid zero-based months
+        matches[1] = parseInt(matches[1], 10) - 1;
+
+        // Iterate the array and set each date property using either
+        // plain or UTC setters
+        for (var i = 0, ii = matches.length; i < ii; i++) {
+          curr = parseInt(matches[i], 10) || 0;
+          dt['set' + prefix + _dateMethods[i]](curr);
+        }
+      }
+
+      // Shit, last-ditch effort using Date.parse
+      else {
+        stamp = Date.parse(val);
+        // Failures to parse yield NaN
+        if (!isNaN(stamp)) {
+          dt = new Date(stamp);
+        }
+      }
+    
+    }
+
+    return dt || null;
+  };
+
 
 }();
 

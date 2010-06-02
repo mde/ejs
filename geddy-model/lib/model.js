@@ -311,7 +311,7 @@ var model = new function () {
     
     item = this.validateAndUpdateFromParams(item, params);
 
-    if (this.useTimestamps) {
+    if (this.useTimestamps && !item.createdAt) {
       item.createdAt = new Date();
     }
     
@@ -484,11 +484,6 @@ model.VirtualProperty = function (name, datatype, o) {
  */
 model.datatypes = new function () {
   
-  var _DATE_PAT = /^(\d{4})(?:\-|\/|\.)(\d{1,2})(?:\-|\/|\.)(\d{1,2})/;
-  var _US_DATE_PAT = /^(\d{1,2})(?:\-|\/|\.)(\d{1,2})(?:\-|\/|\.)(\d{4})/;
-  var _DATETIME_PAT = /^(\d{4})(?:\-|\/|\.)(\d{1,2})(?:\-|\/|\.)(\d{1,2})(?:T| )?(\d{2})?(?::)?(\d{2})?(?::)?(\d{2})?(?:\.)?(\d+)?/;
-  var _TIME_PAT = /^(\d{2})?(?::)?(\d{2})?(?::)?(\d{2})?(?:\.)?(\d+)?$/;
-
   var _isArray = function (obj) {
     return obj &&
       typeof obj === 'object' &&
@@ -602,43 +597,7 @@ model.datatypes = new function () {
   };
   
   this.date = function (name, val) {
-    var dt;
-    var y, m, d;
-    var matches;
-    if (val instanceof Date || typeof val.getFullYear == 'function') {
-      dt = val;
-    }
-    // Value preparsed, looks like [yyyy, mm, dd]
-    else if (_isArray(val)) {
-      y = parseInt(val[0], 10);
-      m = parseInt(val[1], 10) - 1;
-      d = parseInt(val[2], 10);
-      dt = new Date(y, m, d);
-    }
-    else if (typeof val == 'string') {
-      matches = val.match(_DATE_PAT);
-      if (matches) {
-        matches.shift(); // First match is entire match
-        y = parseInt(matches.shift(), 10);
-        m = parseInt(matches.shift(), 10) - 1;
-        d = parseInt(matches.shift(), 10);
-        dt = new Date(y, m, d);
-      }
-      else {
-        matches = val.match(_US_DATE_PAT);
-        if (matches) {
-          matches.shift(); // First match is entire match
-          m = parseInt(matches.shift(), 10) - 1;
-          d = parseInt(matches.shift(), 10);
-          y = parseInt(matches.shift(), 10);
-          dt = new Date(y, m, d);
-        }
-      }
-    }
-    else if (typeof val == 'number') {
-      dt = new Date(val);
-    }
-
+    var dt = util.date.parse(val);
     if (dt) {
       return {
         err: null,
@@ -654,41 +613,7 @@ model.datatypes = new function () {
   };
 
   this.datetime = function (name, val) {
-    var dt;
-    var y, mo, d, h, mi, s, ms;
-    var matches;
-    if (val instanceof Date || typeof val.getFullYear == 'function') {
-      dt = val;
-    }
-    // Value preparsed, looks like [yyyy, mo, dd, hh, mi, ss, ms]
-    else if (_isArray(val)) {
-      y = parseInt(val[0], 10);
-      mo = parseInt(val[1], 10) - 1;
-      d = parseInt(val[2], 10);
-      h = parseInt(val[3], 10) || 0;
-      mi = parseInt(val[4], 10) || 0;
-      s = parseInt(val[5], 10) || 0;
-      ms = parseInt(val[6], 10) || 0;
-      dt = new Date(y, mo, d, h, mi, s, ms);
-    }
-    else if (typeof val == 'string') {
-      matches = val.match(_DATETIME_PAT);
-      if (matches) {
-        matches.shift(); // First match is entire match
-        y = parseInt(matches.shift(), 10);
-        mo = parseInt(matches.shift(), 10) - 1;
-        d = parseInt(matches.shift(), 10);
-        h = parseInt(matches.shift(), 10) || 0;
-        mi = parseInt(matches.shift(), 10) || 0;
-        s = parseInt(matches.shift(), 10) || 0;
-        ms = parseInt(matches.shift(), 10) || 0;
-        dt = new Date(y, mo, d, h, mi, s, ms);
-      }
-    }
-    else if (typeof val == 'number') {
-      dt = new Date(val);
-    }
-
+    var dt = util.date.parse(val);
     if (dt) {
       return {
         err: null,
@@ -703,33 +628,10 @@ model.datatypes = new function () {
     }
   };
 
+  // This is a hack -- we're saving times as Dates of 12/31/1969, and the
+  // desired time
   this.time = function (name, val) {
-    var dt;
-    var h, mi, s, ms;
-    var matches;
-    if (val instanceof Date || typeof val.getFullYear == 'function') {
-      dt = val;
-    }
-    // Value preparsed, looks like [hh, mi, ss, ms]
-    else if (_isArray(val)) {
-      h = parseInt(val[3], 10) || 0;
-      mi = parseInt(val[4], 10) || 0;
-      s = parseInt(val[5], 10) || 0;
-      ms = parseInt(val[6], 10) || 0;
-      dt = new Date(0, 0, 0, h, mi, s, ms);
-    }
-    else if (typeof val == 'string') {
-      matches = val.match(_TIME_PAT);
-      if (matches) {
-        matches.shift(); // First match is entire match
-        h = parseInt(matches.shift(), 10) || 0;
-        mi = parseInt(matches.shift(), 10) || 0;
-        s = parseInt(matches.shift(), 10) || 0;
-        ms = parseInt(matches.shift(), 10) || 0;
-        dt = new Date(0, 0, 0, h, mi, s, ms);
-      }
-    }
-
+    var dt = util.date.parse(val);
     if (dt) {
       return {
         err: null,
