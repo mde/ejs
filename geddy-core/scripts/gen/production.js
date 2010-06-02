@@ -18,20 +18,20 @@
 
 var config = new function () {
   this.detailedErrors = false;
-  /*
   this.hostname = null;
   this.port = 4000;
   this.sessions = {
-    store: 'memory',
-    key: 'sid',
-    expiry: 14 * 24 * 60 * 60
+    store: 'memory'
+    , key: 'sid'
+    , expiry: 14 * 24 * 60 * 60
   };
+  /*
   this.database = {
-    adapter: 'postgresql',
-    hostname: 'localhost',
-    dbName: 'geddy_db',
-    username: 'postgres',
-    password: null
+    adapter: 'postgresql'
+    , hostname: 'localhost'
+    , dbName: 'geddy_db'
+    , username: 'postgres'
+    , password: null
   };
   */
 }();
