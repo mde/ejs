@@ -689,6 +689,9 @@ model.validators = {
   length: function (name, val, params, rule) {
     var qual = rule.qualifier;
     var err;
+    if (!val) {
+      return rule.message || 'Field "' + name + '" is required.';
+    }
     if (typeof qual == 'number') {
       if (val.length != qual) {
         return rule.message || 'Field "' + name + '" must be ' + qual +

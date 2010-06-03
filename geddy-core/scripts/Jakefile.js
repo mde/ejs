@@ -243,7 +243,7 @@ exports.tasks = {
                 break;
               case 'boolean':
                 text += '&nbsp;<input type="checkbox" id="' + p + '" name="' + p +
-                    '" value="true" <%= if (params.' + p + ') { \'checked\'; }  %>/></div>\n';
+                    '" value="true" <% var checked = (params.' + p + ') ? \'checked\' : \'\';  %><%= checked %>/></div>\n';
                 break;
             }
           }
