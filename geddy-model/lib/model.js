@@ -127,74 +127,82 @@ var model = new function () {
     };
 
     // Base constructor function for all model items
-    return function (params) {
-      this.saved = params.saved || false;
+    var ModelItemConstructor = function (params) {
+
+      // SquirrelFish fucks up the binding of "this" to the current object.
+      // Have to create an object explicitly and return it here.
+      var _this = {};
       
-      this.type = def.name;
+      _this.saved = params.saved || false;
+      
+      _this.type = def.name;
 
       if (params.saved) {
-        this.id = params.id;
-        this.properties = params.properties;
-        this.virtualProperties = params.virtualProperties;
-        this.associations = params.associations;
+        _this.id = params.id;
+        _this.properties = params.properties;
+        _this.virtualProperties = params.virtualProperties;
+        _this.associations = params.associations;
       }
       else {
-        this.properties = createPropertyList(false);
-        this.virtualProperties = createPropertyList(true);
-        this.associations = createAssociations();
+        _this.properties = createPropertyList(false);
+        _this.virtualProperties = createPropertyList(true);
+        _this.associations = createAssociations();
       }
 
-      this.valid = function () {
-        return !this.errors;
+      _this.valid = function () {
+        return !_this.errors;
       };
 
       // Callback should be in the format of function (err, result) {}
-      this.save = function (callback) {
-        if (this.errors) {
+      _this.save = function (callback) {
+        if (_this.errors) {
           if (callback) {
-            callback(this.errors, null);
+            callback(_this.errors, null);
           }
           else {
             var err = new Error('Could not validate object. Errors: ' +
-                JSON.stringify(this.errors));
-            err.errors = this.errors;
+                JSON.stringify(_this.errors));
+            err.errors = _this.errors;
             throw err;
           }
         }
         else {
-          if (model.useTimestamps && this.saved) {
-            this.updatedAt = new Date();
+          if (model.useTimestamps && _this.saved) {
+            _this.updatedAt = new Date();
           }
-          return model.dbAdapter.save(this, callback);
+          return model.dbAdapter.save(_this, callback);
         }
       };
 
-      this.updateAttributes = function (params, callback) {
-        model.updateItem(this, params);
-        this.save(callback);
+      _this.updateAttributes = function (params, callback) {
+        model.updateItem(_this, params);
+        _this.save(callback);
       };
 
-      this.toString = function () {
+      _this.toString = function () {
         var obj = {};
-        obj.id = this.id;
-        obj.type = this.type;
-        var props = this.properties;
+        obj.id = _this.id;
+        obj.type = _this.type;
+        var props = _this.properties;
         var formatter; 
         for (var p in props) {
           formatter = model.formatters[props[p].datatype];
-          obj[p] = typeof formatter == 'function' ? formatter(this[p]) : this[p];
+          obj[p] = typeof formatter == 'function' ? formatter(_this[p]) : _this[p];
         }
         return JSON.stringify(obj);
       };
 
-      this.toJson = this.toString;
+      _this.toJson = _this.toString;
       
-      var virtuals = this.virtualProperties;
+      var virtuals = _this.virtualProperties;
       for (var p in virtuals) {
-        this[p] = createVirtualProperty(this, p, virtuals[p]);
+        _this[p] = createVirtualProperty(_this, p, virtuals[p]);
       }
-
+      
+      return _this;
     };
+
+    return ModelItemConstructor;
   };
 
   var _createStaticMethodsMixin = function (name) {
