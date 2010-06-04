@@ -2,13 +2,13 @@ var sys       = require ('sys');
 var assert    = require('assert');
 var gRouter   = require('../router');
 
-//Load util libraries
+//Load utility libraries
 GLOBAL.util = {};
 GLOBAL.util.meta = require('geddy-util/lib/meta');
 GLOBAL.util.string = require('geddy-util/lib/string');
 
 RouterTests = {
-  //pass and fail messages to be used in reporting success or failure
+  //pass and fail messages to be used in reporting success or failure 
   pass : 'Pass',
   fail : 'Failed',
   
@@ -29,11 +29,10 @@ RouterTests = {
     }
   },
 
-  
+ // create a router 
   testCreateRouter : function() {
-    assert.ok(router !== undefined, this.fail);
+    assert.ok(router, this.fail);
   },
-
 
   // create a simple route
   testCreateSimpleRoute : function() {
@@ -80,38 +79,38 @@ RouterTests = {
     assert.ok(route, this.fail)
   },
 
-  // create a static route with key regex match reqirements
+  // create a static route with key regex match requirements
   testRouteWithRegexReqs : function() {
     var route = router.match('/:controller/:action/:id', { id: /\d+/ } );
     assert.ok(route, this.fail)
   },
 
-  // create a static route with key match reqirements as a regex string
+  // create a static route with key match requirements as a regex string
   testRouteWithStringRegexReqs : function() {
     var route = router.match('/:controller/:action/:id', { id: '\\d+' } );
     assert.ok(route, this.fail)
   },
 
-  // create a static route with key match reqirements AND a method
+  // create a static route with key match requirements AND a method
   testRouteWithReqsAndMethod : function() {
     var route = router.match('/:controller/:action/:id', 'GET', { id: /\d+/ } );
     assert.ok(route, this.fail)
   },
 
-  // create a static route with key match reqirements AND a method in reverse order
+  // create a static route with key match requirements AND a method in reverse order
   testRouteWithReqsAndMethodReversed : function() {
     var route = router.match('/:controller/:action/:id', { id: /\d+/ }, 'GET' );
     assert.ok(route, this.fail)
   },
 
-  // create a static route with key match reqirements AND a method in reverse order
+  // create a static route with key match requirements AND a method in reverse order
   testRouteWithName : function() {
     var route = router.match('/:controller/:action/:id', { id: /\d+/ }, 'GET' ).name('aweosme');
     assert.ok(route, this.fail)
   },
 
 
-// ok - let's start doing things with thes routes
+// ok - let's start doing things with these routes
 
   // test that the router matches a URL
   testSimpleRouteParses : function() {
@@ -261,7 +260,7 @@ RouterTests = {
     assert.equal( router.first('/snow_dogs/1','DELETE').action, 'remove', this.fail);
   },
 
-// url generation tiem nao
+// url generation time nao
 
   testResourceUrlGeneration : function() {
     var routes = router.resource('SnowDogs');
@@ -313,11 +312,12 @@ RouterTests = {
   
 }
 
+// Run tests -- additionally setting up custom failure message and calling setup() and teardown()
 for(e in RouterTests) {
   if (e.match(/test/)) {
     RouterTests.fail = "FAILED  :: " + e; 
     RouterTests.setup();
     RouterTests[e]();
-    RouterTests.teardown(e)
+    RouterTests.teardown(e);
   }
 }
