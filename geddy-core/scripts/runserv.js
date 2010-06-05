@@ -19,6 +19,8 @@
 var req, resp, errors, appDirname, config, http,
     parseopts, Config, Init, App, args, opts, sys;
 
+global.geddy = require('geddy-core/lib/geddy');
+
 // Start grabbing errors first thing -- we need to be able
 // to report the entire stack, not just what the child process
 // gets on stderr
