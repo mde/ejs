@@ -73,7 +73,7 @@ var App = function (initData) {
         // =====
         // All the routing magic happens right here
         // =====
-        params = router.first(base, method);      
+        params = geddy.router.first(base, method);      
         log.debug(method + ': ' + url);
 
         // The route matches -- we have a winner!
@@ -113,7 +113,7 @@ var App = function (initData) {
 
             // Mix in any user-defined Application methods
             mixin = new controllerRegistry.Application();
-            controller = util.meta.mixin(controller, mixin);
+            controller = geddy.util.meta.mixin(controller, mixin);
             
             // All righty, let's handle the action
             controller.handleAction(params.action, params);
@@ -123,7 +123,7 @@ var App = function (initData) {
 
         // No route -- serve up the ol' 404
         else {
-          path = config.staticFilePath + req.url;
+          path = geddy.config.staticFilePath + req.url;
           fs.stat(path, function (err, stats) {
             // File not found, hand back the 404
             if (err) {
@@ -160,14 +160,14 @@ var App = function (initData) {
 // the URL and the query-string to produce a Grand Unified Params object
 var mergeParams = function (req, routeParams, qsParams) {
   var p = {};
-  p = util.meta.mixin(p, routeParams);
-  p = util.meta.mixin(p, qsParams);
+  p = geddy.util.meta.mixin(p, routeParams);
+  p = geddy.util.meta.mixin(p, qsParams);
   if ((req.method == 'POST' || req.method == 'PUT') &&
       (req.headers['content-type'].indexOf('form-urlencoded') > -1)) {
     // Deal with the retarded default encoding of spaces to plus-sign
     var b = req.body.replace(/\+/g, '%20');
     var bodyParams = fleegix.url.qsToObject(b, {arrayizeMulti: true});
-    p = util.meta.mixin(p, bodyParams);
+    p = geddy.util.meta.mixin(p, bodyParams);
   }
   return p;
 };

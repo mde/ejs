@@ -71,7 +71,7 @@ var Controller = function (obj) {
     this[p] = obj[p];
   }
 
-  this.nameDecamelized = util.string.decamelize(this.name);
+  this.nameDecamelized = geddy.util.string.decamelize(this.name);
 
 };
 
@@ -156,7 +156,7 @@ Controller.prototype = new function () {
       var act = redir.action;
       var ext = redir.extension || this.params.extension;
       var id = redir.id;
-      contr = util.string.decamelize(contr);
+      contr = geddy.util.string.decamelize(contr);
       url = '/' + contr;
       url += act ? '/' + act : '';
       url += id ? '/' + id : '';

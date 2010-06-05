@@ -30,12 +30,12 @@ Couchdb.prototype = new function () {
  
   this.setup = function (callback) {
     _appCallback = callback;
-    this.request({url: '/' + config.sessions.dbName, method: 'GET'}, this.ensureSetup);
+    this.request({url: '/' + geddy.config.sessions.dbName, method: 'GET'}, this.ensureSetup);
   };
 
   this.ensureSetup = function (response) {
     if (response.statusCode == 404) {
-      _this.request({url: '/' + config.sessions.dbName, method: 'PUT'}, _this.ensureSetup);
+      _this.request({url: '/' + geddy.config.sessions.dbName, method: 'PUT'}, _this.ensureSetup);
     }
     else {
       _appCallback();
@@ -44,7 +44,7 @@ Couchdb.prototype = new function () {
 
   this.read = function (sid, callback) {
     _appCallback = callback;
-    this.request({url: '/' + config.sessions.dbName +
+    this.request({url: '/' + geddy.config.sessions.dbName +
         '/' + sid, method: 'GET'}, this.ensureRead);
   };
 
@@ -64,7 +64,7 @@ Couchdb.prototype = new function () {
   this.create = function (response) {
     var url = response.url;
     var sid = url.substr(url.lastIndexOf('/') + 1);
-    this.request({url: '/' + config.sessions.dbName +
+    this.request({url: '/' + geddy.config.sessions.dbName +
         '/' + sid, method: 'PUT', data: {}}, this.ensureCreate);
   };
 
@@ -90,7 +90,7 @@ Couchdb.prototype = new function () {
   };
   
   this.write = function (sid, store, callback) {
-    this.request({url: '/' + config.sessions.dbName +
+    this.request({url: '/' + geddy.config.sessions.dbName +
         '/' + sid, method: 'PUT', data: store}, this.ensureUpdate);
     _appCallback = callback;
   };
@@ -105,12 +105,12 @@ Couchdb.prototype = new function () {
     req.method = params.method || 'GET';
     req.data = JSON.stringify(params.data) || null;
     
-    var headers = {host: config.sessions.dbHostname};
+    var headers = {host: geddy.config.sessions.dbHostname};
     if (req.data) {
       headers['content-length'] = req.data.length;
     }
     
-    var client = http.createClient(config.sessions.dbPort, config.sessions.dbHostname);
+    var client = http.createClient(geddy.config.sessions.dbPort, geddy.config.sessions.dbHostname);
     var request = client.request(req.method, req.url, headers);
     //sys.puts(req.url);
     request.addListener('response', function (response) {

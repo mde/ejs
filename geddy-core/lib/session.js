@@ -37,7 +37,7 @@ var session = new function () {
   };
 
   this.createStore = function (type, callback) {
-    var key = util.string.capitalize(type);
+    var key = geddy.util.string.capitalize(type);
     var constructor = require('geddy-core/lib/session_stores/' + type)[key];
     session.store = new constructor(callback);
   };
@@ -51,12 +51,12 @@ session.Session = function (obj) {
   for (var p in obj) {
     this[p] = obj[p];
   }
-  var keyName = config.sessions.key;
+  var keyName = geddy.config.sessions.key;
   var sid = this.cookies.get(keyName);
   if (!sid) {
     sid = session.generateSessionId()
     var dt = new Date();
-    dt.setTime(dt.getTime() + (config.sessions.expiry * 1000));
+    dt.setTime(dt.getTime() + (geddy.config.sessions.expiry * 1000));
     this.cookies.set(keyName, sid, {expires: dt.toGMTString()});
   }
   this.sid = sid;

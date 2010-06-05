@@ -19,7 +19,7 @@
 
       var validateSubmit = function () {
         var form = document.getElementById('modelItemForm');
-        var params = util.form.toObject(form);
+        var params = geddy.util.form.toObject(form);
         var item = <%= names.constructor.singular %>.create(params);
         console.log(item);
         if (item.valid()) {

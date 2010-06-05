@@ -15,9 +15,9 @@
  *
 */
 
-if (typeof util == 'undefined') { var util = {}; }
+if (typeof geddy == 'undefined') { geddy = {}; geddy.util = {}; }
 
-util.form = new function () {
+geddy.util.form = new function () {
   /**
    * Serializes the data from all the inputs in a Web form
    * into a query-string style string.
@@ -140,7 +140,5 @@ util.form = new function () {
 
 }();
 
-if (typeof exports != 'undefined') {
-  for (var p in util.form) { exports[p] = util.form[p]; }
-}
+if (module) { module.exports = geddy.util.form; }
 

@@ -18,20 +18,20 @@
 
 var Router = require('geddy-core/lib/router').Router;
 
-router = new Router();
+var router = new Router();
 router.match('/').to({controller: 'Main', action: 'index'});
 
 // Basic routes
-// router.match('/moving/pictures/:id').to(
+// geddy.router.match('/moving/pictures/:id').to(
 //    {controller: 'Moving', action: 'pictures'});
-// router.match('/farewells/:farewelltype/kings/:kingid').to(
+// geddy.router.match('/farewells/:farewelltype/kings/:kingid').to(
 //    {controller: 'Farewells', action: 'kings'});
 // Can also match specific HTTP methods only
-// router.match('/xandadu', 'get').to(
+// geddy.router.match('/xandadu', 'get').to(
 //    {controller: 'Xandadu', action: 'specialHandler'});
 //
 // Resource-based routes
-// router.resource('hemispheres');
+// geddy.router.resource('hemispheres');
 
 exports.router = router;
 

@@ -18,7 +18,7 @@
 
 if (typeof util == 'undefined') { var util = {}; }
 
-util.string = new function () {
+geddy.util.string = new function () {
   // Regexes used in trimming functions
   var _LTR = /^\s+/;
   var _RTR = /\s+$/;
@@ -159,7 +159,7 @@ util.string = new function () {
 }();
 
 if (typeof exports != 'undefined') {
-  for (var p in util.string) { exports[p] = util.string[p]; }
+  for (var p in geddy.util.string) { exports[p] = geddy.util.string[p]; }
 }
 
 

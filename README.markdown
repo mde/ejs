@@ -53,19 +53,19 @@ Routes are similar to Merb or Rails routes.
 
 **Basic routes**
   
-    router.match('/moving/pictures/:id').to(
+    geddy.router.match('/moving/pictures/:id').to(
       {controller: 'Moving', action: 'pictures'});
 
-    router.match('/farewells/:farewelltype/kings/:kingid').to(
+    geddy.router.match('/farewells/:farewelltype/kings/:kingid').to(
        {controller: 'Farewells', action: 'kings'});
 
     //Can also match specific HTTP methods only
-    router.match('/xandadu', 'get').to(
+    geddy.router.match('/xandadu', 'get').to(
       {controller: 'Xandadu', action: 'specialHandler'});
 
 **Resource-based routes**
   
-    router.resource('hemispheres');
+    geddy.router.resource('hemispheres');
 
 ### Creating a Geddy app
 
@@ -90,7 +90,7 @@ resource. The route will be set up automatically for you.
     mde@localhost:~/work/bytor$ geddy-gen resource snow_dog
     [ADDED] ./app/models/snow_dog.js
     [ADDED] ./app/controllers/snow_dogs.js
-    resources snow_dogs route added to ./config/router.js
+    resources snow_dogs route added to ./config/geddy.router.js
     Created view templates.
 
 Restart Geddy, and you'll see the new route working. Hit your
@@ -111,7 +111,7 @@ names by a comma, like this:
     mde@localhost:~/work/bytor$ geddy-gen resource person,people
     [ADDED] ./app/models/person.js
     [ADDED] ./app/controllers/people.js
-    resources people route added to ./config/router.js
+    resources people route added to ./config/geddy.router.js
     Created view templates.
 
 ### App layout
@@ -121,8 +121,8 @@ After adding a resource, a Geddy app is laid out like this:
     mde@localhost:~/work/bytor$ find .
     .
     ./config
-    ./config/config.js
-    ./config/router.js
+    ./config/geddy.config.js
+    ./config/geddy.router.js
     ./app
     ./app/controllers
     ./app/controllers/snow_dogs.js

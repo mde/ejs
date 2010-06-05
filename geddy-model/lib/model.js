@@ -273,7 +273,7 @@ var model = new function () {
     }
     else {
       // Introspect the list of constructors from app/models/*
-      var initList = util.meta.registerConstructors('/app/models/', dirList);
+      var initList = geddy.util.meta.registerConstructors('/app/models/', dirList);
       _constructorList = initList;
       for (var p in _constructorList) {
         model.registerModel(p);
@@ -303,7 +303,7 @@ var model = new function () {
     }
     ModelItem.prototype = origPrototype;
     // Mix in the static methods like .create and .load
-    ModelItem = util.meta.mixin(ModelItem, _createStaticMethodsMixin(p));
+    ModelItem = geddy.util.meta.mixin(ModelItem, _createStaticMethodsMixin(p));
     // Mix in any static methods defined directly on the original constructor
     // People might be retarded and overwrite save, find, et al, but that's
     // the JavaScripty way
@@ -605,7 +605,7 @@ model.datatypes = new function () {
   };
   
   this.date = function (name, val) {
-    var dt = util.date.parse(val);
+    var dt = geddy.util.date.parse(val);
     if (dt) {
       return {
         err: null,
@@ -621,7 +621,7 @@ model.datatypes = new function () {
   };
 
   this.datetime = function (name, val) {
-    var dt = util.date.parse(val);
+    var dt = geddy.util.date.parse(val);
     if (dt) {
       return {
         err: null,
@@ -639,7 +639,7 @@ model.datatypes = new function () {
   // This is a hack -- we're saving times as Dates of 12/31/1969, and the
   // desired time
   this.time = function (name, val) {
-    var dt = util.date.parse(val);
+    var dt = geddy.util.date.parse(val);
     if (dt) {
       return {
         err: null,
@@ -733,11 +733,11 @@ model.validators = {
 
 model.formatters = new function () {
   this.date = function (val) {
-    return util.date.strftime(val, config.dateFormat);
+    return geddy.util.date.strftime(val, geddy.config.dateFormat);
   };
 
   this.time = function (val) {
-    return util.date.strftime(val, config.timeFormat);
+    return geddy.util.date.strftime(val, geddy.config.timeFormat);
   };
 
 }();
@@ -756,7 +756,7 @@ model.ModelItemDefinitionBase = function (name) {
   };
 
   this.validates = function (condition, name, qual, opts) {
-    var rule = util.meta.mixin({}, opts, true);
+    var rule = geddy.util.meta.mixin({}, opts, true);
     rule.qualifier = qual;
     model.modelRegistry[this.name].properties[name].validations[condition] = rule;
   };
@@ -772,11 +772,11 @@ model.ModelItemDefinitionBase = function (name) {
     };
   };
   for (var p in model.validators) {
-    this['validates' + util.string.capitalize(p)] = _getValidator(p);
+    this['validates' + geddy.util.string.capitalize(p)] = _getValidator(p);
   }
 
   this.hasMany = function (datatype, opts) {
-    var key = inflections[datatype];
+    var key = geddy.inflections[datatype];
     if (!key) {
       throw new Error('Unknown model "' + datatype + '"')
     }
@@ -788,7 +788,7 @@ model.ModelItemDefinitionBase = function (name) {
   };
 
   this.belongsTo = function (datatype, opts) {
-    var key = inflections[datatype];
+    var key = geddy.inflections[datatype];
     if (!key) {
       throw new Error('Unknown model "' + datatype + '"')
     }

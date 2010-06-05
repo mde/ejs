@@ -16,9 +16,9 @@
  *
 */
 
-var sys = require('sys');
+if (typeof geddy == 'undefined') { geddy = {}; geddy.util = {}; }
 
-var async = {};
+geddy.util.async = {};
 
 /*
 AsyncChain -- performs a list of asynchronous calls in a desired order.
@@ -26,7 +26,7 @@ Optional "last" method can be set to run after all the items in the
 chain have completed.
 
   // Example usage
-  var asyncChain = new async.AsyncChain([
+  var asyncChain = new geddy.util.async.AsyncChain([
     {
       func: app.trainToBangkok,
       args: [geddy, neil, alex],
@@ -34,7 +34,7 @@ chain have completed.
     },
     {
       func: fs.readdir,
-      args: [config.dirname + '/thailand/express'],
+      args: [geddy.config.dirname + '/thailand/express'],
       callback: function (err, result) {
         if (err) {
           // Bail out completely
@@ -65,7 +65,7 @@ chain have completed.
   asyncChain.run();
   
 */
-async.AsyncChain = function (chain) {
+geddy.util.async.AsyncChain = function (chain) {
   this.chain = [];
   this.currentItem = null;
   this.shortCircuited = false;
@@ -75,12 +75,12 @@ async.AsyncChain = function (chain) {
   var item;
   for (var i = 0; i < chain.length; i++) {
     item = chain[i];
-    this.chain.push(new async.AsyncCall(
+    this.chain.push(new geddy.util.async.AsyncCall(
         item.func, item.args, item.callback));
   }
 };
 
-async.execNonBlocking = function (func) {
+geddy.util.async.execNonBlocking = function (func) {
   if (typeof process != 'undefined' && typeof process.nextTick == 'function') {
     process.nextTick(func);
   }
@@ -89,7 +89,7 @@ async.execNonBlocking = function (func) {
   }
 };
 
-async.AsyncChain.prototype = new function () {
+geddy.util.async.AsyncChain.prototype = new function () {
 
   this.runItem = function (item) {
     // Reference to the current item in the chain -- used
@@ -147,7 +147,7 @@ async.AsyncChain.prototype = new function () {
     else {
       // Scopage
       var _this = this;
-      async.execNonBlocking(function () { _this.next.call(_this); });
+      geddy.util.async.execNonBlocking(function () { _this.next.call(_this); });
     }
   }
 
@@ -170,7 +170,7 @@ async.AsyncChain.prototype = new function () {
 
 }();
 
-async.AsyncGroup = function (group) {
+geddy.util.async.AsyncGroup = function (group) {
   var item;
   var callback;
   var args;
@@ -180,7 +180,7 @@ async.AsyncGroup = function (group) {
 
   for (var i = 0; i < group.length; i++) {
     item = group[i];
-    this.group.push(new async.AsyncCall(
+    this.group.push(new geddy.util.async.AsyncCall(
         item.func, item.args, item.callback));
     this.outstandingCount++;
   }
@@ -192,7 +192,7 @@ Simpler way to group async calls -- doesn't ensure completion order,
 but still has a "last" method called when the entire group of calls
 have completed.
 */
-async.AsyncGroup.prototype = new function () {
+geddy.util.async.AsyncGroup.prototype = new function () {
   this.run = function () {
     var _this = this;
     var group = this.group;
@@ -211,7 +211,7 @@ async.AsyncGroup.prototype = new function () {
       callback = createCallback(item);
       args = item.args.concat(callback);
       // Run the async call
-      async.execNonBlocking(function () { item.func.apply(null, args); });
+      geddy.util.async.execNonBlocking(function () { item.func.apply(null, args); });
     }
   };
 
@@ -226,10 +226,12 @@ async.AsyncGroup.prototype = new function () {
 
 };
 
-async.AsyncCall = function (func, args, callback) {
+geddy.util.async.AsyncCall = function (func, args, callback) {
   this.func = func;
   this.args = args;
   this.callback = callback || null;
 };
 
-for (var p in async) { this[p] = async[p]; }
+if (module) { module.exports = geddy.util.async; }
+
+
