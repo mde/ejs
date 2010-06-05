@@ -37,7 +37,7 @@ process.addListener('uncaughtException', function (err) {
   else {
     var msg = '';
     msg += 'Error starting up application.\n';
-    msg += err.stack.toString();
+    msg += err.stack ? err.stack.toString() : '';
     sys.puts(msg);
     // FIXME: This is a hack -- figure out a better way to
     // tell the parent to shut down
@@ -54,8 +54,9 @@ Init = require('geddy-core/lib/init').Init;
 args = process.argv.slice(2);
 opts = parseopts.parse(args);
 
-// Add the local lib/ dir in the app as a require-lookup path
+// Add the local lib/ and vendor/ dirs in the app as a require-lookup path
 require.paths.unshift(opts.geddyRoot + '/lib/');
+require.paths.unshift(opts.geddyRoot + '/vendor/');
 
 var runServ = function () {
   var hostname;
