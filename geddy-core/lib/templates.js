@@ -20,6 +20,7 @@ var sys = require('sys');
 var fs = require('fs');
 var path = require('path');
 var fleegix = require('./fleegix');
+var async = require('geddy-util/lib/async');
 
 var templates = {};
 
@@ -74,7 +75,7 @@ templates.TemplateNode.prototype = new function () {
     var childNode;
     for (var p in childNodes) {
       childNode = childNodes[p];
-      childNode.loadTemplate();
+      async.execNonBlocking(function () { childNode.loadTemplate(); });
     }
   };
   
@@ -100,7 +101,7 @@ templates.TemplateNode.prototype = new function () {
       // if it either has no children, or all its children have loaded.
       // The parent will do the same thing until we get to the base node
       _this.loaded = true;
-      _this.finish();
+      async.execNonBlocking(function () { _this.finish(); });
     });
 
   };
