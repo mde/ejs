@@ -1,3 +1,4 @@
+var sys = require('sys');
 
 var SQLBaseAdapter = function (conn) {
   var _rows;
@@ -12,6 +13,15 @@ var SQLBaseAdapter = function (conn) {
       }
     }
     return false;
+  }
+
+  // Scrub input for basic SQL injection protection
+  var _escape = function (s) {
+    return s.replace(/'/g, "\'\'\'\'");
+  };
+
+  var _unescape = function (s) {
+    return s.replace(/''/g, "\'");
   }
 
   this.save = function (modelItem, callback) {
@@ -32,12 +42,13 @@ var SQLBaseAdapter = function (conn) {
         , data: item
       };
       for (var p in fields) {
-        vals.push(p + " = '" + fields[p] + "'");
+        vals.push(_escape(p) + " = '" + _escape(fields[p]) + "'");
       }
 
       sql += 'UPDATE geddy_data SET';
       sql += ' ' + vals.join(', ');
-      sql += " WHERE uuid = '" + uuid + "';";
+      sql += " WHERE uuid = '" + _escape(uuid) + "';";
+      sys.puts(sql);
     }
     // Create track
     else {
@@ -58,8 +69,8 @@ var SQLBaseAdapter = function (conn) {
         , data: item
       };
       for (var p in fields) {
-        keys.push(p);
-        vals.push("'" + fields[p] + "'");
+        keys.push(_escape(p));
+        vals.push("'" + _escape(fields[p]) + "'");
       }
 
       sql += 'INSERT INTO geddy_data';
@@ -75,6 +86,9 @@ var SQLBaseAdapter = function (conn) {
 
   this.remove = function (dataType, uuidParam, callback) {
     uuids = typeof uuidParam == 'string' ? [uuidParam] : uuidParam;
+    for (var i = 0, ii = uuids.length; i < ii; i++) {
+      uuids[i] = _escape(uuids[i]);
+    }
     uuids = "'" + uuids.join("', '") + "'";
     sql = "DELETE FROM geddy_data WHERE uuid in (" + uuids + ");";
     conn.query(sql, function (err, rows) {
@@ -86,10 +100,13 @@ var SQLBaseAdapter = function (conn) {
     var sql, uuids;
 
     if(!params.ids || params.ids[0] == 'all') {
-      sql = "SELECT data FROM geddy_data WHERE type = '" + params.dataType + "';";
+      sql = "SELECT data FROM geddy_data WHERE type = '" + _escape(params.dataType) + "';";
     }
     else {
       uuids = "'" + params.ids.join("', '") + "'";
+      for (var i = 0, ii = uuids.length; i < ii; i++) {
+        uuids[i] = _escape(uuids[i]);
+      }
       sql = "SELECT data FROM geddy_data WHERE uuid in (" + uuids + ");";
     }
 
@@ -115,7 +132,8 @@ var SQLBaseAdapter = function (conn) {
           include;
       
       for (i = 0, ii = rows.length; i < ii; i++) {
-        rowData = rows[i].data;
+        rowData = rows[i].data || rows[i][0];
+        rowData = _unescape(rowData);
         data = JSON.parse(rowData);
         data = GLOBAL[data.type].create(data);
 
