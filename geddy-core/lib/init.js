@@ -34,10 +34,10 @@ var Init = function (config, callback) {
   geddy.hooks = require('geddy-core/lib/hooks');
   geddy.inflections = require(geddy.config.dirname + '/config/inflections');
 
-  global.controllerRegistry = {};
-  global.templateRegistry = {};
-  global.pluginRegistry = {};
-  
+  geddy.controllerRegistry = {};
+  geddy.templateRegistry = {};
+  geddy.pluginRegistry = {};
+
   // Load anything in from the app's local init
   var localInit = require(geddy.config.dirname + '/config/init');
   for (var p in localInit) {
@@ -49,7 +49,8 @@ var Init = function (config, callback) {
       sys.puts('Error: ' + JSON.stringify(err));
     }
     else {
-      controllerRegistry = geddy.util.meta.registerConstructors('/app/controllers/', dirList);
+      geddy.controllerRegistry =
+          geddy.util.meta.registerConstructors('/app/controllers/', dirList);
     }
   };
 
@@ -72,7 +73,7 @@ var Init = function (config, callback) {
           templates[file] = true;
         }
       }
-      templateRegistry = templates;
+      geddy.templateRegistry = templates;
     }
   };
 
@@ -91,7 +92,7 @@ var Init = function (config, callback) {
       cfg = plugins[pluginName];
       pathName = fleegix.string.deCamelize(pluginName);
       path = geddy.config.dirname + '/plugins/' + pathName + '/' + pathName;
-      pluginRegistry[pluginName] = new require(path)[pluginName](cfg);
+      geddy.pluginRegistry[pluginName] = new require(path)[pluginName](cfg);
     }
   };
 
@@ -126,7 +127,7 @@ var Init = function (config, callback) {
       callback: this.registerTemplates
     }
   ]);
-  
+
   group.last = _callback;
   group.run();
 

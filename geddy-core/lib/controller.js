@@ -316,13 +316,13 @@ Controller.prototype = new function () {
    
     if (!url) {
       key = parentNode.dirname + '/' + partial + '.html.ejs';
-      if (templateRegistry[key]) {
+      if (geddy.templateRegistry[key]) {
         url = key;
       }
     }
     if (!url) {
       key = 'app/views/' + partial + '.html.ejs';
-      if (templateRegistry[key]) {
+      if (geddy.templateRegistry[key]) {
         url = key;
       }
     }

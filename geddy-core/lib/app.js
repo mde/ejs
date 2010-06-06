@@ -99,7 +99,7 @@ var App = function (initData) {
             log.debug('params: ' + JSON.stringify(params))
 
             // Instantiate the matching controller from the registry
-            constructor = controllerRegistry[params.controller];
+            constructor = geddy.controllerRegistry[params.controller];
             // Give it all the base Controller fu
             constructor.prototype = new Controller({
               request: req,
@@ -112,7 +112,7 @@ var App = function (initData) {
             controller = new constructor();
 
             // Mix in any user-defined Application methods
-            mixin = new controllerRegistry.Application();
+            mixin = new geddy.controllerRegistry.Application();
             controller = geddy.util.meta.mixin(controller, mixin);
             
             // All righty, let's handle the action
