@@ -33,5 +33,5 @@ hooks.Hook = function (name, params) {
   this.callback = params.callback;
 }
 
-for (var p in hooks) { this[p] = hooks[p]; }
+module.exports = hooks;
 

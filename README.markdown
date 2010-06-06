@@ -255,7 +255,7 @@ Here is an example of a model with some validations:
     // Server-side, commonjs
     exports.User = User;
     // Client-side
-    // model.registerModel('User');
+    // geddy.model.registerModel('User');
 
 Creating an instance of one of these models is easy:
 

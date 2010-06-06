@@ -119,7 +119,7 @@ Controller.prototype = new function () {
       }
       if (applyFilter) {
         name = filter.name;
-        hook = hooks.collection[name];
+        hook = geddy.hooks.collection[name];
         hook.args = [_this];
         list.push(hook);
       }

@@ -22,16 +22,16 @@ var router = new Router();
 router.match('/').to({controller: 'Main', action: 'index'});
 
 // Basic routes
-// geddy.router.match('/moving/pictures/:id').to(
+// router.match('/moving/pictures/:id').to(
 //    {controller: 'Moving', action: 'pictures'});
-// geddy.router.match('/farewells/:farewelltype/kings/:kingid').to(
+// router.match('/farewells/:farewelltype/kings/:kingid').to(
 //    {controller: 'Farewells', action: 'kings'});
 // Can also match specific HTTP methods only
-// geddy.router.match('/xandadu', 'get').to(
+// router.match('/xandadu', 'get').to(
 //    {controller: 'Xandadu', action: 'specialHandler'});
 //
 // Resource-based routes
-// geddy.router.resource('hemispheres');
+// router.resource('hemispheres');
 
 exports.router = router;
 

@@ -79,5 +79,5 @@ geddy.util.meta = new function () {
 
 }();
 
-if (module) { module.exports = geddy.util.meta; }
+if (typeof module != 'undefined') { module.exports = geddy.util.meta; }
 

@@ -41,34 +41,35 @@ User.prototype.someMethod = function () {
 // Server-side, commonjs
 exports.User = User;
 // Client-side
-model.registerModel('User');
+geddy.model.registerModel('User');
 */
 
+if (typeof geddy == 'undefined') { geddy = {}; }
 var sys;
 
-var model = new function () {
+geddy.model = new function () {
   
   this.dbAdapter = null;
   this.modelRegistry = {};
   this.useTimestamps = true;
   
-  // Client-side, create GLOBAL ref for top-level execution scope
+  // Client-side, create global ref for top-level execution scope
   if (typeof window != 'undefined') {
-    window.GLOBAL = window;
+    window.global = window;
     this.useTimestamps = false;
   }
   // Server-side
   else {
     sys = require('sys');
   }
-
-  var _constructorList = GLOBAL;
+  
+  var _constructorList = global;
 
   var _createModelItemConstructor = function (def) {
 
       var createPropertyList = function (virtual) {
         var listName = virtual ? 'virtualProperties' : 'properties';
-        var defBase = model.modelRegistry[def.name];
+        var defBase = geddy.model.modelRegistry[def.name];
         var props = defBase[listName];
         var ret = {};
         var fromItem;
@@ -93,15 +94,15 @@ var model = new function () {
     // rather than just mapping a bunch of string keys to method names
     var createVirtualPropertyMethod = function (_this, virtualPropertyName, methodName, args) {
       return function () {
-        return model.dbAdapter.virtual(_this, virtualPropertyName, methodName, arguments);
+        return geddy.model.dbAdapter.virtual(_this, virtualPropertyName, methodName, arguments);
       }
     };
 
     var createVirtualProperty = function (_this, virtualPropertyName, obj) {
       var prop = {};
-      var datatype = model.dbAdapter.virtualPropertyDatatypes[obj.datatype];
+      var datatype = geddy.model.dbAdapter.virtualPropertyDatatypes[obj.datatype];
       if (!datatype) {
-        throw new Error('No virtual-property datatypes defined in model.dbAdapter.');
+        throw new Error('No virtual-property datatypes defined in geddy.model.dbAdapter.');
       };
       var methodNames = datatype.methods;
       var methodName;
@@ -113,7 +114,7 @@ var model = new function () {
     };
 
     var createAssociations = function () {
-        var defBase = model.modelRegistry[def.name];
+        var defBase = geddy.model.modelRegistry[def.name];
         var assoc = defBase.associations;
         var created;
         for (var p in assoc) {
@@ -167,15 +168,15 @@ var model = new function () {
           }
         }
         else {
-          if (model.useTimestamps && _this.saved) {
+          if (geddy.model.useTimestamps && _this.saved) {
             _this.updatedAt = new Date();
           }
-          return model.dbAdapter.save(_this, callback);
+          return geddy.model.dbAdapter.save(_this, callback);
         }
       };
 
       _this.updateAttributes = function (params, callback) {
-        model.updateItem(_this, params);
+        geddy.model.updateItem(_this, params);
         _this.save(callback);
       };
 
@@ -186,7 +187,7 @@ var model = new function () {
         var props = _this.properties;
         var formatter; 
         for (var p in props) {
-          formatter = model.formatters[props[p].datatype];
+          formatter = geddy.model.formatters[props[p].datatype];
           obj[p] = typeof formatter == 'function' ? formatter(_this[p]) : _this[p];
         }
         return JSON.stringify(obj);
@@ -211,54 +212,54 @@ var model = new function () {
     obj.create = function () {
       var args = Array.prototype.slice.call(arguments);
       args.unshift(name);
-      return model.createItem.apply(model, args);
+      return geddy.model.createItem.apply(geddy.model, args);
     };
 
     obj.find = function () {
-      if (!model.dbAdapter) {
+      if (!geddy.model.dbAdapter) {
         throw new Error('dbAdapter is not defined.');
       }
       var args = Array.prototype.slice.call(arguments);
       args.unshift(name);
-      return model.dbAdapter.find.apply(model.dbAdapter, args);
+      return geddy.model.dbAdapter.find.apply(geddy.model.dbAdapter, args);
     };
 
     obj.all = function () {
-      if (!model.dbAdapter) {
+      if (!geddy.model.dbAdapter) {
         throw new Error('dbAdapter is not defined.');
       }
       var args = Array.prototype.slice.call(arguments);
       args.unshift(name);
-      return model.dbAdapter.all.apply(model.dbAdapter, args);
+      return geddy.model.dbAdapter.all.apply(geddy.model.dbAdapter, args);
     };
 
     obj.update = function () {
-      if (!model.dbAdapter) {
+      if (!geddy.model.dbAdapter) {
         throw new Error('dbAdapter is not defined.');
       }
       var args = Array.prototype.slice.call(arguments);
       args.unshift(name);
-      return model.dbAdapter.update.apply(model.dbAdapter, args);
+      return geddy.model.dbAdapter.update.apply(geddy.model.dbAdapter, args);
     };
 
     obj.remove = function () {
-      if (!model.dbAdapter) {
+      if (!geddy.model.dbAdapter) {
         throw new Error('dbAdapter is not defined.');
       }
       var args = Array.prototype.slice.call(arguments);
       args.unshift(name);
-      return model.dbAdapter.remove.apply(model.dbAdapter, args);
+      return geddy.model.dbAdapter.remove.apply(geddy.model.dbAdapter, args);
     };
     
     // Singleton usage -- only one possible instance, and the
     // dbAdapter knows how to get it
     obj.getInstance = function () {
-      if (!model.dbAdapter) {
+      if (!geddy.model.dbAdapter) {
         throw new Error('dbAdapter is not defined.');
       }
       var args = Array.prototype.slice.call(arguments);
       args.unshift(name);
-      return model.dbAdapter.getInstance.apply(model.dbAdapter, args);
+      return geddy.model.dbAdapter.getInstance.apply(geddy.model.dbAdapter, args);
     };
 
     obj.load = obj.find;
@@ -276,7 +277,7 @@ var model = new function () {
       var initList = geddy.util.meta.registerConstructors('/app/models/', dirList);
       _constructorList = initList;
       for (var p in _constructorList) {
-        model.registerModel(p);
+        geddy.model.registerModel(p);
       }
     }
   };
@@ -285,8 +286,8 @@ var model = new function () {
     var ModelItemDefinition = _constructorList[p];
     // Ref to any original prototype, so we can copy stuff off it
     var origPrototype = ModelItemDefinition.prototype;
-    model.modelRegistry[p] = new model.Model(p);
-    ModelItemDefinition.prototype = new model.ModelItemDefinitionBase(p);
+    geddy.model.modelRegistry[p] = new geddy.model.Model(p);
+    ModelItemDefinition.prototype = new geddy.model.ModelItemDefinitionBase(p);
     var def = new ModelItemDefinition();
     // Create the constructor function to use when calling static
     // ModalItem.create. Gives them the proper instanceof value,
@@ -311,11 +312,11 @@ var model = new function () {
       ModelItem[prop] = ModelItemDefinition[prop]
     }
     // Create a globally scoped constructor name
-    GLOBAL[p] = ModelItem;
+    global[p] = ModelItem;
   };
 
   this.createItem = function (typeName, params) {
-    var item = new GLOBAL[typeName](params);
+    var item = new global[typeName](params);
     
     item = this.validateAndUpdateFromParams(item, params);
 
@@ -343,7 +344,7 @@ var model = new function () {
   };
 
   this.validateAndUpdateFromParams = function (item, params) {
-    var type = model.modelRegistry[item.type];
+    var type = geddy.model.modelRegistry[item.type];
     var properties = type.properties;
     var validated = null;
     var errs = null;
@@ -404,7 +405,7 @@ var model = new function () {
     // e.g., undefined will fail the validation for Number, even if the
     // field is optional
     if (val) {
-      var result = model.datatypes[prop.datatype.toLowerCase()](prop.name, val);
+      var result = geddy.model.datatypes[prop.datatype.toLowerCase()](prop.name, val);
       if (result.err) {
         return {
           err: result.err,
@@ -422,7 +423,7 @@ var model = new function () {
     var validator;
     var err;
     for (var p in validations) {
-      validator = model.validators[p]
+      validator = geddy.model.validators[p]
       if (typeof validator != 'function') {
         throw new Error(p + ' is not a valid validator');
       }
@@ -448,19 +449,19 @@ var model = new function () {
   };
 
   this.setDbAdapter = function (adapt) {
-    model.dbAdapter = adapt;
+    geddy.model.dbAdapter = adapt;
   };
 
 }();
 
-model.Model = function (name) {
+geddy.model.Model = function (name) {
   this.name = name;
   this.properties = {};
   this.virtualProperties = {};
   this.associations = {};
 };
 
-model.Property = function (name, datatype, o) {
+geddy.model.Property = function (name, datatype, o) {
   var opts = o || {};
   this.name = name;
   this.datatype = datatype;
@@ -480,7 +481,7 @@ model.Property = function (name, datatype, o) {
   this.validations = validations;
 };
 
-model.VirtualProperty = function (name, datatype, o) {
+geddy.model.VirtualProperty = function (name, datatype, o) {
   var opts = o || {};
   this.name = name;
   this.datatype = datatype;
@@ -490,7 +491,7 @@ model.VirtualProperty = function (name, datatype, o) {
 /*
  * Datatype verification -- may modify the value by casting
  */
-model.datatypes = new function () {
+geddy.model.datatypes = new function () {
   
   var _isArray = function (obj) {
     return obj &&
@@ -667,7 +668,7 @@ model.datatypes = new function () {
  * withFunction: {qualifier: function (s) { return true },
  *    message: 'Something is wrong'}
  */
-model.validators = {
+geddy.model.validators = {
   present: function (name, val, params, rule) {
     if (!val) {
       return rule.message || 'Field "' + name + '" is required.';
@@ -731,7 +732,7 @@ model.validators = {
 
 };
 
-model.formatters = new function () {
+geddy.model.formatters = new function () {
   this.date = function (val) {
     return geddy.util.date.strftime(val, geddy.config.dateFormat);
   };
@@ -742,23 +743,23 @@ model.formatters = new function () {
 
 }();
 
-model.ModelItemDefinitionBase = function (name) {
+geddy.model.ModelItemDefinitionBase = function (name) {
   this.name = name;
 
   this.property = function (name, datatype, o) {
-    model.modelRegistry[this.name].properties[name] =
-      new model.Property(name, datatype, o);
+    geddy.model.modelRegistry[this.name].properties[name] =
+      new geddy.model.Property(name, datatype, o);
   };
 
   this.virtualProperty = function (name, datatype, o) {
-    model.modelRegistry[this.name].virtualProperties[name] =
-      new model.VirtualProperty(name, datatype, o);
+    geddy.model.modelRegistry[this.name].virtualProperties[name] =
+      new geddy.model.VirtualProperty(name, datatype, o);
   };
 
   this.validates = function (condition, name, qual, opts) {
     var rule = geddy.util.meta.mixin({}, opts, true);
     rule.qualifier = qual;
-    model.modelRegistry[this.name].properties[name].validations[condition] = rule;
+    geddy.model.modelRegistry[this.name].properties[name].validations[condition] = rule;
   };
 
   // For each of the validators, create a validatesFooBar from
@@ -771,7 +772,7 @@ model.ModelItemDefinitionBase = function (name) {
       return _this.validates.apply(_this, args);
     };
   };
-  for (var p in model.validators) {
+  for (var p in geddy.model.validators) {
     this['validates' + geddy.util.string.capitalize(p)] = _getValidator(p);
   }
 
@@ -781,7 +782,7 @@ model.ModelItemDefinitionBase = function (name) {
       throw new Error('Unknown model "' + datatype + '"')
     }
     key = key.constructor.plural;
-    var def = model.modelRegistry[this.name];
+    var def = geddy.model.modelRegistry[this.name];
     var assoc = def.associations.hasMany || {};
     assoc[key] = {};
     def.associations.hasMany = assoc;
@@ -793,14 +794,14 @@ model.ModelItemDefinitionBase = function (name) {
       throw new Error('Unknown model "' + datatype + '"')
     }
     key = key.constructor.plural;
-    var def = model.modelRegistry[this.name];
+    var def = geddy.model.modelRegistry[this.name];
     var assoc = def.associations.belongsTo || {};
     assoc[key] = {};
     def.associations.belongsTo = assoc;
   };
 
   // Add the base model properties -- these should not be handled by user input
-  if (model.useTimestamps) {
+  if (geddy.model.useTimestamps) {
     this.property('createdAt', 'datetime');
     this.property('updatedAt', 'datetime');
   }
@@ -808,7 +809,5 @@ model.ModelItemDefinitionBase = function (name) {
 };
 
 // Server-side, add everything to exports
-if (typeof window == 'undefined') {
-  for (var p in model) { this[p] = model[p]; }
-}
+if (typeof module != 'undefined') { module.exports = geddy.model; }
 

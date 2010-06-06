@@ -232,6 +232,6 @@ geddy.util.async.AsyncCall = function (func, args, callback) {
   this.callback = callback || null;
 };
 
-if (module) { module.exports = geddy.util.async; }
+if (typeof module != 'undefined') { module.exports = geddy.util.async; }
 
 

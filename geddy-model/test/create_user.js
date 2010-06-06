@@ -15,7 +15,7 @@ User.prototype.someMethod = function () {
   // Do some stuff on a User instance
 };
 
-model.registerModel('User');
+geddy.model.registerModel('User');
 
 var testCreateUser = new function () {
   var _params = {

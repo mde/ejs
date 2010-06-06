@@ -6,7 +6,7 @@ var ByTor = function () {
   this.property('farewellToKings', 'array');
 };
 
-model.registerModel('ByTor');
+geddy.model.registerModel('ByTor');
 
 var testDatatypes = new function () {
   this.testAllOptional = function () {

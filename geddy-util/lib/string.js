@@ -16,7 +16,7 @@
  *
 */
 
-if (typeof util == 'undefined') { var util = {}; }
+if (typeof geddy == 'undefined') { geddy = {}; geddy.util = {}; }
 
 geddy.util.string = new function () {
   // Regexes used in trimming functions
@@ -158,8 +158,6 @@ geddy.util.string = new function () {
 
 }();
 
-if (typeof exports != 'undefined') {
-  for (var p in geddy.util.string) { exports[p] = geddy.util.string[p]; }
-}
+if (typeof module != 'undefined') { module.exports = geddy.util.string; }
 
 

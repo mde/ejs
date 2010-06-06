@@ -30,15 +30,13 @@ var Init = function (config, callback) {
   geddy.config = config;
   // The app's instantiated Router
   geddy.router = require(geddy.config.dirname + '/config/router').router;
+  geddy.model = require('geddy-model/lib/model');
+  geddy.hooks = require('geddy-core/lib/hooks');
+  geddy.inflections = require(geddy.config.dirname + '/config/inflections');
 
-  global.model = require('geddy-model/lib/model');
-  global.hooks = require('geddy-core/lib/hooks');
   global.controllerRegistry = {};
   global.templateRegistry = {};
   global.pluginRegistry = {};
-  
-  
-  geddy.inflections = require(geddy.config.dirname + '/config/inflections');
   
   // Load anything in from the app's local init
   var localInit = require(geddy.config.dirname + '/config/init');
@@ -81,7 +79,7 @@ var Init = function (config, callback) {
   this.loadDBAdapter = function () {
     var adapterPath = 'geddy-model/lib/adapters/' + geddy.config.database.adapter;
     var adapt = require(adapterPath);
-    model.setDbAdapter(adapt);
+    geddy.model.setDbAdapter(adapt);
   };
 
   this.loadPlugins = function () {
@@ -115,7 +113,7 @@ var Init = function (config, callback) {
     {
       func: fs.readdir,
       args: [geddy.config.dirname + '/app/models'],
-      callback: model.registerModels
+      callback: geddy.model.registerModels
     },
     {
       func: fs.readdir,

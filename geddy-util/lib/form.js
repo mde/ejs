@@ -140,5 +140,5 @@ geddy.util.form = new function () {
 
 }();
 
-if (module) { module.exports = geddy.util.form; }
+if (typeof module != 'undefined') { module.exports = geddy.util.form; }
 

@@ -19,6 +19,8 @@
 var req, resp, errors, appDirname, config, http,
     parseopts, Config, Init, App, args, opts, sys;
 
+sys = require('sys');
+
 global.geddy = require('geddy-core/lib/geddy');
 
 // Start grabbing errors first thing -- we need to be able
@@ -47,7 +49,6 @@ process.addListener('uncaughtException', function (err) {
   }
 });
   
-sys = require('sys');
 appDirname = process.argv[2];
 http = require('http');
 parseopts = require('geddy-core/lib/parseopts');

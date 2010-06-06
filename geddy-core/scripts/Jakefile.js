@@ -79,6 +79,7 @@ exports.tasks = {
       var text, contents;
       var filePath;
       var fleegix = require('../lib/fleegix');
+      
       global.geddy = require('../../geddy-core/lib/geddy');
       
       // Add the controller file
@@ -125,7 +126,7 @@ exports.tasks = {
       text = fs.readFileSync(filePath, 'utf8');
       // Add the new resource route just above the export
       routerArr = text.split('exports.router');
-      routerArr[0] += 'geddy.router.resource(\'' +  names.filename.plural + '\');\n';
+      routerArr[0] += 'router.resource(\'' +  names.filename.plural + '\');\n';
       text = routerArr.join('exports.router');
       fs.writeFileSync(filePath, text, 'utf8');
       sys.puts('resources ' + names.filename.plural + ' route added to ' + filePath);
@@ -175,7 +176,6 @@ exports.tasks = {
       // the client-side model JS files
       var createScaffold = function () {
         var def, props, prop, modelKey, viewsDirName, fileName, tmpl, text;
-        
         // Where the hell are we?
         var dirname = process.cwd();
         // FIXME: Port fleegix.js templates to geddy-util
@@ -183,10 +183,10 @@ exports.tasks = {
 
         // Set up a minimal environment for intepreting the model
         global.geddy = require('geddy-core/lib/geddy');
+        
         geddy.config = {dirname: dirname};
         geddy.inflections = require(dirname + '/config/inflections');
-
-        var model = require('geddy-model/lib/model');
+        geddy.model = require('geddy-model/lib/model');
 
         fs.readdir(dirname + '/app/models', function (err, res) {
 
@@ -194,16 +194,17 @@ exports.tasks = {
           modelKey = names.constructor.singular;
           modelFileName = names.filename.singular;
           viewsDirName = names.filename.plural;
+
           // Load up the model definition
-          model.registerModels(err, res);
-          def = model.modelRegistry[modelKey];
+          geddy.model.registerModels(err, res);
+          def = geddy.model.modelRegistry[modelKey];
           props = def.properties;
          
           // Client-side file for client-side validation
           text = fs.readFileSync(dirname + '/app/models/' + modelFileName + '.js', 'utf8');
           // Use client-side registration instead of server-side export
           text = text.replace('exports.' + modelKey + ' = ' + modelKey + ';',
-              'model.registerModel(\'' + modelKey + '\');');
+              'geddy.model.registerModel(\'' + modelKey + '\');');
           fileName = dirname + '/public/js/models/' + modelFileName + '.js';
           fs.writeFileSync(fileName, text, 'utf8');
           sys.puts('Created client-side model JavaScript files.');
