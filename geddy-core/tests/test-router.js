@@ -1,6 +1,11 @@
 var ERNEST = require('../scripts/ernest').ERNEST;
 var assert = require('assert');
-var gRouter   = require('../lib/router');
+var gRouter = require('../lib/router');
+
+//Load utility libraries
+GLOBAL.util = {};
+GLOBAL.util.meta = require('geddy-util/lib/meta');
+GLOBAL.util.string = require('geddy-util/lib/string');
 
 //overload setup to setup this test
 ERNEST.setup = function(){

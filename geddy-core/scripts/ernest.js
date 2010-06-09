@@ -1,11 +1,6 @@
 var sys       = require ('sys');
 var assert    = require('assert');
 
-//Load utility libraries
-GLOBAL.util = {};
-GLOBAL.util.meta = require('geddy-util/lib/meta');
-GLOBAL.util.string = require('geddy-util/lib/string');
-
 ERNEST = {
   //pass and fail messages to be used in reporting success or failure 
   pass : 'PASSED :: ',

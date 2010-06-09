@@ -416,7 +416,6 @@ exports.tasks = {
     , 'deps': []
     , 'task': function () {
         var rootPath = '/Users/sdavie/Programming/geddy';
-        var cmds = [];
         var paths;
         child_process.exec("find . | grep '/tests/' | grep '\.js$'", function(err, stdout, stderr){
           paths = stdout.split('\n')
