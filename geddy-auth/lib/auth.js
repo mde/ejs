@@ -27,8 +27,8 @@ var auth = {};
 
 auth.Auth = function (config) {
   var _this = this;
-  this.authTypes = config.authTypes;
-  this.htmlRedirect = config.htmlRedirect || '/';
+  this.authTypes = geddy.config.authTypes;
+  this.htmlRedirect = geddy.config.htmlRedirect || '/';
   this.authenticators = {};
   this.controller = null;
 

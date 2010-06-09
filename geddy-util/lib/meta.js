@@ -15,17 +15,17 @@
  * limitations under the License.
  *
 */
-if (typeof util == 'undefined') { var util = {}; }
+if (typeof geddy == 'undefined') { geddy = {}; geddy.util = {}; }
 
-util.meta = new function () {
+geddy.util.meta = new function () {
   this.registerConstructors = function (dirname, dirList) {
     
-    if (typeof util.string == 'undefined') {
+    if (typeof geddy.util.string == 'undefined') {
       if (typeof require != 'undefined') {
-        util.string = require('geddy-util/lib/string');
+        geddy.util.string = require('geddy-util/lib/string');
       }
       else {
-        throw new Error('This method depends on util.string');
+        throw new Error('This method depends on geddy.util.string');
       }
     }
 
@@ -41,10 +41,10 @@ util.meta = new function () {
         // Strip the '.js', e.g., 'neil_pearts'
         fileName = fileName.replace(jsPat, '');
         // Convert underscores to camelCase with initial cap, e.g., 'NeilPearts'
-        constructorName = util.string.camelize(fileName, true);
+        constructorName = geddy.util.string.camelize(fileName, true);
         // Registers as a constructor, e.g., constructors.NeilPearts =
         //    require('/path/to/geddy_app/<dirname>/neil_pearts').NeilPearts
-        constructors[constructorName] = require(config.dirname +
+        constructors[constructorName] = require(geddy.config.dirname +
             dirname + fileName)[constructorName];
       }
     }
@@ -67,7 +67,7 @@ util.meta = new function () {
       if (typeof baseObj[p] == 'undefined' || baseObj[p] != m[p]) {
         if (recurse && (typeof m[p] == 'object') && (m[p] !== null) &&
             !(m[p] instanceof Array)) {
-          util.meta.mixin(target[p], m[p], recurse);
+          geddy.util.meta.mixin(target[p], m[p], recurse);
         }
         else {
           target[p] = m[p];
@@ -79,7 +79,5 @@ util.meta = new function () {
 
 }();
 
-if (typeof exports != 'undefined') {
-  for (var p in util.meta) { exports[p] = util.meta[p]; }
-}
+if (typeof module != 'undefined') { module.exports = geddy.util.meta; }
 

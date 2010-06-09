@@ -17,7 +17,7 @@
 
 if (typeof util == 'undefined') { var util = {}; }
 
-util.url = new function () {
+geddy.util.url = new function () {
   // Private vars
   var _this = this;
   var _QS = '\\?|;';
@@ -228,7 +228,7 @@ util.url = new function () {
 }();
 
 if (typeof exports != 'undefined') {
-  for (var p in util.url) { exports[p] = util.url[p]; }
+  for (var p in geddy.util.url) { exports[p] = geddy.util.url[p]; }
 }
 
 

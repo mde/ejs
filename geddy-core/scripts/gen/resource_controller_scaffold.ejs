@@ -39,7 +39,7 @@ var <%= names.constructor.plural %> = function () {
   this.edit = function (params) {
     <%= names.constructor.singular %>.find(params.id, function (err, items) {
       if (err) throw err;
-      util.meta.mixin(params, items[0]);
+      geddy.util.meta.mixin(params, items[0]);
       _this.respond({params: params});
     });
   };

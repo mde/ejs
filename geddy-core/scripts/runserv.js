@@ -19,6 +19,8 @@
 var req, resp, errors, appDirname, config, http,
     parseopts, Config, Init, App, args, opts, sys;
 
+sys = require('sys');
+
 global.geddy = require('geddy-core/lib/geddy');
 
 // Start grabbing errors first thing -- we need to be able
@@ -47,7 +49,6 @@ process.addListener('uncaughtException', function (err) {
   }
 });
   
-sys = require('sys');
 appDirname = process.argv[2];
 http = require('http');
 parseopts = require('geddy-core/lib/parseopts');
@@ -62,7 +63,7 @@ require.paths.unshift(opts.geddyRoot + '/vendor/');
 
 var runServ = function () {
   var hostname;
-  if (config.hostname) { hostname = config.hostname; }
+  if (geddy.config.hostname) { hostname = geddy.config.hostname; }
   http.createServer(function (request, response) { req = request;
     resp = response;
     // Errors thrown here don't get caught by uncaughtExceptions listener
@@ -74,7 +75,7 @@ var runServ = function () {
       errors.respond(resp, e);
     }
 
-  }).listen(config.port, hostname);
+  }).listen(geddy.config.port, hostname);
 
   // Report server-start in initial startup -- don't report on
   // bounces from file-changes in dev-mode
@@ -82,8 +83,8 @@ var runServ = function () {
     var msg = 'Geddy running ';
     msg += opts.serverRoot ? 'from source (' + opts.serverRoot + ') ' : '';
     msg += 'at ';
-    msg += hostname ? 'http://' + hostname + ':' + config.port : 'port ' + config.port
-    if (config.environment == 'development') {
+    msg += hostname ? 'http://' + hostname + ':' + geddy.config.port : 'port ' + geddy.config.port
+    if (geddy.config.environment == 'development') {
       msg += ' (development mode)'
     }
     sys.puts(msg);

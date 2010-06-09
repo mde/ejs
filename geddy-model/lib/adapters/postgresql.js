@@ -8,7 +8,7 @@ catch (e) {
   throw new Error('Postgres adapter requires node_postgres, http://github.com/ry/node_postgres');
 }
 
-var cfg = config.database;
+var cfg = geddy.config.database;
 var conn = postgres.createConnection(
     "  host='" + cfg.hostname +
     "' dbname='" + cfg.dbName +
