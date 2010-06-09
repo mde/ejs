@@ -411,6 +411,28 @@ exports.tasks = {
     }
   }
 
+  , 'test': {
+    'desc': 'Runs all tests in */tests/.'
+    , 'deps': []
+    , 'task': function () {
+        var rootPath = '/Users/sdavie/Programming/geddy';
+        var cmds = [];
+        var paths;
+        child_process.exec("find . | grep '/tests/' | grep '\.js$'", function(err, stdout, stderr){
+          paths = stdout.split('\n')
+          paths.pop();
+          for(var i=0; i<paths.length; i++){
+            child_process.exec('node ' + paths[i], function(err, stdout,stderr){
+              if(!err){
+                sys.puts(stdout);
+              } else {
+                sys.puts(stderr);
+              }
+            })
+          };
+        });
+     }
+  }
 };
 
 // Runs an array of shell commands asynchronously, calling the

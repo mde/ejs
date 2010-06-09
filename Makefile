@@ -31,3 +31,5 @@ clean:
 uninstall:
 	@rm -fr dist; rm -fr ~/.node_libraries/geddy; rm -f /usr/local/bin/geddy*; echo 'Geddy uninstalled.'
 
+test:
+	@./geddy-core/scripts/jake -f `pwd`/geddy-core/scripts/Jakefile test

@@ -1,34 +1,13 @@
-var sys       = require ('sys');
-var assert    = require('assert');
-var gRouter   = require('../router');
+var ERNEST = require('../scripts/ernest').ERNEST;
+var assert = require('assert');
+var gRouter   = require('../lib/router');
 
-//Load utility libraries
-GLOBAL.util = {};
-GLOBAL.util.meta = require('geddy-util/lib/meta');
-GLOBAL.util.string = require('geddy-util/lib/string');
+//overload setup to setup this test
+ERNEST.setup = function(){
+  router = new gRouter.Router();
+};
 
 RouterTests = {
-  //pass and fail messages to be used in reporting success or failure 
-  pass : 'Pass',
-  fail : 'Failed',
-  
-  //basic test setup
-  setup : function(opts) {
-    return function() {
-      router = new gRouter.Router();
-    }();
-  },
-
-  //tear down must be run at the completion of every test
-  teardown : function(test) {
-    sys.puts('PASSED  ::  ' + test);
-    return function() {
-      process.addListener("exit", function () {
-        assert.equal(0, exitStatus);
-      })();
-    }
-  },
-
  // create a router 
   testCreateRouter : function() {
     assert.ok(router, this.fail);
@@ -309,15 +288,6 @@ RouterTests = {
     var route = router.match('/:controller/:action(/:id)(.:extension)');
     assert.equal( router.url(), '/application/index', this.fail);
   }
-  
-}
+};
 
-// Run tests -- additionally setting up custom failure message and calling setup() and teardown()
-for(e in RouterTests) {
-  if (e.match(/test/)) {
-    RouterTests.fail = "FAILED  :: " + e; 
-    RouterTests.setup();
-    RouterTests[e]();
-    RouterTests.teardown(e);
-  }
-}
+ERNEST.execute(RouterTests);
