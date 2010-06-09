@@ -422,6 +422,7 @@ exports.tasks = {
         var paths;
         child_process.exec("find . | grep '/tests/' | grep '\.js$'", function(err, stdout, stderr){
           paths = stdout.split('\n')
+          sys.puts('*******************  ' + paths); 
           paths.pop();
           for(var i=0; i<paths.length; i++){
             child_process.exec('node ' + paths[i], function(err, stdout,stderr){
