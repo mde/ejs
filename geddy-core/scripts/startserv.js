@@ -1,20 +1,18 @@
 
-var args = process.argv.slice(2),
-    child,
-    opts,
-    log,
-    util = {},
+global.geddy = require('geddy-core/lib/geddy');
+
+var parseopts = require('geddy-core/lib/parseopts');
+var args = process.argv.slice(2);
+var opts = parseopts.parse(args.slice());
+
+var child, opts, log,
     sys = require("sys"),
     fs = require("fs"),
     spawn = require("child_process").spawn,
-    parseopts = require('geddy-core/lib/parseopts'),
     Config = require('geddy-core/lib/config').Config,
     serverRoot;
 
-util.meta = require('geddy-util/lib/meta');
-opts = parseopts.parse(args.slice());
-
-global.config = new Config(opts);
+geddy.config = new Config(opts);
 
 if (opts.serverRoot) {
   serverRoot = opts.serverRoot + '/geddy-core/runserv.js';
@@ -85,13 +83,13 @@ var restartServ = function (curr, prev) {
 startServ();
 
 var hostname;
-if (config.hostname) { hostname = config.hostname; }
+if (geddy.config.hostname) { hostname = geddy.config.hostname; }
 
-if (config.environment == 'development') {
+if (geddy.config.environment == 'development') {
   // watch individual files so we can compare mtimes in restartServ
-  watchTree(config.dirname + '/config', restartServ);
-  watchTree(config.dirname + '/lib', restartServ);
-  watchTree(config.dirname + '/app/controllers', restartServ);
-  watchTree(config.dirname + '/app/models', restartServ);
+  watchTree(geddy.config.dirname + '/config', restartServ);
+  watchTree(geddy.config.dirname + '/lib', restartServ);
+  watchTree(geddy.config.dirname + '/app/controllers', restartServ);
+  watchTree(geddy.config.dirname + '/app/models', restartServ);
 }
 

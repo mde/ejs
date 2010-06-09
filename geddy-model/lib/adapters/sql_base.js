@@ -55,7 +55,7 @@ var SQLBaseAdapter = function (conn) {
       // Responsibilities of the adapter include:
       // 1. Setting the UUID on the item
       // 2. setting the saved flag before saving
-      uuid = util.string.uuid();
+      uuid = geddy.util.string.uuid();
       modelItem.id = uuid;
       modelItem.saved = true;
 
@@ -149,7 +149,7 @@ var SQLBaseAdapter = function (conn) {
           many = data.associations && data.associations.hasMany;
           if (many) {
             for (p in many) {
-              type = inflections[p].constructor.plural;
+              type = geddy.inflections[p].constructor.plural;
               // Only do eager fetch if in params.include
               include = _include[type];
               if (include) {
@@ -166,7 +166,7 @@ var SQLBaseAdapter = function (conn) {
         // current dataset
         belongs = data.assocations && data.associations.belongsTo;
         if (belongs) {
-          type = inflections[data.type].constructor.plural;
+          type = geddy.inflections[data.type].constructor.plural;
           for (p in belongs) {
             items = belongs[p].ids;
             for (j = 0, jj = items.length; j < jj; j++) {
@@ -230,7 +230,7 @@ var SQLBaseAdapter = function (conn) {
       include = typeof include == 'string' ? [include] : include;
       for (var i = 0, ii = include.length; i < ii; i++) {
         key = include[i];
-        key = inflections[key].constructor.plural;
+        key = geddy.inflections[key].constructor.plural;
         _include[key] = true;
       }
     }

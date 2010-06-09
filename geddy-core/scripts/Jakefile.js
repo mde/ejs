@@ -79,7 +79,8 @@ exports.tasks = {
       var text, contents;
       var filePath;
       var fleegix = require('../lib/fleegix');
-      util.string = require('../../geddy-util/lib/string');
+      
+      global.geddy = require('../../geddy-core/lib/geddy');
       
       // Add the controller file
       // ----
@@ -90,11 +91,11 @@ exports.tasks = {
       names.filename.plural = n[1] || names.filename.singular + 's';
       
       // Convert underscores to camelCase, e.g., 'neilPeart'
-      names.property.singular = util.string.camelize(names.filename.singular, false);
-      names.property.plural = util.string.camelize(names.filename.plural, false);
+      names.property.singular = geddy.util.string.camelize(names.filename.singular, false);
+      names.property.plural = geddy.util.string.camelize(names.filename.plural, false);
       // Convert underscores to camelCase with init cap, e.g., 'NeilPeart'
-      names.constructor.singular = util.string.camelize(names.filename.singular, true);
-      names.constructor.plural = util.string.camelize(names.filename.plural, true);
+      names.constructor.singular = geddy.util.string.camelize(names.filename.singular, true);
+      names.constructor.plural = geddy.util.string.camelize(names.filename.plural, true);
       
       // Model
       // ----
@@ -134,7 +135,7 @@ exports.tasks = {
       // ----
       var canon = names.constructor.singular;
       contents = fs.readFileSync('./config/inflections.js', 'utf8');
-      var last = 'for (var p in inflections) { exports[p] = inflections[p]; }';
+      var last = 'module.exports = inflections;';
       contents = contents.replace(last, '');
       text = '';
       text += 'var ' + canon + ' = ' + JSON.stringify(names) + ';\n';
@@ -174,35 +175,37 @@ exports.tasks = {
       // Does the work of creating the scaffold -- runs after creating
       // the client-side model JS files
       var createScaffold = function () {
-        var def, props, prop, modelKey, viewsDirName, fileName, tmpl;
-        var text = '';
-        // Set up a minimal environment for intepreting the model
-        global.util = {};
-        global.util.meta = require('geddy-util/lib/meta');
-        global.util.string = require('geddy-util/lib/string');
-        global.util.date = require('geddy-util/lib/date');
-        global.config = {dirname: process.cwd()};
-        global.inflections = require(config.dirname + '/config/inflections');
-        var model = require('geddy-model/lib/model');
+        var def, props, prop, modelKey, viewsDirName, fileName, tmpl, text;
+        // Where the hell are we?
+        var dirname = process.cwd();
+        // FIXME: Port fleegix.js templates to geddy-util
         var fleegix = require('../lib/fleegix');
 
-        fs.readdir(config.dirname + '/app/models', function (err, res) {
+        // Set up a minimal environment for intepreting the model
+        global.geddy = require('geddy-core/lib/geddy');
+        
+        geddy.config = {dirname: dirname};
+        geddy.inflections = require(dirname + '/config/inflections');
+        geddy.model = require('geddy-model/lib/model');
 
-          var names = inflections[nameParam];
+        fs.readdir(dirname + '/app/models', function (err, res) {
+
+          var names = geddy.inflections[nameParam];
           modelKey = names.constructor.singular;
           modelFileName = names.filename.singular;
           viewsDirName = names.filename.plural;
+
           // Load up the model definition
-          model.registerModels(err, res);
-          def = model.modelRegistry[modelKey];
+          geddy.model.registerModels(err, res);
+          def = geddy.model.modelRegistry[modelKey];
           props = def.properties;
          
           // Client-side file for client-side validation
-          text = fs.readFileSync(config.dirname + '/app/models/' + modelFileName + '.js', 'utf8');
+          text = fs.readFileSync(dirname + '/app/models/' + modelFileName + '.js', 'utf8');
           // Use client-side registration instead of server-side export
           text = text.replace('exports.' + modelKey + ' = ' + modelKey + ';',
-              'model.registerModel(\'' + modelKey + '\');');
-          fileName = config.dirname + '/public/js/models/' + modelFileName + '.js';
+              'geddy.model.registerModel(\'' + modelKey + '\');');
+          fileName = dirname + '/public/js/models/' + modelFileName + '.js';
           fs.writeFileSync(fileName, text, 'utf8');
           sys.puts('Created client-side model JavaScript files.');
           
@@ -214,7 +217,7 @@ exports.tasks = {
               continue;
             }
             prop = props[p];
-            text += '<div>' + util.string.capitalize(p);
+            text += '<div>' + geddy.util.string.capitalize(p);
             switch (prop.datatype.toLowerCase()) {
               case 'string':
                 var inputType = (p.toLowerCase().indexOf('password') > -1) ? 'password' : 'text';
@@ -226,14 +229,14 @@ exports.tasks = {
               case 'date':
                 text += '</div>\n'
                 text += '<div><input type="text" id="' + p + '" name="' + p +
-                    '" value="<%= util.date.strftime(params.' + p +
-                    ', config.dateFormat) || \'\' %>" size="24"/></div>\n';
+                    '" value="<%= geddy.util.date.strftime(params.' + p +
+                    ', geddy.config.dateFormat) || \'\' %>" size="24"/></div>\n';
                 break;
               case 'time':
                 text += '</div>\n'
                 text += '<div><input type="text" id="' + p + '" name="' + p +
-                    '" value="<%= util.date.strftime(params.' + p +
-                    ', config.timeFormat) || \'\' %>" size="12"/></div>\n';
+                    '" value="<%= geddy.util.date.strftime(params.' + p +
+                    ', geddy.config.timeFormat) || \'\' %>" size="12"/></div>\n';
                 break;
               case 'number':
               case 'int':
@@ -250,7 +253,7 @@ exports.tasks = {
           text += '<input type="submit" value="Submit"/>\n'
           text += '</form>\n'
           
-          fileName = config.dirname + '/app/views/' +
+          fileName = dirname + '/app/views/' +
               viewsDirName + '/_form.html.ejs';
           fs.writeFileSync(fileName, text, 'utf8');
 
@@ -258,7 +261,7 @@ exports.tasks = {
           templ = new fleegix.ejs.Template({text: text});
           templ.process({data: {names: names}});
           text = templ.markup.replace(/<@/g, '<%').replace(/@>/g, '%>');
-          fileName = config.dirname + '/app/views/' +
+          fileName = dirname + '/app/views/' +
               viewsDirName + '/add.html.ejs';
           fs.writeFileSync(fileName, text, 'utf8');
 
@@ -266,7 +269,7 @@ exports.tasks = {
           templ = new fleegix.ejs.Template({text: text});
           templ.process({data: {names: names}});
           text = templ.markup.replace(/<@/g, '<%').replace(/@>/g, '%>');
-          fileName = config.dirname + '/app/views/' +
+          fileName = dirname + '/app/views/' +
               viewsDirName + '/edit.html.ejs';
           fs.writeFileSync(fileName, text, 'utf8');
 
@@ -274,7 +277,7 @@ exports.tasks = {
           templ = new fleegix.ejs.Template({text: text});
           templ.process({data: {names: names}});
           text = templ.markup.replace(/<@/g, '<%').replace(/@>/g, '%>');
-          fileName = config.dirname + '/app/views/' +
+          fileName = dirname + '/app/views/' +
               viewsDirName + '/index.html.ejs';
           fs.writeFileSync(fileName, text, 'utf8');
 

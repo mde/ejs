@@ -71,7 +71,7 @@ var Controller = function (obj) {
     this[p] = obj[p];
   }
 
-  this.nameDecamelized = util.string.decamelize(this.name);
+  this.nameDecamelized = geddy.util.string.decamelize(this.name);
 
 };
 
@@ -119,7 +119,7 @@ Controller.prototype = new function () {
       }
       if (applyFilter) {
         name = filter.name;
-        hook = hooks.collection[name];
+        hook = geddy.hooks.collection[name];
         hook.args = [_this];
         list.push(hook);
       }
@@ -156,7 +156,7 @@ Controller.prototype = new function () {
       var act = redir.action;
       var ext = redir.extension || this.params.extension;
       var id = redir.id;
-      contr = util.string.decamelize(contr);
+      contr = geddy.util.string.decamelize(contr);
       url = '/' + contr;
       url += act ? '/' + act : '';
       url += id ? '/' + id : '';
@@ -316,13 +316,13 @@ Controller.prototype = new function () {
    
     if (!url) {
       key = parentNode.dirname + '/' + partial + '.html.ejs';
-      if (templateRegistry[key]) {
+      if (geddy.templateRegistry[key]) {
         url = key;
       }
     }
     if (!url) {
       key = 'app/views/' + partial + '.html.ejs';
-      if (templateRegistry[key]) {
+      if (geddy.templateRegistry[key]) {
         url = key;
       }
     }

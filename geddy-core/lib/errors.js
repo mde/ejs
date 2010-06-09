@@ -57,7 +57,7 @@ var errors = new function () {
     var r = new response.Response(resp);
     var code = e.statusCode || 500;
     var msg = '';
-    if (config.detailedErrors) {
+    if (geddy.config.detailedErrors) {
       msg = e.stack || e.message || String(e);
       msg = msg.replace(/\n/g, '<br/>');
     }

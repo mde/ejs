@@ -17,9 +17,6 @@
 */
 
 var sys = require('sys');
-if (typeof util == 'undefined') { var util = {}; }
-util.string = require('../../geddy-util/lib/string');
-util.meta = require('../../geddy-util/lib/meta');
 
 // need this, but maybe there's a better spot for it?
 var regExpEscape = (function() {
@@ -88,8 +85,8 @@ var Router = function () {
    * returns: array of Routes (for now)
    */
   this.resource = function (res) {
-    var controller = util.string.camelize(res, true);
-    var cslug = util.string.decamelize(res);
+    var controller = geddy.util.string.camelize(res, true);
+    var cslug = geddy.util.string.decamelize(res);
     return [
       this.match('/'+cslug+'(.:extension)', 'GET')
           .to({ controller: controller, action: 'index' }),
@@ -110,7 +107,7 @@ var Router = function () {
   
   // find the first route that match the path & method
   /*
-   * router.first('/snow_dogs/5', 'GET')
+   * geddy.router.first('/snow_dogs/5', 'GET')
    * => { controller: 'SnowDogs', action: 'show', id: 5, method: 'GET' }
    *
    * find & return a params hash from the first route that matches
@@ -134,7 +131,7 @@ var Router = function () {
   };
   
   /*
-   * router.all('/snow_dogs/bob', 'GET') => 
+   * geddy.router.all('/snow_dogs/bob', 'GET') => 
    *  [
    *    { controller: 'SnowDogs', action: 'show', id: 'bob', method: 'GET' },
    *    { controller: 'SnowDogs', action: 'bob', method: 'GET' }
@@ -162,9 +159,9 @@ var Router = function () {
   };
   
   /*
-   * router.url({ controller: 'SnowDogs', action: 'show', id: 5 }) => '/snow_dogs/5'
+   * geddy.router.url({ controller: 'SnowDogs', action: 'show', id: 5 }) => '/snow_dogs/5'
    *  
-   * router.url({ controller: 'SnowDogs', action: 'show', id: 5, extension: 'json' })
+   * geddy.router.url({ controller: 'SnowDogs', action: 'show', id: 5, extension: 'json' })
    *    => '/snow_dogs/5.json'
    *  
    * generates a URL from a params hash
@@ -186,7 +183,7 @@ var Router = function () {
         continue;
       }
       // attempt the stringification with defaults mixed in
-      params = util.meta.mixin({controller:'Application', action:'index' }, params);
+      params = geddy.util.meta.mixin({controller:'Application', action:'index' }, params);
       url = this.routes[i].stringify(params);
       if (url) {
         break;
@@ -291,7 +288,7 @@ var Router = function () {
      * returns the Route for chaining
      */
     this.to = function (params) {
-      util.meta.mixin(this.params, params);
+      geddy.util.meta.mixin(this.params, params);
       return this; // chainable
     };
 
@@ -440,7 +437,7 @@ var Router = function () {
           if (keysAndRoutes[i].test(parts[j])) {
             // parse the subroute
             var subparams = keysAndRoutes[i].parse(parts[j], method);
-            util.meta.mixin(params, subparams);
+            geddy.util.meta.mixin(params, subparams);
             // advance the parts pointer by the number of submatches
             j+= parts[j].match(keysAndRoutes[i].regexString()).length-2 || 0;
           } else {
@@ -452,7 +449,7 @@ var Router = function () {
       
       // camelize the controller
       if (params.controller) {
-        params.controller = util.string.camelize(params.controller, true);
+        params.controller = geddy.util.string.camelize(params.controller, true);
       }
 
       return params;
@@ -518,7 +515,7 @@ var Router = function () {
         if (this.test(string)) {
           // snake_caseify the controller, if there is one
           if (this.name == 'controller') {
-            return util.string.decamelize(string);
+            return geddy.util.string.decamelize(string);
           }
           return string;
         }

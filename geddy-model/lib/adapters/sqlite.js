@@ -8,7 +8,7 @@ catch (e) {
   throw new Error('SQLite adapter requires node-sqlite, http://github.com/grumdrig/node-sqlite');
 }
 
-var db = sqlite.openDatabaseSync(config.database.dbName + '.db');
+var db = sqlite.openDatabaseSync(geddy.config.database.dbName + '.db');
 // Wrap the SQLite query function to use the standard idiom of
 // callback(err, data) for Node
 var conn = new function () {

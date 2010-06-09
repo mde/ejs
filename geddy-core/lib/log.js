@@ -35,7 +35,7 @@ var log = new function () {
     fatal: false
   };
 
-  var maxLevel = profileLevels[config.environment];
+  var maxLevel = profileLevels[geddy.config.environment];
   var hitMax = false;
   for (var level in levels) {
     if (level == maxLevel) {
@@ -78,8 +78,8 @@ var log = new function () {
   this.flush = function () {
     if (msgs.length > 0) {
       // file appending isn't working properly yet <------
-      file = config.logFile;
-      path = config.dirname + '/' + file
+      file = geddy.config.logFile;
+      path = geddy.config.dirname + '/' + file
 
       sys.log(msgs.join("\n"));
 

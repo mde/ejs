@@ -15,9 +15,9 @@
  *
 */
 
-if (typeof util == 'undefined') { var util = {}; }
+if (typeof geddy == 'undefined') { geddy = {}; geddy.util = {}; }
 
-util.date = new function () {
+geddy.util.date = new function () {
   var _this = this;
   
   var _US_DATE_PAT = /^(\d{1,2})(?:\-|\/|\.)(\d{1,2})(?:\-|\/|\.)(\d{4})/;
@@ -672,8 +672,6 @@ util.date = new function () {
 
 }();
 
-if (typeof exports != 'undefined') {
-  for (var p in util.date) { exports[p] = util.date[p]; }
-}
+if (typeof module != 'undefined') { module.exports = geddy.util.date; }
 
 

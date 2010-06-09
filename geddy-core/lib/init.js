@@ -22,32 +22,24 @@ var child_process = require('child_process');
 
 var fleegix = require('geddy-core/lib/fleegix');
 var session = require('geddy-core/lib/session');
-var hooks = require('geddy-core/lib/hooks');
-var meta = require('geddy-util/lib/meta');
-var async = require('geddy-util/lib/async');
-var model = require('geddy-model/lib/model');
-
 var Init = function (config, callback) {
 
   var _this = this;
   var _callback = callback;
 
-  global.util = {};
-  global.util.meta = require('geddy-util/lib/meta');
-  global.util.string = require('geddy-util/lib/string');
-  global.util.date = require('geddy-util/lib/date');
-  global.controllerRegistry = {};
-  global.templateRegistry = {};
-  global.pluginRegistry = {};
-  global.config = config;
-  global.router = require(config.dirname + '/config/router').router;
-  global.hooks = hooks;
-  global.model = model;
-  global.log = require('geddy-util/lib/meta');
-  global.inflections = require(config.dirname + '/config/inflections');
-  
+  geddy.config = config;
+  // The app's instantiated Router
+  geddy.router = require(geddy.config.dirname + '/config/router').router;
+  geddy.model = require('geddy-model/lib/model');
+  geddy.hooks = require('geddy-core/lib/hooks');
+  geddy.inflections = require(geddy.config.dirname + '/config/inflections');
+
+  geddy.controllerRegistry = {};
+  geddy.templateRegistry = {};
+  geddy.pluginRegistry = {};
+
   // Load anything in from the app's local init
-  var localInit = require(config.dirname + '/config/init');
+  var localInit = require(geddy.config.dirname + '/config/init');
   for (var p in localInit) {
     global[p] = localInit[p];
   }
@@ -57,7 +49,8 @@ var Init = function (config, callback) {
       sys.puts('Error: ' + JSON.stringify(err));
     }
     else {
-      controllerRegistry = meta.registerConstructors('/app/controllers/', dirList);
+      geddy.controllerRegistry =
+          geddy.util.meta.registerConstructors('/app/controllers/', dirList);
     }
   };
 
@@ -76,65 +69,65 @@ var Init = function (config, callback) {
       for (var i = 0; i < files.length; i++) {
         file = files[i];
         if (pat.test(file)) {
-          file = file.replace(config.dirname + '/', '');
+          file = file.replace(geddy.config.dirname + '/', '');
           templates[file] = true;
         }
       }
-      templateRegistry = templates;
+      geddy.templateRegistry = templates;
     }
   };
 
   this.loadDBAdapter = function () {
-    var adapterPath = 'geddy-model/lib/adapters/' + config.database.adapter;
+    var adapterPath = 'geddy-model/lib/adapters/' + geddy.config.database.adapter;
     var adapt = require(adapterPath);
-    model.setDbAdapter(adapt);
+    geddy.model.setDbAdapter(adapt);
   };
 
   this.loadPlugins = function () {
-    var plugins = config.plugins;
+    var plugins = geddy.config.plugins;
     var path;
     var pathName;
     var cfg;
     for (var pluginName in plugins) {
       cfg = plugins[pluginName];
       pathName = fleegix.string.deCamelize(pluginName);
-      path = config.dirname + '/plugins/' + pathName + '/' + pathName;
-      pluginRegistry[pluginName] = new require(path)[pluginName](cfg);
+      path = geddy.config.dirname + '/plugins/' + pathName + '/' + pathName;
+      geddy.pluginRegistry[pluginName] = new require(path)[pluginName](cfg);
     }
   };
 
   // Synchronous actions
   // ----------
-  if (config.database) {
+  if (geddy.config.database) {
     this.loadDBAdapter();
   }
   this.loadPlugins();
 
   // Asynchronous actions
   // ----------
-  var group = new async.AsyncChain([
+  var group = new geddy.util.async.AsyncChain([
     {
       func: session.createStore,
-      args: [config.sessions.store],
+      args: [geddy.config.sessions.store],
       callback: null
     },
     {
       func: fs.readdir,
-      args: [config.dirname + '/app/models'],
-      callback: model.registerModels
+      args: [geddy.config.dirname + '/app/models'],
+      callback: geddy.model.registerModels
     },
     {
       func: fs.readdir,
-      args: [config.dirname + '/app/controllers'],
+      args: [geddy.config.dirname + '/app/controllers'],
       callback: this.registerControllers
     },
     {
       func: child_process.exec,
-      args: ['find ' + config.dirname + '/app/views'],
+      args: ['find ' + geddy.config.dirname + '/app/views'],
       callback: this.registerTemplates
     }
   ]);
-  
+
   group.last = _callback;
   group.run();
 
