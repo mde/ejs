@@ -39,7 +39,7 @@ http://groups.google.com/group/geddy
 
 ** Prerequisites**
 
-Geddy requires version 0.1.91 of Node.js.
+Geddy requires version 0.1.94 of Node.js.
 
 To get Geddy from GitHub and install it:
 
@@ -153,7 +153,7 @@ POST */snow_dogs[.extension]<br/>
 GET */snow_dogs/:id[.extension]<br/>
 (SnowDogs controller, show action)
 
-GET */snow_dogs/:id[.extension];edit<br/>
+GET */snow_dogs/:id/edit[.extension]<br/>
 (SnowDogs controller, edit action)
 
 PUT */snow_dogs/:id[.extension]<br/>

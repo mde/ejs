@@ -112,7 +112,7 @@ var Init = function (config, callback) {
 
   // Asynchronous actions
   // ----------
-  var group = new async.AsyncGroup([
+  var group = new async.AsyncChain([
     {
       func: session.createStore,
       args: [config.sessions.store],

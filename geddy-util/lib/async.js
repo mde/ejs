@@ -80,7 +80,17 @@ async.AsyncChain = function (chain) {
   }
 };
 
+async.execNonBlocking = function (func) {
+  if (typeof process != 'undefined' && typeof process.nextTick == 'function') {
+    process.nextTick(func);
+  }
+  else {
+    setTimeout(func, 0);
+  }
+};
+
 async.AsyncChain.prototype = new function () {
+
   this.runItem = function (item) {
     // Reference to the current item in the chain -- used
     // to look up the callback to execute with execCallback
@@ -133,8 +143,11 @@ async.AsyncChain.prototype = new function () {
       return;
     }
     // Otherwise run the next item, if any, in the chain
+    // Let's try not to block if we don't have to
     else {
-      this.next();
+      // Scopage
+      var _this = this;
+      async.execNonBlocking(function () { _this.next.call(_this); });
     }
   }
 
@@ -198,7 +211,7 @@ async.AsyncGroup.prototype = new function () {
       callback = createCallback(item);
       args = item.args.concat(callback);
       // Run the async call
-      item.func.apply(null, args);
+      async.execNonBlocking(function () { item.func.apply(null, args); });
     }
   };
 
