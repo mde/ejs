@@ -131,6 +131,8 @@ Controller.prototype = new function () {
 
   
   this.formatters = {
+    // Right now all we have is JSON and plaintext
+    // Fuck XML until somebody enterprisey wants it
     json: function (content) {
       var toJson = content.toJson || content.toJSON;
       if (typeof toJson == 'function') {
@@ -160,7 +162,9 @@ Controller.prototype = new function () {
       url = '/' + contr;
       url += act ? '/' + act : '';
       url += id ? '/' + id : '';
-      url += '.' + ext;
+      if (ext) {
+        url += '.' + ext;
+      }
     }
     var r = new response.Response(this.response);
     var headers = {'Location': url};

@@ -5,7 +5,7 @@
   </head>
   <body>
     <p>
-      <a href="/<%= names.filename.plural %>/add.html">Create new item</a>
+      <a href="/<%= names.filename.plural %>/add">Create new item</a>
     <p>
     <h3>
       <%= names.constructor.plural %>
@@ -36,9 +36,9 @@
               </td>
             <@ } @>
               <td>
-                <a href="/<%= names.filename.plural %>/<@= item.id @>.html">[show]</a>
-                <a href="/<%= names.filename.plural %>/<@= item.id @>/edit.html">[edit]</a>
-                <form method="post" action="/<%= names.filename.plural %>/<@= item.id @>.html?_method=delete"
+                <a href="/<%= names.filename.plural %>/<@= item.id @>">[show]</a>
+                <a href="/<%= names.filename.plural %>/<@= item.id @>/edit">[edit]</a>
+                <form method="post" action="/<%= names.filename.plural %>/<@= item.id @>?_method=delete"
                     style="display: inline;"
                     onclick="if (!window.confirm('Delete?')) {return false;}">
                   <input type="submit" value="delete"/>

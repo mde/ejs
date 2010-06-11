@@ -418,17 +418,28 @@ exports.tasks = {
     'desc': 'Runs all tests in */tests/.'
     , 'deps': []
     , 'task': function () {
-        var paths, cmds = [];
-        child_process.exec("find . | grep -v dist | grep '/tests/' | grep '\.js$'", function(err, stdout, stderr){
-          paths = stdout.split('\n')
-          paths.pop();
-          for (var i = 0; i < paths.length; i++) {
-            cmds.push('node ' + paths[i]);
-          }
-          runCmds(cmds, null, true);
-        });
-     }
+      var paths, cmds = [];
+      child_process.exec("find . | grep -v dist | grep '/tests/' | grep '\.js$'", function(err, stdout, stderr){
+        paths = stdout.split('\n')
+        paths.pop();
+        for (var i = 0; i < paths.length; i++) {
+          cmds.push('node ' + paths[i]);
+        }
+        runCmds(cmds, null, true);
+      });
+    }
   }
+
+  , 'assets': {
+    'desc': 'Concats and minifies JS source files for client-side use'
+    , 'deps': []
+    , 'task': function () {
+      jsmin = require('geddy-core/scripts/jsmin').jsmin;
+
+    }
+  }
+
+
 };
 
 // Runs an array of shell commands asynchronously, calling the
