@@ -48,7 +48,6 @@ var SQLBaseAdapter = function (conn) {
       sql += 'UPDATE geddy_data SET';
       sql += ' ' + vals.join(', ');
       sql += " WHERE uuid = '" + _escape(uuid) + "';";
-      sys.puts(sql);
     }
     // Create track
     else {
