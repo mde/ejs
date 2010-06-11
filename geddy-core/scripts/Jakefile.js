@@ -100,7 +100,7 @@ exports.tasks = {
       // Model
       // ----
       // Grab the template text
-      text = fs.readFileSync(__dirname + '/gen/resource_model.ejs', 'utf8');
+      text = fs.readFileSync(__dirname + '/gen/resource_model.ejs', 'utf8').toString();
       // Stick in the model name
       var templ = new fleegix.ejs.Template({text: text});
       templ.process({data: {names: names}});
@@ -111,7 +111,7 @@ exports.tasks = {
       // Controller
       // ----
       // Grab the template text
-      text = fs.readFileSync(__dirname + '/gen/resource_controller.ejs', 'utf8');
+      text = fs.readFileSync(__dirname + '/gen/resource_controller.ejs', 'utf8').toString();
       // Stick in the controller name
       var templ = new fleegix.ejs.Template({text: text});
       templ.process({data: {names: names}});
@@ -123,7 +123,7 @@ exports.tasks = {
       // ----
       // Grab the config text
       filePath = './config/router.js';
-      text = fs.readFileSync(filePath, 'utf8');
+      text = fs.readFileSync(filePath, 'utf8').toString();
       // Add the new resource route just above the export
       routerArr = text.split('exports.router');
       routerArr[0] += 'router.resource(\'' +  names.filename.plural + '\');\n';
@@ -134,7 +134,7 @@ exports.tasks = {
       // Add inflections map
       // ----
       var canon = names.constructor.singular;
-      contents = fs.readFileSync('./config/inflections.js', 'utf8');
+      contents = fs.readFileSync('./config/inflections.js', 'utf8').toString();
       var last = 'module.exports = inflections;';
       contents = contents.replace(last, '');
       text = '';
@@ -201,7 +201,7 @@ exports.tasks = {
           props = def.properties;
          
           // Client-side file for client-side validation
-          text = fs.readFileSync(dirname + '/app/models/' + modelFileName + '.js', 'utf8');
+          text = fs.readFileSync(dirname + '/app/models/' + modelFileName + '.js', 'utf8').toString();
           // Use client-side registration instead of server-side export
           text = text.replace('exports.' + modelKey + ' = ' + modelKey + ';',
               'geddy.model.registerModel(\'' + modelKey + '\');');
@@ -257,7 +257,7 @@ exports.tasks = {
               viewsDirName + '/_form.html.ejs';
           fs.writeFileSync(fileName, text, 'utf8');
 
-          text = fs.readFileSync(__dirname + '/gen/views/add_scaffold.html.ejs');
+          text = fs.readFileSync(__dirname + '/gen/views/add_scaffold.html.ejs').toString();
           templ = new fleegix.ejs.Template({text: text});
           templ.process({data: {names: names}});
           text = templ.markup.replace(/<@/g, '<%').replace(/@>/g, '%>');
@@ -265,7 +265,7 @@ exports.tasks = {
               viewsDirName + '/add.html.ejs';
           fs.writeFileSync(fileName, text, 'utf8');
 
-          text = fs.readFileSync(__dirname + '/gen/views/edit_scaffold.html.ejs');
+          text = fs.readFileSync(__dirname + '/gen/views/edit_scaffold.html.ejs').toString();
           templ = new fleegix.ejs.Template({text: text});
           templ.process({data: {names: names}});
           text = templ.markup.replace(/<@/g, '<%').replace(/@>/g, '%>');
@@ -273,7 +273,7 @@ exports.tasks = {
               viewsDirName + '/edit.html.ejs';
           fs.writeFileSync(fileName, text, 'utf8');
 
-          text = fs.readFileSync(__dirname + '/gen/views/index_scaffold.html.ejs');
+          text = fs.readFileSync(__dirname + '/gen/views/index_scaffold.html.ejs').toString();
           templ = new fleegix.ejs.Template({text: text});
           templ.process({data: {names: names}});
           text = templ.markup.replace(/<@/g, '<%').replace(/@>/g, '%>');
@@ -284,7 +284,7 @@ exports.tasks = {
           // Scaffold version of Controller
           // ----
           // Grab the template text
-          text = fs.readFileSync(__dirname + '/gen/resource_controller_scaffold.ejs', 'utf8');
+          text = fs.readFileSync(__dirname + '/gen/resource_controller_scaffold.ejs', 'utf8').toString();
           // Stick in the controller name
           templ = new fleegix.ejs.Template({text: text});
           templ.process({data: {names: names}});
