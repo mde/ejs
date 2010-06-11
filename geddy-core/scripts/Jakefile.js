@@ -419,19 +419,14 @@ exports.tasks = {
     , 'deps': []
     , 'task': function () {
         var rootPath = '/Users/sdavie/Programming/geddy';
-        var paths;
+        var paths, cmds = [];
         child_process.exec("find . | grep -v dist | grep '/tests/' | grep '\.js$'", function(err, stdout, stderr){
           paths = stdout.split('\n')
           paths.pop();
-          for(var i=0; i<paths.length; i++){
-            child_process.exec('node ' + paths[i], function(err, stdout,stderr){
-              if(!err){
-                sys.puts(stdout);
-              } else {
-                sys.puts(stderr);
-              }
-            })
-          };
+          for (var i = 0; i < paths.length; i++) {
+            cmds.push('node ' + paths[i]);
+          }
+          runCmds(cmds, null, true);
         });
      }
   }
@@ -441,7 +436,7 @@ exports.tasks = {
 // next command off the queue inside the callback from child_process.exec.
 // When the queue is done, call the final callback function.
 
-var runCmds = function (arr, callback) {
+var runCmds = function (arr, callback, printStdout) {
   var run = function (cmd) {
     child_process.exec(cmd, function (err, stdout, stderr) {
       if (err) {
@@ -451,12 +446,17 @@ var runCmds = function (arr, callback) {
         sys.puts('Error: ' + stderr);
       }
       else {
+        if (printStdout) {
+          sys.puts(stdout);
+        }
         if (arr.length) {
           var next = arr.shift();
           run(next);
         }
         else {
-          callback();
+          if (callback) {
+            callback();
+          }
         }
       }
     });
