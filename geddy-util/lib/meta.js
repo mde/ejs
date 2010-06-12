@@ -15,7 +15,8 @@
  * limitations under the License.
  *
 */
-if (typeof geddy == 'undefined') { geddy = {}; geddy.util = {}; }
+if (typeof geddy == 'undefined') { geddy = {}; } 
+if (typeof geddy.util == 'undefined') { geddy.util = {}; }
 
 geddy.util.meta = new function () {
   this.registerConstructors = function (dirname, dirList) {

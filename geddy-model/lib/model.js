@@ -46,6 +46,7 @@ geddy.model.registerModel('User');
 
 if (typeof geddy == 'undefined') { geddy = {}; }
 var sys;
+var _log; 
 
 geddy.model = new function () {
   
@@ -53,14 +54,27 @@ geddy.model = new function () {
   this.modelRegistry = {};
   this.useTimestamps = true;
   
-  // Client-side, create global ref for top-level execution scope
+  // Client-side or embedded V8
   if (typeof window != 'undefined') {
-    window.global = window;
+    // Create global ref for top-level execution scope
+    global = window;
     this.useTimestamps = false;
+    // Janky logging crap
+    // Faux client-side env for embedded V8
+    if (typeof _logString != 'undefined') {
+      _log = function (s) {
+        _logString += s + '\n';
+      }
+    }
+    // An actual browser
+    else if (typeof console != 'undefined' && typeof console.log == 'function') {
+      _log = console.log;
+    }
   }
   // Server-side
   else {
     sys = require('sys');
+    _log = sys.puts;
   }
   
   var _constructorList = global;
@@ -130,77 +144,71 @@ geddy.model = new function () {
     // Base constructor function for all model items
     var ModelItemConstructor = function (params) {
 
-      // SquirrelFish fucks up the binding of "this" to the current object.
-      // Have to create an object explicitly and return it here.
-      var _this = {};
+      this.saved = params.saved || false;
       
-      _this.saved = params.saved || false;
-      
-      _this.type = def.name;
+      this.type = def.name;
 
       if (params.saved) {
-        _this.id = params.id;
-        _this.properties = params.properties;
-        _this.virtualProperties = params.virtualProperties;
-        _this.associations = params.associations;
+        this.id = params.id;
+        this.properties = params.properties;
+        this.virtualProperties = params.virtualProperties;
+        this.associations = params.associations;
       }
       else {
-        _this.properties = createPropertyList(false);
-        _this.virtualProperties = createPropertyList(true);
-        _this.associations = createAssociations();
+        this.properties = createPropertyList(false);
+        this.virtualProperties = createPropertyList(true);
+        this.associations = createAssociations();
       }
 
-      _this.valid = function () {
-        return !_this.errors;
+      this.valid = function () {
+        return !this.errors;
       };
 
       // Callback should be in the format of function (err, result) {}
-      _this.save = function (callback) {
-        if (_this.errors) {
+      this.save = function (callback) {
+        if (this.errors) {
           if (callback) {
-            callback(_this.errors, null);
+            callback(this.errors, null);
           }
           else {
             var err = new Error('Could not validate object. Errors: ' +
-                JSON.stringify(_this.errors));
-            err.errors = _this.errors;
+                JSON.stringify(this.errors));
+            err.errors = this.errors;
             throw err;
           }
         }
         else {
-          if (geddy.model.useTimestamps && _this.saved) {
-            _this.updatedAt = new Date();
+          if (geddy.model.useTimestamps && this.saved) {
+            this.updatedAt = new Date();
           }
-          return geddy.model.dbAdapter.save(_this, callback);
+          return geddy.model.dbAdapter.save(this, callback);
         }
       };
 
-      _this.updateAttributes = function (params, callback) {
-        geddy.model.updateItem(_this, params);
-        _this.save(callback);
+      this.updateAttributes = function (params, callback) {
+        geddy.model.updateItem(this, params);
+        this.save(callback);
       };
 
-      _this.toString = function () {
+      this.toString = function () {
         var obj = {};
-        obj.id = _this.id;
-        obj.type = _this.type;
-        var props = _this.properties;
+        obj.id = this.id;
+        obj.type = this.type;
+        var props = this.properties;
         var formatter; 
         for (var p in props) {
           formatter = geddy.model.formatters[props[p].datatype];
-          obj[p] = typeof formatter == 'function' ? formatter(_this[p]) : _this[p];
+          obj[p] = typeof formatter == 'function' ? formatter(this[p]) : this[p];
         }
         return JSON.stringify(obj);
       };
 
-      _this.toJson = _this.toString;
+      this.toJson = this.toString;
       
-      var virtuals = _this.virtualProperties;
+      var virtuals = this.virtualProperties;
       for (var p in virtuals) {
-        _this[p] = createVirtualProperty(_this, p, virtuals[p]);
+        this[p] = createVirtualProperty(this, p, virtuals[p]);
       }
-      
-      return _this;
     };
 
     return ModelItemConstructor;
@@ -302,7 +310,6 @@ geddy.model = new function () {
         origPrototype[prop] = def[prop];
       }
     }
-    ModelItem.prototype = origPrototype;
     // Mix in the static methods like .create and .load
     ModelItem = geddy.util.meta.mixin(ModelItem, _createStaticMethodsMixin(p));
     // Mix in any static methods defined directly on the original constructor
@@ -311,13 +318,15 @@ geddy.model = new function () {
     for (var prop in ModelItemDefinition) {
       ModelItem[prop] = ModelItemDefinition[prop]
     }
+    
+    ModelItem.prototype = origPrototype;
+    
     // Create a globally scoped constructor name
     global[p] = ModelItem;
   };
 
   this.createItem = function (typeName, params) {
     var item = new global[typeName](params);
-    
     item = this.validateAndUpdateFromParams(item, params);
 
     if (this.useTimestamps && !item.createdAt) {

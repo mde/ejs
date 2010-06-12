@@ -15,7 +15,8 @@
  *
 */
 
-if (typeof geddy == 'undefined') { geddy = {}; geddy.util = {}; }
+if (typeof geddy == 'undefined') { geddy = {}; } 
+if (typeof geddy.util == 'undefined') { geddy.util = {}; }
 
 geddy.util.date = new function () {
   var _this = this;

@@ -15,7 +15,8 @@
  *
 */
 
-if (typeof util == 'undefined') { var util = {}; }
+if (typeof geddy == 'undefined') { geddy = {}; } 
+if (typeof geddy.util == 'undefined') { geddy.util = {}; }
 
 geddy.util.url = new function () {
   // Private vars
