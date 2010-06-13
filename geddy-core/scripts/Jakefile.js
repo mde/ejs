@@ -317,7 +317,7 @@ exports.tasks = {
         var appConfig;
         var dirname = process.cwd();
         var filename;
-        var config;
+        var dbConfig;
         var cmds;
         var jsPat = /\.js$/;
         var createStatement = 'CREATE TABlE geddy_data (uuid VARCHAR(255), ' +
@@ -329,26 +329,39 @@ exports.tasks = {
             continue;
           }
           appConfig = require(dirname + '/config/environments/' + filename.replace(jsPat, ''));
-          config = appConfig.database;
-          if (config) {
+          dbConfig = appConfig.database;
+          if (dbConfig) {
             sys.puts('Creating DB for ' + filename + '...');
-            switch (config.adapter) {
+            switch (dbConfig.adapter) {
               // Postgres, the DB of many names
               case 'postgresql':
               case 'postgres':
               case 'psql':
-                if (config.password) {
-                  cmds.push("export PGPASS='" + config.password + "'");
+                if (dbConfig.password) {
+                  cmds.push("export PGPASS='" + dbConfig.password + "'");
                 }
-                cmds.push('createdb -U ' + config.username + ' -w ' + config.dbName);
+                cmds.push('createdb -U ' + dbConfig.username + ' -w ' + dbConfig.dbName);
                 cmds.push('echo "db created"');
-                cmds.push('psql -U ' + config.username + ' -d ' + config.dbName + ' -w -c "' + createStatement + '"');
-                if (config.password) {
+                cmds.push('psql -U ' + dbConfig.username + ' -d ' + dbConfig.dbName + ' -w -c "' + createStatement + '"');
+                if (dbConfig.password) {
                   cmds.push("unset PGPASS");
                 }
                 break;
               case 'sqlite':
-                cmds.push("sqlite3 -line " + config.dbName + ".db '" + createStatement + "'");
+                cmds.push("sqlite3 -line " + dbConfig.dbName + ".db '" + createStatement + "'");
+                break;
+              case 'couchdb':
+                var Client = require('geddy-core/lib/clients/couchdb').Client;
+                var client = new Client(
+                  dbConfig.hostname,
+                  dbConfig.port);
+                client.request({url: '/' + dbConfig.dbName, method: 'PUT'},
+                    function (response) {
+                      if (response.statusCode == 412) {
+                        sys.puts('Database already exists.');
+                      }
+                    }
+                );
                 break;
               default:
                 // Do nothing
@@ -372,7 +385,7 @@ exports.tasks = {
         var appConfig;
         var dirname = process.cwd();
         var filename;
-        var config;
+        var dbConfig;
         var cmds = [];
         var jsPat = /\.js$/;
         for (var i = 0, ii = res.length; i < ii; i++) {
@@ -381,24 +394,37 @@ exports.tasks = {
             continue;
           }
           appConfig = require(dirname + '/config/environments/' + filename.replace(jsPat, ''));
-          config = appConfig.database;
-          if (config) {
+          dbConfig = appConfig.database;
+          if (dbConfig) {
             
-            switch (config.adapter) {
+            switch (dbConfig.adapter) {
               // Postgres, the DB of many names
               case 'postgresql':
               case 'postgres':
               case 'psql':
-                if (config.password) {
-                  cmds.push("export PGPASS='" + config.password + "'");
+                if (dbConfig.password) {
+                  cmds.push("export PGPASS='" + dbConfig.password + "'");
                 }
-                cmds.push('dropdb -U ' + config.username + ' -w ' + config.dbName);
-                if (config.password) {
+                cmds.push('dropdb -U ' + dbConfig.username + ' -w ' + dbConfig.dbName);
+                if (dbConfig.password) {
                   cmds.push("unset PGPASS");
                 }
                 break;
               case 'sqlite':
-                cmds.push("rm " + config.dbName + ".db");
+                cmds.push("rm " + dbConfig.dbName + ".db");
+                break;
+              case 'couchdb':
+                var Client = require('geddy-core/lib/clients/couchdb').Client;
+                var client = new Client(
+                  dbConfig.hostname,
+                  dbConfig.port);
+                client.request({url: '/' + dbConfig.dbName, method: 'DELETE'},
+                    function (response) {
+                      if (response.statusCode == 404) {
+                        sys.puts('Database does not exist to drop.');
+                      }
+                    }
+                );
                 break;
               default:
                 // Do nothing

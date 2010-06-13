@@ -62,12 +62,14 @@ geddy.util.meta = new function () {
     else {
       m = mixin;
     }
-    var baseObj = {};
     for (var p in m) {
       // Don't copy anything from Object.prototype
-      if (typeof baseObj[p] == 'undefined' || baseObj[p] != m[p]) {
+      if (m.hasOwnProperty(p)) {
         if (recurse && (typeof m[p] == 'object') && (m[p] !== null) &&
             !(m[p] instanceof Array)) {
+          if (typeof target[p] == 'undefined') {
+            target[p] = {};
+          }
           geddy.util.meta.mixin(target[p], m[p], recurse);
         }
         else {

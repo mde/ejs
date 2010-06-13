@@ -99,18 +99,19 @@ Couchdb.prototype = new function () {
     _appCallback();
   };
 
+  // FIXME: Convert to use simple clients.couchdb.Client
   this.request = function (params, callback) {
     var req = {};
     req.url = params.url;
     req.method = params.method || 'GET';
     req.data = JSON.stringify(params.data) || null;
     
-    var headers = {host: geddy.config.sessions.dbHostname};
+    var headers = {host: geddy.config.sessions.hostname};
     if (req.data) {
       headers['content-length'] = req.data.length;
     }
     
-    var client = http.createClient(geddy.config.sessions.dbPort, geddy.config.sessions.dbHostname);
+    var client = http.createClient(geddy.config.sessions.dbPort, geddy.config.sessions.hostname);
     var request = client.request(req.method, req.url, headers);
     //sys.puts(req.url);
     request.addListener('response', function (response) {

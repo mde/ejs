@@ -17,8 +17,7 @@
 */
 
 var sys = require('sys');
-
-var fleegix = require('geddy-core/lib/fleegix');
+var geddy = require('geddy-core/lib/geddy');
 
 var Config = function (opts) {
   
@@ -38,35 +37,39 @@ var Config = function (opts) {
   
   /*
   this.database = {
-    adapter: 'postgresql',
-    hostname: 'localhost',
-    dbName: 'geddy_db',
-    username: 'postgres',
-    password: null
+    adapter: 'sqlite'
+    , dbName: 'geddy_db'
   };
   this.database = {
-    adapter: 'couchdb',
-    hostname: 'localhost',
-    dbName: 'geddy_db',
-    dbPort: 5984
+    adapter: 'postgresql'
+    , hostname: 'localhost'
+    , dbName: 'geddy_db'
+    , username: 'postgres'
+    , password: null
+  };
+  this.database = {
+    adapter: 'couchdb'
+    , hostname: 'localhost'
+    , dbName: 'geddy_db'
+    , dbPort: 5984
   };
   this.sessions = {
-    store: 'couchdb',
-    key: 'sid',
-    expiry: 14 * 24 * 60 * 60,
-    dbHostname: 'localhost',
-    dbName: 'geddy_sessions',
-    dbPort: 5984
+    store: 'couchdb,
+    , key: 'sid,
+    , expiry: 14 * 24 * 60 * 60
+    , hostname: 'localhost'
+    , dbName: 'geddy_sessions'
+    , port: 5984
   };
   
   this.plugins = {
     'Auth': {
       // Pluggable auth types to check, in order
-      authTypes: ['Cookie', 'Basic'],
+      authTypes: ['Cookie', 'Basic']
       // The key to look for in the session to indicate logged-in status
-      authedSessionKey: 'login',
+      ' authedSessionKey: 'login'
       // The page to redirect to when hitting an auth-required HTML page
-      htmlRedirect: '/login'
+      , htmlRedirect: '/login'
     }
   };
   */
@@ -77,7 +80,7 @@ var Config = function (opts) {
 
   // Override with app-level opts
   var opts = require(this.dirname + '/config/environments/' + this.environment);
-  fleegix.mixin(this, opts, true);
+  geddy.util.meta.mixin(this, opts, true);
 };
 
 exports.Config = Config;

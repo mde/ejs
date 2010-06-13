@@ -13,7 +13,7 @@ var SQLBaseAdapter = function (conn) {
       }
     }
     return false;
-  }
+  };
 
   // Scrub input for basic SQL injection protection
   var _escape = function (s) {
@@ -22,7 +22,7 @@ var SQLBaseAdapter = function (conn) {
 
   var _unescape = function (s) {
     return s.replace(/''/g, "\'");
-  }
+  };
 
   this.save = function (modelItem, callback) {
     var uuid;
@@ -96,16 +96,17 @@ var SQLBaseAdapter = function (conn) {
   };
 
   var _fetchItems = function (params, base) {
-    var sql, uuids;
+    var sql, ids, uuids;
 
-    if(!params.ids || params.ids[0] == 'all') {
+    if (!params.ids || params.ids[0] == 'all') {
       sql = "SELECT data FROM geddy_data WHERE type = '" + _escape(params.dataType) + "';";
     }
     else {
-      uuids = "'" + params.ids.join("', '") + "'";
-      for (var i = 0, ii = uuids.length; i < ii; i++) {
-        uuids[i] = _escape(uuids[i]);
+      ids = params.ids;
+      for (var i = 0, ii = ids.length; i < ii; i++) {
+        ids[i] = _escape(ids[i]);
       }
+      uuids = "'" + ids.join("', '") + "'";
       sql = "SELECT data FROM geddy_data WHERE uuid in (" + uuids + ");";
     }
 
@@ -174,7 +175,7 @@ var SQLBaseAdapter = function (conn) {
               if (item) {
                 manyData = item.associations.hasMany[type].data || [];
                 manyData.push(data);
-                item.associations.hasMany[type].data = manyData
+                item.associations.hasMany[type].data = manyData;
               }
             }
           }
@@ -239,7 +240,7 @@ var SQLBaseAdapter = function (conn) {
 
   this.update = function (dataType, uuidParam, params, callback) {
     this.find(dataType, uuidParam, function (err, items) {
-      if (err) throw err;
+      if (err) { throw err; }
       var item = items[0];
       item.updateAttributes(params, callback);
     });
