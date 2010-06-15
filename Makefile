@@ -15,7 +15,7 @@
 # limitations under the License.
 #
 
-.PHONY: all build install clean uninstall
+.PHONY: all build install clean uninstall test client
 
 all: build
 
@@ -33,3 +33,6 @@ uninstall:
 
 test:
 	@./geddy-core/scripts/jake -f `pwd`/geddy-core/scripts/Jakefile test
+
+client:
+	@mkdir -p ./dist/client; ./geddy-core/scripts/jake -f `pwd`/geddy-core/scripts/Jakefile client dirname:`pwd` target:`pwd`/dist/client

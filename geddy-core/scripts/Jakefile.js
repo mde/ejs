@@ -456,12 +456,29 @@ exports.tasks = {
     }
   }
 
-  , 'assets': {
+  , 'client': {
     'desc': 'Concats and minifies JS source files for client-side use'
     , 'deps': []
-    , 'task': function () {
-      jsmin = require('geddy-core/scripts/jsmin').jsmin;
-
+    , 'task': function (opts) {
+      sys.puts(sys.inspect(arguments));
+      var jsmin, dirname, target, text, filename, path, minText;
+      jsmin = require('geddy-core/scripts/fulljsmin').jsmin;
+      dirname = opts.dirname || process.cwd();
+      target = opts.target || '.';
+      text = '', minText = '';
+      text = fs.readFileSync(dirname + '/geddy-model/lib/model.js', 'utf8').toString();
+      minText += jsmin('', text, 2);
+      path = dirname + '/geddy-util/lib';
+      fs.readdir(path, function (err, res) {
+        if (err) { throw(err); }
+        for (var i = 0, ii = res.length; i < ii; i++) {
+          filename = res[i];
+          sys.puts(path + '/' + filename);
+          text = fs.readFileSync(path + '/' + filename, 'utf8').toString();
+          minText += jsmin('', text, 2);
+        }
+        fs.writeFileSync(target + '/geddy.js', minText, 'utf8')
+      });
     }
   }
 
