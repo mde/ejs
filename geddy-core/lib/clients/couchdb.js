@@ -50,7 +50,7 @@ couchdb.Client.prototype = new function () {
       //sys.puts(sys.inspect(response));
       //sys.puts("STATUS: " + response.statusCode);
       //sys.puts("HEADERS: " + JSON.stringify(response.headers));
-      response.setBodyEncoding("utf8");
+      response.setEncoding("utf8");
       var resp = '';
       response.addListener("data", function (chunk) {
         //sys.puts("BODY: " + chunk);
@@ -70,7 +70,7 @@ couchdb.Client.prototype = new function () {
       //sys.puts(req.data);
       request.write(req.data);
     }
-    request.close(); 
+    request.end(); 
   };
 
 }();

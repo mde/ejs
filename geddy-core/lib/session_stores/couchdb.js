@@ -117,7 +117,7 @@ Couchdb.prototype = new function () {
     request.addListener('response', function (response) {
       //sys.puts("STATUS: " + response.statusCode);
       //sys.puts("HEADERS: " + JSON.stringify(response.headers));
-      response.setBodyEncoding("utf8");
+      response.setEncoding("utf8");
       response.addListener("data", function (chunk) {
         //sys.puts("BODY: " + chunk);
         callback({
@@ -132,7 +132,7 @@ Couchdb.prototype = new function () {
       //sys.puts(req.data);
       request.write(req.data);
     }
-    request.close(); 
+    request.end(); 
   };
   
   

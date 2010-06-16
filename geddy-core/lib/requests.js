@@ -42,7 +42,7 @@ var requests = new function () {
     var param = this.outstanding[p];
     var fetchReq = client.request(param.method, param.url);
     fetchReq.addListener('response', function (fetchResp) {
-      fetchResp.setBodyEncoding("utf8");
+      fetchResp.setEncoding("utf8");
 
       fetchResp.addListener("data", function (chunk) {
         _this.content += chunk;
