@@ -39,7 +39,7 @@ http://groups.google.com/group/geddy
 
 ** Prerequisites**
 
-Geddy requires version 0.1.94 of Node.js.
+Geddy requires version 0.1.98 of Node.js.
 
 To get Geddy from GitHub and install it:
 
