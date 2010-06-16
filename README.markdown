@@ -49,23 +49,23 @@ To get Geddy from GitHub and install it:
 
 ### Routes
 
-Routes are similar to Merb or Rails routes. 
+Routes are similar to Merb or Rails routes.
 
 **Basic routes**
-  
-    geddy.router.match('/moving/pictures/:id').to(
+
+    router.match('/moving/pictures/:id').to(
       {controller: 'Moving', action: 'pictures'});
 
-    geddy.router.match('/farewells/:farewelltype/kings/:kingid').to(
+    router.match('/farewells/:farewelltype/kings/:kingid').to(
        {controller: 'Farewells', action: 'kings'});
 
     //Can also match specific HTTP methods only
-    geddy.router.match('/xandadu', 'get').to(
+    router.match('/xandadu', 'get').to(
       {controller: 'Xandadu', action: 'specialHandler'});
 
 **Resource-based routes**
-  
-    geddy.router.resource('hemispheres');
+
+    router.resource('hemispheres');
 
 ### Creating a Geddy app
 
@@ -90,7 +90,7 @@ resource. The route will be set up automatically for you.
     mde@localhost:~/work/bytor$ geddy-gen resource snow_dog
     [ADDED] ./app/models/snow_dog.js
     [ADDED] ./app/controllers/snow_dogs.js
-    resources snow_dogs route added to ./config/geddy.router.js
+    resources snow_dogs route added to ./config/router.js
     Created view templates.
 
 Restart Geddy, and you'll see the new route working. Hit your
@@ -111,7 +111,7 @@ names by a comma, like this:
     mde@localhost:~/work/bytor$ geddy-gen resource person,people
     [ADDED] ./app/models/person.js
     [ADDED] ./app/controllers/people.js
-    resources people route added to ./config/geddy.router.js
+    resources people route added to ./config/router.js
     Created view templates.
 
 ### App layout
@@ -121,8 +121,8 @@ After adding a resource, a Geddy app is laid out like this:
     mde@localhost:~/work/bytor$ find .
     .
     ./config
-    ./config/geddy.config.js
-    ./config/geddy.router.js
+    ./config/config.js
+    ./config/router.js
     ./app
     ./app/controllers
     ./app/controllers/snow_dogs.js
@@ -236,7 +236,7 @@ Here is an example of a model with some validations:
       this.validatesFormat('login', /[a-z]+/, {message: 'Subdivisions!'});
       this.validatesLength('login', {min: 3});
       this.validatesConfirmed('password', 'confirmPassword');
-      this.validatesWithFunction('password', function (s) { 
+      this.validatesWithFunction('password', function (s) {
           // Something that returns true or false
           return s.length > 0;
       });
