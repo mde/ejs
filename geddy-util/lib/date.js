@@ -587,7 +587,7 @@ geddy.util.date = new function () {
   };
 
   this.parse = function (val) {
-    var dt, prefix, curr, matches, reordered, off, curr, stamp;
+    var dt, curr, matches, reordered, off, curr, stamp, prefix = '';
     
     // Yay, we have a date, use it as-is
     if (val instanceof Date || typeof val.getFullYear == 'function') {
@@ -604,6 +604,8 @@ geddy.util.date = new function () {
       // Value preparsed, looks like [yyyy, mo, dd, hh, mi, ss, ms, (offset?)]
       if (_isArray(val)) {
         matches = val;
+        matches.unshift(null);
+        matches[8] = null;
       }
 
       // Oh, crap, it's a string -- parse this bitch
@@ -614,18 +616,18 @@ geddy.util.date = new function () {
         if (!matches) {
           val.match(_US_DATE_PAT);
           if (matches) {
-            reordered = [matches[2], matches[0], matches[1]];
+            reordered = [null, matches[2], matches[0], matches[1]];
             // Pad the results to the same length as ISO8601
             reordered[8] = null;
             matches = reordered;
           }
         }
 
-        // Time-stored-in Date hack?
+        // Time-stored-in-Date hack?
         if (!matches) {
           val.match(_TIME_PAT);
           if (matches) {
-            reordered = [0, 0, 0, matches[0], matches[1], matches[2], matches[3], null];
+            reordered = [null, 0, 0, 0, matches[0], matches[1], matches[2], matches[3], null];
             matches = reordered;
           }
         }
