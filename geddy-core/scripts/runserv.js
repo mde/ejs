@@ -62,9 +62,11 @@ require.paths.unshift(opts.geddyRoot + '/lib/');
 require.paths.unshift(opts.geddyRoot + '/vendor/');
 
 var runServ = function () {
-  var hostname;
+  var server, hostname;
   if (geddy.config.hostname) { hostname = geddy.config.hostname; }
-  http.createServer(function (request, response) { req = request;
+  server = http.createServer();
+  server.addListener('request', function (request, response) {
+    req = request;
     resp = response;
     // Errors thrown here don't get caught by uncaughtExceptions listener
     // FIXME: figure out why, try to unify error-handling in one place
@@ -75,7 +77,8 @@ var runServ = function () {
       errors.respond(resp, e);
     }
 
-  }).listen(geddy.config.port, hostname);
+  });
+  server.listen(geddy.config.port, hostname);
 
   // Report server-start in initial startup -- don't report on
   // bounces from file-changes in dev-mode
