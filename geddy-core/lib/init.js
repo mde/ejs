@@ -22,6 +22,8 @@ var child_process = require('child_process');
 
 var fleegix = require('geddy-core/lib/fleegix');
 var session = require('geddy-core/lib/session');
+// TODO: this doesn't need to be a constructor
+// make this a simple static function
 var Init = function (config, callback) {
 
   var _this = this;

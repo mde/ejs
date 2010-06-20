@@ -31,127 +31,155 @@ var Controller = require('./controller').Controller;
 
 var App = function (initData) {
   var _this = this;
+  _queue = [];
+  _processing = false;
+
+  this.handleReq = function (req, resp) {
+    // TODO: Wrap the request to avoid ad-hoc addition of body prop
+    // on actual request
+    req.body = '';
+    req.addListener('data', function (data) {
+      req.body += data;
+    });
+    // Handle the request once it's finished
+    req.addListener('end', function () {
+      _this.queueReq(req, resp);
+    });
+  };
+
+  this.queueReq = function (req, resp) {
+    _queue.push([req, resp]);
+    if (!_processing) {
+      this.processReq();
+    }
+  };
+
+  this.processReq = function () {
+    _processing = true;
+    var next = _queue.shift();
+    if (next) {
+      process.nextTick(function () {
+        _this.run.apply(_this, next);
+      });
+    }
+    else {
+      _processing = false;
+    }
+  };
+
+  this.nextReq = function () {
+    _processing = false;
+    this.processReq();
+  };
 
   this.run = function (req, resp) {
+    
+    geddy.request = req;
+    geddy.response = resp;
     
     try {
       // capture the request start time for reporting
       resp.startTime = new Date().getTime();
 
-      // Build the request body
-      // FIXME: Wrap in some sort of abstraction instead of just
-      // appending an arbitrary new property to the request object
-      // I mean, this is JS and all, but we should have some manners here
-      req.body = '';
-      req.addListener('data', function (data) {
-        req.body += data;
-      });
+      var url, base, qs, qsParams, method, params, cook, sess,
+          constructor, controller, mixin, path, e, r
+      
+      // Let's start with the URL
+      url = req.url;
 
-      // Handle the request once it's finished
-      req.addListener('end', function () {
-        
-        var url, base, qs, qsParams, method, params, cook, sess,
-            constructor, controller, mixin, path, e, r
-        
-        // Let's start with the URL
-        url = req.url;
+      // Get the QS params, so we can check to see if there's a method override
+      qs = fleegix.url.getQS(url);
+      qsParams = fleegix.url.qsToObject(qs);
+      
+      // The method may be overridden by the _method param
+      // TODO: Look for the x-http-method-override header
+      method = (req.method.toUpperCase() == 'POST' && qsParams._method) ?
+          qsParams._method : req.method;
+      // Okay, let's be anal and force all the HTTP verbs to uppercase
+      method = method.toUpperCase();
+      
+      // The base path -- the router doesn't need to know about QS params
+      base = fleegix.url.getBase(url);
 
-        // Get the QS params, so we can check to see if there's a method override
-        qs = fleegix.url.getQS(url);
-        qsParams = fleegix.url.qsToObject(qs);
-        
-        // The method may be overridden by the _method param
-        // TODO: Look for the x-http-method-override header
-        method = (req.method.toUpperCase() == 'POST' && qsParams._method) ?
-            qsParams._method : req.method;
-        // Okay, let's be anal and force all the HTTP verbs to uppercase
-        method = method.toUpperCase();
-        
-        // The base path -- the router doesn't need to know about QS params
-        base = fleegix.url.getBase(url);
+      // =====
+      // All the routing magic happens right here
+      // =====
+      params = geddy.router.first(base, method);      
+      log.debug(method + ': ' + url);
 
-        // =====
-        // All the routing magic happens right here
-        // =====
-        params = geddy.router.first(base, method);      
-        log.debug(method + ': ' + url);
+      // The route matches -- we have a winner!
+      if (params) {
+        log.debug('Routed to ' + params.controller + ' controller, ' + params.action + ' action');
 
-        // The route matches -- we have a winner!
-        if (params) {
-          log.debug('Routed to ' + params.controller + ' controller, ' + params.action + ' action');
+        // Set up the cookies for this request so we can do the session thing
+        cook = new cookies.CookieCollection(req);
+        // Empty session object, ready to be initialized
+        sess = new session.Session({
+          app: this,
+          request: req,
+          cookies: cook
+        });
+        // Session init may involve async I/O (e.g., DB access, etc.)
+        // so the actual action invocation and response happens
+        // in the callback from session.init
+        sess.init(function () {
 
-          // Set up the cookies for this request so we can do the session thing
-          cook = new cookies.CookieCollection(req);
-          // Empty session object, ready to be initialized
-          sess = new session.Session({
-            app: this,
+          // Construct the full set of params from:
+          // 1. Any request body 2. URL params 3. query-string params
+          params = mergeParams(req, params, qsParams);
+          log.debug('params: ' + JSON.stringify(params))
+
+          // Instantiate the matching controller from the registry
+          constructor = geddy.controllerRegistry[params.controller];
+          // Give it all the base Controller fu
+          constructor.prototype = new Controller({
             request: req,
-            cookies: cook
+            response: resp,
+            name: params.controller,
+            params: params,
+            cookies: cook,
+            session: sess
           });
-          // Session init may involve async I/O (e.g., DB access, etc.)
-          // so the actual action invocation and response happens
-          // in the callback from session.init
-          sess.init(function () {
+          controller = new constructor();
 
-            // Construct the full set of params from:
-            // 1. Any request body 2. URL params 3. query-string params
-            params = mergeParams(req, params, qsParams);
-            log.debug('params: ' + JSON.stringify(params))
+          // Mix in any user-defined Application methods
+          mixin = new geddy.controllerRegistry.Application();
+          controller = geddy.util.meta.mixin(controller, mixin);
+          
+          // All righty, let's handle the action
+          controller.handleAction(params.action, params);
+        });
 
-            // Instantiate the matching controller from the registry
-            constructor = geddy.controllerRegistry[params.controller];
-            // Give it all the base Controller fu
-            constructor.prototype = new Controller({
-              request: req,
-              response: resp,
-              name: params.controller,
-              params: params,
-              cookies: cook,
-              session: sess
-            });
-            controller = new constructor();
+      }
+      
+      // Either static or 404 
+      else {
+        path = geddy.config.staticFilePath + req.url;
+        fs.stat(path, function (err, stats) {
+          // File not found, hand back the 404
+          if (err) {
+            e = new errors.NotFoundError('Page ' + req.url + ' not found.');
+            r = new response.Response(resp);
+            r.send(e.message, e.statusCode, {'Content-Type': 'text/html'});
+            log.warn('ERROR: ' + req.url + ' not found.').flush();
+          }
+          // Otherwise it's a static file to serve
+          else {
+            r = new response.Response(resp);
+            r.sendFile(path);
+          }
+        });
+      }
 
-            // Mix in any user-defined Application methods
-            mixin = new geddy.controllerRegistry.Application();
-            controller = geddy.util.meta.mixin(controller, mixin);
-            
-            // All righty, let's handle the action
-            controller.handleAction(params.action, params);
-          });
 
-        }
 
-        // No route -- serve up the ol' 404
-        else {
-          path = geddy.config.staticFilePath + req.url;
-          fs.stat(path, function (err, stats) {
-            // File not found, hand back the 404
-            if (err) {
-              e = new errors.NotFoundError('Page ' + req.url + ' not found.');
-              r = new response.Response(resp);
-              r.send(e.message, e.statusCode, {'Content-Type': 'text/html'});
-              log.warn('ERROR: ' + req.url + ' not found.').flush();
-            }
-            else {
-              r = new response.Response(resp);
-              r.sendFile(path);
-            }
-          });
-        }
-
-      });
-
-    } // End try 
-    
-    // Catch all errors, respond with error page & HTTP error code
-    // Errors in callback should be caught by the uncaughtException listener
-    // in runserv.js
+    }
     catch (e) {
       errors.respond(resp, e);
-      //log.warn('OOPS: ' + req.url + ' not found.').flush();
     }
 
   };
+
 
 };
 

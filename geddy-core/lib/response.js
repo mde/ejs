@@ -220,6 +220,7 @@ Response.prototype = new function () {
             _this.resp.end();
             log.debug('FILE: sent static file ' + filepath + '\nFinished handling request in ' +
                 ((new Date().getTime()) - _this.resp.startTime) + ' ms').flush();
+            geddy.app.nextReq();
             return;
           }
 
@@ -253,6 +254,7 @@ Response.prototype = new function () {
       log.debug('Finished handling request in ' +
           ((new Date().getTime()) - this.resp.startTime) + ' ms').flush();
     }
+    geddy.app.nextReq();
   };
 
 }();

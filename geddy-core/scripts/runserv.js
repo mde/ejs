@@ -16,12 +16,11 @@
  *
 */
 
-var req, resp, errors, appDirname, config, http,
-    parseopts, Config, Init, App, args, opts, sys;
-
-sys = require('sys');
-
+// Make geddy the sole global
 global.geddy = require('geddy-core/lib/geddy');
+
+// Bare min for reporting errors on startup
+var sys = require('sys');
 
 // Start grabbing errors first thing -- we need to be able
 // to report the entire stack, not just what the child process
@@ -32,8 +31,8 @@ global.geddy = require('geddy-core/lib/geddy');
 process.addListener('uncaughtException', function (err) {
   // If the app is running and there's a request in-process,
   // Dump the error into the browser as an HTTP error page
-  if (resp) {
-    errors.respond(resp, err);
+  if (geddy.request) {
+    errors.respond(geddy.response, err);
   }
   // If the app is in the process of starting up, display
   // the entire stack, then send the parent process the
@@ -43,47 +42,50 @@ process.addListener('uncaughtException', function (err) {
     msg += 'Error starting up application.\n';
     msg += err.stack ? err.stack.toString() : '';
     sys.puts(msg);
-    // FIXME: This is a hack -- figure out a better way to
-    // tell the parent to shut down
+    // Die
     sys.debug('###shutdown###');
   }
 });
   
-appDirname = process.argv[2];
-http = require('http');
-parseopts = require('geddy-core/lib/parseopts');
-Config = require('geddy-core/lib/config').Config;
-Init = require('geddy-core/lib/init').Init;
-args = process.argv.slice(2);
-opts = parseopts.parse(args);
+var errors, config, App, fd;
+var appDirname = process.argv[2],
+    net = require('net'),
+    http = require('http'),
+    parseopts = require('geddy-core/lib/parseopts'),
+    Config = require('geddy-core/lib/config').Config,
+    Init = require('geddy-core/lib/init').Init,
+    args = process.argv.slice(2),
+    opts = parseopts.parse(args);
 
 // Add the local lib/ and vendor/ dirs in the app as a require-lookup path
 require.paths.unshift(opts.geddyRoot + '/lib/');
 require.paths.unshift(opts.geddyRoot + '/vendor/');
 
+/*
+ * Main server startup function, invoked as a callback
+ * from the init function 
+ */
 var runServ = function () {
-  var server, hostname;
-  if (geddy.config.hostname) { hostname = geddy.config.hostname; }
-  server = http.createServer();
-  server.addListener('request', function (request, response) {
-    req = request;
-    resp = response;
+  var server = http.createServer();
+  var hostname = geddy.config.hostname || undefined;
+  server.addListener('request', function (req, resp) {
     // Errors thrown here don't get caught by uncaughtExceptions listener
-    // FIXME: figure out why, try to unify error-handling in one place
+    // FIXME: Try to unify error-handling
     try {
-      new App().run(req, resp);
+      geddy.app.handleReq(req, resp);
     }
     catch (e) {
       errors.respond(resp, e);
     }
 
   });
-  server.listen(geddy.config.port, hostname);
+  // Listen on the passed-in fd
+  server.listenFD(fd, 'tcp4');
 
-  // Report server-start in initial startup -- don't report on
-  // bounces from file-changes in dev-mode
+  // Server startup banner
+  // TODO: Move banner up to master process
   if (!opts.restart) {
-    var msg = 'Geddy running ';
+    var msg = 'Geddy worker (pid ' + process.pid + ') running ';
     msg += opts.serverRoot ? 'from source (' + opts.serverRoot + ') ' : '';
     msg += 'at ';
     msg += hostname ? 'http://' + hostname + ':' + geddy.config.port : 'port ' + geddy.config.port
@@ -94,13 +96,40 @@ var runServ = function () {
   }
 };
 
-config = new Config(opts);
-// Initialize the app, passing in the config, and runServ at its callback
-new Init(config, runServ);
-// Get the app constructor, once init has completed
-App = require('geddy-core/lib/app').App;
-// Errors consumes logs, logs needs config to be set up
-// so do this last
-errors = require('geddy-core/lib/errors');
+// Listen on stdin
+var stdin = new net.Stream(0, 'unix');
+
+stdin.addListener('data', function (data) {
+  // TODO: Pass in config here
+  var config = JSON.parse(data.toString());
+});
+
+stdin.addListener('fd', function (f) {
+  // Grab the fd to listen on
+  fd = f;
+  
+  // App-config -- base config is overridden by opts
+  config = new Config(opts);
+
+  // Initialize with the config, then fire up the app
+  // with the callback
+  new Init(config, function () {
+    // Errors current use logging -- logs needs the config to be set up
+    errors = require('geddy-core/lib/errors');
+    
+    // All righty, fire up the app
+    App = require('geddy-core/lib/app').App;
+    geddy.app = new App();
+
+    runServ(); 
+  });
+
+});
+
+stdin.resume();
+
+
+
+
 
 

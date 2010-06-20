@@ -1,16 +1,21 @@
 
 global.geddy = require('geddy-core/lib/geddy');
 
-var parseopts = require('geddy-core/lib/parseopts');
-var args = process.argv.slice(2);
-var opts = parseopts.parse(args.slice());
-
-var child, opts, log,
+var parseopts = require('geddy-core/lib/parseopts'),
+    args = process.argv.slice(2),
+    opts = parseopts.parse(args.slice()),
+    child,
+    opts, 
+    log,
     sys = require("sys"),
     fs = require("fs"),
     spawn = require("child_process").spawn,
     Config = require('geddy-core/lib/config').Config,
-    serverRoot;
+    serverRoot,
+    workers = [],
+    netBinding = process.binding('net'),
+    net = require('net'),
+    pids;
 
 geddy.config = new Config(opts);
 
@@ -48,34 +53,66 @@ var watchTree = function (path, func) {
   })
 };
 
+var fd = netBinding.socket('tcp4');
+netBinding.bind(fd, geddy.config.port);
+netBinding.listen(fd, 128);
+
 var startServ = function (restart) {
   passArgs = restart ? args.concat('-Q', 'true') : args;
-  child  = spawn('node', passArgs);
-  
-  child.stdout.addListener('data', function (data) {
-    sys.puts(data);
-  });
+  pids = [];
+ 
+  for (var i = 0, ii = geddy.config.workers; i < ii; i++) {
 
-  child.stderr.addListener('data', function (data) {
-    if (data == 'DEBUG: ###shutdown###\n') {
-      process.kill(child.pid);
-      process.exit();
+    // Create an unnamed unix socket to pass the fd to the child
+    // Credits: Ext's Connect, http://github.com/extjs/Connect
+    var fds = netBinding.socketpair();
+
+    // Spawn the child process
+    var child = spawn(
+      'node',
+      passArgs, // TODO: pass these via stdin
+      undefined,
+      [fds[1], -1, -1]
+    );
+
+    // Patch child's stdin
+    if (!child.stdin) {
+      child.stdin = new net.Stream(fds[0], 'unix');
     }
-    else {
-      sys.puts(data);
-    }
-  });
-  
-  child.addListener('exit', function (code) {
-    //sys.puts('child process exited with code ' + code);
-  });
+
+    // Pass a dummy config and fd via the child's stdin
+    // TODO: pass config here
+    child.stdin.write(JSON.stringify({}), 'ascii', fd);
+                
+    child.stdout.addListener('data', function (data) {
+      sys.print(data);
+    });
+
+    child.stderr.addListener('data', function (data) {
+      if (data == 'DEBUG: ###shutdown###\n') {
+        process.kill(child.pid);
+        process.exit();
+      }
+      else {
+        sys.print(data);
+      }
+    });
+    child.addListener('exit', function (code) {
+    });
+
+    pids.push(child.pid);
+
+  }
+
 };
 
 var restartServ = function (curr, prev) {
   // Only if the file has been modified
   if (curr.mtime.getTime() != prev.mtime.getTime()) {
     log.info('Restarting server for changed code...').flush();
-    process.kill(child.pid);
+    for (var i = 0, ii = pids.length; i < ii; i++) {
+      process.kill(pids[i]);
+    }
     startServ(true);
   }
 };

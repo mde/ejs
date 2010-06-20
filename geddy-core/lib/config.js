@@ -28,6 +28,7 @@ var Config = function (opts) {
   this.staticFilePath = this.dirname + '/public';
   this.detailedErrors = true;
   this.plugins = {};
+  this.workers = this.environment == 'development' ? 1 : 2;
   
   this.sessions = {
     store: 'memory',
