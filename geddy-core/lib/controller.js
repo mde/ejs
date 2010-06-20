@@ -202,9 +202,14 @@ Controller.prototype = new function () {
     var headers = {'Content-Type': this.contentType};
     headers['Set-Cookie'] = this.cookies.serialize();
     var content = this.content;
-    this.session.close(function () {
+    if (this.session) {
+      this.session.close(function () {
+        r.send(content, 200, headers);
+      });
+    }
+    else {
       r.send(content, 200, headers);
-    });
+    }
   };
 
   this.negotiateContent = function (frmt) {
@@ -236,42 +241,19 @@ Controller.prototype = new function () {
     
     // Look for a specific match
     var a = this.request.headers.accept.split(',');
-    var i;
     var pat;
     var wildcard = false;
 
     // Ignore quality factors for now
-    for (i = 0; i < a.length; i++) {
+    for (var i = 0, ii = a.length; i < ii; i++) {
       a[i] = a[i].split(';')[0];
       if (a[i] == '*/*') {
         wildcard = true;
       }
     }
-    for (i = 0; i < types.length; i++) {
-      pat = response.formatPatterns[types[i]];
-      if (pat) { 
-        for (var j = 0; j < a.length; j++) {
-          match = a[j].match(pat);
-          if (match) {
-            format = types[i];
-            contentType = match;
-            break;
-          }
-        }
-      }
-      // If respondsWith contains an unknown format
-      // TODO: Better error to tell devs how to set up new formats
-      else {
-        err = new errors.InternalServerError('Unknown format');
-        this.error(err);
-      }
-      // Don't look at any more formats if there's a match
-      if (match) {
-        break;
-      }
-    }
     
-    if (!contentType && wildcard) {
+    // If agent accepts anything, respond with the controller's first choice
+    if (wildcard) {
       t = types[0];
       format = t;
       match = response.formats[t];
@@ -279,7 +261,34 @@ Controller.prototype = new function () {
         contentType = match.split('|')[0];
       }
     }
-   
+    // Otherwise look through the acceptable formats and see if
+    // the controller supports any of them
+    else {
+      for (var i = 0, ii = types.length; i < ii; i++) {
+        pat = response.formatPatterns[types[i]];
+        if (pat) { 
+          for (var j = 0, jj = a.length; j < jj; j++) {
+            match = a[j].match(pat);
+            if (match) {
+              format = types[i];
+              contentType = match;
+              break;
+            }
+          }
+        }
+        // If respondsWith contains an unknown format
+        // TODO: Better error to tell devs how to set up new formats
+        else {
+          err = new errors.InternalServerError('Unknown format');
+          this.error(err);
+        }
+        // Don't look at any more formats if there's a match
+        if (match) {
+          break;
+        }
+      }
+    }
+    
     if (!(format && contentType)) {
       err = new errors.InternalServerError('Unknown format');
       this.error(err);
