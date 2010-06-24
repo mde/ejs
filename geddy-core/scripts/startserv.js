@@ -1,9 +1,30 @@
+var MIN_NODE_VERSION = '0.1.98';
+var GEDDY_VERSION = '0.1.0';
 
 global.geddy = require('geddy-core/lib/geddy');
 
-var parseopts = require('geddy-core/lib/parseopts'),
-    args = process.argv.slice(2),
-    opts = parseopts.parse(args.slice()),
+var usage = ''
+    + 'Geddy web framework for Node.js\n'
+    + '********************************************************************************\n'
+    + 'If no flags are given, Geddy starts in development mode on port 4000.\n'
+    + '********************************************************************************\n'
+    + '{Usage}: geddy [options]\n'
+    + '\n'
+    + '{Options}:\n'
+    //+ '  -H, --host ADDR            Host address, defaults to locahost\n'
+    + '  -p, --port NUM             Port number, defaults to 4000\n'
+    + '  -n, --workers NUM          Number of worker processes to use\n'
+    + '  -E, --environment NAME     Sets environment, defaults to "development"\n'
+    + '  -r, --geddy-root PATH      Sets directory for Geddy application root"\n'
+    + '  -V, --version              Outputs Geddy version\n'
+    + '  -h, --help                 Outputs help information\n'
+    + '';
+
+var args = process.argv.slice(2),
+    parseopts = require('geddy-core/lib/parseopts'),
+    parsed = parseopts.parse(args.slice()),
+    cmds = parsed.cmds,
+    opts = parsed.opts,
     child,
     opts, 
     log,
@@ -12,10 +33,26 @@ var parseopts = require('geddy-core/lib/parseopts'),
     spawn = require("child_process").spawn,
     Config = require('geddy-core/lib/config').Config,
     serverRoot,
-    workers = [],
     netBinding = process.binding('net'),
     net = require('net'),
     pids;
+
+var die = function (str) {
+  sys.puts(str);
+  process.exit();
+}
+
+if (process.version < MIN_NODE_VERSION) {
+  die('Geddy requires ' + MIN_NODE_VERSION + ' of Node.js.');
+}
+
+if (typeof opts.version != 'undefined') {
+  die(GEDDY_VERSION);
+}
+
+if (typeof opts.help != 'undefined') {
+  die(usage);
+}
 
 geddy.config = new Config(opts);
 
@@ -58,10 +95,12 @@ netBinding.bind(fd, geddy.config.port);
 netBinding.listen(fd, 128);
 
 var startServ = function (restart) {
-  passArgs = restart ? args.concat('-Q', 'true') : args;
+  var passArgs = restart ? args.concat('-Q', 'true') : args;
+  var workerCount = opts.workers || geddy.config.workers;
+
   pids = [];
  
-  for (var i = 0, ii = geddy.config.workers; i < ii; i++) {
+  for (var i = 0, ii = workerCount; i < ii; i++) {
 
     // Create an unnamed unix socket to pass the fd to the child
     // Credits: Ext's Connect, http://github.com/extjs/Connect

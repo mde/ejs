@@ -55,7 +55,9 @@ var appDirname = process.argv[2],
     Config = require('geddy-core/lib/config').Config,
     Init = require('geddy-core/lib/init').Init,
     args = process.argv.slice(2),
-    opts = parseopts.parse(args);
+    parsed = parseopts.parse(args),
+    cmds = parsed.cmds,
+    opts = parsed.opts;
 
 // Add the local lib/ and vendor/ dirs in the app as a require-lookup path
 require.paths.unshift(opts.geddyRoot + '/lib/');
