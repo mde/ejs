@@ -15,7 +15,7 @@ var usage = ''
     + '  -p, --port NUM             Port number, defaults to 4000\n'
     + '  -n, --workers NUM          Number of worker processes to use\n'
     + '  -E, --environment NAME     Sets environment, defaults to "development"\n'
-    + '  -r, --geddy-root PATH      Sets directory for Geddy application root"\n'
+    + '  -r, --geddy-root PATH      Sets directory for Geddy application root\n'
     + '  -V, --version              Outputs Geddy version\n'
     + '  -h, --help                 Outputs help information\n'
     + '';
