@@ -3,10 +3,9 @@
 
 ### Goals
 
-  * Make the simple stuff easy without making the hard stuff impossible
-  * Performance, simplicity, modularity
-  * Reasonable defaults, easy to override
-  * Simple API, simple codebase
+  * Easy to use
+  * Modular
+  * Fast
 
 Geddy should make things easy for the most basic applications,
 but still let you get under the hood and tinker if you want.
