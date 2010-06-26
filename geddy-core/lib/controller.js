@@ -314,9 +314,26 @@ Controller.prototype = new function () {
       }
     }
   };
+  
+  this.formatContent = function (format, content) {
+    if (format == 'html') {
+      var _this = this;
+      var name = this.nameDecamelized;
+      var act = this.params.action;
+      // Set the root path via templateRoot or app/views/[controller_name]
+      var root = this.templateRoot ? this.templateRoot : 'app/views/' + name;
+      var path = root + '/' + act + '.html.ejs';
+      
+      this.partial(path, content);
+      return;
+    }
+    else {
+      var c = this.formatters[format](content);
+      this.formatContentAndFinish(c);
+    }
+  };
 
   this.partial = function (partial, params, parentNode) {
-    sys.puts(partial);
     var _this = this;
     var node;
     var partialId = this.currentPartialId;
@@ -386,24 +403,6 @@ Controller.prototype = new function () {
     // Return the placeholder text to represent this template -- it gets
     // replaced in the callback from the async load of the actual content
     return '###partial###' + partialId;
-  };
-
-  this.formatContent = function (format, content) {
-    if (format == 'html') {
-      var _this = this;
-      var name = this.nameDecamelized;
-      var act = this.params.action;
-      var root = this.templateRoot ? this.templateRoot : 'app/views/' + name;
-      // E.g., app/views/snow_dogs/index.html.ejs
-      var path = root + '/' + act + '.html.ejs';
-      
-      this.partial(path, content);
-      return;
-    }
-    else {
-      var c = this.formatters[format](content);
-      this.formatContentAndFinish(c);
-    }
   };
 
 }();
