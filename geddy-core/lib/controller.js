@@ -73,6 +73,8 @@ var Controller = function (obj) {
 
   this.nameDecamelized = geddy.util.string.decamelize(this.name);
 
+  this.templateRoot = '';
+
 };
 
 Controller.prototype = new function () {
@@ -314,12 +316,14 @@ Controller.prototype = new function () {
   };
 
   this.partial = function (partial, params, parentNode) {
+    sys.puts(partial);
     var _this = this;
     var node;
     var partialId = this.currentPartialId;
     var isBaseNode = !this.baseTemplateNode;
     var key;
     var url = isBaseNode ? partial : null;
+    var dirs = [], dir;
     
     // Curry the partial method to use the current node as the
     // parent in subsequent calls
@@ -327,18 +331,30 @@ Controller.prototype = new function () {
       return _this.partial.call(_this, part, parm, node);
     };
    
-    if (!url) {
-      key = parentNode.dirname + '/' + partial + '.html.ejs';
+    // Prefer the templateRoot for this controller if it's specified
+    if (this.templateRoot) {
+      dirs.push(this.templateRoot);
+    }
+    // If this is a sub-template, try in the same directory as the
+    // parent
+    if (parentNode) {
+      dirs.push(parentNode.dirname);
+    }
+    // Otherwise fall back to the root of the views directory
+    dirs.push('app/views');
+    
+    // Look through the directory list until you find a registered
+    // template path -- these are registered during app init
+    while (!url) {
+      sys.puts(dir);
+      dir = dirs.shift();
+      sys.puts(dir);
+      key = dir + '/' + partial + '.html.ejs';
       if (geddy.templateRegistry[key]) {
         url = key;
       }
     }
-    if (!url) {
-      key = 'app/views/' + partial + '.html.ejs';
-      if (geddy.templateRegistry[key]) {
-        url = key;
-      }
-    }
+    
     if (!url) {
       var e = new errors.InternalServerError('Template path "' + key + '" not found');
       this.error(e);
@@ -377,8 +393,9 @@ Controller.prototype = new function () {
       var _this = this;
       var name = this.nameDecamelized;
       var act = this.params.action;
+      var root = this.templateRoot ? this.templateRoot : 'app/views' + name;
       // E.g., app/views/snow_dogs/index.html.ejs
-      var path = 'app/views/' + name + '/' + act + '.html.ejs';
+      var path = root + '/' + act + '.html.ejs';
       
       this.partial(path, content);
       return;
