@@ -71,6 +71,7 @@ exports.tasks = {
     }
   }
   
+  // TODO: Refactor to modularize redundant code with controller task
   , 'resource': {
     'desc': ''
     , 'deps': []
@@ -167,6 +168,86 @@ exports.tasks = {
     }
   }
 
+  // TODO: Refactor to modularize redundant code with resource task
+  , 'controller': {
+    'desc': ''
+    , 'deps': []
+    , 'task': function (nameParam) {
+      var util = {};
+      var text, contents;
+      var filePath;
+      var fleegix = require('../lib/fleegix');
+      
+      global.geddy = require('../../geddy-core/lib/geddy');
+      
+      // Add the controller file
+      // ----
+      var n = nameParam.split(',');
+      var names = {filename: {}, constructor: {}, property: {}};
+      names.filename.singular = n[0];
+      // TODO: No fancy inflections yet
+      names.filename.plural = n[1] || names.filename.singular + 's';
+      
+      // Convert underscores to camelCase, e.g., 'neilPeart'
+      names.property.singular = geddy.util.string.camelize(names.filename.singular, false);
+      names.property.plural = geddy.util.string.camelize(names.filename.plural, false);
+      // Convert underscores to camelCase with init cap, e.g., 'NeilPeart'
+      names.constructor.singular = geddy.util.string.camelize(names.filename.singular, true);
+      names.constructor.plural = geddy.util.string.camelize(names.filename.plural, true);
+      
+      // Controller
+      // ----
+      // Grab the template text
+      text = fs.readFileSync(__dirname + '/gen/bare_controller.ejs', 'utf8').toString();
+      // Stick in the controller name
+      var templ = new fleegix.ejs.Template({text: text});
+      templ.process({data: {names: names}});
+      filePath = './app/controllers/' + names.filename.plural + '.js';
+      fs.writeFileSync(filePath, templ.markup, 'utf8');
+      sys.puts('[ADDED] ' + filePath);
+
+      // Add the route
+      // ----
+      // Grab the config text
+      filePath = './config/router.js';
+      text = fs.readFileSync(filePath, 'utf8').toString();
+      // Add the new bare route just above the export
+      routerArr = text.split('exports.router');
+      routerArr[0] += 'router.match(\'/' +  names.filename.plural +
+          '\').to({controller: \'' + names.constructor.plural + '\', action: \'index\'});\n';
+      text = routerArr.join('exports.router');
+      fs.writeFileSync(filePath, text, 'utf8');
+      sys.puts('bare ' + names.filename.plural + ' route added to ' + filePath);
+
+      // Add inflections map
+      // ----
+      var canon = names.constructor.singular;
+      contents = fs.readFileSync('./config/inflections.js', 'utf8').toString();
+      var last = 'module.exports = inflections;';
+      contents = contents.replace(last, '');
+      text = '';
+      text += 'var ' + canon + ' = ' + JSON.stringify(names) + ';\n';
+      text += "inflections['" + names.filename.singular + "'] = " + canon + ";\n"
+      text += "inflections['" + names.filename.plural + "'] = " + canon + ";\n"
+      text += "inflections['" + names.constructor.singular + "'] = " + canon + ";\n"
+      text += "inflections['" + names.constructor.plural + "'] = " + canon + ";\n"
+      text += "inflections['" + names.property.singular + "'] = " + canon + ";\n"
+      text += "inflections['" + names.property.plural + "'] = " + canon + ";\n"
+      contents += text;
+      contents += last;
+      fs.writeFileSync('./config/inflections.js', contents, 'utf8');
+      sys.puts('Updated inflections map.');
+      
+      var cmds = [
+        'mkdir -p ./app/views/' + names.filename.plural
+        , 'cp ~/.node_libraries/geddy-core/scripts/gen/views/index.html.ejs ' +
+            './app/views/' + names.filename.plural + '/'
+      ]
+      runCmds(cmds, function () {
+        sys.puts('Created view templates.');
+      });
+    }
+  }
   , 'scaffold': {
     'desc': 'Creates a scaffold for CRUD operations on a resource.'
     , 'deps': []

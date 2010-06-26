@@ -393,7 +393,7 @@ Controller.prototype = new function () {
       var _this = this;
       var name = this.nameDecamelized;
       var act = this.params.action;
-      var root = this.templateRoot ? this.templateRoot : 'app/views' + name;
+      var root = this.templateRoot ? this.templateRoot : 'app/views/' + name;
       // E.g., app/views/snow_dogs/index.html.ejs
       var path = root + '/' + act + '.html.ejs';
       
