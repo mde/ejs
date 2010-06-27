@@ -26,7 +26,8 @@ var fleegix = require('geddy-core/lib/fleegix');
 var async = require('geddy-util/lib/async');
 
 var Controller = function (obj) {
-//var Controller = function (app, name, params, req, resp) {
+  var _undef; // Undefined value
+
   // The http.ServerRequest passed to the 'request' event
   // callback function
   this.request = null;
@@ -73,7 +74,7 @@ var Controller = function (obj) {
 
   this.nameDecamelized = geddy.util.string.decamelize(this.name);
 
-  this.templateRoot = '';
+  this.templateRoot = _undef;
 
 };
 
@@ -333,19 +334,20 @@ Controller.prototype = new function () {
     }
   };
 
-  this.partial = function (partial, params, parentNode) {
+  this.partial = function (partialUrl, params, parentNode) {
+    
     var _this = this;
     var node;
     var partialId = this.currentPartialId;
     var isBaseNode = !this.baseTemplateNode;
     var key;
-    var url = isBaseNode ? partial : null;
+    var templateUrl = isBaseNode ? partialUrl : null;
     var dirs = [], dir;
     
     // Curry the partial method to use the current node as the
     // parent in subsequent calls
-    params.partial = function (part, parm) {
-      return _this.partial.call(_this, part, parm, node);
+    params.partial = function (partUrl, parm) {
+      return _this.partial.call(_this, partUrl, parm, node);
     };
    
     // Prefer the templateRoot for this controller if it's specified
@@ -362,24 +364,22 @@ Controller.prototype = new function () {
     
     // Look through the directory list until you find a registered
     // template path -- these are registered during app init
-    while (!url) {
-      sys.puts(dir);
+    while (dirs.length) {
       dir = dirs.shift();
-      sys.puts(dir);
-      key = dir + '/' + partial + '.html.ejs';
+      key = dir + '/' + partialUrl + '.html.ejs';
       if (geddy.templateRegistry[key]) {
-        url = key;
+        templateUrl = key;
       }
     }
     
-    if (!url) {
+    // Stop all execution if one of the templates isn't found
+    if (!templateUrl) {
       var e = new errors.InternalServerError('Template path "' + key + '" not found');
-      this.error(e);
-      return;
+      throw e;
     }
 
     // Create the current node, with a reference to its parent, if any
-    node = new templates.TemplateNode(partialId, url, params, parentNode);
+    node = new templates.TemplateNode(partialId, templateUrl, params, parentNode);
     // If there is a parent, add this node as its child
     if (parentNode) {
       parentNode.childNodes[partialId] = node;

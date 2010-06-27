@@ -31,6 +31,7 @@ templates.TemplateNode = function (id, url, params, parentNode) {
   this.params = params;
   this.parentNode = parentNode || null;
   this.loaded = false;
+  this.cachedFinish = false;
   this.childNodes = {};
   this.content = null;
 };
@@ -40,34 +41,30 @@ templates.TemplateNode.prototype = new function () {
   // passes the completed content back to be written out in the response
   this.finishRoot = null;
   
-  this.finish = function (source) {
-    // If this finish is being called by one of the children,
-    // replace its placeholder text with the child's actual content
-    if (source) {
-      this.content = this.content.replace(
-          '###partial###' + source.id, source.content);
-    }
-    // This should never happen, but whatever
-    if (!this.loaded) {
-      return false;
-    }
-    // If any of the child nodes of this parent haven't loaded yet,
-    // bail out -- this will get re-called every time one of them
-    // comes in, until they're all there and we can move on up the chain
-    var childNodes = this.childNodes;
-    for (var p in childNodes) {
-      if (!childNodes[p].loaded) {
-        return false;
+  this.childFinished = function (childNode) {
+    this.content = this.content.replace(
+        '###partial###' + childNode.id, childNode.content);
+    
+    // Every time a child node finished, this node may actually
+    // be finished
+    this.tryFinish();
+  };
+
+  this.tryFinish = function () {
+    // If this node is actually finished, either call up the
+    // chain, or finish the entire thing out
+    if (this.isFinished()) {
+      if (this.parentNode) {
+        this.parentNode.childFinished(this);    
+      }
+      else {
+        this.finishRoot();
       }
     }
-    // If this is not the base node, call up the chain
-    if (this.parentNode) {
-      this.parentNode.finish(this);
-    }
-    // Otherwise, it's the root node -- time to write out the response
-    else {
-      this.finishRoot();
-    }
+  };
+
+  var _createLoader = function (node) {
+    return function () { node.loadTemplate.call(node); };
   };
 
   this.loadChildTemplates = function () {
@@ -75,14 +72,45 @@ templates.TemplateNode.prototype = new function () {
     var childNode;
     for (var p in childNodes) {
       childNode = childNodes[p];
-      async.execNonBlocking(function () { childNode.loadTemplate(); });
+      async.execNonBlocking(_createLoader(childNode));
     }
+  };
+
+  this.isFinished = function () {
+    // May be a recursive check down into a child -- if the child
+    // is not loaded, it's not finished
+    if (!this.loaded) {
+      return false;
+    }
+    
+    // If we've already closed this node out, use the cached finish-flag
+    if (this.cachedFinish) {
+      return true;
+    }
+    
+    // If any of the child nodes of this parent haven't loaded yet,
+    // bail out -- this will get re-called every time one of them
+    // comes in, until they're all there and we can move on up the chain
+    var childNodes = this.childNodes;
+    for (var p in childNodes) {
+      if (!childNodes[p].isFinished()) {
+        return false;
+      }
+    }
+    // Once this guy is finished cache the results to avoid
+    
+    // a bunch of recursive calls when it's called as a child
+    this.cachedFinish = true;
+
+    return true;
   };
   
   this.loadTemplate = function () {
     var _this = this;
-    fs.readFile(this.url, 'utf8', function (err, data) {
-      if (err) { throw err; }
+    
+    var handleLoaded = function (data) {
+      _this.loaded = true;
+      
       // Create a template out of the markup in the file
       var templ = new fleegix.ejs.Template({text: data});
       
@@ -96,16 +124,31 @@ templates.TemplateNode.prototype = new function () {
       // By the time we get here, all 'partial' method calls will
       // have executed, and any children will have been added
       _this.loadChildTemplates();
-      
-      // Send the finish call -- a node can call finish on its parent
-      // if it either has no children, or all its children have loaded.
-      // The parent will do the same thing until we get to the base node
-      _this.loaded = true;
-      async.execNonBlocking(function () { _this.finish(); });
-    });
+     
+      // This node is loaded, and we now know if it has any children
+      // -- it may be finished, too.
+      _this.tryFinish();
+    };
+
+    var cached = templates.textCache[this.url];
+    // Use cached template text if possible
+    if (geddy.config.environment == 'production' && cached) {
+      handleLoaded(cached);
+    }
+    // If this is the first hit, use the template text off disc
+    // and cache it for subsequent requests
+    else {
+      fs.readFile(this.url, 'utf8', function (err, data) {
+        if (err) { throw err; }
+        templates.textCache[_this.url] = data;
+        handleLoaded(data);
+      });
+    }
 
   };
 
 }();
+
+templates.textCache = {};
 
 exports.TemplateNode = templates.TemplateNode;
