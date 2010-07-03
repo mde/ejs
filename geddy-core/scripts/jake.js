@@ -17,6 +17,7 @@
 */
 
 var args = process.argv.slice(2);
+var sys = require('sys');
 
 var opts = {};
 var optsReg = {
@@ -90,11 +91,25 @@ opts.jakefile = opts.jakefile || './Jakefile';
 if (opts.directory) {
   process.chdir(opts.directory);
 }
-var tasks = require(opts.jakefile).tasks;
 
 var jake = new function () {
+  this.currentNamespace = 'default';
+  this.currentTaskDescription = null;
+  this.namespaceTasks = {
+    'default': {}
+  };
   this.runTask = function (name, args) {
-    var task = tasks[name];
+    var nameArr = name.split(':');
+    var nsName, taskName;
+    if (nameArr.length > 1) {
+      nsName = nameArr[0];
+      taskName = nameArr[1];
+    }
+    else {
+      nsName = 'default';
+      taskName = name;
+    }
+    var task = this.namespaceTasks[nsName][taskName];
     if (!task) {
       throw new Error('Task "' + name + '" is not defined in the Jakefile.');
     }
@@ -104,7 +119,7 @@ var jake = new function () {
         this.runTask.call(this, deps[i], args);
       }
     }
-    task.task.apply(task, passArgs);
+    task.handler.apply(task, passArgs);
   };
 
   this.processArgs = function (args) {
@@ -120,4 +135,36 @@ var jake = new function () {
 
 }();
 
+jake.Task = function (name, deps, handler) {
+  this.name = name,
+  this.deps = deps,
+  this.handler = handler;
+  this.desription = null;
+};
+
+global.task = function (name, deps, handler) {
+  var task = new jake.Task(name, deps, handler);
+  if (jake.currentTaskDescription) {
+    task.description = jake.currentTaskDescription;
+    jake.currentTaskDescription = null;
+  }
+  jake.namespaceTasks[jake.currentNamespace][name] = task;
+};
+
+global.desc = function (str) {
+  jake.currentTaskDescription = str;
+};
+
+global.namespace = function (name, tasks) {
+  if (typeof jake.namespaceTasks[name] == 'undefined') {
+    jake.namespaceTasks[name] = {};
+  }
+  jake.currentNamespace = name;
+  tasks();
+  jake.currentNamespace = 'default';
+};
+
+var tasks = require(opts.jakefile).tasks;
+
 jake.runTask(taskName, args);
+
