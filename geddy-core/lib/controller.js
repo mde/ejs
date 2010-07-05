@@ -15,18 +15,16 @@
  * limitations under the License.
  *
 */
-
 var sys = require('sys');
 var fs = require('fs');
 
 var errors = require('geddy-core/lib/errors');
 var response = require('geddy-core/lib/response');
 var templates = require('geddy-core/lib/templates');
-var fleegix = require('geddy-core/lib/fleegix');
-var async = require('geddy-util/lib/async');
+var Templater = require('geddy-template/lib/adapters/ejs').Templater
 
 var Controller = function (obj) {
-  var _undef; // Undefined value
+  var undefined; // Local copy of undefined value
 
   // The http.ServerRequest passed to the 'request' event
   // callback function
@@ -35,20 +33,18 @@ var Controller = function (obj) {
   // callback function
   this.response = null;
   // The action gets passed these as an argument, but we keep
-  // them here too to have access to the file extension, so
-  // we can do content-negotiation
+  // them here too to have access to the file extension for
+  // content-negotiation
   this.params = null;
-  
+  // Cookies collection, written out in the finish and redirect methods
   this.cookies = null;
   // The name of the controller constructor function,
-  // in CamelCase with uppercase initial letter
+  // in CamelCase with uppercase initial letter -- use geddy.inflections
+  // to get the other casing versions
   this.name = null;
   // Content-type the controller can respond with -- assume
   // minimum of plaintext
   this.respondsWith = ['text'];
-  // The name, in lowercase_with_underscores, used for
-  // picking the template if any to attempt to render
-  this.nameDecamelized = null;
   // Content to respond with -- can be an Object or String
   this.content = '';
   // High-level set of options which can represent multiple
@@ -58,23 +54,16 @@ var Controller = function (obj) {
   // Content-type of the response -- driven by the format, and
   // by what content-types the client accepts
   this.contentType = '';
-
-  this.currentPartialId = 0;
-
-  this.baseTemplateNode = null;
-
+  // The template root to look in for partials when rendering templates
+  // Gets created programmatically based on controller name -- see renderTemplate
+  this.templateRoot = undefined;
+  // This will be used for 'before' actions for plugins
   this.beforeFilters = [];
-
+  // This will be used for 'after' actions for plugins
   this.afterFilters = [];
 
-  // Copy all props passed in from the app
-  for (var p in obj) {
-    this[p] = obj[p];
-  }
-
-  this.nameDecamelized = geddy.util.string.decamelize(this.name);
-
-  this.templateRoot = _undef;
+  // Override defaults with passed-in options
+  geddy.util.meta.mixin(this, obj);
 
 };
 
@@ -127,7 +116,7 @@ Controller.prototype = new function () {
         list.push(hook);
       }
     }
-    var chain = new async.AsyncChain(list);
+    var chain = new geddy.util.async.AsyncChain(list);
     chain.last = callback;
     chain.run();
   };
@@ -316,93 +305,36 @@ Controller.prototype = new function () {
     }
   };
   
-  this.formatContent = function (format, content) {
+  this.formatContent = function (format, data) {
     if (format == 'html') {
-      var _this = this;
-      var name = this.nameDecamelized;
-      var act = this.params.action;
-      // Set the root path via templateRoot or app/views/[controller_name]
-      var root = this.templateRoot ? this.templateRoot : 'app/views/' + name;
-      var path = root + '/' + act + '.html.ejs';
-      
-      this.partial(path, content);
-      return;
+      this.renderTemplate(data);
     }
     else {
-      var c = this.formatters[format](content);
+      var c = this.formatters[format](data);
       this.formatContentAndFinish(c);
     }
   };
 
-  this.partial = function (partialUrl, params, parentNode) {
-    
+  this.renderTemplate = function (data) {
     var _this = this;
-    var node;
-    var partialId = this.currentPartialId;
-    var isBaseNode = !this.baseTemplateNode;
-    var key;
-    var templateUrl = isBaseNode ? partialUrl : null;
-    var dirs = [], dir;
-    
-    // Curry the partial method to use the current node as the
-    // parent in subsequent calls
-    params.partial = function (partUrl, parm) {
-      return _this.partial.call(_this, partUrl, parm, node);
-    };
-   
-    // Prefer the templateRoot for this controller if it's specified
-    if (this.templateRoot) {
-      dirs.push(this.templateRoot);
-    }
-    // If this is a sub-template, try in the same directory as the
-    // parent
-    if (parentNode) {
-      dirs.push(parentNode.dirname);
-    }
-    // Otherwise fall back to the root of the views directory
-    dirs.push('app/views');
-    
-    // Look through the directory list until you find a registered
-    // template path -- these are registered during app init
-    while (dirs.length) {
-      dir = dirs.shift();
-      key = dir + '/' + partialUrl + '.html.ejs';
-      if (geddy.templateRegistry[key]) {
-        templateUrl = key;
-      }
-    }
-    
-    // Stop all execution if one of the templates isn't found
-    if (!templateUrl) {
-      var e = new errors.InternalServerError('Template path "' + key + '" not found');
-      throw e;
-    }
 
-    // Create the current node, with a reference to its parent, if any
-    node = new templates.TemplateNode(partialId, templateUrl, params, parentNode);
-    // If there is a parent, add this node as its child
-    if (parentNode) {
-      parentNode.childNodes[partialId] = node;
-    }
-      
-    // If this is the base node (i.e., there's no baseTemplateNode yet),
-    // give this node the finishRoot method that actually renders the final,
-    // completed content for the entire template
-    if (isBaseNode) {
-      node.finishRoot = function () {
-        _this.formatContentAndFinish(_this.baseTemplateNode.content);
-      }
-      this.baseTemplateNode = node;
-      // Kick off the hierarchical async loading process
-      node.loadTemplate();
-    }
+    // Calculate the templateRoot if not set
+    this.templateRoot = this.templateRoot ||
+        'app/views/' + geddy.inflections[this.name].filename.plural;
     
-    // Increment the current partial id for the next call
-    this.currentPartialId++;
+    var templater = new Templater();
+    var content = '';
     
-    // Return the placeholder text to represent this template -- it gets
-    // replaced in the callback from the async load of the actual content
-    return '###partial###' + partialId;
+    templater.addListener('data', function (d) {
+      // Buffer for now, but could stream
+      content += d;
+    });
+    
+    templater.addListener('end', function () {
+      _this.formatContentAndFinish(content);
+    });
+    
+    templater.render(data, [this.templateRoot], this.params.action);
   };
 
 }();

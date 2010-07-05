@@ -16,81 +16,77 @@
  *
 */
 
+var JAKE_VERSION = '0.1.0';
 var args = process.argv.slice(2);
 var sys = require('sys');
 
-var opts = {};
-var optsReg = {
-  directory: ['-C', '--directory'],
-  jakefile: ['-f', '--file']
-};
-var optsReverseMap = {};
-var optsItem;
-for (var p in optsReg) {
-  opts[p] = null;
-  optsItem = optsReg[p];
-  for (var i = 0; i < optsItem.length; i++) {
-    optsReverseMap[optsItem[i]] = p;
-  }
-}
+var parseopts = new function () {
+  var optsReg = {
+    directory: ['-C', '--directory']
+    , jakefile: ['-f', '--file']
+    , version: [null, '--version']
+  };
 
-var taskName;
-var arg;
-var argName;
-var argItems;
-var passArgs = [];
-var passOpts = {};
-var pat = /:|=/;
-var hasOpts = false;
+  this.parse = function (args) {
+    var cmds = [];
+    var opts = {};
+    var optsReverseMap = {};
+    var optsItem;
+    var arg;
+    var argName;
+    var argItems;
 
-while (args.length) {
-  arg = args.shift();
-  if (arg.indexOf('--') == 0) {
-    argItems = arg.split('=');
-    argName = optsReverseMap[argItems[0]];
-    if (argName) {
-      opts[argName] = argItems[1];
+    for (var p in optsReg) {
+      optsItem = optsReg[p];
+      for (var i = 0; i < optsItem.length; i++) {
+        optsReverseMap[optsItem[i]] = p;
+      }
     }
-    else {
-      throw new Error('Unknown option "' + argItems[0] + '"');
-    }
-  }
-  else if (arg.indexOf('-') == 0) {
-    argName = optsReverseMap[arg];
-    if (argName) {
-      opts[argName] = args.shift();
-    }
-    else {
-      throw new Error('Unknown option "' + arg + '"');
-    }
-  }
-  else {
-    if (!taskName) {
-      taskName = arg;
-    }
-    else {
-      if (/:|=/.test(arg)) {
-        hasOpts = true;
-        argItems = arg.split(pat);
-        passOpts[argItems[0]] = argItems[1];
+
+    while (args.length) {
+      arg = args.shift();
+      if (arg.indexOf('--') == 0) {
+        argItems = arg.split('=');
+        argName = optsReverseMap[argItems[0]];
+        if (argName) {
+          // If there's no attached value, value is null
+          opts[argName] = argItems[1] || null;
+        }
+        else {
+          throw new Error('Unknown option "' + argItems[0] + '"');
+        }
+      }
+      else if (arg.indexOf('-') == 0) {
+        argName = optsReverseMap[arg];
+        if (argName) {
+          // If there is no following item, or the next item is
+          // another opt, value is null
+          opts[argName] = (!args[0] || (args[0].indexOf('-') == 0)) ?
+              null : args.shift();
+        }
+        else {
+          throw new Error('Unknown option "' + arg + '"');
+        }
       }
       else {
-        passArgs.push(arg);
+        cmds.push(arg);
       }
     }
-  }
-}
+    
+    return {cmds: cmds, opts: opts};
+  };
 
-if (hasOpts) {
-  passArgs.push(passOpts);
-}
+};
+
+var parsed = parseopts.parse(args);
+var opts = parsed.opts;
+var cmds = parsed.cmds;
+var taskName = cmds.shift();
+var jakefile;
 
 taskName = taskName || 'default';
-opts.jakefile = opts.jakefile || './Jakefile';
-
-if (opts.directory) {
-  process.chdir(opts.directory);
-}
+jakefile = opts.jakefile ?
+    opts.jakefile.replace(/\.js$/, '') : './Jakefile';
 
 var jake = new function () {
   this.currentNamespace = 'default';
@@ -119,18 +115,26 @@ var jake = new function () {
         this.runTask.call(this, deps[i], args);
       }
     }
+    var parsed = this.parseArgs(args);
+    var passArgs = parsed.cmds.concat(parsed.opts);
     task.handler.apply(task, passArgs);
   };
 
-  this.processArgs = function (args) {
+  this.parseArgs = function (args) {
+    var cmds = [];
+    var opts = {};
     var pat = /:|=/;
-    var ret = {};
     var argItems;
     for (var i = 0; i < args.length; i++) {
       argItems = args[i].split(pat);
-      ret[argItems[0]] = argItems[1];
+      if (argItems.length > 1) {
+        opts[argItems[0]] = argItems[1];
+      }
+      else {
+        cmds.push(args[i]);
+      }
     }
-    return ret;
+    return {cmds: cmds, opts: opts}; 
   };
 
 }();
@@ -164,7 +168,17 @@ global.namespace = function (name, tasks) {
   jake.currentNamespace = 'default';
 };
 
-var tasks = require(opts.jakefile).tasks;
+if (typeof opts.version != 'undefined') {
+  sys.puts(JAKE_VERSION);
+  process.exit();
+}
 
-jake.runTask(taskName, args);
+var tasks = require(jakefile);
+
+if (opts.directory) {
+  process.chdir(opts.directory);
+}
+
+
+jake.runTask(taskName, cmds);
 
