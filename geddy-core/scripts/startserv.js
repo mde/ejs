@@ -42,8 +42,18 @@ var die = function (str) {
   process.exit();
 }
 
-if (process.version < MIN_NODE_VERSION) {
-  die('Geddy requires ' + MIN_NODE_VERSION + ' of Node.js.');
+// check node dependency
+// we must iterate because node v0.1.100 fails:
+// 
+// unfortunately "0.1.100" < "0.1.98" returns true
+// 
+var processVersonArray = process.version.split(".");
+var minNodeVersonArray = MIN_NODE_VERSION.split(".");
+
+for (var i = 0; i < 3; i++) {
+  if (parseInt(processVersonArray[i]) < parseInt(minNodeVersonArray[i])){
+    die('Geddy requires ' + MIN_NODE_VERSION + ' of Node.js.');
+  }
 }
 
 if (typeof opts.version != 'undefined') {
