@@ -1,8 +1,8 @@
-var Ernest = require('../../geddy-core/scripts/ernest').ERNEST;
-var assert = require('assert');
-var geddy = require('geddy-core/lib/geddy');
-geddy.model = require('geddy-model/lib/model');
-var sys = require('sys');
+var geddy = {};
+geddy.model = require('../lib/model');
+geddy.util.date = require('../../geddy-util/lib/date');
+geddy.util.meta = require('../../geddy-util/lib/meta');
+geddy.util.string = require('../../geddy-util/lib/string');
 
 global.ByTor = function () {
   this.property('numberProp', 'number');
@@ -15,7 +15,7 @@ global.ByTor = function () {
 
 geddy.model.registerModel('ByTor');
 
-Ernest.setup = function () {};
+//Ernest.setup = function () {};
 
 var testDatatypes = new function () {
   this.testAllOptional = function () {
@@ -114,10 +114,10 @@ var testDatatypes = new function () {
     for (var i = 0, ii = dates.length; i < ii; i++) {
       dt = dates[i];
       byTor = ByTor.create({dateProp: dt});
-      assert.ok(byTor.valid());
-      assert.equal(byTor.dateProp.getFullYear(), 1968);
-      assert.equal(byTor.dateProp.getMonth(), 11); // Zero-based
-      assert.equal(byTor.dateProp.getDate(), 27);
+      assert.ok(byTor.valid(), 'Testing valid');
+      assert.equal(byTor.dateProp.getFullYear(), 1968, 'Testing getFullYear');
+      assert.equal(byTor.dateProp.getMonth(), 11, 'Testing getMonth'); // Zero-based
+      assert.equal(byTor.dateProp.getDate(), 27, 'Testing getDate');
     }
   
   };
@@ -169,5 +169,6 @@ var testDatatypes = new function () {
 
 }();
 
-Ernest.execute(testDatatypes);
+logan.run(testDatatypes);
+
 

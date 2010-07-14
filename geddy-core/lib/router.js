@@ -16,8 +16,6 @@
  *
 */
 
-var sys = require('sys');
-
 // need this, but maybe there's a better spot for it?
 var regExpEscape = (function() {
   var specials = [ '/', '.', '*', '+', '?', '|', '(', ')', '[', ']', '{', '}', '\\' ];
@@ -552,6 +550,6 @@ var Router = function () {
 
 }; // Router
 
-exports.Router = Router;
+if (typeof exports != 'undefined') { exports.Router = Router; }
 
 

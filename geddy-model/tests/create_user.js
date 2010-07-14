@@ -1,5 +1,10 @@
+var geddy = {};
+geddy.model = require('../lib/model');
+geddy.util.date = require('../../geddy-util/lib/date');
+geddy.util.meta = require('../../geddy-util/lib/meta');
+geddy.util.string = require('../../geddy-util/lib/string');
 
-var User = function () {
+global.User = function () {
   this.property('login', 'string', {required: true});
   this.property('password', 'string', {required: true});
   this.property('lastName', 'string');
@@ -25,31 +30,29 @@ var testCreateUser = new function () {
       firstName: 'Neil'
     };
 
-  //this.setup = function () {};
-
   this.testValid = function () {
     var user = User.create(_params);
-    jum.assertTrue(user.valid());
+    assert.ok(user.valid());
   };
 
   this.testShortLogin = function () {
     _params.login = 'zz'; // Too short, invalid
     var user = User.create(_params);
-    jum.assertNotUndefined(user.errors.login);
+    assert.ok(typeof user.errors.login != 'undefined');
   };
 
   this.testInvalidLoginWithCustomMessage = function () {
     _params.login = '2112'; // Contains numbers, invalid 
     var user = User.create(_params);
     // Error message should be customized
-    jum.assertEquals(user.errors.login, 'Subdivisions!');
+    assert.ok(user.errors.login, 'Subdivisions!');
   };
 
   this.testNoLogin = function () {
     delete _params.login; // Contains numbers, invalid 
     var user = User.create(_params);
     // Error message should be customized
-    jum.assertNotUndefined(user.errors.login);
+    assert.ok(typeof user.errors.login != 'undefined');
 
     _params.login = 'zzz'; // Restore to something valid
   };
@@ -58,12 +61,13 @@ var testCreateUser = new function () {
     _params.confirmPassword = 'fdsa';
     var user = User.create(_params);
     // Error message should be customized
-    jum.assertNotUndefined(user.errors.password);
+    assert.ok(typeof user.errors.password != 'undefined');
 
     _params.confirmPassword = 'asdf'; // Restore to something valid
   };
 
-  //this.teardown = function () {};
-
 }();
+
+logan.run(testCreateUser);
+
 

@@ -7,4 +7,4 @@ var geddy = new function () {
   this.util.date = require('geddy-util/lib/date');
 }();
 
-module.exports = geddy;
+if (typeof module != 'undefined') { module.exports = geddy; }

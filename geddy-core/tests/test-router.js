@@ -1,20 +1,17 @@
-var ERNEST = require('../scripts/ernest').ERNEST;
-var assert = require('assert');
-var gRouter = require('../lib/router');
-var geddy = require('geddy-core/lib/geddy');
+//var ERNEST = require('../scripts/ernest').ERNEST;
+//var assert = require('assert');
+//var gRouter = require('../lib/router');
+var geddy = {};
+Router = require('../lib/router').Router;
 
 //Load utility libraries
 geddy.util = {};
-geddy.util.meta = require('geddy-util/lib/meta');
-geddy.util.string = require('geddy-util/lib/string');
+logan.require('geddy.util.meta', '../../geddy-util/lib/meta');
+logan.require('geddy.util.string', '../../geddy-util/lib/string');
 
-//overload setup to setup this test
-ERNEST.setup = function(){
-  router = new gRouter.Router();
-};
+router = new Router();
 
-
-RouterTests = {
+routerTests = {
  // create a router 
   testCreateRouter : function() {
     assert.ok(router, this.fail);
@@ -297,4 +294,5 @@ RouterTests = {
   }
 };
 
-ERNEST.execute(RouterTests);
+logan.run(routerTests);
+
