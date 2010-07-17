@@ -193,6 +193,7 @@ var Router = function () {
       return false;
     }
     
+    /*
     // build the possibly empty query string
     var qs = require('querystring').stringify(url[1]);
     
@@ -200,6 +201,7 @@ var Router = function () {
     if (qs.length > 0) {
       return url[0] + '?' + qs;
     }
+    */
     
     // just return the url
     return url[0];
@@ -356,7 +358,7 @@ var Router = function () {
         delete params[i];
       }
  
-      return [ url.join(''), params ];
+      return [url.join(''), params];
     }; 
     
     this.keysAndRoutes = function () {
@@ -404,8 +406,7 @@ var Router = function () {
       // assigning the vals from the url to the names of the keys as we go (potentially stoopid)
       
       // let's chop off the QS to make life easier
-      var url = require('url').parse(urlParam);
-      var path = url.pathname;
+      var path = urlParam.split(/\?|;/)[0];
       var params = {method:method};
       
       for (var key in this.params) { params[key] = this.params[key]; } 

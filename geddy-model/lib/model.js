@@ -45,7 +45,6 @@ geddy.model.registerModel('User');
 */
 
 if (typeof geddy == 'undefined') { geddy = {}; }
-var sys;
 var _log; 
 
 geddy.model = new function () {

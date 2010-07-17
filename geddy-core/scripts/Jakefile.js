@@ -71,7 +71,7 @@ task('resource', [], function (nameParam) {
   var text, contents;
   var filePath;
   var fleegix = require('../lib/fleegix');
-
+  var ejs = require('../../geddy-template/lib/adapters/ejs/ejs');
   global.geddy = require('../../geddy-core/lib/geddy');
 
   // Add the controller file
@@ -94,7 +94,7 @@ task('resource', [], function (nameParam) {
   // Grab the template text
   text = fs.readFileSync(__dirname + '/gen/resource_model.ejs', 'utf8').toString();
   // Stick in the model name
-  var templ = new fleegix.ejs.Template({text: text});
+  var templ = new ejs.Template({text: text});
   templ.process({data: {names: names}});
   filePath = './app/models/' + names.filename.singular + '.js';
   fs.writeFileSync(filePath, templ.markup, 'utf8');
@@ -105,7 +105,7 @@ task('resource', [], function (nameParam) {
   // Grab the template text
   text = fs.readFileSync(__dirname + '/gen/resource_controller.ejs', 'utf8').toString();
   // Stick in the controller name
-  var templ = new fleegix.ejs.Template({text: text});
+  var templ = new ejs.Template({text: text});
   templ.process({data: {names: names}});
   filePath = './app/controllers/' + names.filename.plural + '.js';
   fs.writeFileSync(filePath, templ.markup, 'utf8');

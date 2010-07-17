@@ -1,4 +1,5 @@
-var geddy = {};
+if (typeof geddy == 'undefined') { geddy = {}; }
+if (typeof geddy.model == 'undefined') { geddy.model = {}; }
 geddy.model = require('../lib/model');
 geddy.util.date = require('../../geddy-util/lib/date');
 geddy.util.meta = require('../../geddy-util/lib/meta');
@@ -69,5 +70,4 @@ var testCreateUser = new function () {
 }();
 
 logan.run(testCreateUser);
-
 

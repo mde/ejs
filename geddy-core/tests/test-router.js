@@ -1,14 +1,9 @@
-//var ERNEST = require('../scripts/ernest').ERNEST;
-//var assert = require('assert');
-//var gRouter = require('../lib/router');
-var geddy = {};
-Router = require('../lib/router').Router;
+if (typeof geddy == 'undefined') { geddy = {}; }
+if (typeof geddy.util == 'undefined') { geddy.util = {}; }
+geddy.util.meta = require('../../geddy-util/lib/meta');
+geddy.util.string = require('../../geddy-util/lib/string');
 
-//Load utility libraries
-geddy.util = {};
-logan.require('geddy.util.meta', '../../geddy-util/lib/meta');
-logan.require('geddy.util.string', '../../geddy-util/lib/string');
-
+var Router = require('../lib/router').Router;
 router = new Router();
 
 routerTests = {

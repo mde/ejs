@@ -354,4 +354,4 @@ ejs.Template.prototype = new function () {
   };
 };
 
-
+module.exports = ejs;

@@ -1,4 +1,6 @@
-var geddy = {};
+if (typeof geddy == 'undefined') { geddy = {}; }
+if (typeof geddy.util == 'undefined') { geddy.util = {}; }
+if (typeof geddy.model == 'undefined') { geddy.model = {}; }
 geddy.model = require('../lib/model');
 geddy.util.date = require('../../geddy-util/lib/date');
 geddy.util.meta = require('../../geddy-util/lib/meta');
@@ -14,8 +16,6 @@ global.ByTor = function () {
 };
 
 geddy.model.registerModel('ByTor');
-
-//Ernest.setup = function () {};
 
 var testDatatypes = new function () {
   this.testAllOptional = function () {
@@ -170,5 +170,4 @@ var testDatatypes = new function () {
 }();
 
 logan.run(testDatatypes);
-
 
