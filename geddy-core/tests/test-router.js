@@ -5,34 +5,38 @@ geddy.util.meta = require('../../geddy-util/lib/meta');
 geddy.util.string = require('../../geddy-util/lib/string');
 
 var Router = require('../lib/router').Router;
-router = new Router();
 
 routerTests = {
  // create a router 
   testCreateRouter : function() {
+    router = new Router();
     assert.ok(router, this.fail);
   },
 
   // create a simple route
   testCreateSimpleRoute : function() {
+    router = new Router();
     var route = router.match('/:controller/:action/:id');
     assert.ok(route, this.fail);
   },
 
   // create a route with optional segments
   testCreateOptionalRoute : function() {
+    router = new Router();
     var route = router.match('/:controller/:action/:id(.:extension)')
     assert.ok(route, this.fail)
   },
 
   // create a route with multiple optional segments
   testCreateMultipleOptionalRoute : function() {
+    router = new Router();
     var route = router.match('/:controller/:id(/:action)(.:extension)')
     assert.ok(route, this.fail)
   },
 
   // create a resource
   testCreateResource : function() {
+    router = new Router();
     var routes = router.resource('SnowDogs');
     assert.ok(routes.length === 7, this.fail)
     for ( var i in routes ) {
@@ -42,48 +46,56 @@ routerTests = {
 
   // create a static route with fixed params 
   testRouteWithParams : function() {
+    router = new Router();
     var route = router.match('/hello/there').to( { controller:'Application', action: 'index' } );
     assert.ok(route, this.fail)
   },
 
   // create a static route with extra fixed params 
   testRouteWithExtraParams : function() {
+    router = new Router();
     var route = router.match('/hello/there').to( { controller:'Application', action: 'index', language: 'english' } );
     assert.ok(route, this.fail)
   },
 
   // create a static route with a specific request method 
   testRouteWithMethod : function() {
+    router = new Router();
     var route = router.match('/:controller/:action', 'GET');
     assert.ok(route, this.fail)
   },
 
   // create a static route with key regex match requirements
   testRouteWithRegexReqs : function() {
+    router = new Router();
     var route = router.match('/:controller/:action/:id', { id: /\d+/ } );
     assert.ok(route, this.fail)
   },
 
   // create a static route with key match requirements as a regex string
   testRouteWithStringRegexReqs : function() {
+    router = new Router();
     var route = router.match('/:controller/:action/:id', { id: '\\d+' } );
     assert.ok(route, this.fail)
   },
 
   // create a static route with key match requirements AND a method
   testRouteWithReqsAndMethod : function() {
+    router = new Router();
     var route = router.match('/:controller/:action/:id', 'GET', { id: /\d+/ } );
     assert.ok(route, this.fail)
   },
 
   // create a static route with key match requirements AND a method in reverse order
   testRouteWithReqsAndMethodReversed : function() {
+    router = new Router();
     var route = router.match('/:controller/:action/:id', { id: /\d+/ }, 'GET' );
     assert.ok(route, this.fail)
   },
 
   // create a static route with key match requirements AND a method in reverse order
   testRouteWithName : function() {
+    router = new Router();
     var route = router.match('/:controller/:action/:id', { id: /\d+/ }, 'GET' ).name('aweosme');
     assert.ok(route, this.fail)
   },
@@ -93,6 +105,7 @@ routerTests = {
 
   // test that the router matches a URL
   testSimpleRouteParses : function() {
+    router = new Router();
     var route = router.match('/:controller/:action/:id');
     var params = router.first('/products/show/1','GET');
     assert.ok(params, this.fail);
@@ -104,6 +117,7 @@ routerTests = {
 
   // test that the router matches a URL
   testSimpleRouteParsesWithOptionalSegment : function() {
+    router = new Router();
     var route = router.match('/:controller/:action/:id(.:extension)');
     var params = router.first('/products/show/1.html','GET');
     assert.ok(params, this.fail);
@@ -115,6 +129,7 @@ routerTests = {
   },
 
   testSimpleRouteParsesWithOptionalSegmentMissing : function() {
+    router = new Router();
     var route = router.match('/:controller/:action/:id(.:extension)','GET');
     var params = router.first('/products/show/1','GET');
     assert.ok(params, this.fail);
@@ -126,12 +141,14 @@ routerTests = {
   },
 
   testSimpleRouteFailingDueToBadMethod : function() {
+    router = new Router();
     var route = router.match('/:controller/:action/:id(.:extension)','GET');
     var params = router.first('/products/show/1','POST');
     assert.equal(params, false, this.fail);
   },
 
   testSimpleRouteWithTwoOptionalSegments : function() {
+    router = new Router();
     var route = router.match('/:controller/:action(/:id)(.:extension)','GET');
     var params = router.first('/products/show','GET');
     assert.ok(params, this.fail);
@@ -143,6 +160,7 @@ routerTests = {
   },
 
   testSimpleRouteWithTwoOptionalSegmentsWithFirstUsed : function() {
+    router = new Router();
     var route = router.match('/:controller/:action(/:id)(.:extension)','GET');
     var params = router.first('/products/show/1','GET');
     assert.ok(params, this.fail);
@@ -154,6 +172,7 @@ routerTests = {
   },
 
   testSimpleRouteWithTwoOptionalSegmentsWithSecondUsed : function() {
+    router = new Router();
     var route = router.match('/:controller/:action(/:id)(.:extension)','GET');
     var params = router.first('/products/show.html','GET');
     assert.ok(params, this.fail);
@@ -165,6 +184,7 @@ routerTests = {
   },
 
   testSimpleRouteWithTwoOptionalSegmentsWithBothUsed : function() {
+    router = new Router();
     var route = router.match('/:controller/:action(/:id)(.:extension)','GET');
     var params = router.first('/products/show/1.html','GET');
     assert.ok(params, this.fail);
@@ -178,6 +198,7 @@ routerTests = {
 // fuck, how repetitive. how about methods for a bit?
   
   testGET : function() {
+    router = new Router();
     var route = router.match('/:controller/:action(/:id)(.:extension)','GET');
     var params = router.first('/products/show/1.html','GET');
     assert.ok(params, this.fail);
@@ -185,6 +206,7 @@ routerTests = {
   },
   
   testPOST : function() {
+    router = new Router();
     var route = router.match('/:controller/:action(/:id)(.:extension)','POST');
     var params = router.first('/products/show/1.html','POST');
     assert.ok(params, this.fail);
@@ -192,6 +214,7 @@ routerTests = {
   },
   
   testPUT : function() {
+    router = new Router();
     var route = router.match('/:controller/:action(/:id)(.:extension)','PUT');
     var params = router.first('/products/show/1.html','PUT');
     assert.ok(params, this.fail);
@@ -199,6 +222,7 @@ routerTests = {
   },
   
   testDELETE : function() {
+    router = new Router();
     var route = router.match('/:controller/:action(/:id)(.:extension)','DELETE');
     var params = router.first('/products/show/1.html','DELETE');
     assert.ok(params, this.fail);
@@ -208,6 +232,7 @@ routerTests = {
 // that was fun. Let's do a little resource testing
   
   testResourceMatches : function() {
+    router = new Router();
     var routes = router.resource('SnowDogs');
     // index
     assert.ok(router.first('/snow_dogs','GET'), this.fail);
@@ -242,6 +267,7 @@ routerTests = {
 // url generation time nao
 
   testResourceUrlGeneration : function() {
+    router = new Router();
     var routes = router.resource('SnowDogs');
     // index
     assert.equal(router.url( { controller:'SnowDogs', action:'index' } ), '/snow_dogs', this.fail);
@@ -275,6 +301,7 @@ routerTests = {
   },
 
   testRouteUrlGeneration : function() {
+    router = new Router();
     var route = router.match('/:controller/:action(/:id)(.:extension)');
     assert.equal(router.url( { controller:'SnowDogs', action:'pet' } ), '/snow_dogs/pet', this.fail);
     assert.equal(router.url( { controller:'SnowDogs', action:'pet', id:5 } ), '/snow_dogs/pet/5', this.fail);
@@ -285,6 +312,7 @@ routerTests = {
   },
 
   testDefaultValues : function() {
+    router = new Router();
     var route = router.match('/:controller/:action(/:id)(.:extension)');
     assert.equal(router.url(), '/application/index', this.fail);
   }
