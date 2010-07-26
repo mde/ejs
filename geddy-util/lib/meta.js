@@ -54,7 +54,7 @@ geddy.util.meta = new function () {
 
   /*
    * Mix in the properties on an object to another object
-   * yam.mixin(target, source, [source,] [source, etc.] [merge-flag]);
+   * geddy.util.mixin(target, source, [source,] [source, etc.] [merge-flag]);
    * 'merge' recurses, to merge object sub-properties together instead
    * of just overwriting with the source object.
    */
