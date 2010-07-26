@@ -1,5 +1,6 @@
-if (typeof geddy == 'undefined') { geddy = {}; }
-if (typeof geddy.util == 'undefined') { geddy.util = {}; }
+logan.namespace('geddy');
+logan.namespace('geddy.util');
+
 geddy.util.meta = require('../../geddy-util/lib/meta');
 geddy.util.string = require('../../geddy-util/lib/string');
 
