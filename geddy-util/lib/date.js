@@ -614,9 +614,9 @@ geddy.util.date = new function () {
         
         // Stupid US-only format?
         if (!matches) {
-          val.match(_US_DATE_PAT);
+          matches = val.match(_US_DATE_PAT);
           if (matches) {
-            reordered = [null, matches[2], matches[0], matches[1]];
+            reordered = [matches[0], matches[3], matches[1], matches[2]];
             // Pad the results to the same length as ISO8601
             reordered[8] = null;
             matches = reordered;
