@@ -19,19 +19,48 @@ var sys = require('sys');
 var child_process = require('child_process');
 var fs = require('fs');
 
-desc('Installs the Geddy Web-app development framework');
+desc('Installs Geddy web framework');
 task('default', [], function () {
   var uid = process.env.SUDO_UID;
   var gid = process.env.SUDO_GID;
-  var cmds = [
-    'mkdir -p ~/.node_libraries',
-    'cp -R ./dist/* ~/.node_libraries/',
-    'chown -R ' + uid + ':' + gid + ' ~/.node_libraries',
-    'cp geddy-core/scripts/geddy-gen /usr/local/bin/',
-    'cp geddy-core/scripts/geddy /usr/local/bin/'
+  var cmds = [];
+  cmds = [
+    'chown -R ' + uid + ':' + gid + ' ~/.node_libraries'
+    , 'cp geddy-core/scripts/geddy-gen /usr/local/bin/'
+    , 'cp geddy-core/scripts/geddy /usr/local/bin/'
   ];
   runCmds(cmds, function () {
-    sys.puts('Geddy installed.');
+    // TODO set uid/gid to non-superuser
+    // Not entirely sure why this expands correctly to the non-superuser's
+    // home dir, but I'm glad it does.
+    cmds = [
+      'mkdir -p ~/.node_libraries'
+      , 'cp -R ./dist/* ~/.node_libraries/'
+    ];
+    runCmds(cmds, function () {
+      sys.puts('Geddy installed.');
+    });
+  });
+});
+
+desc('Uninstalls Geddy web framework');
+task('uninstall', [], function () {
+  var uid = process.env.SUDO_UID;
+  var gid = process.env.SUDO_GID;
+  var cmds = [];
+  cmds = [
+    'rm -f /usr/local/bin/geddy*'
+  ];
+  runCmds(cmds, function () {
+    // TODO set uid/gid to non-superuser
+    // Not entirely sure why this expands correctly to the non-superuser's
+    // home dir, but I'm glad it does.
+    cmds = [
+      'rm -fr ~/.node_libraries/geddy*'
+    ];
+    runCmds(cmds, function () {
+      sys.puts('Geddy uninstalled.');
+    });
   });
 });
 
