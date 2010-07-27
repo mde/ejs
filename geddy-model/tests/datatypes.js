@@ -12,7 +12,8 @@ global.ByTor = function () {
   this.property('objectProp', 'object');
   this.property('arrayProp', 'array');
   this.property('dateProp', 'date');
-  this.property('datetimeProp', 'date');
+  this.property('datetimeProp', 'datetime');
+  this.property('timeProp', 'time');
 };
 
 geddy.model.registerModel('ByTor');
@@ -163,6 +164,30 @@ var testDatatypes = new function () {
       assert.equal(byTor.datetimeProp.getHours(), 16);
       assert.equal(byTor.datetimeProp.getMinutes(), 10);
       assert.equal(byTor.datetimeProp.getSeconds(), 3);
+    }
+  
+  };
+  
+  this.testTime = function () {
+    var byTor;
+    var dates, dt, vals;
+    // Obj key is the input string, value is the list of values
+    // for the parse Date object's h/m/s/ms
+    dates = {
+      '21:12' : [21, 12, 0, 0]
+      , '1:11': [1, 11, 0, 0]
+      , '1:11:03': [1, 11, 3, 0]
+      , '1:11:03.999': [1, 11, 3, 999]
+    };
+    for (var p in dates) {
+      dt = p;
+      vals = dates[p];
+      byTor = ByTor.create({timeProp: dt});
+      assert.ok(byTor.valid());
+      assert.equal(byTor.timeProp.getHours(), vals[0]);
+      assert.equal(byTor.timeProp.getMinutes(), vals[1]);
+      assert.equal(byTor.timeProp.getSeconds(), vals[2]);
+      assert.equal(byTor.timeProp.getMilliseconds(), vals[3]);
     }
   
   };

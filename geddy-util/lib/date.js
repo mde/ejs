@@ -23,7 +23,8 @@ geddy.util.date = new function () {
   
   var _US_DATE_PAT = /^(\d{1,2})(?:\-|\/|\.)(\d{1,2})(?:\-|\/|\.)(\d{4})/;
   var _DATETIME_PAT = /^(\d{4})(?:\-|\/|\.)(\d{1,2})(?:\-|\/|\.)(\d{1,2})(?:T| )?(\d{2})?(?::)?(\d{2})?(?::)?(\d{2})?(?:\.)?(\d+)?(Z|[+-]\d{4}|[+-]\d{2}:\d{2}|[+-]\d{2})?/;
-  var _TIME_PAT = /^(\d{2})?(?::)?(\d{2})?(?::)?(\d{2})?(?:\.)?(\d+)?$/;
+  // TODO Add am/pm parsing instead of dumb, 24-hour clock.
+  var _TIME_PAT = /^(\d{1,2})?(?::)?(\d{2})?(?::)?(\d{2})?(?:\.)?(\d+)?$/;
   
   var _dateMethods = [
     'FullYear'
@@ -625,9 +626,9 @@ geddy.util.date = new function () {
 
         // Time-stored-in-Date hack?
         if (!matches) {
-          val.match(_TIME_PAT);
+          matches = val.match(_TIME_PAT);
           if (matches) {
-            reordered = [null, 0, 0, 0, matches[0], matches[1], matches[2], matches[3], null];
+            reordered = [matches[0], 0, 1, 0, matches[1], matches[2], matches[3], matches[4], null];
             matches = reordered;
           }
         }
