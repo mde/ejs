@@ -25,7 +25,8 @@ task('default', [], function () {
   var gid = process.env.SUDO_GID;
   var cmds = [];
   cmds = [
-    'chown -R ' + uid + ':' + gid + ' ~/.node_libraries'
+    'mkdir -p ~/.node_libraries'
+    , 'chown -R ' + uid + ':' + gid + ' ~/.node_libraries'
     , 'cp geddy-core/scripts/geddy-gen /usr/local/bin/'
     , 'cp geddy-core/scripts/geddy /usr/local/bin/'
   ];
@@ -34,8 +35,7 @@ task('default', [], function () {
     // Not entirely sure why this expands correctly to the non-superuser's
     // home dir, but I'm glad it does.
     cmds = [
-      'mkdir -p ~/.node_libraries'
-      , 'cp -R ./dist/* ~/.node_libraries/'
+      'cp -R ./dist/* ~/.node_libraries/'
     ];
     runCmds(cmds, function () {
       sys.puts('Geddy installed.');
