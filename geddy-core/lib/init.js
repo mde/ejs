@@ -20,7 +20,6 @@ var fs = require('fs');
 var sys = require('sys');
 var child_process = require('child_process');
 
-var fleegix = require('geddy-core/lib/fleegix');
 var session = require('geddy-core/lib/session');
 // TODO: this doesn't need to be a constructor
 // make this a simple static function
@@ -92,7 +91,7 @@ var Init = function (config, callback) {
     var cfg;
     for (var pluginName in plugins) {
       cfg = plugins[pluginName];
-      pathName = fleegix.string.deCamelize(pluginName);
+      pathName = geddy.util.string.decamelize(pluginName);
       path = geddy.config.dirname + '/plugins/' + pathName + '/' + pathName;
       geddy.pluginRegistry[pluginName] = new require(path)[pluginName](cfg);
     }
