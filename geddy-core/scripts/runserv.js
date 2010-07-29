@@ -46,22 +46,26 @@ process.addListener('uncaughtException', function (err) {
     sys.debug('###shutdown###');
   }
 });
-  
-var errors, config, App, fd;
-var appDirname = process.argv[2],
-    net = require('net'),
-    http = require('http'),
-    parseopts = require('geddy-core/lib/parseopts'),
-    Config = require('geddy-core/lib/config').Config,
-    Init = require('geddy-core/lib/init').Init,
-    args = process.argv.slice(2),
-    parsed = parseopts.parse(args),
-    cmds = parsed.cmds,
-    opts = parsed.opts;
+
+var errors
+  , config
+  , App
+  , fd
+  , appDirname = process.argv[2]
+  , net = require('net')
+  , http = require('http')
+  , parseopts = require('geddy-core/lib/parseopts')
+  , Config = require('geddy-core/lib/config').Config
+  , Init = require('geddy-core/lib/init').Init
+  , args = process.argv.slice(2)
+  , parsed = parseopts.parse(args)
+  , cmds = parsed.cmds
+  , opts = parsed.opts;
 
 // Add the local lib/ and vendor/ dirs in the app as a require-lookup path
 require.paths.unshift(opts.geddyRoot + '/lib/');
 require.paths.unshift(opts.geddyRoot + '/vendor/');
+
 
 /*
  * Main server startup function, invoked as a callback

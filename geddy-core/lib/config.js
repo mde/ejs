@@ -19,23 +19,28 @@
 var sys = require('sys');
 var geddy = require('geddy-core/lib/geddy');
 
-var Config = function (opts) {
-  
-  this.environment = opts.environment || 'development';
-  this.hostname = opts.host || null;
-  this.port = parseInt(opts.port, 10) || 4000;
-  this.dirname = opts.geddyRoot;
+var Config = function (passedOpts) {
+
+  // App directory is always passed in on the passedOpts object.
+  // Have to know this to pull in the app-specific config
+  this.dirname = passedOpts.geddyRoot;
+  // Also need to know this to know what env we're starting up
+  this.environment = passedOpts.environment || 'development';
+
+  // Defaults
+  this.hostname = null;
+  this.port = 4000;
   this.staticFilePath = this.dirname + '/public';
   this.detailedErrors = true;
   this.plugins = {};
   this.workers = this.environment == 'development' ? 1 : 2;
-  
+
   this.sessions = {
     store: 'memory',
     key: 'sid',
     expiry: 14 * 24 * 60 * 60
   };
-  
+
   /*
   this.database = {
     adapter: 'sqlite'
@@ -62,7 +67,7 @@ var Config = function (opts) {
     , dbName: 'geddy_sessions'
     , port: 5984
   };
-  
+
   this.plugins = {
     'Auth': {
       // Pluggable auth types to check, in order
@@ -79,9 +84,16 @@ var Config = function (opts) {
   //this.dateFormat = '%F';
   this.timeFormat = '%T';
 
-  // Override with app-level opts
-  var opts = require(this.dirname + '/config/environments/' + this.environment);
-  geddy.util.meta.mixin(this, opts, true);
+  // Override with app-level passedOpts
+  var localOpts = require(this.dirname + '/config/environments/' + this.environment);
+  geddy.util.meta.mixin(this, localOpts, true);
+
+  // Override those with passed-in passedOpts
+  if (passedOpts.port) {
+    passedOpts.port = parseInt(passedOpts.port, 10);
+  }
+  geddy.util.meta.mixin(this, passedOpts, true);
+
 };
 
 exports.Config = Config;
