@@ -28,6 +28,7 @@ var response = new function () {
     text: 'text/plain',
     html: 'text/html',
     json: 'application/json|text/json',
+    js: 'application/javascript|text/javascript',
     xml: 'application/xml|text/xml'
   };
   

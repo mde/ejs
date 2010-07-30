@@ -131,8 +131,11 @@ Controller.prototype = new function () {
         return toJson.call(content);
       }
       return JSON.stringify(content);
-    },
-    text: function (content) {
+    }
+    , js: function (content, params) {
+      return params.callback + '(' + JSON.stringify(content) + ');';
+    }
+    , text: function (content) {
       if (typeof content.toString == 'function') {
         return content.toString();
       }
@@ -310,7 +313,7 @@ Controller.prototype = new function () {
       this.renderTemplate(data);
     }
     else {
-      var c = this.formatters[format](data);
+      var c = this.formatters[format](data, this.params);
       this.formatContentAndFinish(c);
     }
   };

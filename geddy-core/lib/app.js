@@ -20,7 +20,6 @@ var http = require('http');
 var sys = require('sys');
 var fs = require('fs');
 
-var fleegix = require('geddy-core/lib/fleegix');
 var errors = require('geddy-core/lib/errors');
 var session = require('geddy-core/lib/session');
 var response = require('geddy-core/lib/response');
@@ -34,6 +33,12 @@ var App = function (initData) {
   _queue = [];
   _processing = false;
 
+  /**
+   * Initial handler for request/response pairs -- adds two event listners:
+   * 1. data listener, accumulates the request body
+   * 2. end listener, queues the request for processing
+   * 
+   */
   this.handleReq = function (req, resp) {
     // TODO: Wrap the request to avoid ad-hoc addition of body prop
     // on actual request
@@ -47,6 +52,10 @@ var App = function (initData) {
     });
   };
 
+  /**
+   * Queues request/response pairs for processing, triggers processing
+   * if there are no outstanding requests still being processed
+   */
   this.queueReq = function (req, resp) {
     _queue.push([req, resp]);
     if (!_processing) {
@@ -54,19 +63,32 @@ var App = function (initData) {
     }
   };
 
+  /**
+   * Pulls a request off the queue, processes it with the run function
+   * 
+   */
   this.processReq = function () {
     _processing = true;
     var next = _queue.shift();
+    // If we still have request/response pairs to process, keep running
+    // them through
     if (next) {
       process.nextTick(function () {
         _this.run.apply(_this, next);
       });
     }
+    // If we're done with all outstanding request/response pairs, flip off 
+    //the flag hat tells the queueReq method is can process any new incoming
+    // requests
     else {
       _processing = false;
     }
   };
 
+  /**
+   * Called after responses end, either successfully, or with an error
+   * Grabs the next request/response pair to process
+   */
   this.nextReq = function () {
     _processing = false;
     this.processReq();
@@ -74,6 +96,8 @@ var App = function (initData) {
 
   this.run = function (req, resp) {
     
+    // Set the 'currently processing req/resp vars to this pair -- these may
+    // be used in the case of unhandled errors to hand the user back a 500
     geddy.request = req;
     geddy.response = resp;
     
@@ -88,8 +112,8 @@ var App = function (initData) {
       url = req.url;
 
       // Get the QS params, so we can check to see if there's a method override
-      qs = fleegix.url.getQS(url);
-      qsParams = fleegix.url.qsToObject(qs);
+      qs = geddy.util.url.getQS(url);
+      qsParams = geddy.util.url.qsToObject(qs);
       
       // The method may be overridden by the _method param
       // TODO: Look for the x-http-method-override header
@@ -99,7 +123,7 @@ var App = function (initData) {
       method = method.toUpperCase();
       
       // The base path -- the router doesn't need to know about QS params
-      base = fleegix.url.getBase(url);
+      base = geddy.util.url.getBase(url);
 
       // =====
       // All the routing magic happens right here
@@ -194,7 +218,7 @@ var mergeParams = function (req, routeParams, qsParams) {
       (req.headers['content-type'].indexOf('form-urlencoded') > -1)) {
     // Deal with the retarded default encoding of spaces to plus-sign
     var b = req.body.replace(/\+/g, '%20');
-    var bodyParams = fleegix.url.qsToObject(b, {arrayizeMulti: true});
+    var bodyParams = geddy.util.url.qsToObject(b, {arrayizeMulti: true});
     p = geddy.util.meta.mixin(p, bodyParams);
   }
   return p;
