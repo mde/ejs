@@ -1,4 +1,4 @@
-var MIN_NODE_VERSION = '0.1.98';
+var MIN_NODE_VERSION = '0.1.102';
 var GEDDY_VERSION = '0.1.0';
 
 global.geddy = require('geddy-core/lib/geddy');
@@ -28,7 +28,6 @@ var args = process.argv.slice(2),
     child,
     opts, 
     log,
-    sys = require("sys"),
     fs = require("fs"),
     spawn = require("child_process").spawn,
     Config = require('geddy-core/lib/config').Config,
@@ -38,7 +37,7 @@ var args = process.argv.slice(2),
     pids;
 
 var die = function (str) {
-  sys.puts(str);
+  process.stdout.write(str);
   process.exit();
 }
 
@@ -133,17 +132,18 @@ var startServ = function (restart) {
     // TODO: pass config here
     child.stdin.write(JSON.stringify({}), 'ascii', fd);
                 
-    child.stdout.addListener('data', function (data) {
-      sys.print(data);
+    child.stdout.addListener('data', function (d) {
+      process.stdout.write(d);
     });
 
-    child.stderr.addListener('data', function (data) {
-      if (data == 'DEBUG: ###shutdown###\n') {
+    child.stderr.addListener('data', function (d) {
+      var data = d.toString();
+      if (data.indexOf('###shutdown###') > -1) {
         process.kill(child.pid);
         process.exit();
       }
       else {
-        sys.print(data);
+        process.stdout.write(data);
       }
     });
     child.addListener('exit', function (code) {
