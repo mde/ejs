@@ -67,10 +67,10 @@ var adapter = new function () {
     // Create track
     else {
       // Responsibilities of the adapter include:
-      // 1. Setting the UUID on the item
+      // 1. Setting the UUID on the item if there's not one already explicitly set
       // 2. setting the saved flag before saving
       uuid = geddy.util.string.uuid();
-      modelItem.id = uuid;
+      modelItem.id = modelItem.id || uuid;
       modelItem.saved = true;
     }
     
