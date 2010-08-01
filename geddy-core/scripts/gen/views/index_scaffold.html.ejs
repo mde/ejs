@@ -32,7 +32,7 @@
           <tr>  
             <@ for (var p in item.properties) { @>
               <td>
-                <@= item[p] || '&nbsp;'; @> 
+                <@= (p == 'password') ? '******' : (item[p] || '&nbsp;'); @> 
               </td>
             <@ } @>
               <td>
