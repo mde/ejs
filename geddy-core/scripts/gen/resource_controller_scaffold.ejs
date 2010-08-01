@@ -1,7 +1,7 @@
 
 var <%= names.constructor.plural %> = function () {
   var _this = this;
-  this.respondsWith = ['html', 'json', 'txt'];
+  this.respondsWith = ['html', 'json', 'js', 'text'];
 
   this.index = function (params) {
     <%= names.constructor.singular %>.all(function (err, items) {
