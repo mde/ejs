@@ -41,9 +41,9 @@ process.addListener('uncaughtException', function (err) {
     var msg = '';
     msg += 'Error starting up application.\n';
     msg += err.stack ? err.stack.toString() : '';
-    sys.debug(msg);
+    console.warn(msg);
     // Die
-    sys.debug('###shutdown###');
+    console.warn('###shutdown###');
   }
 });
 

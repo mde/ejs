@@ -1,4 +1,3 @@
-var sys = require("sys");
 var http = require("http");
 
 var couchdb = {};
@@ -12,7 +11,6 @@ couchdb.Client = function (h, p, n) {
 
 couchdb.Client.prototype = new function () {
   this.createDocument = function (uuid, item, callback) {
-    //sys.puts('creating doc ...');
     this.request({url: '/' + this.dbName +
         '/' + uuid, method: 'PUT', data: item}, function (response) {
       if (response.statusCode == 201) {
@@ -29,7 +27,9 @@ couchdb.Client.prototype = new function () {
   };
 
   this.request = function (params, callback) {
-    var req = {};
+    var req = {}
+      , headers
+      , request;
     // DB name can be set for the adapter, or passed in on the params,
     // or might even be empty
     var dbName = params.dbName || this.dbName || '';
@@ -37,23 +37,16 @@ couchdb.Client.prototype = new function () {
     req.data = JSON.stringify(params.data) || null;
     req.url = '/' + dbName + '/' + params.url;
     
-    var headers = {host: this.hostname};
+    headers = {host: this.hostname};
     if (req.data) {
       headers['content-length'] = req.data.length;
     }
     
-    //sys.puts(sys.inspect(this));
-    //sys.puts(sys.inspect(req));
-    //sys.puts('making request ...');
-    var request = this.client.request(req.method, req.url, headers);
+    request = this.client.request(req.method, req.url, headers);
     request.addListener('response', function (response) {
-      //sys.puts(sys.inspect(response));
-      //sys.puts("STATUS: " + response.statusCode);
-      //sys.puts("HEADERS: " + JSON.stringify(response.headers));
       response.setEncoding("utf8");
       var resp = '';
       response.addListener("data", function (chunk) {
-        //sys.puts("BODY: " + chunk);
         resp += chunk;
       });
       response.addListener("end", function () {
@@ -66,8 +59,6 @@ couchdb.Client.prototype = new function () {
 
     });
     if (req.data) {
-      //sys.puts('PUT data:');
-      //sys.puts(req.data);
       request.write(req.data);
     }
     request.end(); 

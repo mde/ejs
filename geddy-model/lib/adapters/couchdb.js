@@ -1,24 +1,37 @@
-var sys = require('sys');
+if (geddy.config.environment == 'development') {
+  console.warn('Creating CouchDB client for DB adapter, connecting ...');
+}
 
-var Client = require('geddy-core/lib/clients/couchdb').Client;
-var client = new Client(
+var Client = require('geddy-core/lib/clients/couchdb').Client
+  , client
+  , postData;
+
+client = new Client(
   geddy.config.database.hostname,
   geddy.config.database.port,
   geddy.config.database.dbName);
 
-// Create the by-type and by-id views -- ignore conflicts,
-// this means they're already there
-var postData;
-postData = {"_id": "_design/type", "views": {"all" : {"map": "function(doc){ if (doc.type) { emit(doc.type, doc) }}"}}};
-client.request({url: '/_design/type', method: 'PUT',
-    data: postData}, function (response) {
-      //sys.puts(sys.inspect(response));
+// Try to connect to the database, make sure it's there
+client.request({url: '/', method: 'GET'}, function (resp) {
+      if (resp.statusCode == 404) {
+        throw new Error(geddy.config.database.dbName +
+            ' not found. Set up your DB with geddy-gen db:create.');
+      }
     }
 );
-postData = {"_id": "_design/id", "views": {"all" : {"map": "function(doc){ if (doc.id) { emit(doc.id, doc) }}"}}};
+
+// Create the by-type and by-id views -- ignore conflicts,
+// this means they're already there
+postData = {"_id": "_design/type", "views": {"all":
+    {"map": "function(doc){ if (doc.type) { emit(doc.type, doc) }}"}}};
+client.request({url: '/_design/type', method: 'PUT',
+    data: postData}, function (resp) {
+    }
+);
+postData = {"_id": "_design/id", "views": {"all":
+    {"map": "function(doc){ if (doc.id) { emit(doc.id, doc) }}"}}};
 client.request({url: '/_design/id', method: 'PUT',
-    data: postData}, function (response) {
-      //sys.puts(sys.inspect(response));
+    data: postData}, function (resp) {
     }
 );
 
@@ -99,12 +112,15 @@ var adapter = new function () {
   };
 
   var _fetchItems = function (params, base) {
-    var ids;
+    var ids
+      , buildItemsFunc = function (resp) {
+        _buildItems(resp, params);
+    };
     // All of a given datatype
     if (!params.ids || params.ids[0] == 'all') {
       client.request({url: '/_design/type/_view/all?key=%22' +
           _escape(params.dataType) + '%22',
-          method: 'GET'}, _buildItems);
+          method: 'GET'}, buildItemsFunc);
     }
     // By id
     else {
@@ -113,13 +129,13 @@ var adapter = new function () {
         ids[i] = _escape(ids[i]);
       }
       client.request({url: '/_design/id/_view/all', method: 'POST',
-          data: {keys: ids}}, _buildItems);
+          data: {keys: ids}}, buildItemsFunc);
     }
 
   };
 
-  var _buildItems = function (response) {
-    var body = JSON.parse(response.body);
+  var _buildItems = function (resp, params) {
+    var body = JSON.parse(resp.body);
     var rows = body.rows;
     var data, parsed, resp = [];
     // Create typed objects
@@ -128,11 +144,14 @@ var adapter = new function () {
       data = rows[i].value;
       if (data) {
         parsed = GLOBAL[data.type].create(data);
-        // Add Couch-specific stuff to allow updates
-        parsed._id = data._id;
-        parsed._rev = data._rev;
+        
+        if (!params.conditions || _matched(parsed, params.conditions)) {
+          // Add Couch-specific stuff to allow updates
+          parsed._id = data._id;
+          parsed._rev = data._rev;
 
-        resp.push(parsed);
+          resp.push(parsed);
+        }
       }
     }
     _callback(null, resp);
@@ -150,8 +169,11 @@ var adapter = new function () {
 
   this.all = function () {
     var args = Array.prototype.slice.call(arguments);
-    var callback = args.pop();
+    // Datatype is first arg
     var dataType = args.shift();
+    // Callback is last arg
+    var callback = args.pop();
+    // Optional filtering opts
     var params = args.shift() || {};
     var include, key;
 

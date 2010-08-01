@@ -211,10 +211,12 @@ var SQLBaseAdapter = function (conn) {
   };
 
   this.all = function () {
-
     var args = Array.prototype.slice.call(arguments);
-    var callback = args.pop();
+    // Datatype is first arg
     var dataType = args.shift();
+    // Callback is last arg
+    var callback = args.pop();
+    // Optional filtering opts
     var params = args.shift() || {};
     var include, key;
 
