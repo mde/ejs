@@ -42,7 +42,7 @@ var Router = function () {
   /*
    * Router.match()
    *
-   * r.match('/:controller/:action(/:id)(.:extension)', 'GET',{ id:/\d+/ }).to(......)
+   * r.match('/:controller/:action(/:id)(.:format)', 'GET',{ id:/\d+/ }).to(......)
    *
    * path is mandatory (duh)
    * method is optional, routes without a method will apply in all cases
@@ -86,19 +86,19 @@ var Router = function () {
     var controller = geddy.util.string.camelize(res, true);
     var cslug = geddy.util.string.decamelize(res);
     return [
-      this.match('/'+cslug+'(.:extension)', 'GET')
+      this.match('/'+cslug+'(.:format)', 'GET')
           .to({ controller: controller, action: 'index' }),
-      this.match('/'+cslug+'/add(.:extension)', 'GET')
+      this.match('/'+cslug+'/add(.:format)', 'GET')
           .to({ controller: controller, action: 'add' }),
-      this.match('/'+cslug+'/:id(.:extension)', 'GET')
+      this.match('/'+cslug+'/:id(.:format)', 'GET')
           .to({ controller: controller, action: 'show' }),
-      this.match('/'+cslug+'/:id/edit(.:extension)', 'GET')
+      this.match('/'+cslug+'/:id/edit(.:format)', 'GET')
           .to({ controller: controller, action: 'edit' }),
-      this.match('/'+cslug+'(.:extension)', 'POST')
+      this.match('/'+cslug+'(.:format)', 'POST')
           .to({ controller: controller, action: 'create' }),
-      this.match('/'+cslug+'/:id(.:extension)', 'PUT')
+      this.match('/'+cslug+'/:id(.:format)', 'PUT')
           .to({ controller: controller, action: 'update' }),
-      this.match('/'+cslug+'/:id(.:extension)', 'DELETE')
+      this.match('/'+cslug+'/:id(.:format)', 'DELETE')
           .to({ controller: controller, action: 'remove' })
     ];
   };
@@ -159,7 +159,7 @@ var Router = function () {
   /*
    * geddy.router.url({ controller: 'SnowDogs', action: 'show', id: 5 }) => '/snow_dogs/5'
    *  
-   * geddy.router.url({ controller: 'SnowDogs', action: 'show', id: 5, extension: 'json' })
+   * geddy.router.url({ controller: 'SnowDogs', action: 'show', id: 5, format: 'json' })
    *    => '/snow_dogs/5.json'
    *  
    * generates a URL from a params hash
@@ -210,11 +210,11 @@ var Router = function () {
   /*
    * Route - turns strings into magical ponies that come when you call them
    *
-   * ex: route = Route('/:controller/:action/:id(.:extension)')
-   * ex: route = Route('/:controller/:action(/:id)(.:extension)', 'GET')
-   * ex: route = Route('/:controller/:action(/:id)(.:extension)',
+   * ex: route = Route('/:controller/:action/:id(.:format)')
+   * ex: route = Route('/:controller/:action(/:id)(.:format)', 'GET')
+   * ex: route = Route('/:controller/:action(/:id)(.:format)',
    *   { controller:'snow_dogs', acton:'show' })
-   * ex: route = Route('/:controller/:action/:id(.:extension)', 'GET', { id:/\d+/ })
+   * ex: route = Route('/:controller/:action/:id(.:format)', 'GET', { id:/\d+/ })
    *
    * Pretty familiar to anyone who's used Merb/Rails - called by Router.match()
    */
@@ -233,7 +233,7 @@ var Router = function () {
     // parse th'args
     var path;
     var opts = {};
-    this.optional = false; // for nested optional url segments like (.:extension)
+    this.optional = false; // for nested optional url segments like (.:format)
     
     var args = Array.prototype.slice.call(arguments);
     var arg;

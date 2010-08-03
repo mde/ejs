@@ -23,14 +23,14 @@ routerTests = {
   // create a route with optional segments
   testCreateOptionalRoute : function() {
     router = new Router();
-    var route = router.match('/:controller/:action/:id(.:extension)')
+    var route = router.match('/:controller/:action/:id(.:format)')
     assert.ok(route, this.fail)
   },
 
   // create a route with multiple optional segments
   testCreateMultipleOptionalRoute : function() {
     router = new Router();
-    var route = router.match('/:controller/:id(/:action)(.:extension)')
+    var route = router.match('/:controller/:id(/:action)(.:format)')
     assert.ok(route, this.fail)
   },
 
@@ -118,80 +118,80 @@ routerTests = {
   // test that the router matches a URL
   testSimpleRouteParsesWithOptionalSegment : function() {
     router = new Router();
-    var route = router.match('/:controller/:action/:id(.:extension)');
+    var route = router.match('/:controller/:action/:id(.:format)');
     var params = router.first('/products/show/1.html','GET');
     assert.ok(params, this.fail);
     assert.equal(params.controller, 'Products', this.fail);
     assert.equal(params.action, 'show', this.fail);
     assert.equal(params.id, 1, this.fail);
     assert.equal(params.method, 'GET', this.fail);
-    assert.equal(params.extension, 'html', this.fail);
+    assert.equal(params.format, 'html', this.fail);
   },
 
   testSimpleRouteParsesWithOptionalSegmentMissing : function() {
     router = new Router();
-    var route = router.match('/:controller/:action/:id(.:extension)','GET');
+    var route = router.match('/:controller/:action/:id(.:format)','GET');
     var params = router.first('/products/show/1','GET');
     assert.ok(params, this.fail);
     assert.equal(params.controller, 'Products', this.fail);
     assert.equal(params.action, 'show', this.fail);
     assert.equal(params.id, 1, this.fail);
     assert.equal(params.method, 'GET', this.fail);
-    assert.equal(typeof(params.extension), 'undefined', this.fail);
+    assert.equal(typeof(params.format), 'undefined', this.fail);
   },
 
   testSimpleRouteFailingDueToBadMethod : function() {
     router = new Router();
-    var route = router.match('/:controller/:action/:id(.:extension)','GET');
+    var route = router.match('/:controller/:action/:id(.:format)','GET');
     var params = router.first('/products/show/1','POST');
     assert.equal(params, false, this.fail);
   },
 
   testSimpleRouteWithTwoOptionalSegments : function() {
     router = new Router();
-    var route = router.match('/:controller/:action(/:id)(.:extension)','GET');
+    var route = router.match('/:controller/:action(/:id)(.:format)','GET');
     var params = router.first('/products/show','GET');
     assert.ok(params, this.fail);
     assert.equal(params.controller, 'Products', this.fail);
     assert.equal(params.action, 'show', this.fail);
     assert.equal(typeof(params.id), 'undefined', this.fail);
-    assert.equal(typeof(params.extension), 'undefined', this.fail);
+    assert.equal(typeof(params.format), 'undefined', this.fail);
     assert.equal(params.method, 'GET', this.fail);
   },
 
   testSimpleRouteWithTwoOptionalSegmentsWithFirstUsed : function() {
     router = new Router();
-    var route = router.match('/:controller/:action(/:id)(.:extension)','GET');
+    var route = router.match('/:controller/:action(/:id)(.:format)','GET');
     var params = router.first('/products/show/1','GET');
     assert.ok(params, this.fail);
     assert.equal(params.controller, 'Products', this.fail);
     assert.equal(params.action, 'show', this.fail);
     assert.equal(params.id, 1, this.fail);
-    assert.equal(typeof(params.extension), 'undefined', this.fail);
+    assert.equal(typeof(params.format), 'undefined', this.fail);
     assert.equal(params.method, 'GET', this.fail);
   },
 
   testSimpleRouteWithTwoOptionalSegmentsWithSecondUsed : function() {
     router = new Router();
-    var route = router.match('/:controller/:action(/:id)(.:extension)','GET');
+    var route = router.match('/:controller/:action(/:id)(.:format)','GET');
     var params = router.first('/products/show.html','GET');
     assert.ok(params, this.fail);
     assert.equal(params.controller, 'Products', this.fail);
     assert.equal(params.action, 'show', this.fail);
     assert.equal(typeof(params.id), 'undefined', this.fail);
-    assert.equal(params.extension, 'html', this.fail);
+    assert.equal(params.format, 'html', this.fail);
     assert.equal(params.method, 'GET', this.fail);
   },
 
   testSimpleRouteWithTwoOptionalSegmentsWithBothUsed : function() {
     router = new Router();
-    var route = router.match('/:controller/:action(/:id)(.:extension)','GET');
+    var route = router.match('/:controller/:action(/:id)(.:format)','GET');
     var params = router.first('/products/show/1.html','GET');
     assert.ok(params, this.fail);
     assert.equal(params.controller, 'Products', this.fail);
     assert.equal(params.action, 'show', this.fail);
     assert.equal(params.id, 1, this.fail);
-    assert.equal(params.extension, 'html', this.fail);
+    assert.equal(params.format, 'html', this.fail);
     assert.equal(params.method, 'GET', this.fail);
   },
 
@@ -199,7 +199,7 @@ routerTests = {
   
   testGET : function() {
     router = new Router();
-    var route = router.match('/:controller/:action(/:id)(.:extension)','GET');
+    var route = router.match('/:controller/:action(/:id)(.:format)','GET');
     var params = router.first('/products/show/1.html','GET');
     assert.ok(params, this.fail);
     assert.equal(params.method, 'GET', this.fail);
@@ -207,7 +207,7 @@ routerTests = {
   
   testPOST : function() {
     router = new Router();
-    var route = router.match('/:controller/:action(/:id)(.:extension)','POST');
+    var route = router.match('/:controller/:action(/:id)(.:format)','POST');
     var params = router.first('/products/show/1.html','POST');
     assert.ok(params, this.fail);
     assert.equal(params.method, 'POST', this.fail);
@@ -215,7 +215,7 @@ routerTests = {
   
   testPUT : function() {
     router = new Router();
-    var route = router.match('/:controller/:action(/:id)(.:extension)','PUT');
+    var route = router.match('/:controller/:action(/:id)(.:format)','PUT');
     var params = router.first('/products/show/1.html','PUT');
     assert.ok(params, this.fail);
     assert.equal(params.method, 'PUT', this.fail);
@@ -223,7 +223,7 @@ routerTests = {
   
   testDELETE : function() {
     router = new Router();
-    var route = router.match('/:controller/:action(/:id)(.:extension)','DELETE');
+    var route = router.match('/:controller/:action(/:id)(.:format)','DELETE');
     var params = router.first('/products/show/1.html','DELETE');
     assert.ok(params, this.fail);
     assert.equal(params.method, 'DELETE', this.fail);
@@ -271,49 +271,49 @@ routerTests = {
     var routes = router.resource('SnowDogs');
     // index
     assert.equal(router.url( { controller:'SnowDogs', action:'index' } ), '/snow_dogs', this.fail);
-    assert.equal(router.url( { controller:'SnowDogs', action:'index', extension: 'html' } ), '/snow_dogs.html', this.fail);
-    assert.equal(router.url( { controller:'SnowDogs', action:'index', extension: 'json' } ), '/snow_dogs.json', this.fail);
+    assert.equal(router.url( { controller:'SnowDogs', action:'index', format: 'html' } ), '/snow_dogs.html', this.fail);
+    assert.equal(router.url( { controller:'SnowDogs', action:'index', format: 'json' } ), '/snow_dogs.json', this.fail);
     // show
     assert.equal(router.url( { controller:'SnowDogs', action:'show', id:1 } ), '/snow_dogs/1', this.fail);
-    assert.equal(router.url( { controller:'SnowDogs', action:'show', id:1, extension: 'html' } ), '/snow_dogs/1.html', this.fail);
-    assert.equal(router.url( { controller:'SnowDogs', action:'show', id:1, extension: 'json' } ), '/snow_dogs/1.json', this.fail);
+    assert.equal(router.url( { controller:'SnowDogs', action:'show', id:1, format: 'html' } ), '/snow_dogs/1.html', this.fail);
+    assert.equal(router.url( { controller:'SnowDogs', action:'show', id:1, format: 'json' } ), '/snow_dogs/1.json', this.fail);
     // add form
     assert.equal(router.url( { controller:'SnowDogs', action:'add' } ), '/snow_dogs/add', this.fail);
-    assert.equal(router.url( { controller:'SnowDogs', action:'add', extension: 'html' } ), '/snow_dogs/add.html', this.fail);
-    assert.equal(router.url( { controller:'SnowDogs', action:'add', extension: 'json' } ), '/snow_dogs/add.json', this.fail);
+    assert.equal(router.url( { controller:'SnowDogs', action:'add', format: 'html' } ), '/snow_dogs/add.html', this.fail);
+    assert.equal(router.url( { controller:'SnowDogs', action:'add', format: 'json' } ), '/snow_dogs/add.json', this.fail);
     // edit form
     assert.equal(router.url( { controller:'SnowDogs', action:'edit', id:1 } ), '/snow_dogs/1/edit', this.fail);
-    assert.equal(router.url( { controller:'SnowDogs', action:'edit', id:1, extension: 'html' } ), '/snow_dogs/1/edit.html', this.fail);
-    assert.equal(router.url( { controller:'SnowDogs', action:'edit', id:1, extension: 'json' } ), '/snow_dogs/1/edit.json', this.fail);
+    assert.equal(router.url( { controller:'SnowDogs', action:'edit', id:1, format: 'html' } ), '/snow_dogs/1/edit.html', this.fail);
+    assert.equal(router.url( { controller:'SnowDogs', action:'edit', id:1, format: 'json' } ), '/snow_dogs/1/edit.json', this.fail);
     // create
     assert.equal(router.url( { controller:'SnowDogs', action:'create' } ), '/snow_dogs', this.fail);
-    assert.equal(router.url( { controller:'SnowDogs', action:'create', extension: 'html' } ), '/snow_dogs.html', this.fail);
-    assert.equal(router.url( { controller:'SnowDogs', action:'create', extension: 'json' } ), '/snow_dogs.json', this.fail);
+    assert.equal(router.url( { controller:'SnowDogs', action:'create', format: 'html' } ), '/snow_dogs.html', this.fail);
+    assert.equal(router.url( { controller:'SnowDogs', action:'create', format: 'json' } ), '/snow_dogs.json', this.fail);
     // update
     assert.equal(router.url( { controller:'SnowDogs', action:'update', id:1 } ), '/snow_dogs/1', this.fail);
-    assert.equal(router.url( { controller:'SnowDogs', action:'update', id:1, extension: 'html' } ), '/snow_dogs/1.html', this.fail);
-    assert.equal(router.url( { controller:'SnowDogs', action:'update', id:1, extension: 'json' } ), '/snow_dogs/1.json', this.fail);
+    assert.equal(router.url( { controller:'SnowDogs', action:'update', id:1, format: 'html' } ), '/snow_dogs/1.html', this.fail);
+    assert.equal(router.url( { controller:'SnowDogs', action:'update', id:1, format: 'json' } ), '/snow_dogs/1.json', this.fail);
     // delete
     assert.equal(router.url( { controller:'SnowDogs', action:'remove', id:1 } ), '/snow_dogs/1', this.fail);
-    assert.equal(router.url( { controller:'SnowDogs', action:'remove', id:1, extension: 'html' } ), '/snow_dogs/1.html', this.fail);
-    assert.equal(router.url( { controller:'SnowDogs', action:'remove', id:1, extension: 'json' } ), '/snow_dogs/1.json', this.fail);
+    assert.equal(router.url( { controller:'SnowDogs', action:'remove', id:1, format: 'html' } ), '/snow_dogs/1.html', this.fail);
+    assert.equal(router.url( { controller:'SnowDogs', action:'remove', id:1, format: 'json' } ), '/snow_dogs/1.json', this.fail);
 
   },
 
   testRouteUrlGeneration : function() {
     router = new Router();
-    var route = router.match('/:controller/:action(/:id)(.:extension)');
+    var route = router.match('/:controller/:action(/:id)(.:format)');
     assert.equal(router.url( { controller:'SnowDogs', action:'pet' } ), '/snow_dogs/pet', this.fail);
     assert.equal(router.url( { controller:'SnowDogs', action:'pet', id:5 } ), '/snow_dogs/pet/5', this.fail);
-    assert.equal(router.url( { controller:'SnowDogs', action:'pet', id:5, extension:'html' } ), '/snow_dogs/pet/5.html', this.fail);
-    assert.equal(router.url( { controller:'SnowDogs', action:'pet', id:5, extension:'json' } ), '/snow_dogs/pet/5.json', this.fail);
-    assert.equal(router.url( { controller:'SnowDogs', action:'pet', extension:'html' } ), '/snow_dogs/pet.html', this.fail);
+    assert.equal(router.url( { controller:'SnowDogs', action:'pet', id:5, format:'html' } ), '/snow_dogs/pet/5.html', this.fail);
+    assert.equal(router.url( { controller:'SnowDogs', action:'pet', id:5, format:'json' } ), '/snow_dogs/pet/5.json', this.fail);
+    assert.equal(router.url( { controller:'SnowDogs', action:'pet', format:'html' } ), '/snow_dogs/pet.html', this.fail);
 
   },
 
   testDefaultValues : function() {
     router = new Router();
-    var route = router.match('/:controller/:action(/:id)(.:extension)');
+    var route = router.match('/:controller/:action(/:id)(.:format)');
     assert.equal(router.url(), '/application/index', this.fail);
   }
 };

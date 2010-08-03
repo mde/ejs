@@ -33,7 +33,7 @@ var Controller = function (obj) {
   // callback function
   this.response = null;
   // The action gets passed these as an argument, but we keep
-  // them here too to have access to the file extension for
+  // them here too to have access to the format for
   // content-negotiation
   this.params = null;
   // Cookies collection, written out in the finish and redirect methods
@@ -151,7 +151,7 @@ Controller.prototype = new function () {
     else {
       var contr = redir.controller || this.name;
       var act = redir.action;
-      var ext = redir.extension || this.params.extension;
+      var ext = redir.format || this.params.format;
       var id = redir.id;
       contr = geddy.util.string.decamelize(contr);
       url = '/' + contr;
@@ -218,8 +218,8 @@ Controller.prototype = new function () {
     if (frmt) {
       types = [frmt];
     }
-    else if (params.extension) {
-      var t = response.contentTypes[params.extension];
+    else if (params.format) {
+      var t = response.contentTypes[params.format];
       var f = response.formatsReverseMap[t];
       if (f && ('|' + this.respondsWith.join('|') + '|').indexOf(
           '|' + f + '|') > -1) {
