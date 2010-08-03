@@ -219,8 +219,9 @@ Controller.prototype = new function () {
       types = [frmt];
     }
     else if (params.format) {
-      var t = response.contentTypes[params.format];
-      var f = response.formatsReverseMap[t];
+      var f = params.format; 
+      // See if we can actually respond with this format,
+      // i.e., that this one is in the list
       if (f && ('|' + this.respondsWith.join('|') + '|').indexOf(
           '|' + f + '|') > -1) {
         types = [f];
