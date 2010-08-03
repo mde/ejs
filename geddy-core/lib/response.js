@@ -25,7 +25,7 @@ var log = require('geddy-core/lib/log');
 var response = new function () {
 
   this.formats = {
-    text: 'text/plain',
+    txt: 'text/plain',
     html: 'text/html',
     json: 'application/json|text/json',
     js: 'application/javascript|text/javascript',

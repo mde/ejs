@@ -44,12 +44,12 @@ var Controller = function (obj) {
   this.name = null;
   // Content-type the controller can respond with -- assume
   // minimum of plaintext
-  this.respondsWith = ['text'];
+  this.respondsWith = ['txt'];
   // Content to respond with -- can be an Object or String
   this.content = '';
   // High-level set of options which can represent multiple
   // content-types
-  // 'text', 'json', 'xml', 'html'
+  // 'txt', 'json', 'xml', 'html'
   this.format = '';
   // Content-type of the response -- driven by the format, and
   // by what content-types the client accepts
@@ -135,7 +135,7 @@ Controller.prototype = new function () {
     , js: function (content, params) {
       return params.callback + '(' + JSON.stringify(content) + ');';
     }
-    , text: function (content) {
+    , txt: function (content) {
       if (typeof content.toString == 'function') {
         return content.toString();
       }
@@ -250,11 +250,11 @@ Controller.prototype = new function () {
     
     // If agent accepts anything, respond with the controller's first choice
     if (wildcard) {
-      t = types[0];
+      var t = types[0];
       format = t;
       match = response.formats[t];
       if (match) {
-        contentType = match.split('|')[0];
+        contentType = response.contentTypes[t]; 
       }
     }
     // Otherwise look through the acceptable formats and see if
