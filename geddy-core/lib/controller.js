@@ -20,7 +20,6 @@ var fs = require('fs');
 
 var errors = require('geddy-core/lib/errors');
 var response = require('geddy-core/lib/response');
-var templates = require('geddy-core/lib/templates');
 var Templater = require('geddy-template/lib/adapters/ejs').Templater
 
 var Controller = function (obj) {
@@ -121,7 +120,7 @@ Controller.prototype = new function () {
     chain.run();
   };
 
-  
+
   this.formatters = {
     // Right now all we have is JSON and plaintext
     // Fuck XML until somebody enterprisey wants it
@@ -132,7 +131,12 @@ Controller.prototype = new function () {
       }
       return JSON.stringify(content);
     }
-    , js: function (content, params) {
+    , js: function (content, controller) {
+      var params = controller.params;
+      if (!params.callback) {
+        err = new errors.InternalServerError('JSONP callback not defined.');
+        controller.error(err);
+      }
       return params.callback + '(' + JSON.stringify(content) + ');';
     }
     , txt: function (content) {
@@ -188,7 +192,7 @@ Controller.prototype = new function () {
       var err = new errors.NotAcceptableError('Not an acceptable media type.');
       this.error(err);
     }
-    
+
     this.formatContentAndFinish(content);
   };
 
@@ -208,89 +212,85 @@ Controller.prototype = new function () {
   };
 
   this.negotiateContent = function (frmt) {
-    var format;
-    var contentType;
-    var types;
-    var match;
-    var params = this.params;
-    var err;
-    
+    var format
+      , contentType
+      , types = []
+      , match
+      , params = this.params
+      , err
+      , accepts = this.request.headers.accept.split(',')
+      , pat
+      , wildcard = false;
+
     if (frmt) {
       types = [frmt];
     }
     else if (params.format) {
-      var f = params.format; 
+      var f = params.format;
       // See if we can actually respond with this format,
       // i.e., that this one is in the list
       if (f && ('|' + this.respondsWith.join('|') + '|').indexOf(
           '|' + f + '|') > -1) {
         types = [f];
       }
-      else {
-        err = new errors.NotAcceptableError('Not an acceptable media type.');
-        this.error(err);
-      }
     }
     else {
       types = this.respondsWith;
     }
-    
-    // Look for a specific match
-    var a = this.request.headers.accept.split(',');
-    var pat;
-    var wildcard = false;
 
-    // Ignore quality factors for now
-    for (var i = 0, ii = a.length; i < ii; i++) {
-      a[i] = a[i].split(';')[0];
-      if (a[i] == '*/*') {
-        wildcard = true;
+    // Okay, we have some format-types.
+    if (types.length) {
+      // Ignore quality factors for now
+      for (var i = 0, ii = accepts.length; i < ii; i++) {
+        accepts[i] = accepts[i].split(';')[0];
+        if (accepts[i] == '*/*') {
+          wildcard = true;
+        }
       }
-    }
-    
-    // If agent accepts anything, respond with the controller's first choice
-    if (wildcard) {
-      var t = types[0];
-      format = t;
-      match = response.formats[t];
-      if (match) {
-        contentType = response.contentTypes[t]; 
+
+      // If agent accepts anything, respond with the controller's first choice
+      if (wildcard) {
+        var t = types[0];
+        format = t;
+        contentType = response.formatsPreferred[t];
+        if (!contentType) {
+          this.throwUndefinedFormatError();
+        }
       }
-    }
-    // Otherwise look through the acceptable formats and see if
-    // the controller supports any of them
-    else {
-      for (var i = 0, ii = types.length; i < ii; i++) {
-        pat = response.formatPatterns[types[i]];
-        if (pat) { 
-          for (var j = 0, jj = a.length; j < jj; j++) {
-            match = a[j].match(pat);
-            if (match) {
-              format = types[i];
-              contentType = match;
-              break;
+      // Otherwise look through the acceptable formats and see if
+      // Geddy knows about any of them.
+      else {
+        for (var i = 0, ii = types.length; i < ii; i++) {
+          pat = response.formatPatterns[types[i]];
+          if (pat) {
+            for (var j = 0, jj = accepts.length; j < jj; j++) {
+              match = accepts[j].match(pat);
+              if (match) {
+                format = types[i];
+                contentType = match;
+                break;
+              }
             }
           }
-        }
-        // If respondsWith contains an unknown format
-        // TODO: Better error to tell devs how to set up new formats
-        else {
-          err = new errors.InternalServerError('Unknown format');
-          this.error(err);
-        }
-        // Don't look at any more formats if there's a match
-        if (match) {
-          break;
+          // If respondsWith contains some random format that Geddy doesn't know
+          // TODO Make it easy for devs to add new formats
+          else {
+            this.throwUndefinedFormatError();
+          }
+          // Don't look at any more formats if there's a match
+          if (match) {
+            break;
+          }
         }
       }
     }
-    
-    if (!(format && contentType)) {
-      err = new errors.InternalServerError('Unknown format');
-      this.error(err);
-    }
-    
+
     return {format: format, contentType: contentType};
+  };
+
+  this.throwUndefinedFormatError = function () {
+    err = new errors.InternalServerError('Format not defined in response.formats.');
+    this.error(err);
   };
 
   this.formatContentAndFinish = function (content) {
@@ -298,7 +298,7 @@ Controller.prototype = new function () {
       this.content = content;
       this.finish();
     }
-    else { 
+    else {
       if (this.format) {
         this.formatContent(this.format, content);
       }
@@ -308,13 +308,13 @@ Controller.prototype = new function () {
       }
     }
   };
-  
+
   this.formatContent = function (format, data) {
     if (format == 'html') {
       this.renderTemplate(data);
     }
     else {
-      var c = this.formatters[format](data, this.params);
+      var c = this.formatters[format](data, this);
       this.formatContentAndFinish(c);
     }
   };
@@ -325,19 +325,19 @@ Controller.prototype = new function () {
     // Calculate the templateRoot if not set
     this.templateRoot = this.templateRoot ||
         'app/views/' + geddy.inflections[this.name].filename.plural;
-    
+
     var templater = new Templater();
     var content = '';
-    
+
     templater.addListener('data', function (d) {
       // Buffer for now, but could stream
       content += d;
     });
-    
+
     templater.addListener('end', function () {
       _this.formatContentAndFinish(content);
     });
-    
+
     templater.render(data, [this.templateRoot], this.params.action);
   };
 

@@ -34,9 +34,11 @@ var response = new function () {
   
   this.formatsReverseMap = {};
   this.formatPatterns = {};
+  this.formatsPreferred = {};
   var formatTypes;
   for (var p in this.formats) {
     formatTypes = this.formats[p].split('|');
+    this.formatsPreferred[p] = formatTypes[0];
     for (var i = 0; i < formatTypes.length; i++) {
       this.formatsReverseMap[formatTypes[i]] = p;
     }
