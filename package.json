@@ -1,0 +1,8 @@
+{ "name": "geddy"
+, "version": "0.1.1"
+, "author": "Matthew Eernisse <mde@fleegix.org> (http://fleegix.org)"
+, "scripts":
+  { "install": "make && make install"
+  , "uninstall": "make uninstall"
+  }
+}
