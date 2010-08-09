@@ -1,4 +1,4 @@
-## Geddy: a small, hackable Web app development framework for Node.js
+## Geddy web framework for Node.js
 - - -
 
 ### Goals
