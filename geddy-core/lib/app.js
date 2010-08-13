@@ -178,7 +178,7 @@ var App = function (initData) {
       
       // Either static or 404 
       else {
-        path = geddy.config.staticFilePath + req.url;
+        path = geddy.config.staticFilePath + base;
         fs.stat(path, function (err, stats) {
           // File not found, hand back the 404
           if (err) {
