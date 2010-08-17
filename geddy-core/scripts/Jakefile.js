@@ -314,7 +314,8 @@ task('scaffold', [], function (nameParam) {
           continue;
         }
         prop = props[p];
-        text += '<div>' + geddy.util.string.capitalize(p);
+        text += '<div><label for="' + p + '" id="' + p + '_label">' 
+             + geddy.util.string.capitalize(p) + '</label>';
         switch (prop.datatype.toLowerCase()) {
           case 'string':
             var inputType = (p.toLowerCase().indexOf('password') > -1) ? 'password' : 'text';
