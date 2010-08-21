@@ -41,19 +41,24 @@ var die = function (str) {
   process.exit();
 }
 
-// check node dependency
-// we must iterate because node v0.1.100 fails:
-// 
-// unfortunately "0.1.100" < "0.1.98" returns true
-// 
-var processVersonArray = process.version.split(".");
-var minNodeVersonArray = MIN_NODE_VERSION.split(".");
-
-for (var i = 0; i < 3; i++) {
-  if (parseInt(processVersonArray[i]) < parseInt(minNodeVersonArray[i])){
-    die('Geddy requires ' + MIN_NODE_VERSION + ' of Node.js.');
+var checkMinVersion = function () {
+  var processVersonArray = process.version.replace(/^v/, '').split(".");
+  var minNodeVersonArray = MIN_NODE_VERSION.split(".");
+  for (var i = 0; i < 3; i++) {
+    // If the current level is actually a higher version than required,
+    // no need to check the next level down
+    if (parseInt(processVersonArray[i]) > parseInt(minNodeVersonArray[i])){
+      return;
+    }
+    // If the current level is lower than the required one, die
+    if (parseInt(processVersonArray[i]) < parseInt(minNodeVersonArray[i])){
+      die('Geddy requires ' + MIN_NODE_VERSION + ' of Node.js.');
+    }
+    // If the two are equal, need to go to the next level and check again ...
   }
 }
+
+checkMinVersion();
 
 if (typeof opts.version != 'undefined') {
   die(GEDDY_VERSION);
