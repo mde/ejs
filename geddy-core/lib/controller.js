@@ -83,8 +83,13 @@ Controller.prototype = new function () {
     this[phase + 'Filters'].push(obj);
   }
 
+  /**
+   * Primary entry point for calling the action on a controller
+   */
   this.handleAction = function (action, params) {
     var _this = this;
+    // Wrap the actual action-handling in a callback to use as the 'last'
+    // method in the async chain of before-filters
     var callback = function () {
       _this[action].call(_this, params);
     };
@@ -218,9 +223,18 @@ Controller.prototype = new function () {
       , match
       , params = this.params
       , err
-      , accepts = this.request.headers.accept.split(',')
+      , accepts = this.request.headers.accept
       , pat
       , wildcard = false;
+
+    // If the client doesn't provide an Accept header, assume
+    // it's happy with anything
+    if (accepts) {
+      accepts = accepts.split(',');
+    }
+    else {
+      accepts = ['*/*'];
+    }
 
     if (frmt) {
       types = [frmt];
