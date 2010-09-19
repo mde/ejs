@@ -21,8 +21,10 @@ var fs = require('fs');
 
 desc('Installs Geddy web framework');
 task('default', [], function () {
-  var uid = process.env.SUDO_UID;
-  var gid = process.env.SUDO_GID;
+  // Try to get the real user -- if not using sudo, fall back
+  // to whomever is running the process
+  var uid = process.env.SUDO_UID || process.getuid();
+  var gid = process.env.SUDO_GID || process.getgid();
   var cmds = [];
   cmds = [
     'mkdir -p ~/.node_libraries'
