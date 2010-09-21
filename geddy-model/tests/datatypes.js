@@ -115,10 +115,10 @@ var testDatatypes = new function () {
     for (var i = 0, ii = dates.length; i < ii; i++) {
       dt = dates[i];
       byTor = ByTor.create({dateProp: dt});
-      assert.ok(byTor.valid(), 'Testing valid');
-      assert.equal(byTor.dateProp.getFullYear(), 1968, 'Testing getFullYear');
-      assert.equal(byTor.dateProp.getMonth(), 11, 'Testing getMonth'); // Zero-based
-      assert.equal(byTor.dateProp.getDate(), 27, 'Testing getDate');
+      assert.ok(byTor.valid(), 'Testing valid method for ' + dt);
+      assert.equal(byTor.dateProp.getFullYear(), 1968, 'Testing getFullYear for ' + dt);
+      assert.equal(byTor.dateProp.getMonth(), 11, 'Testing getMonth for ' + dt); // Zero-based
+      assert.equal(byTor.dateProp.getDate(), 27, 'Testing getDate for ' + dt);
     }
   
   };
@@ -135,17 +135,18 @@ var testDatatypes = new function () {
       , new Date(1968, 11, 27)
       , new Date('12/27/1968')
       , 'Fri, 27 Dec 1968'
+      //, '1968/12/27 00:00:00 -0800' // Your local offset must be the same for this test to pass
     ];
     for (var i = 0, ii = dates.length; i < ii; i++) {
       dt = dates[i];
       byTor = ByTor.create({datetimeProp: dt});
-      assert.ok(byTor.valid());
-      assert.equal(byTor.datetimeProp.getFullYear(), 1968);
-      assert.equal(byTor.datetimeProp.getMonth(), 11); // Zero-based
-      assert.equal(byTor.datetimeProp.getDate(), 27);
-      assert.equal(byTor.datetimeProp.getHours(), 0);
-      assert.equal(byTor.datetimeProp.getMinutes(), 0);
-      assert.equal(byTor.datetimeProp.getSeconds(), 0);
+      assert.ok(byTor.valid(), 'Testing valid method for ' + dt);
+      assert.equal(byTor.datetimeProp.getFullYear(), 1968, 'Testing getFullYear for ' + dt);
+      assert.equal(byTor.datetimeProp.getMonth(), 11, 'Testing getMonth for ' + dt); // Zero-based
+      assert.equal(byTor.datetimeProp.getDate(), 27, 'Testing getDate for ' + dt);
+      assert.equal(byTor.datetimeProp.getHours(), 0, 'Testing getHours for ' + dt);
+      assert.equal(byTor.datetimeProp.getMinutes(), 0, 'Testing getMinutes for ' + dt);
+      assert.equal(byTor.datetimeProp.getSeconds(), 0, 'Testing getSeconds for ' + dt);
     }
     // Dates with times
     dates = [
@@ -153,17 +154,18 @@ var testDatatypes = new function () {
       , [1968, 12, 27, 16, 10, 3]
       , new Date(1968, 11, 27, 16, 10, 3)
       , 'Fri, 27 Dec 1968 16:10:03'
+      //, '1968/12/27 16:10:03 -0800' // Your local offset must be the same for this test to pass
     ];
     for (var i = 0, ii = dates.length; i < ii; i++) {
       dt = dates[i];
       byTor = ByTor.create({datetimeProp: dt});
-      assert.ok(byTor.valid());
-      assert.equal(byTor.datetimeProp.getFullYear(), 1968);
-      assert.equal(byTor.datetimeProp.getMonth(), 11); // Zero-based
-      assert.equal(byTor.datetimeProp.getDate(), 27);
-      assert.equal(byTor.datetimeProp.getHours(), 16);
-      assert.equal(byTor.datetimeProp.getMinutes(), 10);
-      assert.equal(byTor.datetimeProp.getSeconds(), 3);
+      assert.ok(byTor.valid(), 'Testing valid method for ' + dt);
+      assert.equal(byTor.datetimeProp.getFullYear(), 1968, 'Testing getFullYear for ' + dt);
+      assert.equal(byTor.datetimeProp.getMonth(), 11, 'Testing getMonth for ' + dt); // Zero-based
+      assert.equal(byTor.datetimeProp.getDate(), 27, 'Testing getDate for ' + dt);
+      assert.equal(byTor.datetimeProp.getHours(), 16, 'Testing getHours for ' + dt);
+      assert.equal(byTor.datetimeProp.getMinutes(), 10, 'Testing getMinutes for ' + dt);
+      assert.equal(byTor.datetimeProp.getSeconds(), 3, 'Testing getSeconds for ' + dt);
     }
   
   };
