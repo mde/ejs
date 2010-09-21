@@ -56,7 +56,7 @@ geddy.util.date = new function () {
   this.meridian = {
     'AM': 'AM',
     'PM': 'PM'
-  }
+  };
 
   this.supportedFormats = {
     // abbreviated weekday name according to the current locale
@@ -72,11 +72,11 @@ geddy.util.date = new function () {
     'c': function (dt) { return _this.strftime(dt, '%a %b %d %T %Y'); },
     // century number (the year divided by 100 and truncated
     // to an integer, range 00 to 99)
-    'C': function (dt) { return _this.calcCentury(dt.getFullYear());; },
+    'C': function (dt) { return _this.calcCentury(dt.getFullYear()); },
     // day of the month as a decimal number (range 01 to 31)
     'd': function (dt) { return _this.leftPad(dt.getDate(), 2, '0'); },
     // same as %m/%d/%y
-    'D': function (dt) { return _this.strftime(dt, '%m/%d/%y') },
+    'D': function (dt) { return _this.strftime(dt, '%m/%d/%y'); },
     // day of the month as a decimal number, a single digit is
     // preceded by a space (range ' 1' to '31')
     'e': function (dt) { return _this.leftPad(dt.getDate(), 2, ' '); },
@@ -169,13 +169,13 @@ geddy.util.date = new function () {
     var str = '';
     for (var i in this.supportedFormats) { str += i; }
     return str;
-  }
+  };
 
   this.supportedFormatsPat = new RegExp('%[' +
       this.getSupportedFormats() + ']{1}', 'g');
 
   this.strftime = function (dt, format) {
-    if (!dt) { return '' }
+    if (!dt) { return ''; }
     
     var d = dt;
     var pats = [];
@@ -220,7 +220,7 @@ geddy.util.date = new function () {
    * @return Integer century number
    */
   this.calcCentury = function (y) {
-    var ret = parseInt(y/100);
+    var ret = parseInt(y/100, 10);
     ret = ret.toString();
     return this.leftPad(ret);
   };
@@ -236,7 +236,7 @@ geddy.util.date = new function () {
     var ret = 0;
     first = first.getTime();
     diff = (dt.getTime() - first);
-    ret = parseInt(((((diff/1000)/60)/60)/24))+1;
+    ret = parseInt(((((diff/1000)/60)/60)/24), 10)+1;
     return ret;
   };
 
@@ -246,7 +246,7 @@ geddy.util.date = new function () {
    * @return Integer day number for 1-7 base week
    */
   this.convertOneBase = function (d) {
-    return d == 0 ? 7 : d;
+    return d === 0 ? 7 : d;
   };
 
   this.getTwoDigitYear = function (yr) {
@@ -256,7 +256,7 @@ geddy.util.date = new function () {
     var millenYear = yr + 1000;
     var str = millenYear.toString();
     str = str.substr(2); // Get the last two digits
-    return str
+    return str;
   };
 
   /**
@@ -275,9 +275,9 @@ geddy.util.date = new function () {
    * @return String for hour in 12-hour format -- may be string length of one
    */
   this.hrMil2Std = function (hour) {
-    var h = typeof hour == 'number' ? hour : parseInt(hour);
+    var h = typeof hour == 'number' ? hour : parseInt(hour, 10);
     var str = h > 12 ? h - 12 : h;
-    str = str == 0 ? 12 : str;
+    str = str === 0 ? 12 : str;
     return str;
   };
 
@@ -288,7 +288,7 @@ geddy.util.date = new function () {
    * @return String for hour in 24-hour format
    */
   this.hrStd2Mil = function  (hour, pm) {
-    var h = typeof hour == 'number' ? hour : parseInt(hour);
+    var h = typeof hour == 'number' ? hour : parseInt(hour, 10);
     var str = '';
     // PM
     if (pm) {
@@ -375,13 +375,13 @@ geddy.util.date = new function () {
         // Can't have zero leftover days, so numbers divisible by 5 get
         // a days value of 5, and the remaining days make up the number of weeks
         var mod = incr % 5;
-        if (mod == 0) {
+        if (mod === 0) {
           days = (incr > 0) ? 5 : -5;
           weeks = (incr > 0) ? ((incr-5)/5) : ((incr+5)/5);
         }
         else {
           days = mod;
-          weeks = parseInt(incr/5);
+          weeks = parseInt(incr/5, 10);
         }
         // Get weekday value for orig date param
         strt = dt.getDay();
@@ -392,13 +392,13 @@ geddy.util.date = new function () {
         }
         // Orig date is Sun / negative incrementer
         // Jump back over Sat
-        else if (strt == 0 && incr < 0) {
+        else if (strt === 0 && incr < 0) {
           adj = -1;
         }
         // Get weekday val for the new date
         trgt = strt + days;
         // New date is on Sat or Sun
-        if (trgt == 0 || trgt == 6) {
+        if (trgt === 0 || trgt == 6) {
           adj = (incr > 0) ? 2 : -2;
         }
         // Increment by number of weeks plus leftover days plus
@@ -478,18 +478,18 @@ geddy.util.date = new function () {
       case dateParts.WEEK:
         // Truncate instead of rounding
         // Don't use Math.floor -- value may be negative
-        delta = parseInt(weeDiff);
+        delta = parseInt(weeDiff, 10);
         break;
       case dateParts.DAY:
         delta = dayDiff;
         break;
       case dateParts.WEEKDAY:
         var days = Math.round(dayDiff);
-        var weeks = parseInt(days/7);
+        var weeks = parseInt(days/7, 10);
         var mod = days % 7;
 
         // Even number of weeks
-        if (mod == 0) {
+        if (mod === 0) {
           days = weeks*5;
         }
         else {
@@ -498,7 +498,7 @@ geddy.util.date = new function () {
           var aDay = date1.getDay();
           var bDay = date2.getDay();
 
-          weeks = parseInt(days/7);
+          weeks = parseInt(days/7, 10);
           mod = days % 7;
           // Mark the date advanced by the number of
           // round weeks (may be zero)
@@ -514,7 +514,7 @@ geddy.util.date = new function () {
                 adj = -1;
                 break;
               // Range starts on Sun
-              case aDay == 0:
+              case aDay === 0:
                 adj = 0;
                 break;
               // Range ends on Sat
@@ -522,7 +522,7 @@ geddy.util.date = new function () {
                 adj = -1;
                 break;
               // Range ends on Sun
-              case bDay == 0:
+              case bDay === 0:
                 adj = -2;
                 break;
               // Range contains weekend
@@ -541,7 +541,7 @@ geddy.util.date = new function () {
                 adj = 0;
                 break;
               // Range starts on Sun
-              case aDay == 0:
+              case aDay === 0:
                 adj = 1;
                 break;
               // Range ends on Sat
@@ -549,7 +549,7 @@ geddy.util.date = new function () {
                 adj = 2;
                 break;
               // Range ends on Sun
-              case bDay == 0:
+              case bDay === 0:
                 adj = 1;
                 break;
               // Range contains weekend
@@ -588,7 +588,19 @@ geddy.util.date = new function () {
   };
 
   this.parse = function (val) {
-    var dt, curr, matches, reordered, off, curr, stamp, prefix = '';
+    var dt
+      , curr
+      , matches
+      , reordered
+      , offset
+      , stamp
+      , prefix = ''
+      , normalized
+      , arr
+      , dir
+      , hrs
+      , min
+      , diff;
     
     // Yay, we have a date, use it as-is
     if (val instanceof Date || typeof val.getFullYear == 'function') {
@@ -606,13 +618,12 @@ geddy.util.date = new function () {
       if (_isArray(val)) {
         matches = val;
         matches.unshift(null);
+        // Pad the results to the same length as ISO8601
         matches[8] = null;
       }
 
       // Oh, crap, it's a string -- parse this bitch
       else if (typeof val == 'string') {
-        matches = val.match(_DATETIME_PAT);
-        
         // Stupid US-only format?
         if (!matches) {
           matches = val.match(_US_DATE_PAT);
@@ -624,13 +635,22 @@ geddy.util.date = new function () {
           }
         }
 
-        // Time-stored-in-Date hack?
+        // Time, to be stored in Date
         if (!matches) {
           matches = val.match(_TIME_PAT);
           if (matches) {
             reordered = [matches[0], 0, 1, 0, matches[1], matches[2], matches[3], matches[4], null];
             matches = reordered;
           }
+        }
+        
+        // Maybe this is ISO8601 or Rails's fucked-up Date format
+        if (!matches) {
+          arr = val.split(/T| /g);
+          normalized = arr[0].replace(/\//g, '-');
+          normalized += arr[1] ? 'T' + arr[1] : '';
+          normalized += arr[2] ? arr[2] : '';
+          matches = normalized.match(_DATETIME_PAT);
         }
 
       }
@@ -639,23 +659,49 @@ geddy.util.date = new function () {
       if (matches) {
         matches.shift(); // First match is entire match, DO NOT WANT
         
-        off = matches.pop();
-        // If there's an offset, and it's GMT, we know to use
-        // UTC methods to set everything
-        if (off && off == 'Z') {
-          prefix = 'UTC';
-        }
-
-        dt = new Date(0);
-        
         // Stupid zero-based months
         matches[1] = parseInt(matches[1], 10) - 1;
+        
+        offset = matches.pop();
+        
+        // If there's an offset, it's UTC or relative to UTC
+        if (offset) {
+          // Create a Date of Jan. 1st
+          dt = new Date(0);
+          // Set the date to the first so we don't have something like 12/31, then
+          // set the month to Feb and end up with 2/31 -> wraparound to 3/3
+          dt.setDate(1);
+          
+          // Iterate the array and set each date property using either
+          // plain or UTC setters
+          for (var i = 0, ii = matches.length; i < ii; i++) {
+            curr = parseInt(matches[i], 10) || 0;
+            dt['setUTC' + _dateMethods[i]](curr);
+          }
 
-        // Iterate the array and set each date property using either
-        // plain or UTC setters
-        for (var i = 0, ii = matches.length; i < ii; i++) {
-          curr = parseInt(matches[i], 10) || 0;
-          dt['set' + prefix + _dateMethods[i]](curr);
+          if (offset != 'Z') {
+            dir = offset.substr(0, 1);
+            // Strip leading zeros so that parseInt doesn't magically convert to zero
+            hrs = offset.substr(1, 2).replace(/^0/, '');
+            min = offset.substr(3, 2).replace(/^0/, '');
+            hrs = parseInt(hrs, 10);
+            min = parseInt(min, 10);
+            diff = (hrs * 60 * 60 * 1000) + (min * 60 * 60 * 1000);
+            if (dir == '+') {
+              dt.setTime(dt.getTime() - diff);
+            }
+            else {
+              dt.setTime(dt.getTime() + diff);
+            }
+          }
+        }
+        // Otherwise it's just an arbitrary Date -- use local offset
+        else {
+          for (var i = 0; i < 7; i++) {
+            matches[i] = matches[i] || 0;
+          }
+          dt = new Date(matches[0], matches[1], matches[2], matches[3],
+              matches[4], matches[5], matches[6]);
         }
       }
 
