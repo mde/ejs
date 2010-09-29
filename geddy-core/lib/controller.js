@@ -257,9 +257,13 @@ Controller.prototype = new function () {
       // Ignore quality factors for now
       for (var i = 0, ii = accepts.length; i < ii; i++) {
         accepts[i] = accepts[i].split(';')[0];
-        if (accepts[i] == '*/*') {
-          wildcard = true;
+        // We need a string operation here, due to different charset encodings of browser headers  
+        if (accepts[i].indexOf('*/*') < 0) {
+        	continue;          
         }
+        
+        wildcard = true;
+        break;
       }
 
       // If agent accepts anything, respond with the controller's first choice
