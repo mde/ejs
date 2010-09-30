@@ -175,6 +175,9 @@ task('resource', [], function (nameParam) {
 
   var cmds = [
     'mkdir -p ./app/views/' + names.filename.plural
+    , 'mkdir -p ./app/views/layout'
+    , 'cp -u ~/.node_libraries/geddy-core/scripts/gen/views/layout.html.ejs ' +
+    	'./app/views/layout/default.html.ejs'    
     , 'cp ~/.node_libraries/geddy-core/scripts/gen/views/add.html.ejs ' +
         './app/views/' + names.filename.plural + '/'
     , 'cp ~/.node_libraries/geddy-core/scripts/gen/views/edit.html.ejs ' +

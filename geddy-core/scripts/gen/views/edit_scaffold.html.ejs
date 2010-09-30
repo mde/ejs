@@ -1,6 +1,19 @@
-<@ params.formAction = '/<%= names.filename.plural %>/' + params.id + '?_method=put'; @>
-<html>
-  <head>
+
+	<@ params.formAction = '/<%= names.filename.plural %>/' + params.id + '?_method=put'; @>
+  
+    <h3>
+      Edit <%= names.constructor.singular %> <@= params.id @>
+    </h3>
+    <@ if (params.errors) { @>
+    <p>
+      <div>Errors:</div>
+      <@ for (var p in params.errors) { @>
+      <div><@=  p @>: <@= params.errors[p] @></div>
+      <@ } @>
+    </p>
+    <@ } @>
+    <@= partial('_form', {params: params}); @>
+    
     <script type="text/javascript" src="/js/util/date.js"></script>
     <script type="text/javascript" src="/js/util/form.js"></script>
     <script type="text/javascript" src="/js/util/meta.js"></script>
@@ -30,23 +43,7 @@
         }
       };
 
-    </script>
-    <link type="text/css" rel="stylesheet" href="/css/master.css"/>
-  </head>
-  <body>
-    <h3>
-      Edit <%= names.constructor.singular %> <@= params.id @>
-    </h3>
-    <@ if (params.errors) { @>
-    <p>
-      <div>Errors:</div>
-      <@ for (var p in params.errors) { @>
-      <div><@=  p @>: <@= params.errors[p] @></div>
-      <@ } @>
-    </p>
-    <@ } @>
-    <@= partial('_form', {params: params}); @>
-  </body>
-</html>
+    </script>    
+
 
 
