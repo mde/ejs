@@ -325,6 +325,14 @@ task('scaffold', [], function (nameParam) {
 
             text += '<div><input type="' + inputType + '" id="' + p + '" name="' + p +
                 '" value="<%= params.' + p + ' || \'\' %>" size="24"/></div>\n';
+
+            if ( inputType === 'password' ) {
+              p = 'confirm' + geddy.util.string.capitalize(p) 
+              text += '<div><label for="' + p + '" id="' + p + '_label">' 
+                   + geddy.util.string.capitalize(p) + '</label></div>'
+                   + '<div><input type="' + inputType + '" id="' + p + '" name="' + p
+                   + '" value="<%= params.' + p + ' || \'\' %>" size="24"/></div>\n';
+            }
             break;
           case 'date':
             text += '</div>\n'
