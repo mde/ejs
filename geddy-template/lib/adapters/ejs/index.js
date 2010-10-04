@@ -26,67 +26,74 @@ var sys = require('sys'),
  * EJS templater constructor
  * @contstructor
  */
-var Templater = function () {};
+var Templater = function () {
+  this.currentPartialId = 0;
+  this.baseTemplateNode = undefined;
+  this.templateRoot = undefined;
+  this.isLayout = false;
+};
 
 // Inherit from TemplaterBase
 Templater.prototype = new TemplaterBase();
 
-Templater.prototype.currentPartialId = 0;
-
-Templater.prototype.baseTemplateNode = undefined;
-
-Templater.prototype.templateRoot = undefined;
-
 // Override the TempaterBase render method
-Templater.prototype.render = function (data, paths, filename) {
-  
-  if (paths.layout) {
-	  
-	this.templateRoot = paths.layout;
-	
-	var _this = this;  
+Templater.prototype.render = function (data, config) {
+
+  if (config.layout) {
+
+    this.isLayout = true;
+    this.templateRoot = getDirname(config.layout);
+
+    var _this = this;
     var templaterContent = new Templater();
     var contentPartial = '';
 
     templaterContent.addListener('data', function (d) {
       // Buffer for now, but could stream
-	  contentPartial += d;
+	    contentPartial += d;
     });
 
     templaterContent.addListener('end', function () {
-      data['yield'] = contentPartial;
-      _this.partial('default', data);
-    });	  
-	  
-	templaterContent.render(data
-				,{content:paths.content}
-				,filename);	  	  
-  } 
+      data.yield = function () { return contentPartial; };
+      _this.partial(getFilename(config.layout), data);
+    });
+
+    templaterContent.render(data, {template: config.template});
+  }
+
   else {
 	 // Set the base path to look for template partials
-	 this.templateRoot = paths.content || paths[0];
-	 this.partial(filename, data);	  
+	 this.templateRoot = getDirname(config.template);
+	 filename = getFilename(config.template);
+   this.partial(filename, data);
   }
 };
 
+var getFilename = function (path) {
+  return path.split('/').pop();
+};
 
-var getTemplateUrl = function (templateRoot, partialUrl, parentNode) {
-  var key,
-      templateUrl,
-      dirs = [],
-      dir;
-  
+var getDirname = function (path) {
+  var arr = path.split('/');
+  arr.pop();
+  return arr.join('/');
+};
+
+var getTemplateUrl = function (templateRoot, partialUrl, parentNode, isLayout) {
+  var key
+    , templateUrl
+    , dirs = []
+    , dir
+    , err;
+
   // If this is a sub-template, try in the same directory as the the parent
   if (parentNode) {
     dirs.push(parentNode.dirname);
   }
-  
-  // Or fall back to the templateRoot
+
+  // Or look in the specified the templateRoot
   dirs.push(templateRoot);
 
-  // Or fall back to the fallback of the root of the views directory
-  dirs.push('app/views');
-  
   // Look through the directory list until you find a registered
   // template path -- these are registered during app init so we're
   // not touching the filesystem every time to look for partials
@@ -98,26 +105,33 @@ var getTemplateUrl = function (templateRoot, partialUrl, parentNode) {
       break;
     }
   }
-  
-  // Bail out if we can't find a template 
+
+  // No template
   if (!templateUrl) {
-    var e = new errors.InternalServerError('Partial template "' +
-        partialUrl + '" not found in ' + dirs.join(", "));
-    throw e;
+    // If it's a layout, use the default one for the app
+    if (isLayout) {
+      templateUrl = 'app/views/layouts/application.html.ejs';
+    }
+    // Bail out if a normal content template 
+    else {
+      err = new errors.InternalServerError('Partial template "' +
+          partialUrl + '" not found in ' + dirs.join(", "));
+      throw err;
+    }
   }
-  
+
   return templateUrl;
 };
 
 Templater.prototype.partial = function (partialUrl, renderContext, parentNode) {
-  
+
   var _this = this,
       node,
       partialId = this.currentPartialId,
       isBaseNode = !this.baseTemplateNode,
       templateUrl;
-  
-  templateUrl = getTemplateUrl(this.templateRoot, partialUrl, parentNode);
+
+  templateUrl = getTemplateUrl(this.templateRoot, partialUrl, parentNode, this.isLayout);
 
   // Create the current node, with a reference to its parent, if any
   node = new TemplateNode(partialId, templateUrl, renderContext, parentNode);
@@ -127,12 +141,12 @@ Templater.prototype.partial = function (partialUrl, renderContext, parentNode) {
   renderContext.partial = function (partUrl, ctxt) {
     return _this.partial.call(_this, partUrl, ctxt, node);
   };
- 
+
   // If there is a parent, add this node as its child
   if (parentNode) {
     parentNode.childNodes[partialId] = node;
   }
-    
+
   // If this is the base node (i.e., there's no baseTemplateNode yet),
   // give this node the finishRoot method that actually renders the final,
   // completed content for the entire template
@@ -147,10 +161,10 @@ Templater.prototype.partial = function (partialUrl, renderContext, parentNode) {
     // Kick off the hierarchical async loading process
     node.loadTemplate();
   }
-  
+
   // Increment the current partial id for the next call
   this.currentPartialId++;
-  
+
   // Return the placeholder text to represent this template -- it gets
   // replaced in the callback from the async load of the actual content
   return '###partial###' + partialId;
