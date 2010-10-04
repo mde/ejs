@@ -55,10 +55,10 @@ var Controller = function (obj) {
   this.contentType = '';
   // The template root to look in for partials when rendering templates
   // Gets created programmatically based on controller name -- see renderTemplate
-  this.templateRoot = undefined;
+  this.template = undefined;
   // The template layout directory to look in when rendering templates
   // Gets created programmatically based on controller name -- see renderTemplate
-  this.templateLayout = undefined;  
+  this.layout = undefined;  
   // This will be used for 'before' actions for plugins
   this.beforeFilters = [];
   // This will be used for 'after' actions for plugins
@@ -343,13 +343,13 @@ Controller.prototype = new function () {
  this.renderTemplate = function (data) {
     var _this = this;
 
-    // Calculate the templateRoot if not set
-    this.templateRoot = this.templateRoot || 
-    	'app/views/' + geddy.inflections[this.name].filename.plural;
+    // Calculate the template if not set
+    this.template = this.template || 
+    	'app/views/' + geddy.inflections[this.name].filename.plural + '/' + this.params.action;
 
-    // Calculate the templateLayout if not set
-    this.templateLayout = this.templateLayout || 
-    	'app/views/layout';    
+    // Calculate the layout if not set
+    this.layout = this.layout || 
+    	'app/views/layouts/' + geddy.inflections[this.name].filename.plural;
     
     var templater = new Templater();
     var content = '';
@@ -363,12 +363,12 @@ Controller.prototype = new function () {
       _this.formatContentAndFinish(content);
     });
 
-    templater.render(data
-    			,{
-    			   layout:this.templateLayout
-    			  ,content:this.templateRoot
-    			}
-    		     ,this.params.action);
+    templater.render(data, {
+      layout: this.layout
+    , template: this.template
+    , controller: this.name
+    , action: this.params.action
+    });
   };
 
 }();
