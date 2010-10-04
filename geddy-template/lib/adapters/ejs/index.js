@@ -39,10 +39,34 @@ Templater.prototype.templateRoot = undefined;
 
 // Override the TempaterBase render method
 Templater.prototype.render = function (data, paths, filename) {
-  // Set the base path to look for template partials
-  this.templateRoot = paths[0];
-  // Start rendering from the partials root
-  this.partial(filename, data);
+  
+  if (paths.layout) {
+	  
+	this.templateRoot = paths.layout;
+	
+	var _this = this;  
+    var templaterContent = new Templater();
+    var contentPartial = '';
+
+    templaterContent.addListener('data', function (d) {
+      // Buffer for now, but could stream
+	  contentPartial += d;
+    });
+
+    templaterContent.addListener('end', function () {
+      data['yield'] = contentPartial;
+      _this.partial('default', data);
+    });	  
+	  
+	templaterContent.render(data
+				,{content:paths.content}
+				,filename);	  	  
+  } 
+  else {
+	 // Set the base path to look for template partials
+	 this.templateRoot = paths.content || paths[0];
+	 this.partial(filename, data);	  
+  }
 };
 
 

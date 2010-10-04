@@ -133,7 +133,7 @@ var App = function (initData) {
 
       // The route matches -- we have a winner!
       if (params) {
-        log.debug('Routed to ' + params.controller + ' controller, ' + params.action + ' action');
+        log.debug('Routed to ' + params.controller + ' controller, ' + params.action + ' action, ' + params.format + ' format');
 
         // Set up the cookies for this request so we can do the session thing
         cook = new cookies.CookieCollection(req);
