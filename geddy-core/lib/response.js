@@ -213,7 +213,7 @@ Response.prototype = new function () {
     this.writeHeaders(200, {'Content-Type': contentType});
 
     // From Paperboy, http://github.com/felixge/node-paperboy
-    fs.open(filepath, process.O_RDONLY, 0666, function (err, fd) {
+    fs.open(filepath, 'r', 0666, function (err, fd) {
       var pos = 0;
       var streamChunk = function () {
         fs.read(fd, 16 * 1024, pos, encoding,
