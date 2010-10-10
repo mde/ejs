@@ -227,14 +227,17 @@ Controller.prototype = new function () {
       , params = this.params
       , err
       , accepts = this.request.headers.accept
+      , accept
       , pat
       , wildcard = false;
 
+    // If the client provides an Accept header, split on comma
+    // Some user-agents may include whitespace with the comma
+    if (accepts) {
+      accepts = accepts.split(/\s*,\s*/);
+    }
     // If the client doesn't provide an Accept header, assume
     // it's happy with anything
-    if (accepts) {
-      accepts = accepts.split(',');
-    }
     else {
       accepts = ['*/*'];
     }
@@ -255,18 +258,15 @@ Controller.prototype = new function () {
       types = this.respondsWith;
     }
 
-    // Okay, we have some format-types.
+    // Okay, we have some format-types, let's see if anything matches
     if (types.length) {
-      // Ignore quality factors for now
       for (var i = 0, ii = accepts.length; i < ii; i++) {
-        accepts[i] = accepts[i].split(';')[0];
-        // We need a string operation here, due to different charset encodings of browser headers  
-        if (accepts[i].indexOf('*/*') < 0) {
-        	continue;          
+        // Ignore quality factors for now
+        accept = accepts[i].split(';')[0];
+        if (accept == '*/*') {
+          wildcard = true;
+          break;
         }
-        
-        wildcard = true;
-        break;
       }
 
       // If agent accepts anything, respond with the controller's first choice
