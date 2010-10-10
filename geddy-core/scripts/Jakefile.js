@@ -323,13 +323,14 @@ task('scaffold', [], function (nameParam) {
              + geddy.util.string.capitalize(p) + '</label>';
         switch (prop.datatype.toLowerCase()) {
           case 'string':
-            var inputType = (p.toLowerCase().indexOf('password') > -1) ? 'password' : 'text';
             text += '</div>\n'
 
+            var inputType = (p.toLowerCase().indexOf('password') > -1) ? 'password' : 'text';
             text += '<div><input type="' + inputType + '" id="' + p + '" name="' + p +
                 '" value="<%= params.' + p + ' || \'\' %>" size="24"/></div>\n';
-
-            if ( inputType === 'password' ) {
+            
+            // Password -- add a confirmation field
+            if (inputType == 'password') {
               p = 'confirm' + geddy.util.string.capitalize(p) 
               text += '<div><label for="' + p + '" id="' + p + '_label">' 
                    + geddy.util.string.capitalize(p) + '</label></div>'
