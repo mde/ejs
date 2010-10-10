@@ -40,13 +40,13 @@ var config = new function () {
   };
   //*/
   /*  PostgreSQL
-  this.database = { 
+  this.database = {
     adapter: 'postgresql',
     hostname: 'localhost',
     dbName: 'geddy_db',
     username: 'postgres',
     password: null
-  };  
+  };
   //*/
 
 }();
