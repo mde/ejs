@@ -17,7 +17,7 @@
 #
 
 SOURCE_DIR=
-ROOT_DIR=$PWD
+ROOT_DIR=`pwd`
 DAEMON=0
 COMMAND=
 ARGS=
@@ -35,7 +35,6 @@ do
                   ;; 
     -x|--server-root) 
                   SOURCE_DIR=$2
-	          ARGS="${ARGS}-x ${2} "
                   shift 2
                   ;; 
     -d|--daemon) 
@@ -53,6 +52,8 @@ do
   esac
 
 done
+
+ARGS="${ARGS}-r ${ROOT_DIR}"
 
 if [ $ACTION = "start" ]
 then
