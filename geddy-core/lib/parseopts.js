@@ -37,7 +37,8 @@ var parseopts = new function () {
         argName = optsReverseMap[argItems[0]];
         if (argName) {
           // If there's no attached value, value is null
-          opts[argName] = argItems[1] || null;
+          opts[argName] = argItems[1] || (!args[0] || (args[0].indexOf('-') == 0)) ?
+                  null : args.shift();
         }
         else {
           throw new Error('Unknown option "' + argItems[0] + '"');
@@ -66,3 +67,4 @@ var parseopts = new function () {
 };
 
 exports.parse = parseopts.parse;
+
