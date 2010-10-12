@@ -1,3 +1,5 @@
+#!/bin/bash
+
 #
 # Geddy JavaScript Web development framework
 # Copyright 2112 Matthew Eernisse (mde@fleegix.org)
@@ -15,34 +17,80 @@
 # limitations under the License.
 #
 
-#!/bin/bash
+SOURCE_DIR=
+ROOT_DIR=$PWD
+DAEMON=0
+COMMAND=
+ARGS=
+PIDPATH=$HOME
+PIDFILE=
+ACTION="start"
 
-SOURCE_DIR=""
-USE_SOURCE=0
-
-for x in $@
+while [ "$1" != "" ] 
 do
-  if [ $USE_SOURCE = 1 ]
-  then
-    SOURCE_DIR="$x"
-    break
-  fi
-  if [ ${x:0:13} = "--server-root" ]
-  then
-    USE_SOURCE=1
-    # This doesn't expand ~/ paths, why not?
-    SOURCE_DIR="${x/--server-root=/}"
-    break
-  fi
-  if [ "$x" = "-x" ]
-  then
-    USE_SOURCE=1
-  fi
+  case $1 in
+    -r|--geddy-root) 
+                  ROOT_DIR=$2                  
+	          ARGS="${ARGS}-r ${2} "
+                  shift 2
+                  ;; 
+    -x|--server-root) 
+                  SOURCE_DIR=$2
+	          ARGS="${ARGS}-x ${2} "
+                  shift 2
+                  ;; 
+    -d|--daemon) 
+                  DAEMON=1
+                  shift
+                  ;;
+    --stop)
+                  ACTION="stop"
+                  shift
+                  ;;
+    *)
+                  ARGS="${ARGS}${1} "
+                  shift
+                  ;;
+  esac
+
 done
 
-if [ $USE_SOURCE = 0 ]
+if [ $ACTION = "start" ]
 then
-  unset NODE_PATH; node ~/.node_libraries/geddy-core/scripts/startserv.js -r `pwd` $@
+  COMMAND="/usr/local/bin/node"
+
+  if [ -z $SOURCE_DIR ]
+    then
+      unset NODE_PATH; 
+      COMMAND="${COMMAND} ${HOME}/.node_libraries"
+    else
+      export NODE_PATH=${SOURCE_DIR}; 
+      COMMAND="${COMMAND} ${SOURCE_DIR}"
+  fi
+
+  COMMAND="${COMMAND}/geddy-core/scripts/startserv.js ${ARGS}"
+
+  if [ $DAEMON = 1 ]
+  then
+    $COMMAND > /dev/null &
+    PIDFILE=`echo $ROOT_DIR|sed 's/\//\-/g'`
+    PIDFILE="${PIDPATH}/geddy${PIDFILE}.pid"
+    echo "$!" > $PIDFILE
+  else
+    $COMMAND
+  fi
 else
-  export NODE_PATH=${SOURCE_DIR}; node ${SOURCE_DIR}/geddy-core/startserv.js -r `pwd` $@
+  PIDFILE=`echo $ROOT_DIR|sed 's/\//\-/g'`
+  PIDFILE="${PIDPATH}/geddy${PIDFILE}.pid"
+  if [ -s $PIDFILE ]
+    then
+      p=`cat $PIDFILE`
+      >$PIDFILE
+      if [ `kill -SIGINT "${p}"` ]
+      then
+        kill -9 "${p}"
+        exit 1
+      fi
+  fi
 fi
+exit 0

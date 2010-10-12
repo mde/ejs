@@ -71,7 +71,7 @@ var log = new function () {
   
   this.fatal = function (msg) {
     this.flush()
-    sys.puts("\n\nFATAL ERROR:\n\n"+sanitize(msg))
+    sys.puts("\n\nFATAL ERROR:\n\n"+this.sanitize(msg))
     return this; // not that it maters...
   }
   

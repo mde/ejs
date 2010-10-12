@@ -3,6 +3,7 @@ var GEDDY_VERSION = '0.1.0';
 
 global.geddy = require('geddy-core/lib/geddy');
 
+
 var usage = ''
     + 'Geddy web framework for Node.js\n'
     + '********************************************************************************\n'
@@ -18,6 +19,10 @@ var usage = ''
     + '  -r, --geddy-root PATH      Sets directory for Geddy application root\n'
     + '  -V, --version              Outputs Geddy version\n'
     + '  -h, --help                 Outputs help information\n'
+    + '  -x, --server-root PATH     Sets directory for Geddy source, defaults to use path' 
+    + '                             where Geddy installed'
+    + '  -d, --daemon               Start as daemon'
+    + '  --stop                     Stop daemon'
     + '';
 
 var args = process.argv.slice(2),
@@ -78,6 +83,8 @@ else {
 }
 
 args.unshift(serverRoot);
+
+process.chdir(geddy.config.dirname);
 
 log = require('geddy-core/lib/log');
 
@@ -150,15 +157,24 @@ var startServ = function (restart) {
       else {
         process.stdout.write(data);
       }
-    });
-    child.addListener('exit', function (code) {
+    }); 
+    
+    child.addListener('exit', function (code, signal) {    	
+    		process.kill(child.pid);
+    		process.exit();    		
     });
 
     pids.push(child.pid);
-
   }
 
 };
+
+process.on('SIGINT',function(){
+    for (var i = 0, ii = pids.length; i < ii; i++) {
+        process.kill(pids[i]);
+    }
+	process.exit();
+});
 
 var restartServ = function (curr, prev) {
   // Only if the file has been modified
@@ -183,4 +199,5 @@ if (geddy.config.environment == 'development') {
   watchTree(geddy.config.dirname + '/app/controllers', restartServ);
   watchTree(geddy.config.dirname + '/app/models', restartServ);
 }
+
 
