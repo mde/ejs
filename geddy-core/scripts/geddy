@@ -31,7 +31,6 @@ do
   case $1 in
     -r|--geddy-root) 
                   ROOT_DIR=$2                  
-	          ARGS="${ARGS}-r ${2} "
                   shift 2
                   ;; 
     -x|--server-root) 
