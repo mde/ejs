@@ -2,3 +2,5 @@
 .buildpath
 .project
 dist
+.DS_Store
+
