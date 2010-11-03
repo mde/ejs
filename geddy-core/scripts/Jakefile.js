@@ -98,7 +98,6 @@ task('app', [], function (appName) {
 // TODO: Refactor to modularize redundant code with controller task
 desc('');
 task('resource', [], function (nameParam) {
-  var util = {};
   var text, contents;
   var filePath;
   var fleegix = require('../lib/fleegix');
@@ -195,7 +194,6 @@ task('resource', [], function (nameParam) {
 // TODO: Refactor to modularize redundant code with resource task
 desc('');
 task('controller', [], function (nameParam) {
-  var util = {};
   var text, contents;
   var filePath;
   var fleegix = require('../lib/fleegix');
