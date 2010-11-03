@@ -16,11 +16,11 @@
  *
 */
 
-var sys = require('sys');
+var util = require('util');
 
 var Basic = function () {
   this.authenticate =  function(controller, callback) {
-    //sys.puts('basic auth');
+    //util.puts('basic auth');
     callback();
   };
 };

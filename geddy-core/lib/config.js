@@ -16,7 +16,7 @@
  *
 */
 
-var sys = require('sys');
+var util = require('util');
 var geddy = require('geddy-core/lib/geddy');
 
 var Config = function (passedOpts) {

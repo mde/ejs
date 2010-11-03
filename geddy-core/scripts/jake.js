@@ -18,7 +18,7 @@
 
 var JAKE_VERSION = '0.1.0';
 var args = process.argv.slice(2);
-var sys = require('sys');
+var util = require('util');
 
 var parseopts = new function () {
   var optsReg = {
@@ -169,7 +169,7 @@ global.namespace = function (name, tasks) {
 };
 
 if (typeof opts.version != 'undefined') {
-  sys.puts(JAKE_VERSION);
+  util.puts(JAKE_VERSION);
   process.exit();
 }
 

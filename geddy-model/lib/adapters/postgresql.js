@@ -1,4 +1,4 @@
-var sys = require('sys');
+var util = require('util');
 var postgres;
 
 try {
@@ -18,7 +18,7 @@ var conn = postgres.createConnection(
 
 /*
 conn.addListener("connect", function () {
-  sys.puts(conn.readyState);
+  util.puts(conn.readyState);
 });
 */
 

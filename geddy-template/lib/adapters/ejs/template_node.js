@@ -16,7 +16,7 @@
  *
 */
 
-var sys = require('sys'),
+var util = require('util'),
     fs = require('fs'),
     path = require('path'),
     async = require('geddy-util/lib/async');

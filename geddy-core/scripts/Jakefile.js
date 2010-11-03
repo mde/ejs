@@ -15,7 +15,7 @@
  *
 */
 
-var sys = require('sys');
+var util = require('util');
 var child_process = require('child_process');
 var fs = require('fs');
 
@@ -40,7 +40,7 @@ task('default', [], function () {
       'cp -R ./dist/* ~/.node_libraries/'
     ];
     runCmds(cmds, function () {
-      sys.puts('Geddy installed.');
+      util.puts('Geddy installed.');
     });
   });
 });
@@ -61,7 +61,7 @@ task('uninstall', [], function () {
       'rm -fr ~/.node_libraries/geddy*'
     ];
     runCmds(cmds, function () {
-      sys.puts('Geddy uninstalled.');
+      util.puts('Geddy uninstalled.');
     });
   });
 });
@@ -91,7 +91,7 @@ task('app', [], function (appName) {
     , 'cp ~/.node_libraries/geddy-core/scripts/gen/favicon.ico ' + dir + '/public/'
   ];
   runCmds(cmds, function () {
-    sys.puts('Created app ' + dir + '.');
+    util.puts('Created app ' + dir + '.');
   });
 });
 
@@ -129,7 +129,7 @@ task('resource', [], function (nameParam) {
   templ.process({data: {names: names}});
   filePath = './app/models/' + names.filename.singular + '.js';
   fs.writeFileSync(filePath, templ.markup, 'utf8');
-  sys.puts('[ADDED] ' + filePath);
+  util.puts('[ADDED] ' + filePath);
 
   // Controller
   // ----
@@ -140,7 +140,7 @@ task('resource', [], function (nameParam) {
   templ.process({data: {names: names}});
   filePath = './app/controllers/' + names.filename.plural + '.js';
   fs.writeFileSync(filePath, templ.markup, 'utf8');
-  sys.puts('[ADDED] ' + filePath);
+  util.puts('[ADDED] ' + filePath);
 
   // Add the route
   // ----
@@ -152,7 +152,7 @@ task('resource', [], function (nameParam) {
   routerArr[0] += 'router.resource(\'' +  names.filename.plural + '\');\n';
   text = routerArr.join('exports.router');
   fs.writeFileSync(filePath, text, 'utf8');
-  sys.puts('resources ' + names.filename.plural + ' route added to ' + filePath);
+  util.puts('resources ' + names.filename.plural + ' route added to ' + filePath);
 
   // Add inflections map
   // ----
@@ -171,7 +171,7 @@ task('resource', [], function (nameParam) {
   contents += text;
   contents += last;
   fs.writeFileSync('./config/inflections.js', contents, 'utf8');
-  sys.puts('Updated inflections map.');
+  util.puts('Updated inflections map.');
 
   var cmds = [
     'mkdir -p ./app/views/' + names.filename.plural
@@ -188,7 +188,7 @@ task('resource', [], function (nameParam) {
         './app/views/' + names.filename.plural + '/'
   ]
   runCmds(cmds, function () {
-    sys.puts('Created view templates.');
+    util.puts('Created view templates.');
   });
 });
 
@@ -226,7 +226,7 @@ task('controller', [], function (nameParam) {
   templ.process({data: {names: names}});
   filePath = './app/controllers/' + names.filename.plural + '.js';
   fs.writeFileSync(filePath, templ.markup, 'utf8');
-  sys.puts('[ADDED] ' + filePath);
+  util.puts('[ADDED] ' + filePath);
 
   // Add the route
   // ----
@@ -239,7 +239,7 @@ task('controller', [], function (nameParam) {
       '\').to({controller: \'' + names.constructor.plural + '\', action: \'index\'});\n';
   text = routerArr.join('exports.router');
   fs.writeFileSync(filePath, text, 'utf8');
-  sys.puts('bare ' + names.filename.plural + ' route added to ' + filePath);
+  util.puts('bare ' + names.filename.plural + ' route added to ' + filePath);
 
   // Add inflections map
   // ----
@@ -258,7 +258,7 @@ task('controller', [], function (nameParam) {
   contents += text;
   contents += last;
   fs.writeFileSync('./config/inflections.js', contents, 'utf8');
-  sys.puts('Updated inflections map.');
+  util.puts('Updated inflections map.');
 
   var cmds = [
     'mkdir -p ./app/views/' + names.filename.plural
@@ -266,7 +266,7 @@ task('controller', [], function (nameParam) {
         './app/views/' + names.filename.plural + '/'
   ]
   runCmds(cmds, function () {
-    sys.puts('Created view templates.');
+    util.puts('Created view templates.');
   });
 });
 
@@ -309,7 +309,7 @@ task('scaffold', [], function (nameParam) {
           'geddy.model.registerModel(\'' + modelKey + '\');');
       fileName = dirname + '/public/js/models/' + modelFileName + '.js';
       fs.writeFileSync(fileName, text, 'utf8');
-      sys.puts('Created client-side model JavaScript files.');
+      util.puts('Created client-side model JavaScript files.');
 
       text = '<form id="modelItemForm" method="post" action="<%= params.formAction %>"' +
           ' onsubmit="validateSubmit(); return false;">\n';
@@ -403,7 +403,7 @@ task('scaffold', [], function (nameParam) {
       filePath = './app/controllers/' + names.filename.plural + '.js';
       fs.writeFileSync(filePath, templ.markup, 'utf8');
 
-      sys.puts('Created controller and views for ' + nameParam + '.');
+      util.puts('Created controller and views for ' + nameParam + '.');
     });
   };
 
@@ -451,7 +451,7 @@ task('client', [], function (opts) {
       minText += jsmin('', text, 2);
     }
     fs.writeFileSync(target + '/geddy.js', minText, 'utf8')
-    sys.puts('Built ' + target + '/geddy.js');
+    util.puts('Built ' + target + '/geddy.js');
   });
 });
 
@@ -477,7 +477,7 @@ namespace('db', function () {
         appConfig = require(dirname + '/config/environments/' + filename.replace(jsPat, ''));
         dbConfig = appConfig.database;
         if (dbConfig) {
-          sys.puts('Creating DB for ' + filename + '...');
+          util.puts('Creating DB for ' + filename + '...');
           switch (dbConfig.adapter) {
             // Postgres, the DB of many names
             case 'postgresql':
@@ -504,7 +504,7 @@ namespace('db', function () {
               client.request({url: '/' + dbConfig.dbName, method: 'PUT'},
                   function (response) {
                     if (response.statusCode == 412) {
-                      sys.puts('Database already exists.');
+                      util.puts('Database already exists.');
                     }
                   }
               );
@@ -564,7 +564,7 @@ namespace('db', function () {
               client.request({url: '/' + dbConfig.dbName, method: 'DELETE'},
                   function (response) {
                     if (response.statusCode == 404) {
-                      sys.puts('Database does not exist to drop.');
+                      util.puts('Database does not exist to drop.');
                     }
                   }
               );
@@ -591,14 +591,14 @@ var runCmds = function (arr, callback, printStdout) {
   var run = function (cmd) {
     child_process.exec(cmd, function (err, stdout, stderr) {
       if (err) {
-        sys.puts('Error: ' + JSON.stringify(err));
+        util.puts('Error: ' + JSON.stringify(err));
       }
       else if (stderr) {
-        sys.puts('Error: ' + stderr);
+        util.puts('Error: ' + stderr);
       }
       else {
         if (printStdout) {
-          sys.puts(stdout);
+          util.puts(stdout);
         }
         if (arr.length) {
           var next = arr.shift();

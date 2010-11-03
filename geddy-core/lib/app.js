@@ -17,7 +17,7 @@
 */
 
 var http = require('http');
-var sys = require('sys');
+var util = require('util');
 var fs = require('fs');
 
 var errors = require('geddy-core/lib/errors');

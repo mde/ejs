@@ -16,7 +16,7 @@
  *
 */
 
-var sys = require('sys'),
+var util = require('util'),
     EventEmitter = require('events').EventEmitter;
 
 /**
@@ -50,7 +50,7 @@ TemplaterBase.prototype.eventTypes = {
 TemplaterBase.prototype.render = function (data, paths, filename) {
   
   // Do some stuff with the passed-in data
-  var content = sys.inspect(data);
+  var content = util.inspect(data);
 
   // Emit 'data' events whenever there's content to push out to
   // the response

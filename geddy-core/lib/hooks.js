@@ -16,7 +16,7 @@
  *
 */
 
-var sys = require('sys');
+var util = require('util');
 
 var hooks = new function () {
   this.collection = {};

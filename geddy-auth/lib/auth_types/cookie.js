@@ -16,8 +16,6 @@
  *
 */
 
-var sys = require('sys');
-
 var Cookie = function () {
   this.authenticate =  function(controller, callback) {
     // The key to look for in the session to indicate logged-in status

@@ -20,7 +20,7 @@
 global.geddy = require('geddy-core/lib/geddy');
 
 // Bare min for reporting errors on startup
-var sys = require('sys');
+var util = require('util');
 
 // Start grabbing errors first thing -- we need to be able
 // to report the entire stack, not just what the child process
@@ -98,7 +98,7 @@ var runServ = function () {
     if (geddy.config.environment == 'development') {
       msg += ' (development mode)'
     }
-    sys.puts(msg);
+    util.puts(msg);
   }
 };
 

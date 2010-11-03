@@ -17,7 +17,7 @@
 */
 
 var fs = require('fs');
-var sys = require('sys');
+var util = require('util');
 var child_process = require('child_process');
 
 var session = require('geddy-core/lib/session');
@@ -47,7 +47,7 @@ var Init = function (config, callback) {
 
   this.registerControllers = function (err, dirList) {
     if (err) {
-      sys.puts('Error: ' + JSON.stringify(err));
+      util.puts('Error: ' + JSON.stringify(err));
     }
     else {
       geddy.controllerRegistry =
@@ -57,10 +57,10 @@ var Init = function (config, callback) {
 
   this.registerTemplates = function (err, stdin, stderr) {
     if (err) {
-      sys.puts('Error: ' + JSON.stringify(err));
+      util.puts('Error: ' + JSON.stringify(err));
     }
     else if (stderr) {
-      sys.puts('Error: ' + stderr);
+      util.puts('Error: ' + stderr);
     }
     else {
       var templates = {};
