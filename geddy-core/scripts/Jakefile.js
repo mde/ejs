@@ -265,7 +265,7 @@ task('controller', [], function (nameParam) {
     , 'cp ~/.node_libraries/geddy-core/scripts/gen/views/index.html.ejs ' +
         './app/views/' + names.filename.plural + '/'
     , 'mkdir -p ./app/views/layouts'
-    , 'rsync -u ~/.node_libraries/geddy-core/scripts/gen/views/layout.html.ejs ' +
+    , 'cp ~/.node_libraries/geddy-core/scripts/gen/views/layout.html.ejs ' +
     	'./app/views/layouts/application.html.ejs'    
   ]
   runCmds(cmds, function () {
