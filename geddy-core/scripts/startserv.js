@@ -19,7 +19,7 @@ var usage = ''
     + '  -r, --geddy-root PATH      Sets directory for Geddy application root\n'
     + '  -V, --version              Outputs Geddy version\n'
     + '  -h, --help                 Outputs help information\n'
-    + '  -x, --server-root PATH     Sets directory for Geddy source, defaults to use path' 
+    + '  -x, --server-root PATH     Sets directory for Geddy source, defaults to use path'
     + '                             where Geddy installed'
     + '  -d, --daemon               Start as daemon'
     + '  --stop                     Stop daemon'
@@ -31,7 +31,7 @@ var args = process.argv.slice(2),
     cmds = parsed.cmds,
     opts = parsed.opts,
     child,
-    opts, 
+    opts,
     log,
     fs = require("fs"),
     spawn = require("child_process").spawn,
@@ -107,7 +107,7 @@ var watchTree = function (path, func) {
           watchTree(path + '/' + files[f], func);
         }
       });
-    } 
+    }
   })
 };
 
@@ -120,7 +120,7 @@ var startServ = function (restart) {
   var workerCount = opts.workers || geddy.config.workers;
 
   pids = [];
- 
+
   for (var i = 0, ii = workerCount; i < ii; i++) {
 
     // Create an unnamed unix socket to pass the fd to the child
@@ -143,7 +143,7 @@ var startServ = function (restart) {
     // Pass a dummy config and fd via the child's stdin
     // TODO: pass config here
     child.stdin.write(JSON.stringify({}), 'ascii', fd);
-                
+
     child.stdout.addListener('data', function (d) {
       process.stdout.write(d);
     });
@@ -157,11 +157,11 @@ var startServ = function (restart) {
       else {
         process.stdout.write(data);
       }
-    }); 
-    
-    child.addListener('exit', function (code, signal) {    	
+    });
+
+    child.addListener('exit', function (code, signal) {
     		process.kill(child.pid);
-    		process.exit();    		
+    		process.exit();
     });
 
     pids.push(child.pid);
