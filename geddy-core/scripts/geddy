@@ -21,7 +21,7 @@ ROOT_DIR=`pwd`
 DAEMON=0
 COMMAND=
 ARGS=
-PIDPATH=$HOME
+PIDPATH='./log'
 PIDFILE=
 ACTION="start"
 
@@ -73,15 +73,14 @@ then
   if [ $DAEMON = 1 ]
   then
     $COMMAND > /dev/null &
-    PIDFILE=`echo $ROOT_DIR|sed 's/\//\-/g'`
-    PIDFILE="${PIDPATH}/geddy${PIDFILE}.pid"
+    PIDFILE="${PIDPATH}/geddy.pid"
     echo "$!" > $PIDFILE
   else
     $COMMAND
   fi
 else
   PIDFILE=`echo $ROOT_DIR|sed 's/\//\-/g'`
-  PIDFILE="${PIDPATH}/geddy${PIDFILE}.pid"
+  PIDFILE="${PIDPATH}/geddy.pid"
   if [ -s $PIDFILE ]
     then
       p=`cat $PIDFILE`

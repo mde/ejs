@@ -80,6 +80,7 @@ task('app', [], function (appName) {
     , 'mkdir -p ./' + dir + '/public/js'
     , 'mkdir -p ./' + dir + '/public/css'
     , 'mkdir -p ./' + dir + '/lib'
+    , 'mkdir -p ./' + dir + '/log'
     , 'cp ~/.node_libraries/geddy-core/scripts/gen/router.js ' + dir + '/config/'
     , 'cp ~/.node_libraries/geddy-core/scripts/gen/init.js ' + dir + '/config/'
     , 'cp ~/.node_libraries/geddy-core/scripts/gen/development.js ' + dir + '/config/environments/'
