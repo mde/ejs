@@ -160,8 +160,7 @@ var startServ = function (restart) {
     });
 
     child.addListener('exit', function (code, signal) {
-    		process.kill(child.pid);
-    		process.exit();
+      process.exit();
     });
 
     pids.push(child.pid);
@@ -170,9 +169,13 @@ var startServ = function (restart) {
 };
 
 process.on('SIGINT',function(){
-    for (var i = 0, ii = pids.length; i < ii; i++) {
-        process.kill(pids[i]);
+  for (var i = 0, ii = pids.length; i < ii; i++) {
+    try {
+      process.kill(pids[i]);
     }
+    // Don't complain if children no longer exist
+    catch (e) {}
+  }
 	process.exit();
 });
 
