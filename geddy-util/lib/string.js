@@ -24,6 +24,7 @@ geddy.util.string = new function () {
   var _LTR = /^\s+/;
   var _RTR = /\s+$/;
   var _TR = /^\s+|\s+$/g;
+  var _NL = /\n|\r|\r\n/g;
   // From/to char mappings -- for the XML escape,
   // unescape, and test for escapable chars
   var _CHARS = {
@@ -119,6 +120,10 @@ geddy.util.string = new function () {
     return s;
   };
 
+  this.nl2br = function (str) {
+	  return str.replace(_NL,'<br />');
+  } 
+  
   // Converts someVariableName to some_variable_name
   this.decamelize = function (s) {
     return s.replace(/([A-Z]+)/g, '_$1').toLowerCase().
