@@ -446,6 +446,7 @@ task('client', [], function (opts) {
   jsmin = require(dirname + '/geddy-core/scripts/fulljsmin').jsmin;
   text = fs.readFileSync(dirname + '/geddy-model/lib/model.js', 'utf8').toString();
   minText += jsmin('', text, 2);
+  //minText += text;
   path = dirname + '/geddy-util/lib';
   fs.readdir(path, function (err, res) {
     if (err) { throw(err); }
@@ -453,6 +454,7 @@ task('client', [], function (opts) {
       filename = res[i];
       text = fs.readFileSync(path + '/' + filename, 'utf8').toString();
       minText += jsmin('', text, 2);
+      //minText += text;
     }
     fs.writeFileSync(target + '/geddy.js', minText, 'utf8')
     sys.puts('Built ' + target + '/geddy.js');

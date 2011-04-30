@@ -45,14 +45,15 @@ geddy.model.registerModel('User');
 */
 
 if (typeof geddy == 'undefined') { geddy = {}; }
-var _log; 
 
 geddy.model = new function () {
   
   this.dbAdapter = null;
   this.modelRegistry = {};
   this.useTimestamps = true;
+  this.reg = null;
   
+  var _log = function () {};
   // Client-side or embedded V8
   if (typeof window != 'undefined') {
     // Create global ref for top-level execution scope
@@ -60,14 +61,16 @@ geddy.model = new function () {
     this.useTimestamps = false;
     // Janky logging crap
     // Faux client-side env for embedded V8
-    if (typeof _logString != 'undefined') {
+    if (typeof console == 'undefined' && typeof _logString != 'undefined') {
       _log = function (s) {
         _logString += s + '\n';
       }
     }
     // An actual browser
     else if (typeof console != 'undefined' && typeof console.log == 'function') {
-      _log = console.log;
+      _log = function () {
+        console.log.apply(console, arguments);
+      }
     }
   }
   // Server-side
@@ -75,8 +78,8 @@ geddy.model = new function () {
     sys = require('sys');
     _log = sys.puts;
   }
-  
-  var _constructorList = global;
+
+  this.reg = global;
 
   var _createModelItemConstructor = function (def) {
 
@@ -282,15 +285,14 @@ geddy.model = new function () {
     else {
       // Introspect the list of constructors from app/models/*
       var initList = geddy.util.meta.registerConstructors('/app/models/', dirList);
-      _constructorList = initList;
-      for (var p in _constructorList) {
+      for (var p in initList) {
         geddy.model.registerModel(p);
       }
     }
   };
 
   this.registerModel = function (p) {
-    var ModelItemDefinition = _constructorList[p];
+    var ModelItemDefinition = this.reg[p];
     // Ref to any original prototype, so we can copy stuff off it
     var origPrototype = ModelItemDefinition.prototype;
     geddy.model.modelRegistry[p] = new geddy.model.Model(p);
@@ -321,11 +323,11 @@ geddy.model = new function () {
     ModelItem.prototype = origPrototype;
     
     // Create a globally scoped constructor name
-    global[p] = ModelItem;
+    this.reg[p] = ModelItem;
   };
 
   this.createItem = function (typeName, params) {
-    var item = new global[typeName](params);
+    var item = new this.reg[typeName](params);
     item = this.validateAndUpdateFromParams(item, params);
 
     if (this.useTimestamps && !item.createdAt) {
@@ -815,6 +817,29 @@ geddy.model.ModelItemDefinitionBase = function (name) {
   }
 
 };
+
+geddy.model.stubDBAdapter = new (function () {
+  this.virtualPropertyDatatypes = {
+    'Object': {
+      methods: ['merge', 'fetch', 'all', 'count', 'remove', 'total']
+    },
+    'Number': {
+      methods: ['increment', 'decrement', 'value']
+    },
+    'String': {
+      methods: ['value']
+    }
+  };
+  this.virtual = function (modelItem, virtualPropertyName, methodName, args) {
+    var argsArray = Array.prototype.slice.call(args);
+    argsArray.unshift(virtualPropertyName);
+    return this[methodName].apply(this, argsArray);
+  };
+
+  this.save = function (data, callback) {
+    return data;
+  };
+})();
 
 // Server-side, add everything to exports
 if (typeof module != 'undefined') { module.exports = geddy.model; }
