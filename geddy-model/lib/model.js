@@ -286,12 +286,19 @@ geddy.model = new function () {
       // Introspect the list of constructors from app/models/*
       var initList = geddy.util.meta.registerConstructors('/app/models/', dirList);
       for (var p in initList) {
+
+        // ---
+        // TODO: Not this
+        // ---
+        global[p] = initList[p];
+
         geddy.model.registerModel(p);
       }
     }
   };
 
   this.registerModel = function (p) {
+    console.log(this.reg[p]);
     var ModelItemDefinition = this.reg[p];
     // Ref to any original prototype, so we can copy stuff off it
     var origPrototype = ModelItemDefinition.prototype;

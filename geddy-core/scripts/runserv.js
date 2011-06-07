@@ -38,12 +38,14 @@ process.addListener('uncaughtException', function (err) {
   // the entire stack, then send the parent process the
   // signal to shut down
   else {
-    var msg = '';
-    msg += 'Error starting up application.\n';
-    msg += err.stack ? err.stack.toString() : '';
-    console.warn(msg);
+    var msg = 'Error starting up application.\n';
+    console.error(msg);
+    console.error(err.message);
+    console.error(err.stack);
     // Die
-    console.warn('###shutdown###');
+    setTimeout(function () {
+      console.warn('###shutdown###');
+    }, 100);
   }
 });
 
