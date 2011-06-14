@@ -135,10 +135,6 @@ var adapter = new function () {
   };
 
   var _buildItems = function (resp, params) {
-    console.log("resp:");
-    console.log(resp);
-    console.log("params:");
-    console.log(params);
     var body = JSON.parse(resp.body);
     var rows = body.rows;
     var data, parsed, resp = [];
