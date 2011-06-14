@@ -40,6 +40,7 @@ couchdb.Client.prototype = new function () {
     headers = {host: this.hostname};
     if (req.data) {
       headers['content-length'] = req.data.length;
+      headers['content-type'] = 'application/json';
     }
     
     request = this.client.request(req.method, req.url, headers);
