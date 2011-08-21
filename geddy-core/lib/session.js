@@ -16,7 +16,7 @@
  *
 */
 
-var sys = require('sys');
+var util = require('util');
 
 var session = new function () {
   var KEY_LENGTH = 32;

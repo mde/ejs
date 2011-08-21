@@ -30,7 +30,6 @@ do
   case $1 in
     -r|--geddy-root) 
                   ROOT_DIR=$2                  
-	          ARGS="${ARGS}-r ${2} "
                   shift 2
                   ;; 
     -x|--server-root) 
@@ -79,7 +78,6 @@ then
     $COMMAND
   fi
 else
-  PIDFILE=`echo $ROOT_DIR|sed 's/\//\-/g'`
   PIDFILE="${PIDPATH}/geddy.pid"
   if [ -s $PIDFILE ]
     then

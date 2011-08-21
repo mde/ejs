@@ -17,7 +17,7 @@
 */
 
 var fs = require('fs');
-var sys = require('sys');
+var util = require('util');
 var fleegix = require('./fleegix');
 var errors = require('geddy-core/lib/errors');
 var log = require('geddy-core/lib/log');

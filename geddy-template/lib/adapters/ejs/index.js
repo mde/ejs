@@ -16,7 +16,7 @@
  *
 */
 
-var sys = require('sys'),
+var util = require('util'),
     errors = require('geddy-core/lib/errors'),
     TemplaterBase = require('../../templater_base').TemplaterBase;
     EventEmitter = require('events').EventEmitter,

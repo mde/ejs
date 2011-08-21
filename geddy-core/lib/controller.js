@@ -15,7 +15,7 @@
  * limitations under the License.
  *
 */
-var sys = require('sys');
+var util = require('util');
 var fs = require('fs');
 
 var errors = require('geddy-core/lib/errors');
@@ -56,9 +56,11 @@ var Controller = function (obj) {
   // The template root to look in for partials when rendering templates
   // Gets created programmatically based on controller name -- see renderTemplate
   this.template = undefined;
+  // Should the layout be rendered
+  this.layout = true;
   // The template layout directory to look in when rendering templates
-  // Gets created programmatically based on controller name -- see renderTemplate
-  this.layout = undefined;  
+  // Gets created programmatically based on controller name -- see renderTemplate  
+  this.layoutpath = undefined;  
   // This will be used for 'before' actions for plugins
   this.beforeFilters = [];
   // This will be used for 'after' actions for plugins
@@ -347,9 +349,11 @@ Controller.prototype = new function () {
     this.template = this.template || 
     	'app/views/' + geddy.inflections[this.name].filename.plural + '/' + this.params.action;
 
-    // Calculate the layout if not set
-    this.layout = this.layout || 
-    	'app/views/layouts/' + geddy.inflections[this.name].filename.plural;
+    if (this.layout) {
+	    // Calculate the layout if not set
+	    this.layoutpath = this.layoutpath || 
+	    	'app/views/layouts/' + geddy.inflections[this.name].filename.plural;
+    }
     
     var templater = new Templater();
     var content = '';
@@ -364,7 +368,7 @@ Controller.prototype = new function () {
     });
 
     templater.render(data, {
-      layout: this.layout
+      layout: this.layoutpath
     , template: this.template
     , controller: this.name
     , action: this.params.action

@@ -128,8 +128,9 @@ var startServ = function (restart) {
     var fds = netBinding.socketpair();
 
     // Spawn the child process
+   // TODO: find the dynmaic place of node bin
     var child = spawn(
-      'node',
+      '/usr/local/bin/node',
       passArgs, // TODO: pass these via stdin
       undefined,
       [fds[1], -1, -1]

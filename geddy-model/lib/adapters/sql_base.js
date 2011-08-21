@@ -1,4 +1,4 @@
-var sys = require('sys');
+var util = require('util');
 
 var SQLBaseAdapter = function (conn) {
   var _rows;

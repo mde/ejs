@@ -75,8 +75,8 @@ geddy.model = new function () {
   }
   // Server-side
   else {
-    sys = require('sys');
-    _log = sys.puts;
+    util = require('util');
+    _log = util.puts;
   }
 
   this.reg = global;

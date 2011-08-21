@@ -16,7 +16,7 @@
  *
 */
 
-var sys = require('sys');
+var util = require('util');
 
 // "stream" is a writable IO handle
 //    ex: 
@@ -71,7 +71,7 @@ var log = new function () {
   
   this.fatal = function (msg) {
     this.flush()
-    sys.puts("\n\nFATAL ERROR:\n\n"+this.sanitize(msg))
+    util.puts("\n\nFATAL ERROR:\n\n"+this.sanitize(msg))
     return this; // not that it maters...
   }
   
@@ -81,17 +81,17 @@ var log = new function () {
       file = geddy.config.logFile;
       path = geddy.config.dirname + '/' + file
 
-      sys.log(msgs.join("\n"));
+      util.log(msgs.join("\n"));
 
       if (file) {
         var fs = require('fs')
         fs.open(path,'a+', 0666, function(err,fd){
-          if (err) return sys.puts(sys.inspect(err));
+          if (err) return util.puts(util.inspect(err));
           fs.write(fd,"\n\n" + (new Date().toString()) + " - " +
               msgs.join("\n"), null, 'utf8', function(err,data) {
             msgs = [];
             fs.close(fd);
-            if (err) return sys.puts(sys.inspect(err));
+            if (err) return util.puts(util.inspect(err));
           })
         })
       }else{ // other must wait to delete the msgs
@@ -103,7 +103,7 @@ var log = new function () {
   
   // helper methods
   this.sanitize = function(msg){
-    if (typeof(msg)!='string') return sys.inspect(msg);
+    if (typeof(msg)!='string') return util.inspect(msg);
     return msg;
   }
 

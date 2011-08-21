@@ -16,7 +16,7 @@
  *
 */
 var response = require('geddy-core/lib/response');
-var sys = require('sys');
+var util = require('util');
 
 var errors = new function () {
   
