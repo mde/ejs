@@ -1,0 +1,557 @@
+<html><head><meta http-equiv="content-type" content="text/html; charset=utf-8"> <style>
+	.KEYW {color: #933;}
+	.COMM {color: #bbb; font-style: italic;}
+	.NUMB {color: #393;}
+	.STRN {color: #393;}
+	.REGX {color: #339;}
+	.line {border-right: 1px dotted #666; color: #666; font-style: normal;}
+	</style></head><body><pre><span class='line'>  1</span> <span class="COMM">/*
+<span class='line'>  2</span>  * Geddy JavaScript Web development framework
+<span class='line'>  3</span>  * Copyright 2112 Matthew Eernisse (mde@fleegix.org)
+<span class='line'>  4</span>  *
+<span class='line'>  5</span>  * Licensed under the Apache License, Version 2.0 (the "License");
+<span class='line'>  6</span>  * you may not use this file except in compliance with the License.
+<span class='line'>  7</span>  * You may obtain a copy of the License at
+<span class='line'>  8</span>  *
+<span class='line'>  9</span>  *         http://www.apache.org/licenses/LICENSE-2.0
+<span class='line'> 10</span>  *
+<span class='line'> 11</span>  * Unless required by applicable law or agreed to in writing, software
+<span class='line'> 12</span>  * distributed under the License is distributed on an "AS IS" BASIS,
+<span class='line'> 13</span>  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+<span class='line'> 14</span>  * See the License for the specific language governing permissions and
+<span class='line'> 15</span>  * limitations under the License.
+<span class='line'> 16</span>  *
+<span class='line'> 17</span> */</span><span class="WHIT">
+<span class='line'> 18</span> </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">fs</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">require</span><span class="PUNC">(</span><span class="STRN">'fs'</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'> 19</span> </span><span class="WHIT">  </span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">errors</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">require</span><span class="PUNC">(</span><span class="STRN">'./errors'</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'> 20</span> </span><span class="WHIT">  </span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">response</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">require</span><span class="PUNC">(</span><span class="STRN">'./response'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 21</span> </span><span class="COMM">//var Templater = require('geddy-template/lib/adapters/ejs').Templater</span><span class="WHIT">
+<span class='line'> 22</span> 
+<span class='line'> 23</span> </span><span class="COMM">/**
+<span class='line'> 24</span>    @name BaseController
+<span class='line'> 25</span>    @constructor
+<span class='line'> 26</span>  */</span><span class="WHIT">
+<span class='line'> 27</span> </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">BaseController</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 28</span> </span><span class="WHIT">  </span><span class="COMM">/**
+<span class='line'> 29</span>     @name BaseController#request
+<span class='line'> 30</span>     @public
+<span class='line'> 31</span>     @type http.ServerRequest
+<span class='line'> 32</span>     @description The raw http.ServerRequest object for this request/response
+<span class='line'> 33</span>     cycle.
+<span class='line'> 34</span>    */</span><span class="WHIT">
+<span class='line'> 35</span> </span><span class="WHIT">  </span><span class="NAME">this.request</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 36</span> </span><span class="WHIT">  </span><span class="COMM">/**
+<span class='line'> 37</span>     @name BaseController#response
+<span class='line'> 38</span>     @public
+<span class='line'> 39</span>     @type http.ServerResponse
+<span class='line'> 40</span>     @description The raw http.ServerResponse object for this request/response
+<span class='line'> 41</span>     cycle.
+<span class='line'> 42</span>    */</span><span class="WHIT">
+<span class='line'> 43</span> </span><span class="WHIT">  </span><span class="NAME">this.response</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 44</span> </span><span class="WHIT">  </span><span class="COMM">/**
+<span class='line'> 45</span>     @name BaseController#params
+<span class='line'> 46</span>     @public
+<span class='line'> 47</span>     @type Object
+<span class='line'> 48</span>     @description The parsed params for the request. Also passed as an arg
+<span class='line'> 49</span>     to the action, added as an instance field for convenience.
+<span class='line'> 50</span>    */</span><span class="WHIT">
+<span class='line'> 51</span> </span><span class="WHIT">  </span><span class="NAME">this.params</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 52</span> </span><span class="WHIT">  </span><span class="COMM">/**
+<span class='line'> 53</span>     @name BaseController#cookies
+<span class='line'> 54</span>     @public
+<span class='line'> 55</span>     @type Object
+<span class='line'> 56</span>     @description Cookies collection for the request
+<span class='line'> 57</span>    */</span><span class="WHIT">
+<span class='line'> 58</span> </span><span class="WHIT">  </span><span class="NAME">this.cookies</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 59</span> </span><span class="WHIT">  </span><span class="COMM">/**
+<span class='line'> 60</span>     @name BaseController#name
+<span class='line'> 61</span>     @public
+<span class='line'> 62</span>     @type String
+<span class='line'> 63</span>     @description The name of the controller constructor function,
+<span class='line'> 64</span>     in CamelCase with uppercase initial letter.
+<span class='line'> 65</span>    */</span><span class="WHIT">
+<span class='line'> 66</span> </span><span class="WHIT">  </span><span class="NAME">this.name</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 67</span> </span><span class="WHIT">  </span><span class="COMM">/**
+<span class='line'> 68</span>     @name BaseController#respondsWith
+<span class='line'> 69</span>     @public
+<span class='line'> 70</span>     @type Array
+<span class='line'> 71</span>     @description Content-type the controller can respond with.
+<span class='line'> 72</span>     @default ['txt']
+<span class='line'> 73</span>    */</span><span class="WHIT">
+<span class='line'> 74</span> </span><span class="WHIT">  </span><span class="NAME">this.respondsWith</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="STRN">'txt'</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 75</span> </span><span class="WHIT">  </span><span class="COMM">/**
+<span class='line'> 76</span>     @name BaseController#content
+<span class='line'> 77</span>     @public
+<span class='line'> 78</span>     @type {Object|String}
+<span class='line'> 79</span>     @description Content to use for the response.
+<span class='line'> 80</span>    */</span><span class="WHIT">
+<span class='line'> 81</span> </span><span class="WHIT">  </span><span class="NAME">this.content</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="STRN">''</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 82</span> </span><span class="WHIT">  </span><span class="COMM">/**
+<span class='line'> 83</span>     @name BaseController#format
+<span class='line'> 84</span>     @public
+<span class='line'> 85</span>     @type {String}
+<span class='line'> 86</span>     @description Determined by what format the client requests, and if the
+<span class='line'> 87</span>     controller/action supports it. Built-in formats can be found in the static
+<span class='line'> 88</span>     BaseController.formats
+<span class='line'> 89</span>    */</span><span class="WHIT">
+<span class='line'> 90</span> </span><span class="WHIT">  </span><span class="NAME">this.format</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="STRN">''</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 91</span> </span><span class="WHIT">  </span><span class="COMM">/**
+<span class='line'> 92</span>     @name BaseController#contentType
+<span class='line'> 93</span>     @public
+<span class='line'> 94</span>     @type {String}
+<span class='line'> 95</span>     @description Content-type of the response -- a result of the
+<span class='line'> 96</span>     content-negotiation process. Determined by the format, and by what
+<span class='line'> 97</span>     content-types the client accepts.
+<span class='line'> 98</span>    */</span><span class="WHIT">
+<span class='line'> 99</span> </span><span class="WHIT">  </span><span class="NAME">this.contentType</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="STRN">''</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>100</span> </span><span class="WHIT">  </span><span class="COMM">/**
+<span class='line'>101</span>     @name BaseController#beforeFilters
+<span class='line'>102</span>     @public
+<span class='line'>103</span>     @type {Array}
+<span class='line'>104</span>     @description Actions to be performed before rendering a repsonse.
+<span class='line'>105</span>    */</span><span class="WHIT">
+<span class='line'>106</span> </span><span class="WHIT">  </span><span class="NAME">this.beforeFilters</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>107</span> </span><span class="WHIT">  </span><span class="COMM">/**
+<span class='line'>108</span>     @name BaseController#afterFilters
+<span class='line'>109</span>     @public
+<span class='line'>110</span>     @type {Array}
+<span class='line'>111</span>     @description Actions to be performed after rendering a repsonse.
+<span class='line'>112</span>    */</span><span class="WHIT">
+<span class='line'>113</span> </span><span class="WHIT">  </span><span class="NAME">this.afterFilters</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>114</span> 
+<span class='line'>115</span> </span><span class="WHIT">  </span><span class="COMM">/*
+<span class='line'>116</span>   // The template root to look in for partials when rendering templates
+<span class='line'>117</span>   // Gets created programmatically based on controller name -- see renderTemplate
+<span class='line'>118</span>   this.template = undefined;
+<span class='line'>119</span>   // Should the layout be rendered
+<span class='line'>120</span>   this.layout = true;
+<span class='line'>121</span>   // The template layout directory to look in when rendering templates
+<span class='line'>122</span>   // Gets created programmatically based on controller name -- see renderTemplate
+<span class='line'>123</span>   this.layoutpath = undefined;
+<span class='line'>124</span>   */</span><span class="WHIT">
+<span class='line'>125</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>126</span> 
+<span class='line'>127</span> </span><span class="COMM">/**
+<span class='line'>128</span>   @name BaseController.formats
+<span class='line'>129</span>   @static
+<span class='line'>130</span>   @enum
+<span class='line'>131</span>   @description High-level set of options which can represent multiple
+<span class='line'>132</span>   content-types.
+<span class='line'>133</span>  */</span><span class="WHIT">
+<span class='line'>134</span> </span><span class="NAME">BaseController.formats</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>135</span> </span><span class="WHIT">  </span><span class="NAME">TXT</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">'txt'</span><span class="WHIT">
+<span class='line'>136</span> </span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">JSON</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">'json'</span><span class="WHIT">
+<span class='line'>137</span> </span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">JSON</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">'xml'</span><span class="WHIT">
+<span class='line'>138</span> </span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">HTML</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">'html'</span><span class="WHIT">
+<span class='line'>139</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>140</span> 
+<span class='line'>141</span> </span><span class="COMM">/**
+<span class='line'>142</span>   @name BaseController.formatters
+<span class='line'>143</span>   @static
+<span class='line'>144</span>   @namespace
+<span class='line'>145</span>   @description Contains the static methods for returning data in a specific
+<span class='line'>146</span>   format.
+<span class='line'>147</span>  */</span><span class="WHIT">
+<span class='line'>148</span> </span><span class="NAME">BaseController.formatters</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>149</span> 
+<span class='line'>150</span> </span><span class="WHIT">  </span><span class="COMM">/**
+<span class='line'>151</span>     @name BaseController.formatters.json
+<span class='line'>152</span>     @static
+<span class='line'>153</span>     @function
+<span class='line'>154</span>     @description JSON-formats an object, by looking for toJson/toJSON methds
+<span class='line'>155</span>     defined on it, and then falling back to JSON.stringify.
+<span class='line'>156</span>    */</span><span class="WHIT">
+<span class='line'>157</span> </span><span class="WHIT">  </span><span class="NAME">this.json</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">content</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>158</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">toJson</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">content.toJson</span><span class="WHIT"> </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="NAME">content.toJSON</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>159</span> </span><span class="WHIT">    </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="KEYW">typeof</span><span class="WHIT"> </span><span class="NAME">toJson</span><span class="WHIT"> </span><span class="PUNC">==</span><span class="WHIT"> </span><span class="STRN">'function'</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>160</span> </span><span class="WHIT">      </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">toJson.call</span><span class="PUNC">(</span><span class="NAME">content</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>161</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>162</span> </span><span class="WHIT">    </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">JSON.stringify</span><span class="PUNC">(</span><span class="NAME">content</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>163</span> </span><span class="WHIT">  </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>164</span> </span><span class="WHIT">  </span><span class="COMM">/**
+<span class='line'>165</span>     @name BaseController.formatters.js
+<span class='line'>166</span>     @static
+<span class='line'>167</span>     @function
+<span class='line'>168</span>     @description Formats an object as JSONP, by looking for toJson/toJSON methds
+<span class='line'>169</span>     defined on it, and then falling back to JSON.stringify, and wrapping it in a
+<span class='line'>170</span>     callback.
+<span class='line'>171</span>    */</span><span class="WHIT">
+<span class='line'>172</span> </span><span class="WHIT">  </span><span class="NAME">this.js</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">content</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">controller</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>173</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">params</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">controller.params</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>174</span> </span><span class="WHIT">    </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">!</span><span class="NAME">params.callback</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>175</span> </span><span class="WHIT">      </span><span class="NAME">err</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">errors.InternalServerError</span><span class="PUNC">(</span><span class="STRN">'JSONP callback not defined.'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>176</span> </span><span class="WHIT">      </span><span class="NAME">controller.error</span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>177</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>178</span> </span><span class="WHIT">    </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">params.callback</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="STRN">'('</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NAME">JSON.stringify</span><span class="PUNC">(</span><span class="NAME">content</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="STRN">');'</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>179</span> </span><span class="WHIT">  </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>180</span> </span><span class="WHIT">  </span><span class="COMM">/**
+<span class='line'>181</span>     @name BaseController.formatters.txt
+<span class='line'>182</span>     @static
+<span class='line'>183</span>     @function
+<span class='line'>184</span>     @description Formats an object as plaintext, by looking for a toString
+<span class='line'>185</span>     defined on it, and then falling back to JSON.stringify.
+<span class='line'>186</span>    */</span><span class="WHIT">
+<span class='line'>187</span> </span><span class="WHIT">  </span><span class="NAME">this.txt</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">content</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>188</span> </span><span class="WHIT">    </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="KEYW">typeof</span><span class="WHIT"> </span><span class="NAME">content.toString</span><span class="WHIT"> </span><span class="PUNC">==</span><span class="WHIT"> </span><span class="STRN">'function'</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>189</span> </span><span class="WHIT">      </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">content.toString</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>190</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>191</span> </span><span class="WHIT">    </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">JSON.stringify</span><span class="PUNC">(</span><span class="NAME">content</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>192</span> </span><span class="WHIT">  </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>193</span> 
+<span class='line'>194</span> </span><span class="WHIT">  </span><span class="COMM">/**
+<span class='line'>195</span>     @name BaseController.formatters.html
+<span class='line'>196</span>     @static
+<span class='line'>197</span>     @function
+<span class='line'>198</span>     @description Renders a template with the data-object as its params.
+<span class='line'>199</span>    */</span><span class="WHIT">
+<span class='line'>200</span> </span><span class="WHIT">  </span><span class="NAME">this.html</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">content</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">controller</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>201</span> </span><span class="WHIT">    </span><span class="NAME">controller.renderTemplate</span><span class="PUNC">(</span><span class="NAME">data</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>202</span> </span><span class="WHIT">  </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>203</span> </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>204</span> 
+<span class='line'>205</span> </span><span class="NAME">BaseController.prototype</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>206</span> 
+<span class='line'>207</span> </span><span class="WHIT">  </span><span class="COMM">// Private methods, utility methods</span><span class="WHIT">
+<span class='line'>208</span> </span><span class="WHIT">  </span><span class="COMM">// -------------------</span><span class="WHIT">
+<span class='line'>209</span> </span><span class="WHIT">  </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">_addFilter</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">phase</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">filter</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">opts</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>210</span> </span><span class="WHIT">        </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">obj</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="NAME">name</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">filter</span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>211</span> </span><span class="WHIT">        </span><span class="NAME">obj.except</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">opts.except</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>212</span> </span><span class="WHIT">        </span><span class="NAME">obj.only</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">opts.only</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>213</span> </span><span class="WHIT">        </span><span class="KEYW">this</span><span class="PUNC">[</span><span class="NAME">phase</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="STRN">'Filters'</span><span class="PUNC">]</span><span class="PUNC">.</span><span class="NAME">push</span><span class="PUNC">(</span><span class="NAME">obj</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>214</span> </span><span class="WHIT">      </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>215</span> 
+<span class='line'>216</span> </span><span class="WHIT">    </span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">_execFilters</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">action</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">phase</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">callback</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>217</span> </span><span class="WHIT">        </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">_this</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>218</span> </span><span class="WHIT">        </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">filters</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">[</span><span class="NAME">phase</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="STRN">'Filters'</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>219</span> </span><span class="WHIT">        </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">filter</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>220</span> </span><span class="WHIT">        </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">name</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>221</span> </span><span class="WHIT">        </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">hook</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>222</span> </span><span class="WHIT">        </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">list</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>223</span> </span><span class="WHIT">        </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">applyFilter</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>224</span> </span><span class="WHIT">        </span><span class="KEYW">for</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">i</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="NAME">i</span><span class="WHIT"> </span><span class="PUNC">&lt;</span><span class="WHIT"> </span><span class="NAME">filters.length</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="NAME">i</span><span class="PUNC">++</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>225</span> </span><span class="WHIT">          </span><span class="NAME">filter</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">filters</span><span class="PUNC">[</span><span class="NAME">i</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>226</span> </span><span class="WHIT">          </span><span class="NAME">applyFilter</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">true</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>227</span> </span><span class="WHIT">          </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">filter.only</span><span class="WHIT"> </span><span class="PUNC">&&</span><span class="WHIT"> </span><span class="NAME">filter.only</span><span class="WHIT"> </span><span class="PUNC">!=</span><span class="WHIT"> </span><span class="NAME">action</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>228</span> </span><span class="WHIT">            </span><span class="NAME">applyFilter</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>229</span> </span><span class="WHIT">          </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>230</span> </span><span class="WHIT">          </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">filter.except</span><span class="WHIT"> </span><span class="PUNC">&&</span><span class="WHIT"> </span><span class="NAME">filter.except</span><span class="WHIT"> </span><span class="PUNC">==</span><span class="WHIT"> </span><span class="NAME">action</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>231</span> </span><span class="WHIT">            </span><span class="NAME">applyFilter</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>232</span> </span><span class="WHIT">          </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>233</span> </span><span class="WHIT">          </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">applyFilter</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>234</span> </span><span class="WHIT">            </span><span class="NAME">name</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">filter.name</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>235</span> </span><span class="WHIT">            </span><span class="NAME">hook</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">geddy.hooks.collection</span><span class="PUNC">[</span><span class="NAME">name</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>236</span> </span><span class="WHIT">            </span><span class="NAME">hook.args</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="NAME">_this</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>237</span> </span><span class="WHIT">            </span><span class="NAME">list.push</span><span class="PUNC">(</span><span class="NAME">hook</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>238</span> </span><span class="WHIT">          </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>239</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>240</span> </span><span class="WHIT">        </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">chain</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">geddy.async.AsyncChain</span><span class="PUNC">(</span><span class="NAME">list</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>241</span> </span><span class="WHIT">        </span><span class="NAME">chain.last</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">callback</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>242</span> </span><span class="WHIT">        </span><span class="NAME">chain.run</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>243</span> </span><span class="WHIT">      </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>244</span> 
+<span class='line'>245</span> </span><span class="WHIT">    </span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">_negotiateContent</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">frmt</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>246</span> </span><span class="WHIT">        </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">format</span><span class="WHIT">
+<span class='line'>247</span> </span><span class="WHIT">          </span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">contentType</span><span class="WHIT">
+<span class='line'>248</span> </span><span class="WHIT">          </span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">types</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="PUNC">]</span><span class="WHIT">
+<span class='line'>249</span> </span><span class="WHIT">          </span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">match</span><span class="WHIT">
+<span class='line'>250</span> </span><span class="WHIT">          </span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">params</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this.params</span><span class="WHIT">
+<span class='line'>251</span> </span><span class="WHIT">          </span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">err</span><span class="WHIT">
+<span class='line'>252</span> </span><span class="WHIT">          </span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">accepts</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this.request.headers.accept</span><span class="WHIT">
+<span class='line'>253</span> </span><span class="WHIT">          </span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">accept</span><span class="WHIT">
+<span class='line'>254</span> </span><span class="WHIT">          </span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">pat</span><span class="WHIT">
+<span class='line'>255</span> </span><span class="WHIT">          </span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">wildcard</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>256</span> 
+<span class='line'>257</span> </span><span class="WHIT">        </span><span class="COMM">// If the client provides an Accept header, split on comma</span><span class="WHIT">
+<span class='line'>258</span> </span><span class="WHIT">        </span><span class="COMM">// Some user-agents may include whitespace with the comma</span><span class="WHIT">
+<span class='line'>259</span> </span><span class="WHIT">        </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">accepts</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>260</span> </span><span class="WHIT">          </span><span class="NAME">accepts</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">accepts.split</span><span class="PUNC">(</span><span class="REGX">/\s*,\s*/</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>261</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>262</span> </span><span class="WHIT">        </span><span class="COMM">// If the client doesn't provide an Accept header, assume</span><span class="WHIT">
+<span class='line'>263</span> </span><span class="WHIT">        </span><span class="COMM">// it's happy with anything</span><span class="WHIT">
+<span class='line'>264</span> </span><span class="WHIT">        </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>265</span> </span><span class="WHIT">          </span><span class="NAME">accepts</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="STRN">'*/*'</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>266</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>267</span> 
+<span class='line'>268</span> </span><span class="WHIT">        </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">frmt</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>269</span> </span><span class="WHIT">          </span><span class="NAME">types</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="NAME">frmt</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>270</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>271</span> </span><span class="WHIT">        </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">params.format</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>272</span> </span><span class="WHIT">          </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">f</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">params.format</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>273</span> </span><span class="WHIT">          </span><span class="COMM">// See if we can actually respond with this format,</span><span class="WHIT">
+<span class='line'>274</span> </span><span class="WHIT">          </span><span class="COMM">// i.e., that this one is in the list</span><span class="WHIT">
+<span class='line'>275</span> </span><span class="WHIT">          </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">f</span><span class="WHIT"> </span><span class="PUNC">&&</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="STRN">'|'</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NAME">this.respondsWith.join</span><span class="PUNC">(</span><span class="STRN">'|'</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="STRN">'|'</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">indexOf</span><span class="PUNC">(</span><span class="WHIT">
+<span class='line'>276</span> </span><span class="WHIT">              </span><span class="STRN">'|'</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NAME">f</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="STRN">'|'</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">></span><span class="WHIT"> </span><span class="PUNC">-</span><span class="NUMB">1</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>277</span> </span><span class="WHIT">            </span><span class="NAME">types</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="NAME">f</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>278</span> </span><span class="WHIT">          </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>279</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>280</span> </span><span class="WHIT">        </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>281</span> </span><span class="WHIT">          </span><span class="NAME">types</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this.respondsWith</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>282</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>283</span> 
+<span class='line'>284</span> </span><span class="WHIT">        </span><span class="COMM">// Okay, we have some format-types, let's see if anything matches</span><span class="WHIT">
+<span class='line'>285</span> </span><span class="WHIT">        </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">types.length</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>286</span> </span><span class="WHIT">          </span><span class="KEYW">for</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">i</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">ii</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">accepts.length</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="NAME">i</span><span class="WHIT"> </span><span class="PUNC">&lt;</span><span class="WHIT"> </span><span class="NAME">ii</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="NAME">i</span><span class="PUNC">++</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>287</span> </span><span class="WHIT">            </span><span class="COMM">// Ignore quality factors for now</span><span class="WHIT">
+<span class='line'>288</span> </span><span class="WHIT">            </span><span class="NAME">accept</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">accepts</span><span class="PUNC">[</span><span class="NAME">i</span><span class="PUNC">]</span><span class="PUNC">.</span><span class="NAME">split</span><span class="PUNC">(</span><span class="STRN">';'</span><span class="PUNC">)</span><span class="PUNC">[</span><span class="NUMB">0</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>289</span> </span><span class="WHIT">            </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">accept</span><span class="WHIT"> </span><span class="PUNC">==</span><span class="WHIT"> </span><span class="STRN">'*/*'</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>290</span> </span><span class="WHIT">              </span><span class="NAME">wildcard</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">true</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>291</span> </span><span class="WHIT">              </span><span class="KEYW">break</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>292</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>293</span> </span><span class="WHIT">          </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>294</span> 
+<span class='line'>295</span> </span><span class="WHIT">          </span><span class="COMM">// If agent accepts anything, respond with the controller's first choice</span><span class="WHIT">
+<span class='line'>296</span> </span><span class="WHIT">          </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">wildcard</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>297</span> </span><span class="WHIT">            </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">t</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">types</span><span class="PUNC">[</span><span class="NUMB">0</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>298</span> </span><span class="WHIT">            </span><span class="NAME">format</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">t</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>299</span> </span><span class="WHIT">            </span><span class="NAME">contentType</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">response.formatsPreferred</span><span class="PUNC">[</span><span class="NAME">t</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>300</span> </span><span class="WHIT">            </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">!</span><span class="NAME">contentType</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>301</span> </span><span class="WHIT">              </span><span class="NAME">this.throwUndefinedFormatError</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>302</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>303</span> </span><span class="WHIT">          </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>304</span> </span><span class="WHIT">          </span><span class="COMM">// Otherwise look through the acceptable formats and see if</span><span class="WHIT">
+<span class='line'>305</span> </span><span class="WHIT">          </span><span class="COMM">// Geddy knows about any of them.</span><span class="WHIT">
+<span class='line'>306</span> </span><span class="WHIT">          </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>307</span> </span><span class="WHIT">            </span><span class="KEYW">for</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">i</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">ii</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">types.length</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="NAME">i</span><span class="WHIT"> </span><span class="PUNC">&lt;</span><span class="WHIT"> </span><span class="NAME">ii</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="NAME">i</span><span class="PUNC">++</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>308</span> </span><span class="WHIT">              </span><span class="NAME">pat</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">response.formatPatterns</span><span class="PUNC">[</span><span class="NAME">types</span><span class="PUNC">[</span><span class="NAME">i</span><span class="PUNC">]</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>309</span> </span><span class="WHIT">              </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">pat</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>310</span> </span><span class="WHIT">                </span><span class="KEYW">for</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">j</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">jj</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">accepts.length</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="NAME">j</span><span class="WHIT"> </span><span class="PUNC">&lt;</span><span class="WHIT"> </span><span class="NAME">jj</span><span class="PUNC">;</span><span class="WHIT"> </span><span class="NAME">j</span><span class="PUNC">++</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>311</span> </span><span class="WHIT">                  </span><span class="NAME">match</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">accepts</span><span class="PUNC">[</span><span class="NAME">j</span><span class="PUNC">]</span><span class="PUNC">.</span><span class="NAME">match</span><span class="PUNC">(</span><span class="NAME">pat</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>312</span> </span><span class="WHIT">                  </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">match</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>313</span> </span><span class="WHIT">                    </span><span class="NAME">format</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">types</span><span class="PUNC">[</span><span class="NAME">i</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>314</span> </span><span class="WHIT">                    </span><span class="NAME">contentType</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">match</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>315</span> </span><span class="WHIT">                    </span><span class="KEYW">break</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>316</span> </span><span class="WHIT">                  </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>317</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>318</span> </span><span class="WHIT">              </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>319</span> </span><span class="WHIT">              </span><span class="COMM">// If respondsWith contains some random format that Geddy doesn't know</span><span class="WHIT">
+<span class='line'>320</span> </span><span class="WHIT">              </span><span class="COMM">// TODO Make it easy for devs to add new formats</span><span class="WHIT">
+<span class='line'>321</span> </span><span class="WHIT">              </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>322</span> </span><span class="WHIT">                </span><span class="NAME">this.throwUndefinedFormatError</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>323</span> </span><span class="WHIT">              </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>324</span> </span><span class="WHIT">              </span><span class="COMM">// Don't look at any more formats if there's a match</span><span class="WHIT">
+<span class='line'>325</span> </span><span class="WHIT">              </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">match</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>326</span> </span><span class="WHIT">                </span><span class="KEYW">break</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>327</span> </span><span class="WHIT">              </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>328</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>329</span> </span><span class="WHIT">          </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>330</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>331</span> </span><span class="WHIT">        </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="NAME">format</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">format</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">contentType</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">contentType</span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>332</span> </span><span class="WHIT">      </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>333</span> 
+<span class='line'>334</span> </span><span class="WHIT">  </span><span class="COMM">// Pseudo-private, non-API</span><span class="WHIT">
+<span class='line'>335</span> </span><span class="WHIT">  </span><span class="COMM">// -------------------</span><span class="WHIT">
+<span class='line'>336</span> </span><span class="WHIT">  </span><span class="COMM">/**
+<span class='line'>337</span>    * Primary entry point for calling the action on a controller
+<span class='line'>338</span>    * Wraps the action so befores and afters can be run
+<span class='line'>339</span>    */</span><span class="WHIT">
+<span class='line'>340</span> </span><span class="WHIT">  </span><span class="NAME">this._handleAction</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">action</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>341</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">_this</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>342</span> </span><span class="WHIT">    </span><span class="COMM">// Wrap the actual action-handling in a callback to use as the 'last'</span><span class="WHIT">
+<span class='line'>343</span> </span><span class="WHIT">    </span><span class="COMM">// method in the async chain of before-filters</span><span class="WHIT">
+<span class='line'>344</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">callback</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>345</span> </span><span class="WHIT">      </span><span class="NAME">_this</span><span class="PUNC">[</span><span class="NAME">action</span><span class="PUNC">]</span><span class="PUNC">.</span><span class="NAME">apply</span><span class="PUNC">(</span><span class="NAME">_this</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="NAME">_this.request</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">_this.response</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">_this.params</span><span class="PUNC">]</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>346</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>347</span> </span><span class="WHIT">    </span><span class="NAME">_execFilters.apply</span><span class="PUNC">(</span><span class="KEYW">this</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="NAME">action</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">'before'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">callback</span><span class="PUNC">]</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>348</span> </span><span class="WHIT">  </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>349</span> 
+<span class='line'>350</span> </span><span class="WHIT">  </span><span class="COMM">// Public methods</span><span class="WHIT">
+<span class='line'>351</span> </span><span class="WHIT">  </span><span class="COMM">// -------------------</span><span class="WHIT">
+<span class='line'>352</span> </span><span class="WHIT">  </span><span class="COMM">/**
+<span class='line'>353</span>     @name BaseController#before
+<span class='line'>354</span>     @public
+<span class='line'>355</span>     @function
+<span class='line'>356</span>     @description Adds an action to the beforeFilters list.
+<span class='line'>357</span>     @param filter {Function} Action to add to the beforeFilter list of
+<span class='line'>358</span>     actions to be performed before a response is rendered.
+<span class='line'>359</span>     @param options {Object} [opts]
+<span class='line'>360</span>       @param {Array} [opts.except=null] List of actions where the
+<span class='line'>361</span>       before-filter should not be performed.
+<span class='line'>362</span>       @param {Array} [opts.only=null] This list of actions are the
+<span class='line'>363</span>       only actions where this before-filter should be performed.
+<span class='line'>364</span>    */</span><span class="WHIT">
+<span class='line'>365</span> </span><span class="WHIT">  </span><span class="NAME">this.before</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">filter</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">options</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>366</span> </span><span class="WHIT">    </span><span class="NAME">_addFilter.apply</span><span class="PUNC">(</span><span class="KEYW">this</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="STRN">'before'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">filter</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">options</span><span class="WHIT"> </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">]</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>367</span> </span><span class="WHIT">  </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>368</span> 
+<span class='line'>369</span> </span><span class="WHIT">  </span><span class="COMM">/**
+<span class='line'>370</span>     @name BaseController#after
+<span class='line'>371</span>     @public
+<span class='line'>372</span>     @function
+<span class='line'>373</span>     @description Adds an action to the afterFilters list of actions
+<span class='line'>374</span>     to be performed after a response is rendered.
+<span class='line'>375</span>     @param filter {Function} Action to add to the afterFilter list.
+<span class='line'>376</span>     @param options {Object} [opts]
+<span class='line'>377</span>       @param {Array} [opts.except=null] List of actions where the
+<span class='line'>378</span>       after-filter should not be performed.
+<span class='line'>379</span>       @param {Array} [opts.only=null] This list of actions are the
+<span class='line'>380</span>       only actions where this after-filter should be performed.
+<span class='line'>381</span>    */</span><span class="WHIT">
+<span class='line'>382</span> </span><span class="WHIT">  </span><span class="NAME">this.after</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">filter</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">options</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>383</span> </span><span class="WHIT">    </span><span class="NAME">_addFilter.apply</span><span class="PUNC">(</span><span class="KEYW">this</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="STRN">'after'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">filter</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">options</span><span class="WHIT"> </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">]</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>384</span> </span><span class="WHIT">  </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>385</span> 
+<span class='line'>386</span> </span><span class="WHIT">  </span><span class="COMM">/**
+<span class='line'>387</span>     @name BaseController#redirect
+<span class='line'>388</span>     @public
+<span class='line'>389</span>     @function
+<span class='line'>390</span>     @description Sends a 302 redirect to the client, based on either a
+<span class='line'>391</span>     simple string-URL, or a controller/action/format combination.
+<span class='line'>392</span>     @param target {String|Object} Either an URL, or an object literal containing
+<span class='line'>393</span>     controller/action/format attributes to base the redirect on.
+<span class='line'>394</span>    */</span><span class="WHIT">
+<span class='line'>395</span> </span><span class="WHIT">  </span><span class="NAME">this.redirect</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">target</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>396</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">url</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>397</span> </span><span class="WHIT">    </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="KEYW">typeof</span><span class="WHIT"> </span><span class="NAME">target</span><span class="WHIT"> </span><span class="PUNC">==</span><span class="WHIT"> </span><span class="STRN">'string'</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>398</span> </span><span class="WHIT">      </span><span class="NAME">url</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">target</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>399</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>400</span> </span><span class="WHIT">    </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>401</span> </span><span class="WHIT">      </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">contr</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">target.controller</span><span class="WHIT"> </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="NAME">this.name</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>402</span> </span><span class="WHIT">      </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">act</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">target.action</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>403</span> </span><span class="WHIT">      </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">ext</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">target.format</span><span class="WHIT"> </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="NAME">this.params.format</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>404</span> </span><span class="WHIT">      </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">id</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">target.id</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>405</span> </span><span class="WHIT">      </span><span class="NAME">contr</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">geddy.string.decamelize</span><span class="PUNC">(</span><span class="NAME">contr</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>406</span> </span><span class="WHIT">      </span><span class="NAME">url</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="STRN">'/'</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NAME">contr</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>407</span> </span><span class="WHIT">      </span><span class="NAME">url</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">act</span><span class="WHIT"> </span><span class="PUNC">?</span><span class="WHIT"> </span><span class="STRN">'/'</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NAME">act</span><span class="WHIT"> </span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">''</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>408</span> </span><span class="WHIT">      </span><span class="NAME">url</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">id</span><span class="WHIT"> </span><span class="PUNC">?</span><span class="WHIT"> </span><span class="STRN">'/'</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NAME">id</span><span class="WHIT"> </span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">''</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>409</span> </span><span class="WHIT">      </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">ext</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>410</span> </span><span class="WHIT">        </span><span class="NAME">url</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="PUNC">=</span><span class="WHIT"> </span><span class="STRN">'.'</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NAME">ext</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>411</span> </span><span class="WHIT">      </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>412</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>413</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">r</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">response.Response</span><span class="PUNC">(</span><span class="NAME">this.response</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>414</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">headers</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="STRN">'Location'</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">url</span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>415</span> </span><span class="WHIT">    </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">this.cookies</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>416</span> </span><span class="WHIT">      </span><span class="NAME">headers</span><span class="PUNC">[</span><span class="STRN">'Set-Cookie'</span><span class="PUNC">]</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this.cookies.serialize</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>417</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>418</span> </span><span class="WHIT">    </span><span class="NAME">this.session.close</span><span class="PUNC">(</span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>419</span> </span><span class="WHIT">      </span><span class="NAME">r.send</span><span class="PUNC">(</span><span class="STRN">''</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NUMB">302</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">headers</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>420</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>421</span> </span><span class="WHIT">  </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>422</span> 
+<span class='line'>423</span> </span><span class="WHIT">  </span><span class="COMM">/**
+<span class='line'>424</span>     @name BaseController#error
+<span class='line'>425</span>     @public
+<span class='line'>426</span>     @function
+<span class='line'>427</span>     @description Respond to a request with an appropriate HTTP error-code.
+<span class='line'>428</span>     If a status-code is set on the error object, uses that as the error's
+<span class='line'>429</span>     status-code. Otherwise, responds with a 500 for the status-code.
+<span class='line'>430</span>     @param err {Object} The error to use as the basis for the response.
+<span class='line'>431</span>    */</span><span class="WHIT">
+<span class='line'>432</span> </span><span class="WHIT">  </span><span class="NAME">this.error</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>433</span> </span><span class="WHIT">    </span><span class="NAME">errors.respond</span><span class="PUNC">(</span><span class="NAME">this.response</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">err</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>434</span> </span><span class="WHIT">  </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>435</span> 
+<span class='line'>436</span> </span><span class="WHIT">  </span><span class="COMM">/**
+<span class='line'>437</span>     @name BaseController#transfer
+<span class='line'>438</span>     @public
+<span class='line'>439</span>     @function
+<span class='line'>440</span>     @description Transfer a request from its original action to a new one. The
+<span class='line'>441</span>     entire request cycle is repeated, including before-filters.
+<span class='line'>442</span>     @param action {Object} The new action designated to handle the request.
+<span class='line'>443</span>    */</span><span class="WHIT">
+<span class='line'>444</span> </span><span class="WHIT">  </span><span class="NAME">this.transfer</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">action</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>445</span> </span><span class="WHIT">    </span><span class="NAME">this.params.action</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">action</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>446</span> </span><span class="WHIT">    </span><span class="NAME">this._handleAction</span><span class="PUNC">(</span><span class="NAME">action</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>447</span> </span><span class="WHIT">  </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>448</span> 
+<span class='line'>449</span> </span><span class="WHIT">  </span><span class="COMM">/**
+<span class='line'>450</span>     @name BaseController#respond
+<span class='line'>451</span>     @public
+<span class='line'>452</span>     @function
+<span class='line'>453</span>     @description Performs content-negotiation, and renders a response.
+<span class='line'>454</span>     @param content {Object|String} The content to use in the response.
+<span class='line'>455</span>     @param [format] {String} The desired format for the response.
+<span class='line'>456</span>    */</span><span class="WHIT">
+<span class='line'>457</span> </span><span class="WHIT">  </span><span class="NAME">this.respond</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">content</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">format</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>458</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">c</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">content</span><span class="WHIT">
+<span class='line'>459</span> </span><span class="WHIT">      </span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">r</span><span class="WHIT">
+<span class='line'>460</span> </span><span class="WHIT">      </span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">headers</span><span class="WHIT">
+<span class='line'>461</span> </span><span class="WHIT">    </span><span class="COMM">// format and contentType are set at the same time</span><span class="WHIT">
+<span class='line'>462</span> </span><span class="WHIT">    </span><span class="COMM">// format may not be passed</span><span class="WHIT">
+<span class='line'>463</span> </span><span class="WHIT">      </span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">negotiated</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">_negotiateContent.call</span><span class="PUNC">(</span><span class="KEYW">this</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">format</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>464</span> 
+<span class='line'>465</span> </span><span class="WHIT">    </span><span class="NAME">this.format</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">negotiated.format</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>466</span> </span><span class="WHIT">    </span><span class="NAME">this.contentType</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">negotiated.contentType</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>467</span> 
+<span class='line'>468</span> </span><span class="WHIT">    </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">!</span><span class="NAME">this.contentType</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>469</span> </span><span class="WHIT">      </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">err</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">errors.NotAcceptableError</span><span class="PUNC">(</span><span class="STRN">'Not an acceptable media type.'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>470</span> </span><span class="WHIT">      </span><span class="NAME">this.error</span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>471</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>472</span> 
+<span class='line'>473</span> </span><span class="WHIT">    </span><span class="COMM">// If content needs formatting</span><span class="WHIT">
+<span class='line'>474</span> </span><span class="WHIT">    </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="KEYW">typeof</span><span class="WHIT"> </span><span class="NAME">c</span><span class="WHIT"> </span><span class="PUNC">!=</span><span class="WHIT"> </span><span class="STRN">'string'</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>475</span> </span><span class="WHIT">      </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">this.format</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>476</span> </span><span class="WHIT">        </span><span class="NAME">c</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">BaseController.formatters</span><span class="PUNC">[</span><span class="NAME">format</span><span class="PUNC">]</span><span class="PUNC">(</span><span class="NAME">data</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>477</span> </span><span class="WHIT">      </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>478</span> </span><span class="WHIT">      </span><span class="COMM">// If we couldn't perform content-negotiaton successfully, bail</span><span class="WHIT">
+<span class='line'>479</span> </span><span class="WHIT">      </span><span class="COMM">// with error</span><span class="WHIT">
+<span class='line'>480</span> </span><span class="WHIT">      </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>481</span> </span><span class="WHIT">        </span><span class="NAME">this.throwUndefinedFormatError</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>482</span> </span><span class="WHIT">        </span><span class="KEYW">return</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>483</span> </span><span class="WHIT">      </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>484</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>485</span> 
+<span class='line'>486</span> </span><span class="WHIT">    </span><span class="NAME">this.content</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">c</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>487</span> 
+<span class='line'>488</span> </span><span class="WHIT">    </span><span class="NAME">r</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">response.Response</span><span class="PUNC">(</span><span class="NAME">this.response</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>489</span> </span><span class="WHIT">    </span><span class="NAME">headers</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="STRN">'Content-Type'</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">this.contentType</span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>490</span> </span><span class="WHIT">    </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">this.cookies</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>491</span> </span><span class="WHIT">      </span><span class="NAME">headers</span><span class="PUNC">[</span><span class="STRN">'Set-Cookie'</span><span class="PUNC">]</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this.cookies.serialize</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>492</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>493</span> </span><span class="WHIT">    </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">this.session</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>494</span> </span><span class="WHIT">      </span><span class="NAME">this.session.close</span><span class="PUNC">(</span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>495</span> </span><span class="WHIT">        </span><span class="NAME">r.send</span><span class="PUNC">(</span><span class="NAME">c</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NUMB">200</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">headers</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>496</span> </span><span class="WHIT">      </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>497</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>498</span> </span><span class="WHIT">    </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>499</span> </span><span class="WHIT">      </span><span class="NAME">r.send</span><span class="PUNC">(</span><span class="NAME">c</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NUMB">200</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">headers</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>500</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>501</span> </span><span class="WHIT">  </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>502</span> 
+<span class='line'>503</span> </span><span class="WHIT">  </span><span class="NAME">this.render</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this.respond</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>504</span> 
+<span class='line'>505</span> 
+<span class='line'>506</span> </span><span class="WHIT">  </span><span class="NAME">this.throwUndefinedFormatError</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>507</span> </span><span class="WHIT">    </span><span class="NAME">err</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">errors.InternalServerError</span><span class="PUNC">(</span><span class="STRN">'Format not defined in response.formats.'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>508</span> </span><span class="WHIT">    </span><span class="NAME">this.error</span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>509</span> </span><span class="WHIT">  </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>510</span> 
+<span class='line'>511</span> </span><span class="WHIT"> </span><span class="COMM">/*
+<span class='line'>512</span>  this.renderTemplate = function (data) {
+<span class='line'>513</span>     var _this = this;
+<span class='line'>514</span> 
+<span class='line'>515</span>     // Calculate the template if not set
+<span class='line'>516</span>     this.template = this.template ||
+<span class='line'>517</span>     	'app/views/' + geddy.inflections[this.name].filename.plural + '/' + this.params.action;
+<span class='line'>518</span> 
+<span class='line'>519</span>     if (this.layout) {
+<span class='line'>520</span> 	    // Calculate the layout if not set
+<span class='line'>521</span> 	    this.layoutpath = this.layoutpath ||
+<span class='line'>522</span> 	    	'app/views/layouts/' + geddy.inflections[this.name].filename.plural;
+<span class='line'>523</span>     }
+<span class='line'>524</span> 
+<span class='line'>525</span>     var templater = new Templater();
+<span class='line'>526</span>     var content = '';
+<span class='line'>527</span> 
+<span class='line'>528</span>     templater.addListener('data', function (d) {
+<span class='line'>529</span>       // Buffer for now, but could stream
+<span class='line'>530</span>       content += d;
+<span class='line'>531</span>     });
+<span class='line'>532</span> 
+<span class='line'>533</span>     templater.addListener('end', function () {
+<span class='line'>534</span>       _this.render(content);
+<span class='line'>535</span>     });
+<span class='line'>536</span> 
+<span class='line'>537</span>     templater.render(data, {
+<span class='line'>538</span>       layout: this.layoutpath
+<span class='line'>539</span>     , template: this.template
+<span class='line'>540</span>     , controller: this.name
+<span class='line'>541</span>     , action: this.params.action
+<span class='line'>542</span>     });
+<span class='line'>543</span>   };
+<span class='line'>544</span>   */</span><span class="WHIT">
+<span class='line'>545</span> 
+<span class='line'>546</span> </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>547</span> 
+<span class='line'>548</span> </span><span class="NAME">exports.BaseController</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">BaseController</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>549</span> 
+<span class='line'>550</span> </span></pre></body></html>

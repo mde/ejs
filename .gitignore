@@ -1,6 +1,5 @@
 *.swp
 *.swo
-doc
 auth_info.js
 dist
 .idea/
