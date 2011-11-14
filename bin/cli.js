@@ -1,15 +1,22 @@
 #!/usr/bin/env node
 
-// TODO: add start/stop/restart commands
-// command to create new project layout too
+// TODO: add start/stop/restart commands, commands to create new app-layout
 
-var Server = require(__dirname + '/../lib/server')
-  , parseopts = require(__dirname + '/../lib/parseopts')
+var childProcess = require('child_process')
+  , fs = require('fs')
+  , exec = require('child_process').exec
+  , Server = require('../lib/server')
+  , parseopts = require('../lib/parseopts')
+  , utils = require('../lib/utils/index')
+  , parser
   , args = process.argv.slice(2)
-  , childProcess = require('child_process')
-  , fs = require('fs');
+  , optsReg
+  , cmds
+  , opts
+  , usage
+  , cmd;
 
-var usage = ''
+usage = ''
     + 'Geddy web framework for Node.js\n'
     + '*********************************************************************************************\n'
     + 'With no flags, server starts running on port 4000, accepting requests from http://localhost.\n'
@@ -51,9 +58,10 @@ optsReg = [
   }
 ];
 
-Parser = new parseopts.Parser(optsReg);
-parsed = Parser.parse(args);
-opts = Parser.opts;
+parser = new parseopts.Parser(optsReg);
+parser.parse(args);
+cmds = parser.cmds;
+opts = parser.opts;
 
 function start() {
   /*
@@ -93,6 +101,38 @@ function start() {
 if (typeof opts.help != 'undefined') {
   Server.die(usage);
 }
+else {
+  // `geddy app foo` or `geddy resource bar` etc. -- run generators
+  if (cmds.length) {
+    cmd = 'jake -f /' + __dirname + '/../Jakefile ';
+    if (!cmds[1]) {
+      throw new Error(cmds[0] + ' command requires another argument.');
+    }
+    switch (cmds[0]) {
+      case 'app':
+        cmd += 'app:create[' + cmds[1] + ']'
+        break;
+      case 'resource':
+        break;
+      default:
+        Server.die(cmds[0] + ' is not a Geddy command.');
+    }
+    exec(cmd, function (err, stdout, stderr) {
+      if (err) {
+        throw err;
+      }
+      else if (stderr) {
+        console.log(stderr);
+      }
+      else {
+        console.log(utils.string.trim(stdout));
+      }
+    });
+  }
+  // Just `geddy` -- start the server
+  else {
+    start();
+  }
+}
 
-start();
 

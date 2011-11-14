@@ -17,7 +17,7 @@
 */
 
 var config = new function () {
-  this.detailedErrors = false;
+  this.detailedErrors = true;
   this.hostname = null;
   this.port = 4000;
   this.sessions = {
@@ -25,15 +25,6 @@ var config = new function () {
     , key: 'sid'
     , expiry: 14 * 24 * 60 * 60
   };
-  /*PostgreSQL
-  this.database = {
-    adapter: 'postgresql'
-    , hostname: 'localhost'
-    , dbName: 'geddy_db'
-    , username: 'postgres'
-    , password: null
-  };
-  //*/
   /* SQLite
   this.database = {
     adapter: 'sqlite'
@@ -48,8 +39,16 @@ var config = new function () {
 		    , port: 5984
   };
   //*/
+  /*  PostgreSQL
+  this.database = {
+    adapter: 'postgresql',
+    hostname: 'localhost',
+    dbName: 'geddy_db',
+    username: 'postgres',
+    password: null
+  };
+  //*/
+
 }();
-
-module.exports = config;
-
+config;
 

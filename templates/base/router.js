@@ -16,40 +16,21 @@
  *
 */
 
-var config = new function () {
-  this.detailedErrors = true;
-  this.hostname = null;
-  this.port = 4000;
-  this.sessions = {
-    store: 'memory'
-    , key: 'sid'
-    , expiry: 14 * 24 * 60 * 60
-  };
-  /* SQLite
-  this.database = {
-    adapter: 'sqlite'
-    , dbName: 'geddy_db'
-  };
-  //*/
-  /* CouchDB
-  this.database = {
-		    adapter: 'couchdb'
-		    , hostname: 'localhost'
-		    , dbName: 'geddy_db'
-		    , port: 5984
-  };
-  //*/
-  /*  PostgreSQL
-  this.database = {
-    adapter: 'postgresql',
-    hostname: 'localhost',
-    dbName: 'geddy_db',
-    username: 'postgres',
-    password: null
-  };
-  //*/
 
-}();
+var router = new geddy.RegExpRouter();
+router.match('/').to({controller: 'Main', action: 'index'});
 
-module.exports = config;
+// Basic routes
+// router.match('/moving/pictures/:id').to(
+//    {controller: 'Moving', action: 'pictures'});
+// router.match('/farewells/:farewelltype/kings/:kingid').to(
+//    {controller: 'Farewells', action: 'kings'});
+// Can also match specific HTTP methods only
+// router.match('/xandadu', 'get').to(
+//    {controller: 'Xandadu', action: 'specialHandler'});
+//
+// Resource-based routes
+// router.resource('hemispheres');
+
+exports.router = router;
 

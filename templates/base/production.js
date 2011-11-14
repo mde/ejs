@@ -16,22 +16,39 @@
  *
 */
 
-var Router = require('geddy-core/lib/router').Router;
+var config = new function () {
+  this.detailedErrors = false;
+  this.hostname = null;
+  this.port = 4000;
+  this.sessions = {
+    store: 'memory'
+    , key: 'sid'
+    , expiry: 14 * 24 * 60 * 60
+  };
+  /*PostgreSQL
+  this.database = {
+    adapter: 'postgresql'
+    , hostname: 'localhost'
+    , dbName: 'geddy_db'
+    , username: 'postgres'
+    , password: null
+  };
+  //*/
+  /* SQLite
+  this.database = {
+    adapter: 'sqlite'
+    , dbName: 'geddy_db'
+  };
+  //*/
+  /* CouchDB
+  this.database = {
+		    adapter: 'couchdb'
+		    , hostname: 'localhost'
+		    , dbName: 'geddy_db'
+		    , port: 5984
+  };
+  //*/
+}();
+config;
 
-var router = new Router();
-router.match('/').to({controller: 'Main', action: 'index'});
-
-// Basic routes
-// router.match('/moving/pictures/:id').to(
-//    {controller: 'Moving', action: 'pictures'});
-// router.match('/farewells/:farewelltype/kings/:kingid').to(
-//    {controller: 'Farewells', action: 'kings'});
-// Can also match specific HTTP methods only
-// router.match('/xandadu', 'get').to(
-//    {controller: 'Xandadu', action: 'specialHandler'});
-//
-// Resource-based routes
-// router.resource('hemispheres');
-
-exports.router = router;
 
