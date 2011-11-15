@@ -1,4 +1,7 @@
-var child_process = require('child_process')
+var fs = require('fs')
+  , pkg = JSON.parse(fs.readFileSync('package.json').toString())
+  , version = pkg.version
+  , child_process = require('child_process')
   , exec = child_process.exec;
 
 namespace('app', function () {
@@ -107,5 +110,20 @@ var runCmds = function (arr, callback, printStdout) {
   run(arr.shift());
 };
 
+var t = new jake.PackageTask('geddy', 'v' + version, function () {
+  var fileList = [
+    'Makefile'
+  , 'Jakefile'
+  , 'README.md'
+  , 'package.json'
+  , 'bin/*'
+  , 'deps/*'
+  , 'lib/*'
+  , 'templates/*'
+  ];
+  this.packageFiles.include(fileList);
+  this.needTarGz = true;
+  this.needTarBz2 = true;
+});
 
 
