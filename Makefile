@@ -15,24 +15,24 @@
 # limitations under the License.
 #
 
-.PHONY: all build install clean uninstall test client
+.PHONY: all build install clean uninstall
 
 all: build
 
 build:
-	@mkdir -p ./dist; cp -r geddy-core geddy-auth geddy-model geddy-template geddy-util dist; echo 'Geddy built.'
+	@echo 'Geddy built.'
 
 install:
-	@./geddy-core/scripts/jake -f `pwd`/geddy-core/scripts/Jakefile default
+	@mkdir -p /usr/local/lib/node_modules/geddy && \
+		cp -R ./* /usr/local/lib/node_modules/geddy/ && \
+		ln -snf /usr/local/lib/node_modules/geddy/bin/cli.js /usr/local/bin/geddy && \
+		chmod 755 /usr/local/lib/node_modules/geddy/bin/cli.js && \
+		echo 'Geddy installed.'
 
 clean:
-	@rm -fr dist
+	@true
 
 uninstall:
-	@./geddy-core/scripts/jake -f `pwd`/geddy-core/scripts/Jakefile uninstall 
-
-test:
-	@./geddy-core/scripts/jake -f `pwd`/geddy-core/scripts/Jakefile test
-
-client:
-	@mkdir -p ./dist/client; ./geddy-core/scripts/jake -f `pwd`/geddy-core/scripts/Jakefile client dirname:`pwd` target:`pwd`/dist/client
+	@rm -f /usr/local/bin/geddy && \
+		rm -fr /usr/local/lib/node_modules/geddy/ && \
+		echo 'Geddy uninstalled.'

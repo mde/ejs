@@ -1,5 +1,6 @@
+
 var fs = require('fs')
-  , pkg = JSON.parse(fs.readFileSync('package.json').toString())
+  , pkg = JSON.parse(fs.readFileSync(__dirname + '/package.json').toString())
   , version = pkg.version
   , child_process = require('child_process')
   , exec = child_process.exec;
@@ -111,15 +112,17 @@ var runCmds = function (arr, callback, printStdout) {
 };
 
 var t = new jake.PackageTask('geddy', 'v' + version, function () {
+  // Preface with __dirname, will still resolve FileList when
+  // run outside of project dir for generator-tasks
   var fileList = [
-    'Makefile'
-  , 'Jakefile'
-  , 'README.md'
-  , 'package.json'
-  , 'bin/*'
-  , 'deps/*'
-  , 'lib/*'
-  , 'templates/*'
+    __dirname + '/Makefile'
+  , __dirname + '/Jakefile'
+  , __dirname + '/README.md'
+  , __dirname + '/package.json'
+  , __dirname + '/bin/*'
+  , __dirname + '/deps/*'
+  , __dirname + '/lib/*'
+  , __dirname + '/templates/*'
   ];
   this.packageFiles.include(fileList);
   this.needTarGz = true;

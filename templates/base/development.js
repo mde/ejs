@@ -16,39 +16,15 @@
  *
 */
 
-var config = new function () {
-  this.detailedErrors = true;
-  this.hostname = null;
-  this.port = 4000;
-  this.sessions = {
+var config = {
+  detailedErrors: true
+, hostname: null
+, port: 4000
+, sessions: {
     store: 'memory'
-    , key: 'sid'
-    , expiry: 14 * 24 * 60 * 60
-  };
-  /* SQLite
-  this.database = {
-    adapter: 'sqlite'
-    , dbName: 'geddy_db'
-  };
-  //*/
-  /* CouchDB
-  this.database = {
-		    adapter: 'couchdb'
-		    , hostname: 'localhost'
-		    , dbName: 'geddy_db'
-		    , port: 5984
-  };
-  //*/
-  /*  PostgreSQL
-  this.database = {
-    adapter: 'postgresql',
-    hostname: 'localhost',
-    dbName: 'geddy_db',
-    username: 'postgres',
-    password: null
-  };
-  //*/
+  , key: 'sid'
+  , expiry: 14 * 24 * 60 * 60
+  }
+};
 
-}();
-config;
-
+module.exports = config;

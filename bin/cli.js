@@ -104,7 +104,7 @@ if (typeof opts.help != 'undefined') {
 else {
   // `geddy app foo` or `geddy resource bar` etc. -- run generators
   if (cmds.length) {
-    cmd = 'jake -f /' + __dirname + '/../Jakefile ';
+    cmd = 'jake -t -f /' + __dirname + '/../Jakefile ';
     if (!cmds[1]) {
       throw new Error(cmds[0] + ' command requires another argument.');
     }
