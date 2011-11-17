@@ -111,22 +111,25 @@ var runCmds = function (arr, callback, printStdout) {
   run(arr.shift());
 };
 
-var t = new jake.PackageTask('geddy', 'v' + version, function () {
-  // Preface with __dirname, will still resolve FileList when
-  // run outside of project dir for generator-tasks
-  var fileList = [
-    __dirname + '/Makefile'
-  , __dirname + '/Jakefile'
-  , __dirname + '/README.md'
-  , __dirname + '/package.json'
-  , __dirname + '/bin/*'
-  , __dirname + '/deps/*'
-  , __dirname + '/lib/*'
-  , __dirname + '/templates/*'
-  ];
-  this.packageFiles.include(fileList);
-  this.needTarGz = true;
-  this.needTarBz2 = true;
-});
-
+// Don't generate the package-tasks when being called as a generator
+// from an installed geddy
+if (!process.env.generator) {
+  var t = new jake.PackageTask('geddy', 'v' + version, function () {
+    // Preface with __dirname, will still resolve FileList when
+    // run outside of project dir for generator-tasks
+    var fileList = [
+      'Makefile'
+    , 'Jakefile'
+    , 'README.md'
+    , 'package.json'
+    , 'bin/*'
+    , 'deps/*'
+    , 'lib/*'
+    , 'templates/*'
+    ];
+    this.packageFiles.include(fileList);
+    this.needTarGz = true;
+    this.needTarBz2 = true;
+  });
+}
 

@@ -117,6 +117,7 @@ else {
       default:
         Server.die(cmds[0] + ' is not a Geddy command.');
     }
+    cmd += ' generator=true'
     exec(cmd, function (err, stdout, stderr) {
       if (err) {
         throw err;
