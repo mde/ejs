@@ -47,12 +47,12 @@ geddy.model.registerModel('User');
 if (typeof geddy == 'undefined') { geddy = {}; }
 
 geddy.model = new function () {
-  
+
   this.dbAdapter = null;
   this.modelRegistry = {};
   this.useTimestamps = true;
   this.reg = null;
-  
+
   var _log = function () {};
   // Client-side or embedded V8
   if (typeof window != 'undefined') {
@@ -147,7 +147,7 @@ geddy.model = new function () {
     var ModelItemConstructor = function (params) {
 
       this.saved = params.saved || false;
-      
+
       this.type = def.name;
 
       if (params.saved) {
@@ -197,7 +197,7 @@ geddy.model = new function () {
         obj.id = this.id;
         obj.type = this.type;
         var props = this.properties;
-        var formatter; 
+        var formatter;
         for (var p in props) {
           formatter = geddy.model.formatters[props[p].datatype];
           obj[p] = typeof formatter == 'function' ? formatter(this[p]) : this[p];
@@ -206,7 +206,7 @@ geddy.model = new function () {
       };
 
       this.toJson = this.toString;
-      
+
       var virtuals = this.virtualProperties;
       for (var p in virtuals) {
         this[p] = createVirtualProperty(this, p, virtuals[p]);
@@ -218,7 +218,7 @@ geddy.model = new function () {
 
   var _createStaticMethodsMixin = function (name) {
     var obj = {};
-    
+
     obj.create = function () {
       var args = Array.prototype.slice.call(arguments);
       args.unshift(name);
@@ -260,7 +260,7 @@ geddy.model = new function () {
       args.unshift(name);
       return geddy.model.dbAdapter.remove.apply(geddy.model.dbAdapter, args);
     };
-    
+
     // Singleton usage -- only one possible instance, and the
     // dbAdapter knows how to get it
     obj.getInstance = function () {
@@ -273,7 +273,7 @@ geddy.model = new function () {
     };
 
     obj.load = obj.find;
-    
+
     return obj;
   };
 
@@ -326,9 +326,9 @@ geddy.model = new function () {
     for (var prop in ModelItemDefinition) {
       ModelItem[prop] = ModelItemDefinition[prop]
     }
-    
+
     ModelItem.prototype = origPrototype;
-    
+
     // Create a globally scoped constructor name
     this.reg[p] = ModelItem;
   };
@@ -340,7 +340,7 @@ geddy.model = new function () {
     if (this.useTimestamps && !item.createdAt) {
       item.createdAt = new Date();
     }
-    
+
     // After-create hook
     if (typeof item.afterCreate == 'function') {
       item.afterCreate();
@@ -349,9 +349,9 @@ geddy.model = new function () {
   };
 
   this.updateItem = function (item, params) {
-    
+
     item = this.validateAndUpdateFromParams(item, params);
-    
+
     // After-update hook
     if (typeof item.afterUpdate == 'function') {
       item.afterUpdate();
@@ -366,7 +366,7 @@ geddy.model = new function () {
     var validated = null;
     var errs = null;
     var val;
-    
+
     // May be revalidating, clear errors
     delete item.errors;
 
@@ -392,8 +392,8 @@ geddy.model = new function () {
         // FIXME: Is there something better to do than just emptying
         // out the param item when it fails validation?
         params[p] = null;
-      }
-      // Otherwise add this property the the return item 
+
+      // Otherwise add this property the the return item
       else {
         item[p] = validated.val;
       }
@@ -509,7 +509,7 @@ geddy.model.VirtualProperty = function (name, datatype, o) {
  * Datatype verification -- may modify the value by casting
  */
 geddy.model.datatypes = new function () {
-  
+
   var _isArray = function (obj) {
     return obj &&
       typeof obj === 'object' &&
@@ -621,7 +621,7 @@ geddy.model.datatypes = new function () {
       val: val
     };
   };
-  
+
   this.date = function (name, val) {
     var dt = geddy.util.date.parse(val);
     if (dt) {
