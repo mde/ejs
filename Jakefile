@@ -1,13 +1,12 @@
-
 var fs = require('fs')
   , pkg = JSON.parse(fs.readFileSync(__dirname + '/package.json').toString())
   , version = pkg.version
   , child_process = require('child_process')
   , exec = child_process.exec;
 
-namespace('app', function () {
+namespace('gen', function () {
   desc('Creates a new Geddy app scaffold.');
-  task('create', [], function (appName) {
+  task('app', [], function (appName) {
     if (!appName) {
       throw new Error('No app-name specified.');
     }
@@ -33,10 +32,25 @@ namespace('app', function () {
         , 'cp ' + templateDir + '/master.css ' + dir + '/public/css/'
         , 'cp ' + templateDir + '/favicon.ico ' + dir + '/public/'
         ];
-    runCmds(cmds, function () {
+    jake.exec(cmds, function () {
       console.log('Created app ' + dir + '.');
-    });
+      complete();
+    }, {breakOnError: true});
+  }, true);
+
+  desc('Creates a resource-based route with model and controller.');
+  task('resource', ['model', 'controller'], function (name) {
+    var namePlural
+      , names = {
+        filename: {}
+      , constructor: {}
+      , property: {}
+      };
   });
+
+  task('model', [], function () {});
+  task('controller', [], function () {});
+
 });
 
 namespace('doc', function () {
@@ -112,11 +126,9 @@ var runCmds = function (arr, callback, printStdout) {
 };
 
 // Don't generate the package-tasks when being called as a generator
-// from an installed geddy
+// from an installed geddy -- don't run outside the geddy project dir
 if (!process.env.generator) {
   var t = new jake.PackageTask('geddy', 'v' + version, function () {
-    // Preface with __dirname, will still resolve FileList when
-    // run outside of project dir for generator-tasks
     var fileList = [
       'Makefile'
     , 'Jakefile'

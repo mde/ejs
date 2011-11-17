@@ -110,7 +110,7 @@ else {
     }
     switch (cmds[0]) {
       case 'app':
-        cmd += 'app:create[' + cmds[1] + ']'
+        cmd += 'gen:app[' + cmds[1] + ']'
         break;
       case 'resource':
         break;
