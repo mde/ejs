@@ -37,13 +37,6 @@ To get Geddy from GitHub and install it:
     cd geddy
     make && sudo make install
 
-### Installing with [NPM](http://npmjs.org/)
-
-    npm install -g geddy
-
-Geddy includes app- and resource-generation scripts that are
-easiest to use in a global install.
-
 ### Routes
 
 Routes are similar to Merb or Rails routes.
@@ -187,11 +180,11 @@ form-post/query-string params looks like this:
 
 ## Content-negotiation
 
-Geddy has built-in ability to perform content-negotiation
-based on the requested filename-extension.
+Geddy can perform content-negotiation, and respond with with the
+correct format based on the requested filename-extension.
 
-If you have a JSON-serializable JavaScript object you want
-to return in JSON format, pass your JavaScript object to the
+If you have a JSON-serializable JavaScript object you want to
+return in JSON format, pass your JavaScript object to the
 `respond` method in the action on that controller.
 
     this.respondsWith = ['text', 'json'];
@@ -204,13 +197,9 @@ to return in JSON format, pass your JavaScript object to the
 
 ## Models and validations
 
-Geddy has an easy, intuitive way of defining models, with
-a full-featured set of data validations. The syntax is very
-similar to models in Ruby's ActiveRecord or DataMapper.
-
-The model module is coded with browser-based use in mind,
-so it's very easy to share model and input validation code in
-your app between client and server.
+Geddy has a simple way of defining models, with a full-featured
+set of data validations. The syntax is very similar to models in
+Ruby's ActiveRecord or DataMapper.
 
 Here is an example of a model with some validations:
 
