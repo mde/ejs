@@ -229,7 +229,7 @@ Here is an example of a model with some validations:
       // Do some other stuff
     };
 
-    geddy.model.registerModel('User', User);
+    User = geddy.model.registerModel('User', User);
 
 Creating an instance of one of these models is easy:
 

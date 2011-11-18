@@ -36,5 +36,5 @@ var <%= names.constructor.singular %> = function () {
 <%= names.constructor.singular %>.someStaticProperty = 'YYZ';
 */
 
-geddy.model.register('<%= names.constructor.singular %>', <%= names.constructor.singular %>);
+<%= names.constructor.singular %> = geddy.model.register('<%= names.constructor.singular %>', <%= names.constructor.singular %>);
 
