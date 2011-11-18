@@ -269,6 +269,10 @@ is valid.
     // Prints 'Field "password" is required'
     sys.puts(user.errors.password);
 
+## API Docs
+
+API docs [can be found here](http://mde.github.com/geddy/doc/).
+
 - - -
 Geddy Web-app development framework copyright 2112
 mde@fleegix.org.
