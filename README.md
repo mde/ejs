@@ -16,7 +16,7 @@ but still let you get under the hood and tinker if you want.
   * Easy resource-based routing
   * App and resource generators
   * Content-negotiation
-  * Session support (in-memory and CouchDB)
+  * Session support (in-memory, cookie, CouchDB)
   * Templating (EJS), partials support
   * Fully non-blocking
 
@@ -24,27 +24,25 @@ but still let you get under the hood and tinker if you want.
 
 Apache License, Version 2
 
-### Community
+### Prerequisites
 
-IRC:
+Geddy requires version 0.4.x or higher of Node.js, and the
+[Jake](https://github.com/mde/jake) JavaScript build-tool.
 
-\#node.js on freenode.net
-
-Mailing list:
-
-http://groups.google.com/group/geddy
-
-### Building and installing Geddy
-
-** Prerequisites**
-
-Geddy requires version 0.1.98 of Node.js.
+### Installing
 
 To get Geddy from GitHub and install it:
 
     git clone git://github.com/mde/geddy.git
     cd geddy
     make && sudo make install
+
+### Installing with [NPM](http://npmjs.org/)
+
+    npm install -g geddy
+
+Geddy includes app- and resource-generation scripts that are
+easiest to use in a global install.
 
 ### Routes
 
@@ -68,10 +66,11 @@ Routes are similar to Merb or Rails routes.
 
 ### Creating a Geddy app
 
-Geddy comes with a utility called `geddy-gen` you can use to
-create an app. Run `geddy` to start the server.
+You can use Geddy to create an app. Run `geddy app [app-name]` to
+create an app. Then Run `geddy` inside the app-directory to start
+the server.
 
-    mde@localhost:~/work$ geddy-gen app bytor
+    mde@localhost:~/work$ geddy app bytor
     Created app bytor.
     mde@localhost:~/work$ cd bytor
     mde@localhost:~/work/bytor$ geddy
@@ -83,7 +82,7 @@ Attention all planets of the Solar Federation
 
 ### Adding resources
 
-Use `geddy-gen resource` in your app directory to add a
+Use `geddy resource` in your app directory to add a
 resource. The route will be set up automatically for you.
 
     mde@localhost:~/work/bytor$ geddy-gen resource snow_dog
@@ -98,20 +97,10 @@ and you should see something like this:
 
 {"method":"index","params":{"extension":"json"}}
 
-The geddy-gen utility doesn't handle fancy pluralization between
-model and controller -- the default is simply to add an "s"
-to your resource name to use for the plural in controller
-names and paths.
-
-However, you can specify different singular/plural names when
-generating your resource. Separate the singular and plural
-names by a comma, like this:
-
-    mde@localhost:~/work/bytor$ geddy-gen resource person,people
-    [ADDED] ./app/models/person.js
-    [ADDED] ./app/controllers/people.js
-    resources people route added to ./config/router.js
-    Created view templates.
+The geddy generator utility also handles fancy pluralization
+between model and controller. Specify your resource-name as a
+singular naun, and the generator will do the right thing --
+changing 'person' to 'people,' etc.
 
 ### App layout
 
@@ -251,10 +240,7 @@ Here is an example of a model with some validations:
       // Do some other stuff
     };
 
-    // Server-side, commonjs
-    exports.User = User;
-    // Client-side
-    // geddy.model.registerModel('User');
+    geddy.model.registerModel('User', User);
 
 Creating an instance of one of these models is easy:
 
