@@ -12,10 +12,10 @@ var <%= names.constructor.singular %> = function () {
   // Use with the name of the other parameter to compare with
   this.validatesConfirmed('password', 'confirmPassword');
   // Use with any function that returns a Boolean
-  this.validatesWithFunction('password', function (s) { 
+  this.validatesWithFunction('password', function (s) {
       return s.length > 0;
   });
-  
+
   // Can define methods for instances like this
   this.someMethod = function () {
     // Do some stuff
@@ -36,5 +36,5 @@ var <%= names.constructor.singular %> = function () {
 <%= names.constructor.singular %>.someStaticProperty = 'YYZ';
 */
 
-exports.<%= names.constructor.singular %> = <%= names.constructor.singular %>;
+geddy.model.register('<%= names.constructor.singular %>', <%= names.constructor.singular %>);
 

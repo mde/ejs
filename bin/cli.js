@@ -113,6 +113,7 @@ else {
         cmd += 'gen:app[' + cmds[1] + ']'
         break;
       case 'resource':
+        cmd += 'gen:resource[' + cmds[1] + ']'
         break;
       default:
         Server.die(cmds[0] + ' is not a Geddy command.');
