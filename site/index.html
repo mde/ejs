@@ -50,7 +50,7 @@
         </li>
       </ul>
     </div>
-    
+
     <div id="masthead">
       <h3 id="logline">
         web framework for node.js
@@ -58,39 +58,38 @@
       <div id="masthead-content">
         <ul>
           <li>
-            A modular, full-service web framework for Node.js.
+            A modular, simple-to-use web framework for Node.js.
           </li>
           <li>
-            Similar to web frameworks like Merb, Rails, Pylons, or Django. 
+            Similar to web frameworks like Merb, Rails, Pylons, or Django.
           </li>
           <li>
-            Built on Node.js, so it's wicked fast.
+            Built on Node.js, so it's fast and flexible.
           </li>
         </ul>
       </div>
     </div>
-    
+
     <div id="main-content" class="content">
       <ul id="feature-list">
         <li class="feature">
           <h4 class="feature-subtitle sprite-generators">Generators</h4>
           <p class="feature-content">
-            The <code>geddy-gen</code> utility is
-            your friend. Creating an app is a snap with
-            <code>geddy-gen app</code>. Create resources and models
-            for your app with <code>geddy-gen resource</code> and
-            <code>geddy-gen model</code>.
+            Geddy gives you an easy way to generate an app-scaffold,
+            and to create models, controllers, or resources with
+            RESTful routes. Super-easy with <code>geddy app</code>,
+            <code>geddy resource</code>, <code>geddy model</code>, etc.
           </p>
         </li>
 
         <li class="feature">
           <h4 class="feature-subtitle sprite-router">Flexible DSL for routes</h4>
           <p class="feature-content">
-            Intuitive syntax for creating routes &#8212; just
+            Simple syntax for defining routes &#8212; just
             <code>match</code> paths and params <code>to</code>
             controllers and actions. Set up resource-based
             routes with the uber-simple <code>resource</code>,
-            or let <code>geddy-gen</code> do it
+            or let the <code>geddy resource</code> generator do it
             for you.
           </p>
         </li>
@@ -109,10 +108,10 @@
         <li class="feature">
           <h4 class="feature-subtitle sprite-resources">Templates and partials</h4>
           <p class="feature-content">
-            Geddy does EJS templating, with recursive partials
-            support. Templates and sub-templates load and
+            Geddy does EJS templating, with support for rendering
+            partials. Templates and sub-templates load and
             render asynchronously. Yes, pluggable templates
-            are on the way for you fans of 'stache, Haml, et al.
+            are possible for you fans of 'stache, Haml, et al.
           </p>
         </li>
 
@@ -130,20 +129,21 @@
         <li class="feature">
           <h4 class="feature-subtitle sprite-templating">JavaScripty goodness</h4>
           <p class="feature-content">
-            Geddy is built on Node.js, a JavaScript I/O
-            system that uses Google's V8 engine. Node.js is
+            Geddy is built on Node.js, an asynchronous JavaScript I/O
+            framework that uses Google's V8 engine. Node.js is
             very fast &#8212; but you get to use the JavaScript
-            we all know and love (okay, maybe that's stretching
-            it) from the browser.
+            we all know and love from browser-land.
           </p>
         </li>
       </ul>
 
       <h3>Get started</h3>
       <p>
-        Geddy is a web framework for Node.js. Geddy requires <a
-        href="http://nodejs.org/dist/node-v0.1.94.tar.gz">version
-        0.1.94</a> of <a href="http://www.nodejs.org">Node.js</a>.
+        Geddy is a web framework for Node.js. Geddy requires
+        version 0.4.x or higher of <a
+        href="http://www.nodejs.org">Node.js</a>, and the
+        <a href="https://github.com/mde/jake">Jake</a> JavaScript
+        build tool.
       </p>
 
       <p>
@@ -172,7 +172,29 @@ $ ~/work$ cd bytor
 $ ~/work/bytor$ geddy
 Server running at http://127.0.0.1:4000/
 </pre>
-      
+
+      <h3>
+        Geddy on GitHub
+      </h3>
+      <p>
+        <a href="https://github.com/mde/geddy">https://github.com/mde/geddy</a>
+      </p>
+
+      <h3>
+        API docs
+      </h3>
+      <p>
+        <a href="http://mde.github.com/geddy/doc">http://mde.github.com/geddy/doc</a>
+      </p>
+
+      <h3>
+        Current version
+      </h3>
+      <p>
+        The version under active development is v0.2.x. Geddy v0.1.x is no longer under active development, and is no longer supported.
+      </p>
+
+<!--
       <h3 id="community">
         Community
       </h3>
@@ -189,10 +211,8 @@ Server running at http://127.0.0.1:4000/
         <li>
           <strong>GitHub:</strong> <a href="http://www.github.com/mde/geddy">geddy</a>
         </li>
-        <!-- <li>
-          <strong>Mailing list: </strong> <a href="http://groups.google.com/group/geddy">http://groups.google.com/group/geddy</a>
-        </li> -->
       </ul>
+-->
     </div>
   </div>
   <div id="footer">
