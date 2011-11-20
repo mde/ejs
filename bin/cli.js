@@ -115,6 +115,9 @@ else {
       case 'resource':
         cmd += 'gen:resource[' + cmds[1] + ']'
         break;
+      case 'controller':
+        cmd += 'gen:bareController[' + cmds[1] + ']'
+        break;
       default:
         Server.die(cmds[0] + ' is not a Geddy command.');
     }

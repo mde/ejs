@@ -2,6 +2,7 @@ var fs = require('fs')
   , pkg = JSON.parse(fs.readFileSync(__dirname + '/package.json').toString())
   , version = pkg.version
   , child_process = require('child_process')
+  , path = require('path')
   , exec = child_process.exec
   , inflection = require('./deps/inflection')
   , utils = require('./lib/utils')
@@ -94,45 +95,78 @@ namespace('gen', function () {
         {inflection: 'plural'});
   });
 
-  task('route', [], function (name) {
+  task('route', [], function (name, opts) {
     var names = _getInflections(name)
+      , options = opts || {}
+      , routeType = options.bare ? 'Bare' : 'Resource'
       , filePath = './config/router.js'
-      , newRoute = 'router.resource(\'' +  names.filename.plural + '\');'
+      , newRoute
       , text = fs.readFileSync(filePath, 'utf8').toString()
       , routeArr;
+
+    if (options.bare) {
+      newRoute = 'router.match(\'/' +  names.filename.plural +
+          '\').to({controller: \'' + names.constructor.plural +
+          '\', action: \'index\'});';
+    }
+    else {
+      newRoute = 'router.resource(\'' +  names.filename.plural + '\');'
+    }
+
     if (text.indexOf(newRoute) == -1) {
       // Add the new resource route just above the export
       routerArr = text.split('exports.router');
       routerArr[0] += newRoute + '\n';
       text = routerArr.join('exports.router');
       fs.writeFileSync(filePath, text, 'utf8');
-      console.log('resources ' + names.filename.plural + ' route added to ' + filePath);
+      console.log(routeType + ' ' + names.filename.plural +
+          ' route added to ' + filePath);
     }
     else {
-      console.log('(resources ' + names.filename.plural +
+      console.log('(' + routeType + ' ' + names.filename.plural +
           ' route already defined in ' + filePath + ')');
     }
   });
 
-  task('views', [], function (name) {
+  task('views', [], function (name, opts) {
     var names = _getInflections(name)
-      , cmds = [
-      'mkdir -p ./app/views/' + names.filename.plural
-      , 'mkdir -p ./app/views/layouts'
-      , 'cp  ' + __dirname + '/templates/views/layout.html.ejs ' +
-        './app/views/layouts/application.html.ejs'
-      , 'cp ' + __dirname + '/templates/views/add.html.ejs ' +
-          './app/views/' + names.filename.plural + '/'
-      , 'cp ' + __dirname + '/templates/views/edit.html.ejs ' +
-          './app/views/' + names.filename.plural + '/'
-      , 'cp ' + __dirname + '/templates/views/index.html.ejs ' +
-          './app/views/' + names.filename.plural + '/'
-      , 'cp ' + __dirname + '/templates/views/show.html.ejs ' +
-          './app/views/' + names.filename.plural + '/'
-    ]
+      , options = opts || {}
+      , viewDir = './app/views/' + names.filename.plural
+      , actions
+      , cmds = []
+      , addActionView = function (action) {
+          cmds.push('cp ' + __dirname + '/templates/views/' +
+              action + '.html.ejs ' + viewDir + '/');
+        };
+
+    cmds.push('mkdir -p ' + viewDir);
+    cmds.push('mkdir -p ./app/views/layouts');
+
+    addActionView('index');
+    // Add views for the other CRUD actions when doing a full-on resource
+    if (!options.bare) {
+      ['add', 'edit', 'show'].forEach(function (action) {
+        addActionView(action);
+      });
+    }
+
+    // Create an app-layout if one doesn't exist
+    if (!path.existsSync(process.cwd() +
+        '/app/views/layouts/application.html.ejs')) {
+      cmds.push('cp  ' + __dirname + '/templates/views/layout.html.ejs ' +
+          './app/views/layouts/application.html.ejs');
+    }
+
     jake.exec(cmds, function () {
       console.log('Created view templates.');
     });
+  });
+
+  task('bareController', [], function (name) {
+    _writeTemplate(name, 'bare_controller', 'controllers',
+        {inflection: 'plural'});
+    jake.Task['gen:route'].invoke(name, {bare: true});
+    jake.Task['gen:views'].invoke(name, {bare: true});
   });
 
 });
