@@ -57,6 +57,7 @@ namespace('gen', function () {
         , 'mkdir -p ./' + dir + '/app/models'
         , 'mkdir -p ./' + dir + '/app/controllers'
         , 'mkdir -p ./' + dir + '/app/views'
+        , 'mkdir -p ./' + dir + '/lib'
         , 'mkdir -p ./' + dir + '/public'
         , 'mkdir -p ./' + dir + '/public/js'
         , 'mkdir -p ./' + dir + '/public/css'
