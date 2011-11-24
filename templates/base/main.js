@@ -17,7 +17,7 @@
 */
 
 var Main = function () {
-  this.index = function (params) {
+  this.index = function (req, resp, params) {
     this.respond('Attention all planets of the Solar Federation');
   };
 };

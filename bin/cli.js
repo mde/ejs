@@ -105,18 +105,21 @@ else {
   // `geddy app foo` or `geddy resource bar` etc. -- run generators
   if (cmds.length) {
     cmd = 'jake -t -f /' + __dirname + '/../Jakefile ';
-    if (!cmds[1]) {
+    if (cmds[0] != 'secret' && !cmds[1]) {
       throw new Error(cmds[0] + ' command requires another argument.');
     }
     switch (cmds[0]) {
       case 'app':
-        cmd += 'gen:app[' + cmds[1] + ']'
+        cmd += 'gen:app[' + cmds[1] + ']';
         break;
       case 'resource':
-        cmd += 'gen:resource[' + cmds[1] + ']'
+        cmd += 'gen:resource[' + cmds[1] + ']';
         break;
       case 'controller':
-        cmd += 'gen:bareController[' + cmds[1] + ']'
+        cmd += 'gen:bareController[' + cmds[1] + ']';
+        break;
+      case 'secret':
+        cmd += 'gen:secret';
         break;
       default:
         Server.die(cmds[0] + ' is not a Geddy command.');

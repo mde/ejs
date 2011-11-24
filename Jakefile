@@ -170,6 +170,22 @@ namespace('gen', function () {
     jake.Task['gen:views'].invoke(name, {bare: true});
   });
 
+  task('secret', [], function (name) {
+    var filename = process.cwd() + '/config/environment.js'
+      , conf = fs.readFileSync(filename).toString()
+      , confArr
+      , secret = utils.string.uuid(128);
+
+    // Remove any old secret
+    conf = conf.replace(/\nconfig.secret.+;\n/, '');
+
+    confArr = conf.split('module.exports = config;');
+    conf = confArr[0] + "config.secret = '" + secret + "';\n\n" +
+      'module.exports = config;' + confArr[1];
+    fs.writeFileSync(filename, conf);
+    console.log('secret added to environment.js config.');
+  });
+
 });
 
 namespace('doc', function () {
