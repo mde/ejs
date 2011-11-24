@@ -258,6 +258,12 @@ is valid.
     // Prints 'Field "password" is required'
     sys.puts(user.errors.password);
 
+## Running the tests
+
+In the geddy project directory, run `jake test`. The tests simply
+use NodeJS's `assert` library, which throw an error on failure.
+If there are no errors, the tests all ran successfully.
+
 ## API Docs
 
 API docs [can be found here](http://mde.github.com/geddy/doc/).
