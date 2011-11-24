@@ -8,6 +8,8 @@ var fs = require('fs')
   , utils = require('./lib/utils')
   , ejs = require('./lib/template/adapters/ejs/ejs');
 
+var JSPAT = /\.js$/;
+
 namespace('gen', function () {
 
   var _writeTemplate = function (name, filename, dirname, opts) {
@@ -228,6 +230,25 @@ namespace('doc', function () {
   }, true);
 
 });
+
+desc('Runs the tests.');
+task('test', function () {
+  var dir = process.cwd()
+    , dirList = fs.readdirSync(dir + '/test')
+    , fileName
+    , cmds = [];
+  for (var i = 0; i < dirList.length; i++) {
+    fileName = dirList[i];
+    // Any files ending in '.js'
+    if (JSPAT.test(fileName)) {
+      cmds.push('node ./test/' + fileName);
+    }
+  }
+  jake.exec(cmds, function () {
+    console.log('Tests passed.');
+    complete();
+  });
+}, true);
 
 // Don't generate the package-tasks when being called as a generator
 // from an installed geddy -- don't run outside the geddy project dir
