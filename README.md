@@ -37,6 +37,13 @@ To get Geddy from GitHub and install it:
     cd geddy
     make && sudo make install
 
+### Installing with [NPM](http://npmjs.org/)
+
+    npm install -g geddy
+
+Note that Geddy (specifically, the generators) is a system-level
+tool, and wants to be installed globally.
+
 ### Routes
 
 Routes are similar to Merb or Rails routes.

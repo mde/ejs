@@ -263,6 +263,7 @@ if (!process.env.generator) {
     , 'deps/*'
     , 'lib/*'
     , 'templates/*'
+    , 'test/*'
     ];
     this.packageFiles.include(fileList);
     this.needTarGz = true;
