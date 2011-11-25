@@ -26,7 +26,7 @@ Apache License, Version 2
 
 ### Prerequisites
 
-Geddy requires version 0.4.x or higher of Node.js, and the
+Geddy requires version 0.4.x of Node.js, and the
 [Jake](https://github.com/mde/jake) JavaScript build-tool.
 
 ### Installing
