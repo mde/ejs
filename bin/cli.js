@@ -2,8 +2,7 @@
 
 // TODO: add start/stop/restart commands, commands to create new app-layout
 
-var childProcess = require('child_process')
-  , fs = require('fs')
+var fs = require('fs')
   , exec = require('child_process').exec
   , Server = require('../lib/server')
   , parseopts = require('../lib/parseopts')
@@ -93,7 +92,7 @@ function start() {
   Server.opts = opts;
   Server.start();
   // Generate a pid file
-  childProcess.exec('echo ' + process.pid + ' > /tmp/xdr-proxy.pids',
+  exec('echo ' + process.pid + ' > /tmp/xdr-proxy.pids',
       function (err, stdout, stderr) {});
 
 }
