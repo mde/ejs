@@ -261,7 +261,7 @@ is valid.
 ## Running the tests
 
 In the geddy project directory, run `jake test`. The tests simply
-use NodeJS's `assert` library, which throw an error on failure.
+use NodeJS's `assert` library, which throws an error on failure.
 If there are no errors, the tests all ran successfully.
 
 ## API Docs
