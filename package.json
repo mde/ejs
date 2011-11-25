@@ -1,8 +1,14 @@
 { "name": "geddy"
 , "version": "0.2.0"
 , "author": "Matthew Eernisse <mde@fleegix.org> (http://fleegix.org)"
-, "scripts":
-  { "install": "make && make install"
-  , "uninstall": "make uninstall"
+, "dependencies": {
+    "jake": "0.1.x"
   }
+, "bin": { "geddy": "./bin/cli.js" }
+, "main": "./lib"
+, "repository": {
+    "type": "git"
+  , "url": "https://github.com/mde/geddy.git"
+  }
+, "preferGlobal": true
 }
