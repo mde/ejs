@@ -2,9 +2,10 @@
 
 // TODO: add start/stop/restart commands, commands to create new app-layout
 
+var geddy = global.geddy = {};
+
 var fs = require('fs')
   , exec = require('child_process').exec
-  , Server = require('../lib/server')
   , parseopts = require('../lib/parseopts')
   , utils = require('../lib/utils/index')
   , parser
@@ -55,6 +56,9 @@ optsReg = [
 , { full: 'environment'
   , abbr: 'e'
   }
+, { full: 'spawned'
+  , abbr: 'Q'
+  }
 ];
 
 parser = new parseopts.Parser(optsReg);
@@ -62,43 +66,57 @@ parser.parse(args);
 cmds = parser.cmds;
 opts = parser.opts;
 
-function start() {
-  /*
-  process.on('uncaughtException', function (err) {
-    if (err.stack) {
-      Server.emergency("Server Uncaught Exception. Exiting...");
-      Server.emergency(err.stack);
-      Server.stderrLog.error("Server Uncaught Exception. Exiting...");
-      Server.stderrLog.error(err.stack);
-    }
-    Server.stderrLog.error("ERROR: " + err);
-    process.exit(1);
-  });
-  */
+var start = function () {
 
+  var cluster
+    , master
+    , worker
+    , m
+    , w;
+
+  // Node 0.6
+  try {
+    cluster = require('cluster');
+    geddy.FD_HACK = false;
+    master = require('../lib/cluster/master')
+    worker = require('../lib/cluster/worker');
+  }
+  // Node 0.4
+  catch (e) {
+    geddy.FD_HACK = true;
+    master = require('../lib/cluster/hack_master')
+    worker = require('../lib/cluster/hack_worker');
+  }
+
+  if ((cluster && cluster.isMaster) ||
+      (geddy.FD_HACK && !opts.spawned)) {
+    m = new master.Master();
+    m.start(opts);
+  }
+  else {
+    w = new worker.Worker();
+  }
+
+
+  /*
   process.addListener('SIGHUP', function (d) {
     shutdownMode = true;
     restartMode = true;
-    Server.stdoutLog.warning('Restarting master process ...');
-    Server.sendShutdownToWorkers();
+    //Master.stdoutLog.warning('Restarting master process ...');
+    //Master.sendShutdownToWorkers();
   });
 
   process.addListener('SIGTERM', function() {
     shutdownMode = true;
-    Server.stdoutLog.warning('Graceful shutdown from SIGTERM...');
-    Server.sendShutdownToWorkers();
+    //Master.stdoutLog.warning('Graceful shutdown from SIGTERM...');
+    //Master.sendShutdownToWorkers();
   });
+  */
 
-  Server.opts = opts;
-  Server.start();
-  // Generate a pid file
-  exec('echo ' + process.pid + ' > /tmp/xdr-proxy.pids',
-      function (err, stdout, stderr) {});
-
-}
+};
 
 if (typeof opts.help != 'undefined') {
-  Server.die(usage);
+  m.die(usage);
 }
 else {
   // `geddy app foo` or `geddy resource bar` etc. -- run generators
@@ -121,7 +139,7 @@ else {
         cmd += 'gen:secret';
         break;
       default:
-        Server.die(cmds[0] + ' is not a Geddy command.');
+        m.die(cmds[0] + ' is not a Geddy command.');
     }
     cmd += ' generator=true'
     exec(cmd, function (err, stdout, stderr) {
