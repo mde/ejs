@@ -94,10 +94,10 @@ var start = function () {
     m.start(opts);
   }
   else {
-    geddy.worker = new worker.Worker();
-    require('../lib/geddy.js');
+    var App = require('../lib/geddy.js').App;
+    var app = new App();
+    geddy.mixin(geddy, app);
   }
-
 
   /*
   process.addListener('SIGHUP', function (d) {
