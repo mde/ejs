@@ -1,8 +1,7 @@
 #!/usr/bin/env node
 
-// TODO: add start/stop/restart commands, commands to create new app-layout
-
-var geddy = global.geddy = {};
+// Load the basic Geddy toolkit
+require('../lib/geddy');
 
 var fs = require('fs')
   , exec = require('child_process').exec

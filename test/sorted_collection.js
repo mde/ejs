@@ -1,5 +1,7 @@
-var utils = require('../lib/utils')
-  , SortedCollection = geddy.SortedCollection
+// Load the basic Geddy toolkit
+require('../lib/geddy');
+
+var SortedCollection = geddy.SortedCollection
   , assert = require('assert')
   , tests;
 

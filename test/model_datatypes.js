@@ -1,5 +1,7 @@
-var utils = require('../lib/utils')
-  , model = require('../lib/model')
+// Load the basic Geddy toolkit
+require('../lib/geddy');
+
+var model = require('../lib/model')
   , assert = require('assert')
   , tests;
 
