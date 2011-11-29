@@ -88,13 +88,15 @@ var start = function () {
     worker = require('../lib/cluster/hack_worker');
   }
 
+  // Master-process
   if ((cluster && cluster.isMaster) ||
       (geddy.FD_HACK && !opts.spawned)) {
     m = new master.Master();
     m.start(opts);
   }
+  // Worker-process -- start up an app
   else {
-    var App = require('../lib/geddy.js').App;
+    var App = require('../lib/app.js').App;
     var app = new App();
     geddy.mixin(geddy, app);
   }
