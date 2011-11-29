@@ -94,7 +94,8 @@ var start = function () {
     m.start(opts);
   }
   else {
-    w = new worker.Worker();
+    geddy.worker = new worker.Worker();
+    require('../lib/geddy.js');
   }
 
 

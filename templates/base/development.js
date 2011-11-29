@@ -18,6 +18,7 @@
 
 var config = {
   detailedErrors: true
+, debug: true
 , hostname: null
 , port: 4000
 , sessions: {
