@@ -7,6 +7,7 @@ var fs = require('fs')
   , exec = require('child_process').exec
   , parseopts = require('../lib/parseopts')
   , utils = require('../lib/utils/index')
+  , App = require('../lib/app.js').App
   , parser
   , args = process.argv.slice(2)
   , optsReg
@@ -71,7 +72,8 @@ var start = function () {
     , master
     , worker
     , m
-    , w;
+    , w
+    , app;
 
   // Node 0.6
   try {
@@ -95,8 +97,12 @@ var start = function () {
   }
   // Worker-process -- start up an app
   else {
-    var App = require('../lib/app.js').App;
-    var app = new App();
+    w = new worker.Worker();
+    geddy.mixin(geddy, w);
+    app = new App();
+    app.init(function () {
+      w.startServer();
+    });
     geddy.mixin(geddy, app);
   }
 
