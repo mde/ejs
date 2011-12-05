@@ -78,7 +78,7 @@ namespace('gen', function () {
       console.log('Created app ' + dir + '.');
       complete();
     });
-  }, true);
+  }, {async: true});
 
   desc('Creates a resource-based route with model and controller.');
   task('resource', function (name) {
@@ -209,7 +209,7 @@ namespace('doc', function () {
       console.log('Done.');
       complete();
     });
-  }, true);
+  }, {async: true});
 
   desc('Clobber the generated docs.');
   task('clobber', function () {
@@ -227,7 +227,7 @@ namespace('doc', function () {
       console.log('Clobbered old docs.');
       complete();
     });
-  }, true);
+  }, {async: true});
 
 });
 
@@ -248,7 +248,7 @@ task('test', function () {
     console.log('Tests passed.');
     complete();
   });
-}, true);
+}, {async: true});
 
 // Don't generate the package-tasks when being called as a generator
 // from an installed geddy -- don't run outside the geddy project dir
