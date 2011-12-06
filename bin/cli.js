@@ -106,21 +106,6 @@ var start = function () {
     geddy.mixin(geddy, app);
   }
 
-  /*
-  process.addListener('SIGHUP', function (d) {
-    shutdownMode = true;
-    restartMode = true;
-    //Master.stdoutLog.warning('Restarting master process ...');
-    //Master.sendShutdownToWorkers();
-  });
-
-  process.addListener('SIGTERM', function() {
-    shutdownMode = true;
-    //Master.stdoutLog.warning('Graceful shutdown from SIGTERM...');
-    //Master.sendShutdownToWorkers();
-  });
-  */
-
 };
 
 if (typeof opts.help != 'undefined') {
