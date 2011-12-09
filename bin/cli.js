@@ -97,13 +97,14 @@ var start = function () {
   }
   // Worker-process -- start up an app
   else {
-    w = new worker.Worker(function () {
+    w = new worker.Worker();
+    w.init(function () {
       geddy.mixin(geddy, w);
       app = new App();
       app.init(function () {
         w.startServer();
+        geddy.mixin(geddy, app);
       });
-      geddy.mixin(geddy, app);
     });
   }
 
