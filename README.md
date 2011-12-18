@@ -37,6 +37,18 @@ To get Geddy from GitHub and install it:
     cd geddy
     make && sudo make install
 
+By default Geddy is installed in "/usr/local." To install it into a
+different directory (e.g., one that doesn't require super-user
+privilege), pass the PREFIX variable to the `make install` command.
+For example, to install it into a "geddy" directory in your home
+directory, you could use this:
+
+    make && make install PREFIX=~/geddy
+
+If you do install Geddy somewhere special, you'll need to add the
+"bin" directory in the install target to your PATH to get access
+to the `geddy` executable.
+
 ### Installing with [NPM](http://npmjs.org/)
 
     npm install -g geddy
