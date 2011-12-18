@@ -17,22 +17,26 @@
 
 .PHONY: all build install clean uninstall
 
+PREFIX=/usr/local
+DESTDIR=
+
 all: build
 
 build:
 	@echo 'Geddy built.'
 
 install:
-	@mkdir -p /usr/local/lib/node_modules/geddy && \
-		cp -R ./* /usr/local/lib/node_modules/geddy/ && \
-		ln -snf /usr/local/lib/node_modules/geddy/bin/cli.js /usr/local/bin/geddy && \
-		chmod 755 /usr/local/lib/node_modules/geddy/bin/cli.js && \
+	@mkdir -p $(DESTDIR)$(PREFIX)/bin \
+	  mkdir -p $(DESTDIR)$(PREFIX)/lib/node_modules/geddy && \
+		cp -R ./* $(DESTDIR)$(PREFIX)/lib/node_modules/geddy/ && \
+		ln -snf $(DESTDIR)$(PREFIX)/lib/node_modules/geddy/bin/cli.js $(DESTDIR)$(PREFIX)/bin/geddy && \
+		chmod 755 $(DESTDIR)$(PREFIX)/lib/node_modules/geddy/bin/cli.js && \
 		echo 'Geddy installed.'
 
 clean:
 	@true
 
 uninstall:
-	@rm -f /usr/local/bin/geddy && \
-		rm -fr /usr/local/lib/node_modules/geddy/ && \
+	@rm -f $(DESTDIR)$(PREFIX)/bin/geddy && \
+		rm -fr $(DESTDIR)$(PREFIX)/lib/node_modules/geddy/ && \
 		echo 'Geddy uninstalled.'

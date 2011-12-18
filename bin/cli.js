@@ -98,6 +98,7 @@ var start = function () {
   // Worker-process -- start up an app
   else {
     w = new worker.Worker();
+    geddy.worker = w;
     w.init(function () {
       geddy.mixin(geddy, w);
       app = new App();
