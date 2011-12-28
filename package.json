@@ -1,5 +1,5 @@
 { "name": "geddy"
-, "version": "0.2.2"
+, "version": "0.2.3"
 , "author": "Matthew Eernisse <mde@fleegix.org> (http://fleegix.org)"
 , "dependencies": {
     "jake": "0.1.x"
