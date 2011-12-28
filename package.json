@@ -1,14 +1,21 @@
-{ "name": "geddy"
-, "version": "0.2.2"
-, "author": "Matthew Eernisse <mde@fleegix.org> (http://fleegix.org)"
-, "dependencies": {
+{
+  "name": "geddy",
+  "version": "0.2.3",
+  "author": "Matthew Eernisse <mde@fleegix.org> (http://fleegix.org)",
+  "dependencies": {
     "jake": "0.1.x"
+  },
+  "bin": {
+    "geddy": "./bin/cli.js"
+  },
+  "main": "./lib",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/mde/geddy.git"
+  },
+  "preferGlobal": true,
+  "devDependencies": {},
+  "engines": {
+    "node": "*"
   }
-, "bin": { "geddy": "./bin/cli.js" }
-, "main": "./lib"
-, "repository": {
-    "type": "git"
-  , "url": "https://github.com/mde/geddy.git"
-  }
-, "preferGlobal": true
 }
