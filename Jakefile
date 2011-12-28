@@ -1,14 +1,41 @@
 var fs = require('fs')
-  , pkg = JSON.parse(fs.readFileSync(__dirname + '/package.json').toString())
-  , version = pkg.version
   , child_process = require('child_process')
   , path = require('path')
   , exec = child_process.exec
   , inflection = require('./deps/inflection')
   , utils = require('./lib/utils')
-  , ejs = require('./lib/template/adapters/ejs/ejs');
+  , ejs = require('./lib/template/adapters/ejs/ejs')
+  , createPackageTask
+  , getCurrentVersionNumber;
 
 var JSPAT = /\.js$/;
+
+getCurrentVersionNumber = function () {
+  pkg = JSON.parse(fs.readFileSync(__dirname + '/package.json').toString())
+  version = pkg.version
+  return version;
+};
+
+createPackageTask = function () {
+  var version = getCurrentVersionNumber()
+    , t;
+
+  t = new jake.PackageTask('geddy', 'v' + version, function () {
+    var fileList = [
+        'Makefile'
+      , 'Jakefile'
+      , 'README.md'
+      , 'package.json'
+      , 'bin/*'
+      , 'deps/*'
+      , 'lib/*'
+      , 'templates/*'
+      , 'test/*'
+      ];
+    this.packageFiles.include(fileList);
+    this.needTarGz = true;
+  });
+};
 
 namespace('gen', function () {
 
@@ -247,27 +274,52 @@ task('test', function () {
   jake.exec(cmds, function () {
     console.log('Tests passed.');
     complete();
-  });
+  }, {stdout: true});
 }, {async: true});
 
-// Don't generate the package-tasks when being called as a generator
-// from an installed geddy -- don't run outside the geddy project dir
-if (!process.env.generator) {
-  var t = new jake.PackageTask('geddy', 'v' + version, function () {
-    var fileList = [
-      'Makefile'
-    , 'Jakefile'
-    , 'README.md'
-    , 'package.json'
-    , 'bin/*'
-    , 'deps/*'
-    , 'lib/*'
-    , 'templates/*'
-    , 'test/*'
+namespace('npm', function () {
+ task('version', function () {
+    cmds = [
+      'npm version patch --message "Bumped version number."'
+    , 'git push origin master'
+    , 'git push --tags'
     ];
-    this.packageFiles.include(fileList);
-    this.needTarGz = true;
-    this.needTarBz2 = true;
-  });
+    jake.exec(cmds, function () {
+      console.log('Bumped version number.');
+      complete();
+    });
+  }, {async: true});
+
+  task('package', function () {
+    // Recreate the PackageTask with the updated version-number,
+    // run 'package'
+    createPackageTask();
+    // FIXME: Shouldn't have to shell out to get a real prereqs-tree
+    jake.exec(['jake package'], function () {
+      console.log('Created package.');
+      complete();
+    });
+
+  }, {async: true});
+
+  task('publish', function () {
+    var version = getCurrentVersionNumber();
+    cmds = [
+      'sudo npm publish pkg/geddy-v' + version + '.tar.gz'
+    ];
+    jake.exec(cmds, function () {
+      console.log('Published to NPM.');
+      complete();
+    }, {stdout: true});
+  }, {async: true});
+});
+
+desc('Bump version-number, package, and publish to NPM.');
+task('publish', ['npm:version', 'npm:package', 'npm:publish'], function () {
+});
+
+// Don't create the package-tasks when being called as a generator
+if (!process.env.generator) {
+  createPackageTask();
 }
 
