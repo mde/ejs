@@ -66,6 +66,11 @@ parser.parse(args);
 cmds = parser.cmds;
 opts = parser.opts;
 
+var die = function (str) {
+  console.log(str);
+  process.exit();
+};
+
 var start = function () {
 
   var cluster
@@ -112,7 +117,7 @@ var start = function () {
 };
 
 if (typeof opts.help != 'undefined') {
-  m.die(usage);
+  die(usage);
 }
 else {
   // `geddy app foo` or `geddy resource bar` etc. -- run generators
@@ -135,7 +140,7 @@ else {
         cmd += 'gen:secret';
         break;
       default:
-        m.die(cmds[0] + ' is not a Geddy command.');
+        die(cmds[0] + ' is not a Geddy command.');
     }
     cmd += ' generator=true'
     exec(cmd, function (err, stdout, stderr) {
