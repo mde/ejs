@@ -307,10 +307,15 @@ namespace('npm', function () {
     cmds = [
       'sudo npm publish pkg/geddy-v' + version + '.tar.gz'
     ];
-    jake.exec(cmds, function () {
-      console.log('Published to NPM.');
-      complete();
-    }, {stdout: true});
+    // Hackity hack -- NPM publish sometimes returns errror like:
+    // Error sending version data\nnpm ERR!
+    // Error: forbidden 0.2.4 is modified, should match modified time
+    setTimeout(function () {
+      jake.exec(cmds, function () {
+        console.log('Published to NPM.');
+        complete();
+      }, {stdout: true});
+    }, 5000);
   }, {async: true});
 });
 
