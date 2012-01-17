@@ -5,40 +5,11 @@ var fs = require('fs')
   , inflection = require('./deps/inflection')
   , utils = require('./lib/utils')
   , ejs = require('./lib/template/adapters/ejs/ejs')
-  , createPackageTask
-  , getCurrentVersionNumber;
+  , createPackageTask;
 
 var JSPAT = /\.js$/;
 
-getCurrentVersionNumber = function () {
-  pkg = JSON.parse(fs.readFileSync(__dirname + '/package.json').toString())
-  version = pkg.version
-  return version;
-};
-
-createPackageTask = function () {
-  var version = getCurrentVersionNumber()
-    , t;
-
-  t = new jake.PackageTask('geddy', 'v' + version, function () {
-    var fileList = [
-        'Makefile'
-      , 'Jakefile'
-      , 'README.md'
-      , 'package.json'
-      , 'bin/*'
-      , 'deps/*'
-      , 'lib/*'
-      , 'templates/*'
-      , 'test/*'
-      ];
-    this.packageFiles.include(fileList);
-    this.needTarGz = true;
-  });
-};
-
 namespace('gen', function () {
-
   var _writeTemplate = function (name, filename, dirname, opts) {
         var names = _getInflections(name)
           , text = fs.readFileSync(__dirname +
@@ -277,54 +248,20 @@ task('test', function () {
   }, {stdout: true});
 }, {async: true});
 
-namespace('npm', function () {
- task('version', function () {
-    cmds = [
-      'npm version patch --message "Bumped version number."'
-    , 'git push origin master'
-    , 'git push --tags'
-    ];
-    jake.exec(cmds, function () {
-      console.log('Bumped version number.');
-      complete();
-    });
-  }, {async: true});
-
-  task('package', function () {
-    // Recreate the PackageTask with the updated version-number,
-    // run 'package'
-    createPackageTask();
-    // FIXME: Shouldn't have to shell out to get a real prereqs-tree
-    jake.exec(['jake package'], function () {
-      console.log('Created package.');
-      complete();
-    });
-
-  }, {async: true});
-
-  task('publish', function () {
-    var version = getCurrentVersionNumber();
-    cmds = [
-      'sudo npm publish pkg/geddy-v' + version + '.tar.gz'
-    ];
-    // Hackity hack -- NPM publish sometimes returns errror like:
-    // Error sending version data\nnpm ERR!
-    // Error: forbidden 0.2.4 is modified, should match modified time
-    setTimeout(function () {
-      jake.exec(cmds, function () {
-        console.log('Published to NPM.');
-        complete();
-      }, {stdout: true});
-    }, 5000);
-  }, {async: true});
-});
-
-desc('Bump version-number, package, and publish to NPM.');
-task('publish', ['npm:version', 'npm:package', 'npm:publish'], function () {
-});
+var p = new jake.NpmPublishTask('geddy', [
+  'Makefile'
+, 'Jakefile'
+, 'README.md'
+, 'package.json'
+, 'bin/*'
+, 'deps/*'
+, 'lib/*'
+, 'templates/*'
+, 'test/*'
+]);
 
 // Don't create the package-tasks when being called as a generator
 if (!process.env.generator) {
-  createPackageTask();
+  jake.Task['npm:definePackage'].invoke();
 }
 
