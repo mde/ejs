@@ -1,6 +1,6 @@
 {
   "name": "geddy",
-  "version": "0.2.6",
+  "version": "0.2.7",
   "author": "Matthew Eernisse <mde@fleegix.org> (http://fleegix.org)",
   "dependencies": {
     "jake": "0.1.x"
