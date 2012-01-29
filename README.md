@@ -97,10 +97,10 @@ Attention all planets of the Solar Federation
 Use `geddy resource` in your app directory to add a
 resource. The route will be set up automatically for you.
 
-    mde@localhost:~/work/bytor$ geddy-gen resource snow_dog
+    mde@localhost:~/work/bytor$ geddy resource snow_dog
     [ADDED] ./app/models/snow_dog.js
     [ADDED] ./app/controllers/snow_dogs.js
-    resources snow_dogs route added to ./config/router.js
+    Resource snow_dogs route added to ./config/router.js
     Created view templates.
 
 Restart Geddy, and you'll see the new route working. Hit your
