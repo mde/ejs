@@ -21,7 +21,9 @@
 
     <link href="js/google-code-prettify/prettify.css" type="text/css" rel="stylesheet" />
     <script type="text/javascript" src="js/google-code-prettify/prettify.js"></script>
+
     <style type="text/css">
+
       @media (min-width: 980px) {
         body {
           padding-top: 60px;
@@ -32,19 +34,6 @@
         box-shadow: 0px 0px 3px #000;
       }
 
-      .hero-unit {
-        text-align: center;
-        background-color: rgba(200, 200, 200, .5);
-        box-shadow: 0px 0px 3px #bababa;
-        border: 1px solid #EDEDED;
-      }
-
-      .hero-unit h1 {
-        font-size: 84px;
-        line-height: 1.2;
-        text-shadow: -1px -1px 3px #fff;
-      }
-
       .code-box {
         padding-top: 28px;
       }
@@ -52,6 +41,17 @@
       .code-box .syntaxhighlighter {
         box-shadow: 0px 0px 3px #000;
         border-radius: 3px;
+      }
+
+      hr {
+        border-color: #ccc;
+        box-shadow: -1px 0 1px white;
+      }
+
+      .hero-unit {
+        background-color: rgba(200, 200, 200, .5);
+        box-shadow: 0px 0px 3px #bababa;
+        border: 1px solid #EDEDED;
       }
 
     </style>
@@ -74,8 +74,8 @@
           <a class="brand" href="index.html">Geddy.JS</a>
           <div class="nav-collapse">
             <ul class="nav">
-              <li class="active"><a href="index.html">Home</a></li>
-              <li><a href="features.html">Features</a></li>
+              <li><a href="index.html">Home</a></li>
+              <li class="active"><a href="features.html">Features</a></li>
               <li><a href="tutorial.html">Tutorial</a></li>
               <li><a href="docs.html">Docs</a></li>
             </ul>
@@ -88,32 +88,98 @@
     </div>
 
     <div class="container">
-
-      <!-- Main hero unit for a primary marketing message or call to action -->
       <div class="hero-unit">
-        <h1>Geddy.js</h1>
-        <p>A simple, structured framework for Node.</p>
-        <p><a class="btn btn-primary btn-large">Check out the features</a></p>
+        <h1>Features</h1>
+        <p class="pull-right">Geddy has you covered</p>
+      </div>
+      <div class="row">
+        <div class="span2 heading-box">
+          <h3>Models</h3>
+        </div>
+        <div class="span5">
+          <h4>A flexible data layer</h4>
+          <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
+          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
+        </div>
+        <div class="span5">
+
+<!-- Model Example -->
+<pre class="code-box prettyprint">
+Model.find('thing', function(thing){
+  // do stuff
+})
+
+
+
+
+
+// Models
+</pre>
+
+        </div>
       </div>
 
-      <!-- Example row of columns -->
+      <hr/>
+
+      <!-- Views -->
       <div class="row">
-        <div class="span4">
-          <h2>Get the Code</h2>
-          <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
-          <p><a class="btn" href="http://github.com/mde/geddy">Veiw on github &raquo;</a></p>
+        <div class="span2 heading-box">
+          <h3>Views</h3>
         </div>
-        <div class="span4">
-          <h2>Get Started</h2>
-          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-          <p><a class="btn" href="tutorials.html">Read the tutorial &raquo;</a></p>
-       </div>
-        <div class="span4">
-          <h2>Documentation</h2>
+        <div class="span5">
+          <h4>A templating system you already know how to use</h4>
           <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
-          <p><a class="btn" href="docs.html">Explore the documentation &raquo;</a></p>
+          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
+        </div>
+        <div class="span5">
+
+<!-- View Example -->
+<pre class="code-box prettyprint">
+this.render();
+
+
+
+
+
+
+
+// Views
+</pre>
+
         </div>
       </div>
+
+      <hr/>
+
+      <!-- Controllers -->
+      <div class="row">
+        <div class="span2 heading-box">
+          <h3>Controllers</h3>
+        </div>
+        <div class="span5">
+          <h4>Simple inheritence based controllers</h4>
+          <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
+          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
+        </div>
+        <div class="span5">
+
+<!-- Controller Example -->
+<pre class="code-box prettyprint">
+Controller.action = function (req, resp) {
+
+}
+
+
+
+
+
+// Controllers
+</pre>
+
+        </div>
+      </div>
+
+      <hr/>
 
       <footer>
         <p>&copy; GeddyJS.org 2112</p>
