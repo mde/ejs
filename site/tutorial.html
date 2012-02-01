@@ -103,10 +103,8 @@
           <div class="well">
             <h5>Installing Geddy</h5>
             <ul>
-              <li><a href="#">Link</a></li>
-              <li><a href="#">Link</a></li>
-              <li><a href="#">Link</a></li>
-              <li><a href="#">Link</a></li>
+              <li><a href="#npm">Install via npm</a></li>
+              <li><a href="#git">Clone the repository</a></li>
             </ul>
             <h5>Example Application</h5>
             <ul>
@@ -126,20 +124,19 @@
         </div>
         <div class="span9">
           <div class="hero-unit">
-            <h3>A templating system that just works</h3>
-            <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
+            <h2>Installing Geddy</h2>
+            <p>If you already have <a href="http://nodejs.org">node.js</a> and <a href="npmjs.org">npm</a> installed, installing Geddy is easy: </p>
 
-<!-- Model Example -->
-<pre class="codebox prettyprint">
-Model.find('thing', function(thing){
-  // do stuff
-})
+<!-- Install Example -->
+<pre class="codebox prettyprint" id="npm">
+$> npm install -g jake geddy
+</pre>
 
+            <h2>Creating your first Geddy app<h2>
 
-
-
-
-// Models
+<!-- App Creation Example -->
+<pre class="codebox prettyprint" id="first-app">
+$> geddy app test-app
 </pre>
 
           </div>
