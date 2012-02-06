@@ -11,23 +11,18 @@ tests = new (function () {
 
   this.testEventBuffer = function () {
     var source = new Stream()
-      , dest1 = new EventEmitter()
-      , dest2 = new EventEmitter();
+      , dest = new EventEmitter()
+      , buff = new EventBuffer(source)
+      , data = '';
+    dest.on('data', function(d) { data += d; });
     source.writeable = true;
     source.readable = true;
-    var buff = new EventBuffer(source)
-      , data1 = ''
-      , data2 = '';
     source.emit('data', 'abcdef');
     source.emit('data', '123456');
-    dest1.on('data', function(d) { data1 += d; });
-    dest2.on('data', function(d) { data2 += d; });
-    buff.addOutlet(dest1);
-    buff.flush(dest2);
-    assert.equal('abcdef123456', data1);
-    assert.equal('abcdef123456', data2);
+    buff.sync(dest);
+    assert.equal('abcdef123456', data);
     source.emit('data', '---');
-    assert.equal('abcdef123456---', data2);
+    assert.equal('abcdef123456---', data);
   };
 
 })();
