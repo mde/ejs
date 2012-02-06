@@ -1,5 +1,7 @@
 {
   "name": "geddy",
+  "description": "Web framework for Node.js",
+  "keywords": ["Web", "framework", "REST", "MVC"],
   "version": "0.2.12",
   "author": "Matthew Eernisse <mde@fleegix.org> (http://fleegix.org)",
   "dependencies": {
