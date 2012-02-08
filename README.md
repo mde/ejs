@@ -16,7 +16,7 @@ but still let you get under the hood and tinker if you want.
   * Easy resource-based routing
   * App and resource generators
   * Content-negotiation
-  * Session support (in-memory, cookie, CouchDB)
+  * Session support (in-memory, cookie)
   * Templating (EJS), partials support
   * Fully non-blocking
 
