@@ -11,9 +11,9 @@ var color = require('./color');
 /**
  * Initialize a `Loggeer` with the given log `level` defaulting
  * to __DEBUG__ and `stream` defaulting to _stdout_.
- * 
- * @param {Number} level 
- * @param {Object} stream 
+ *
+ * @param {Number} level
+ * @param {Object} stream
  * @api public
  */
 var Log = exports = module.exports = function Log(level, stream, print, loggly) {
@@ -22,7 +22,7 @@ var Log = exports = module.exports = function Log(level, stream, print, loggly) 
     this.stream = stream || process.stdout;
     this.print = print || false;
     if (loggly && typeof loggly.log == 'function') {
-      this.loggly = loggly; 
+      this.loggly = loggly;
     } else {
       this.loggly = false;
     }
@@ -30,14 +30,14 @@ var Log = exports = module.exports = function Log(level, stream, print, loggly) 
 };
 /**
  * System is unusable.
- * 
+ *
  * @type Number
  */
 exports.EMERGENCY = 0;
 /**
  * Action must be taken immediately.
- * 
- * @type Number 
+ *
+ * @type Number
  */
 exports.ALERT = 1;
 /**
@@ -48,37 +48,37 @@ exports.ALERT = 1;
 exports.CRITICAL = 2;
 /**
  * Error condition.
- * 
+ *
  * @type Number
  */
 exports.ERROR = 3;
 /**
  * Warning condition.
- * 
+ *
  * @type Number
  */
 exports.WARNING = 4;
 /**
  * Normal but significant condition.
- * 
+ *
  * @type Number
  */
 exports.NOTICE = 5;
 /**
  * Purely informational message.
- * 
+ *
  * @type Number
  */
 exports.INFO = 6;
 /**
  * Application debug messages.
- * 
+ *
  * @type Number
  */
 exports.DEBUG = 7;
 /**
  * Application access messages.
- * 
+ *
  * @type Number
  */
 exports.ACCESS = 8;
@@ -139,7 +139,7 @@ Log.prototype = {
               if (levelStr === 'NOTICE')  { coloredLevelStr = levelStr.green; }
               if (levelStr === 'INFO')    { coloredLevelStr = levelStr.blue; }
               if (levelStr === 'DEBUG')   { coloredLevelStr = levelStr.yellow; }
-              console.log(('[' + new Date().toUTCString() + ']').grey + ' ' + coloredLevelStr + ' ' + msg);
+              console.log(('[' + new Date().toUTCString() + ']').cyan + ' ' + coloredLevelStr + ' ' + msg);
             }
             if (typeof this.loggly.log == 'function' && (this.loggly.logLevel >= exports[levelStr])) {
               this.loggly.log({eventType: levelStr, message: msg});
