@@ -10,3 +10,4 @@ spec/browser/autogen_suite.js
 node_modules
 tmtags
 *.DS_Store
+examples/todo_app/log/*
