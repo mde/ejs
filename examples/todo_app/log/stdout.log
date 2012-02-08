@@ -1,4 +1,4 @@
-[Wed, 08 Feb 2012 09:53:42 GMT] INFO Server starting with config: {
+[Wed, 08 Feb 2012 10:08:03 GMT] INFO Server starting with config: {
   "environment": "development",
   "workers": 1,
   "port": 4000,
@@ -23,9 +23,19 @@
   "detailedErrors": true,
   "hostname": null
 }
-[Wed, 08 Feb 2012 09:53:42 GMT] INFO Metrics server started on port 4001
-[Wed, 08 Feb 2012 09:53:42 GMT] INFO Creating 1 worker process.
-[Wed, 08 Feb 2012 09:53:42 GMT] NOTICE [object Object]
-[Wed, 08 Feb 2012 09:53:42 GMT] INFO Server worker running in development on port 4000 with a PID of: 23613
-[Wed, 08 Feb 2012 09:53:42 GMT] DEBUG LOGGING STARTED ============================================
-[Wed, 08 Feb 2012 09:53:42 GMT] DEBUG ============================================================
+[Wed, 08 Feb 2012 10:08:03 GMT] INFO Metrics server started on port 4001
+[Wed, 08 Feb 2012 10:08:03 GMT] INFO Creating 1 worker process.
+[Wed, 08 Feb 2012 10:08:03 GMT] NOTICE [object Object]
+[Wed, 08 Feb 2012 10:08:03 GMT] INFO Server worker running in development on port 4000 with a PID of: 24209
+[Wed, 08 Feb 2012 10:08:03 GMT] DEBUG LOGGING STARTED ============================================
+[Wed, 08 Feb 2012 10:08:03 GMT] DEBUG ============================================================
+[Wed, 08 Feb 2012 10:15:46 GMT] DEBUG POST /todos
+[Wed, 08 Feb 2012 10:15:46 GMT] DEBUG received data
+[Wed, 08 Feb 2012 10:22:24 GMT] DEBUG POST /todos
+[Wed, 08 Feb 2012 10:22:24 GMT] DEBUG received data
+[Wed, 08 Feb 2012 10:25:22 GMT] DEBUG POST /todos
+[Wed, 08 Feb 2012 10:25:22 GMT] DEBUG received data
+[Wed, 08 Feb 2012 10:25:26 GMT] DEBUG POST /todos
+[Wed, 08 Feb 2012 10:25:26 GMT] DEBUG received data
+[Wed, 08 Feb 2012 10:25:37 GMT] DEBUG POST /todos
+[Wed, 08 Feb 2012 10:25:37 GMT] DEBUG received data

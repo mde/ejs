@@ -1,13 +1,12 @@
 <div class="hero-unit">
-  <% if (todos.length) { %>
-  <h3>ToDos:</h3>
-  <ul>
-    <% for (var i in todos) { %>
-      <li><a href="/todos/<%= todos[i].id; %>"><%= todos[i].title; %></a> - <%= todos[i].status; %></li>
-    <% } %>
-  </ul>
-  <% } else { %>
-    No ToDos yet
-  <% } %>
-  <a href="/todos/add">Create a new ToDo</a>
+  <h1>To Do List</h1>
+  <a href="/todos/add" class="btn pull-right">Create a new To Do</a></p>
 </div>
+<% if (todos.length) { %>
+<div class="row todo-item">
+  <% for (var i in todos) { %>
+    <div class="span8"><h3><a href="/todos/<%= todos[i].id; %>"><%= todos[i].title; %></a></h3></div>
+    <div class="span4"><h3><i class="icon-list-alt"></i><%= todos[i].status; %></h3></div>
+  <% } %>
+</div>
+<% } %>

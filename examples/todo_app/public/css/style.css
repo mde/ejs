@@ -24,3 +24,16 @@ body {
 .geddy-welcome-box .btn-large {
   margin-top: 20px;
 }
+
+.todo-item div {
+  background: white;
+  border-bottom: 2px solid #ccc;
+}
+
+.todo-item div > * {
+  padding: 20px;
+}
+
+.todo-item div h3 i {
+  margin: 5px;
+}
