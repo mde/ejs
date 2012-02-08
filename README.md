@@ -16,7 +16,7 @@ but still let you get under the hood and tinker if you want.
   * Easy resource-based routing
   * App and resource generators
   * Content-negotiation
-  * Session support (in-memory, cookie, CouchDB)
+  * Session support (in-memory, cookie)
   * Templating (EJS), partials support
   * Fully non-blocking
 
@@ -26,7 +26,7 @@ Apache License, Version 2
 
 ### Prerequisites
 
-Geddy requires version 0.4.x of Node.js, and the
+Geddy requires version 0.4.x of Node.js or higher, and the
 [Jake](https://github.com/mde/jake) JavaScript build-tool.
 
 ### Installing

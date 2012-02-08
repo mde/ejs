@@ -58,6 +58,7 @@ namespace('gen', function () {
         , 'mkdir -p ./' + dir + '/app/controllers'
         , 'mkdir -p ./' + dir + '/lib'
         , 'mkdir -p ./' + dir + '/log'
+        , 'mkdir -p ./' + dir + '/node_modules'
         , 'cp -r ' + templateDir + '/views ' + dir + '/app/'
         , 'cp -r ' + templateDir + '/public ' + dir
         , 'cp ' + templateDir + '/router.js ' + dir + '/config/'
