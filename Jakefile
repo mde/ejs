@@ -67,7 +67,6 @@ namespace('gen', function () {
         , 'cp ' + templateDir + '/production.js ' + dir + '/config/'
         , 'cp ' + templateDir + '/main.js ' + dir + '/app/controllers/'
         , 'cp ' + templateDir + '/application.js ' + dir + '/app/controllers/'
-        , 'cp ' + templateDir + '/master.css ' + dir + '/public/css/'
         , 'cp ' + templateDir + '/favicon.ico ' + dir + '/public/'
         ];
     jake.exec(cmds, function () {
