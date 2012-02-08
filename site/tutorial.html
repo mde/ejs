@@ -50,6 +50,10 @@
         border: 1px solid #EDEDED;
       }
 
+      .hero-unit h2 {
+        margin-top: 40px;
+      }
+
       @media (max-width: 480px) {
         .hero-unit {
           padding: 20px 20px 30px 20px;
@@ -84,7 +88,7 @@
               <li><a href="index.html">Home</a></li>
               <li><a href="features.html">Features</a></li>
               <li class="active"><a href="tutorial.html">Tutorial</a></li>
-              <li><a href="docs.html">Docs</a></li>
+              <!--<li><a href="docs.html">Docs</a></li>-->
             </ul>
             <ul class="nav pull-right">
               <li><a href="http://github.com/mde/geddy">Get it on Github</a></li>
@@ -125,19 +129,139 @@
         </div>
         <div class="span9">
           <div class="hero-unit">
+            <h2 style="margin-top: 0">Introduction</h2>
+            <p>Welcome to the Geddy.js tutorial. We'll walk you through getting started with Geddy, and in the process make a simple in memory to do list.</p>
+
             <h2>Installing Geddy</h2>
             <p>If you already have <a href="http://nodejs.org">node.js</a> and <a href="npmjs.org">npm</a> installed, installing Geddy is easy: </p>
 
 <!-- Install Example -->
 <pre class="codebox prettyprint" id="npm">
-$> npm install -g jake geddy
+npm install -g jake geddy
 </pre>
 
-            <h2>Creating your first Geddy app<h2>
+            <p>If you want to install from source, you can always git clone the repo and make install</p>
+ <!-- Install Example -->
+<pre class="codebox prettyprint" id="git">
+git clone git://github.com/mde/geddy.git
+cd geddy
+make && sudo make install
+</pre>
 
+            <h2>Creating your first Geddy app</h2>
+            <p>Make sure you're in the directory where you store all your code, and run:</p>
 <!-- App Creation Example -->
 <pre class="codebox prettyprint" id="first-app">
-$> geddy app test-app
+geddy app todo_app
+</pre>
+
+            <h2>Running your first Geddy app</h2>
+            <p>Similarly, use the geddy executable to start your app inside your app directory: </p>
+ <!-- App Creation Example -->
+<pre class="codebox prettyprint" id="start-app">
+cd todo_app
+geddy
+</pre>
+
+            <h2>Viewing your app</h2>
+            <p>To view your app, go to <a href="http://localhost:4000/" target="_blank">http://localhost:4000/</a> in your browser. You should see an app similar to this:</p>
+            <p>{{insert image here}}</p>
+
+            <h2>Generating your first resource</h2>
+            <p>Use the executable to generate a restful resource:</p>
+ <!-- App Creation Example -->
+<pre class="codebox prettyprint" id="resource">
+geddy resource todo
+</pre>
+            <p>Your directory structure should look like this now:</p>
+<pre class="codebox prettyprint">
+./app
+./app/controllers
+./app/controllers/application.js
+./app/controllers/main.js
+./app/controllers/todos.js
+./app/models
+./app/models/todo.js
+./app/views
+./app/views/.DS_Store
+./app/views/layouts
+./app/views/layouts/application.html.ejs
+./app/views/main
+./app/views/main/index.html.ejs
+./app/views/todos
+./app/views/todos/add.html.ejs
+./app/views/todos/edit.html.ejs
+./app/views/todos/index.html.ejs
+./app/views/todos/show.html.ejs
+./config
+./config/development.js
+./config/environment.js
+./config/init.js
+./config/production.js
+./config/router.js
+./lib
+./log
+./public
+./public/.DS_Store
+./public/css
+./public/css/.DS_Store
+./public/css/bootstrap.css
+./public/css/bootstrap.min.css
+./public/css/bootstrap.responsive.css
+./public/css/bootstrap.responsive.min.css
+./public/css/style.css
+./public/favicon.ico
+./public/img
+./public/img/glyphicons-halflings-white.png
+./public/img/glyphicons-halflings.png
+./public/img/whitey.png
+./public/js
+./public/js/.DS_Store
+./public/js/bootstrap.js
+./public/js/bootstrap.min.js
+./public/js/jquery.min.js
+</pre>
+
+            <h2>Todos Controller</h2>
+            <p>We'll be doing most of our work in the todos.js controller</p>
+ <!-- App Creation Example -->
+<pre class="codebox prettyprint" id="controller">
+var Todos = function () {
+  this.respondsWith = ['html', 'json', 'js', 'txt'];
+
+  this.index = function (req, resp, params) {
+    this.respond({params: params});
+  };
+
+  this.add = function (req, resp, params) {
+    this.respond({params: params});
+  };
+
+  this.create = function (req, resp, params) {
+    // Save the resource, then display index page
+    this.redirect({controller: this.name});
+  };
+
+  this.show = function (req, resp, params) {
+    this.respond({params: params});
+  };
+
+  this.edit = function (req, resp, params) {
+    this.respond({params: params});
+  };
+
+  this.update = function (req, resp, params) {
+    // Save the resource, then display the item page
+    this.redirect({controller: this.name, id: params.id});
+  };
+
+  this.remove = function (req, resp, params) {
+    this.respond({params: params});
+  };
+
+};
+
+exports.Todos = Todos;
 </pre>
 
           </div>

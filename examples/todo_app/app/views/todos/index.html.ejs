@@ -1,0 +1,13 @@
+<div class="hero-unit">
+  <% if (todos.length) { %>
+  <h3>ToDos:</h3>
+  <ul>
+    <% for (var i in todos) { %>
+      <li><a href="/todos/<%= todos[i].id; %>"><%= todos[i].title; %></a> - <%= todos[i].status; %></li>
+    <% } %>
+  </ul>
+  <% } else { %>
+    No ToDos yet
+  <% } %>
+  <a href="/todos/add">Create a new ToDo</a>
+</div>

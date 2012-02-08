@@ -1,0 +1,36 @@
+[Wed, 08 Feb 2012 07:49:50 GMT] INFO Server starting with config: {
+  "environment": "development",
+  "workers": 1,
+  "port": 4000,
+  "debug": true,
+  "rotateWorkers": false,
+  "rotationWindow": 7200000,
+  "rotationTimeout": 300000,
+  "logDir": "/Users/derickson/dev/todo_app/log",
+  "gracefulShutdownTimeout": 30000,
+  "heartbeatInterval": 5000,
+  "heartbeatWindow": 20000,
+  "staticFilePath": "/Users/derickson/dev/todo_app/public",
+  "sessions": {
+    "store": "memory",
+    "key": "sid",
+    "expiry": 1209600
+  },
+  "cookieSessionKey": "sdata",
+  "detailedErrors": true,
+  "hostname": null
+}
+[Wed, 08 Feb 2012 07:49:50 GMT] INFO Creating 1 worker process.
+[Wed, 08 Feb 2012 07:49:50 GMT] INFO Server worker running in development on port 4000 with a PID of: 19947
+[Wed, 08 Feb 2012 07:49:50 GMT] DEBUG LOGGING STARTED ============================================
+[Wed, 08 Feb 2012 07:49:50 GMT] DEBUG ============================================================
+[Wed, 08 Feb 2012 07:50:05 GMT] DEBUG POST /todos
+[Wed, 08 Feb 2012 07:50:05 GMT] DEBUG received data
+[Wed, 08 Feb 2012 07:51:10 GMT] INFO Creating 1 worker process.
+[Wed, 08 Feb 2012 07:51:11 GMT] INFO Server worker running in development on port 4000 with a PID of: 19985
+[Wed, 08 Feb 2012 07:51:11 GMT] DEBUG LOGGING STARTED ============================================
+[Wed, 08 Feb 2012 07:51:11 GMT] DEBUG ============================================================
+[Wed, 08 Feb 2012 07:51:15 GMT] INFO Creating 1 worker process.
+[Wed, 08 Feb 2012 07:51:16 GMT] INFO Server worker running in development on port 4000 with a PID of: 19990
+[Wed, 08 Feb 2012 07:51:16 GMT] DEBUG LOGGING STARTED ============================================
+[Wed, 08 Feb 2012 07:51:16 GMT] DEBUG ============================================================

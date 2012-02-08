@@ -55,6 +55,10 @@
         border: 1px solid #EDEDED;
       }
 
+      h4 {
+        margin-bottom: 20px;
+      }
+
       @media (max-width: 480px) {
         .hero-unit {
           padding: 20px 20px 30px 20px;
@@ -88,8 +92,8 @@
             <ul class="nav">
               <li><a href="index.html">Home</a></li>
               <li class="active"><a href="features.html">Features</a></li>
-              <li><a href="tutorial.html">Tutorial</a></li>
-              <li><a href="docs.html">Docs</a></li>
+              <!--<li><a href="tutorial.html">Tutorial</a></li>-->
+              <!--<li><a href="docs.html">Docs</a></li>-->
             </ul>
             <ul class="nav pull-right">
               <li><a href="http://github.com/mde/geddy">Get it on Github</a></li>
@@ -108,24 +112,28 @@
         <div class="span2 heading-box">
           <h3>Models</h3>
         </div>
-        <div class="span5">
+        <div class="span4">
           <h4>A flexible data layer</h4>
-          <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
-          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
+          <p>Geddy lets you define reusable models for your data. It's got validation, instance methods, and static methods. It'll even stub out a model adapter for you to help you get your data slurped in.</p>
         </div>
-        <div class="span5">
+        <div class="span6">
 
 <!-- Model Example -->
 <pre class="code-box prettyprint">
-Model.find('thing', function(thing){
-  // do stuff
-})
+var User = function () {
+  this.property('login', 'string', {required: true});
+  this.property('password', 'string', {required: true});
 
+  this.validatesPresent('login');
+  this.validatesConfirmed('password', 'confirmPassword');
 
+  // You can define methods for instances like this
+  this.someMethod = function () {
+    // Do some stuff
+  };
+};
 
-
-
-// Models
+User = geddy.model.registerModel('User', User);
 </pre>
 
         </div>
@@ -138,24 +146,26 @@ Model.find('thing', function(thing){
         <div class="span2 heading-box">
           <h3>Views</h3>
         </div>
-        <div class="span5">
+        <div class="span4">
           <h4>A templating system you already know how to use</h4>
-          <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
-          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
+          <p>Geddy uses EJS for templating. This means you get to use the same Javascript you know and love to create your templates. The syntax is very similar to ERB, so if you have experience with rails you should be able to jump right in.
         </div>
-        <div class="span5">
+        <div class="span6">
 
 <!-- View Example -->
 <pre class="code-box prettyprint">
-this.render();
+// view logic
+<% if (localVar) { %>
+  // do some stuff with that local variable
+<% } %>
 
+// display the value of a variable
+<%= user.login %>
 
-
-
-
-
-
-// Views
+// just use regular js
+<% for (var i in user.posts) { %>
+  <%= user.posts[i].title %>
+<% } %>
 </pre>
 
         </div>
@@ -168,24 +178,214 @@ this.render();
         <div class="span2 heading-box">
           <h3>Controllers</h3>
         </div>
-        <div class="span5">
-          <h4>Simple inheritence based controllers</h4>
-          <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
-          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
+        <div class="span4">
+          <h4>Simple controllers</h4>
+          <p>When you generate a resource, your controller is automatically filled with your basic CRUD actions. If you want to add more actions to your controller, just add a method onto the controller and add a new route. It's that easy.</p>
         </div>
-        <div class="span5">
+        <div class="span6">
 
 <!-- Controller Example -->
 <pre class="code-box prettyprint">
-Controller.action = function (req, resp) {
+var User = function () {
+  this.index = function (req, resp, params) {
+    this.respond(params, {
+      format: 'html'
+    , template: 'app/views/main/index'
+    });
+  };
+};
 
-}
+exports.User = User;
+</pre>
 
+        </div>
+      </div>
 
+      <hr/>
 
+      <!-- Content Negotiation -->
+      <div class="row">
+        <div class="span2 heading-box">
+          <h3>Content Negotiation</h3>
+        </div>
+        <div class="span4">
+          <h4>Automatic json and jsonp support</h4>
+          <p>Geddy handles content formats for you - add a <code>.json</code> to your url, and you'll get json back. Add a <code>.js?callback=foo</code> to your url and you'll have a jsonp response. Awesome, huh?</p>
+        </div>
+        <div class="span6">
 
+<!-- Content Example -->
+<pre class="code-box prettyprint">
+this.respondsWith = ['js', 'json'];
 
-// Controllers
+this.show = function (params) {
+  // (Fetch some item by params.id)
+    item = {foo: 'FOO', bar: 1, baz: false};
+      this.respond(item);
+};
+</pre>
+
+        </div>
+      </div>
+
+      <hr/>
+
+      <!-- Process Clustering -->
+      <div class="row">
+        <div class="span2 heading-box">
+          <h3>Process Clustering</h3>
+        </div>
+        <div class="span4">
+          <h4>No code needed for clustering</h4>
+          <p>Geddy automatically handles multi-process clustering for you. It works with 0.6.x and it's backwards compatible with node 0.4.x; scale your node apps across your server's core without any extra work.</p>
+        </div>
+        <div class="span6">
+
+<!-- Clustering Example -->
+<pre class="code-box prettyprint">
+// just set the number of workers in your config
+"workers": 1
+
+// Geddy also handles process rotation
+"rotateWorkers": true,
+"rotationWindow": 7200000,
+"rotationTimeout": 300000,
+</pre>
+
+        </div>
+      </div>
+
+      <hr/>
+
+      <!-- Metrics -->
+      <div class="row">
+        <div class="span2 heading-box">
+          <h3>App Metrics</h3>
+        </div>
+        <div class="span4">
+          <h4>Automatically Instrumented Controllers</h4>
+          <p>With geddy, all your controller actions and requests are instrumented automatically. All you need to do is enable metrics in your config. hit up port 4001 /metrics to collect them periodically.</p>
+        </div>
+        <div class="span6">
+
+<!-- Clustering Example -->
+<pre class="code-box prettyprint">
+// counters
+var counter = new geddy.metrics.Counter;
+counter.inc(1);
+
+// timers
+var timer = new geddy.metrics.Timer;
+timer.mark();
+</pre>
+
+        </div>
+      </div>
+
+      <hr/>
+
+      <!-- Generators -->
+      <div class="row">
+        <div class="span2 heading-box">
+          <h3>Executable</h3>
+        </div>
+        <div class="span4">
+          <h4>Generate your initial app and all it's resources</h4>
+          <p>Use the <code>geddy</code> executable to generate geddy apps and resources. <code>geddy app test_app</code> will generate a geddy app called test_app in the test_app directory. <code>geddy resource users</code> will generate a users controller, a user model, a bunch on user views, and all the restful routes needed to interact with a user.</p>
+        </div>
+        <div class="span6">
+
+<!-- Generators -->
+<pre class="code-box prettyprint">
+// generate an app
+$> geddy app test_app
+
+// generate a new resource
+$> geddy resource users
+
+// start your app
+$> geddy
+</pre>
+
+        </div>
+      </div>
+
+      <hr/>
+
+      <!-- Bootstrap -->
+      <div class="row">
+        <div class="span2 heading-box">
+          <h3>Bootstrap and jQuery</h3>
+        </div>
+        <div class="span4">
+          <h4>Your app automatically works on mobile devices</h4>
+          <p>Geddy gives you Twitter's Bootstrap on the front end so you can rapidly lay out your prototype. Plus, since responsive layouts are built right in, your app automatically works on mobile devices and tablets.</p>
+        </div>
+        <div class="span6">
+
+<!-- Bootstrap -->
+<pre class="code-box prettyprint" style="font-size: 90%">
+&lt;script type=&quot;text/javascript&quot; src=&quot;js/jquery.min.js&quot;&gt;
+&lt;script type=&quot;text/javascript&quot; src=&quot;js/bootstrap.min.js&quot;&gt;
+
+&lt;link rel=&quot;stylesheet&quot; href=&quot;css/bootstrap.min.css&quot;&gt;
+&lt;link rel=&quot;stylesheet&quot; href=&quot;css/bootstrap.responsive.css&quot;&gt;
+</pre>
+
+        </div>
+      </div>
+
+      <hr/>
+
+      <!-- Logging -->
+      <div class="row">
+        <div class="span2 heading-box">
+          <h3>Logging</h3>
+        </div>
+        <div class="span4">
+          <h4>Access, stdout, and error logs</h4>
+          <p>Geddy automatically logs requests to an access log, and you can log anything you'd to stdout or a file. It supports 9 different log levels from debug to emergency.</p>
+        </div>
+        <div class="span6">
+
+<!-- Bootstrap -->
+<pre class="code-box prettyprint" style="font-size: 90%">
+// info
+geddy.log.info('Some info for you');
+
+// warning
+geddy.log.warn('A warning!');
+
+// error
+geddy.log.Error('An error occurred');
+</pre>
+
+        </div>
+      </div>
+
+      <hr/>
+
+      <!-- routes -->
+      <div class="row">
+        <div class="span2 heading-box">
+          <h3>Routes</h3>
+        </div>
+        <div class="span4">
+          <h4>Easy to use Routing API</h4>
+          <p>Routes are easy with Geddy. Just match a url to a controller and an action. You can specify http methods, formats, and url params.</p>
+        </div>
+        <div class="span6">
+
+<!-- Bootstrap -->
+<pre class="code-box prettyprint" style="font-size: 90%">
+// standard main route
+router.match('/').to({controller: 'Main', action: 'index'});
+
+// a custom route
+router.match('/moving/pictures/:id').to({controller: 'Moving', action: 'pictures'});
+
+// a restful resource route
+router.resource('users');
 </pre>
 
         </div>
