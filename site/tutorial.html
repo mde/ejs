@@ -162,11 +162,11 @@
 
             <ul>
             <li>How to generate an app</li>
-            <li>Setting up a resource for us to use</li>
-            <li>Review how to use Bootstrap to automatically make a mobile version of your app</li>
+            <li>Setting up a RESTful resource for your app</li>
+            <li>Review how to use Bootstrap to make a mobile version of your app, automatically</li>
             <li>Using Geddy Models</li>
-            <li>Using a model adapter to interact with your data</li>
-            <li>How to use init.js in your app</li>
+            <li>Using a model-adapter to interact with your data</li>
+            <li>How to use init.js in your app's startup</li>
             <li>How views in Geddy work</li>
             <li>How to use controllers to tie everything together</li>
             </ul>
@@ -175,13 +175,15 @@
 
             <p>First, make sure that you have <a href="http://nodejs.org">node</a> installed on your machine.</p>
 
-            <p>Next, install Jake and Geddy. Jake is a task system written in Javascript similar to Ruby's Rake.</p>
+            <p>Next, install Jake and Geddy. Jake is a Javascript build-tool similar to Ruby's Rake.</p>
 
             <pre class="prettyprint">$&gt; npm install -g jake geddy</pre>
 
+            <blockquote class="pull-right">(Note running this command may require super-user access, i.e., `sudo`.)</blockquote>
+
             <h2 id="generate-app">Create Your first app</h2>
 
-            <p>Now lets use the <code>geddy</code> executable to generate a basic app structure.</p>
+            <p>Now use the <code>geddy</code> executable to generate a basic app-structure.</p>
 
             <pre class="prettyprint">$&gt; geddy app todo_app</pre>
 
@@ -196,7 +198,7 @@ $&gt; cd todo_app
 $&gt; geddy
             </pre>
 
-            <p>Geddy will default to running in development mode, which means your server will output all unhandled errors output debug logs.</p>
+            <p>Geddy will default to running in development mode, which means your server directs all its output to the console, instead of to logs.</p>
 
             <h2 id="view-app">Check out your app</h2>
 
@@ -253,7 +255,9 @@ $&gt; geddy
             <li>Static Methods</li>
             </ul>
 
-            <p>Go ahead and open up <code>app/models/todo.js</code>. Read through the commented out code there if you'd like to learn a little more. We'll be writing our model from scratch for this tutorial, so lets leave that commented out (it's been deleted in the example app.)</p>
+            <p>These tools should look familiar to anyone who's used an ORM-system like Ruby's ActiveRecord, or DataMapper.</p>
+
+            <p>Go ahead and open up <code>app/models/todo.js</code>. Read through the commented out code there for some ideas on what you can do with models. We'll be writing our model from scratch for this tutorial, so lets leave that commented out. (It's been deleted in the example app.)</p>
 
             <p>So, minus the commented out code, you should have a file that looks like this:</p>
 
@@ -268,8 +272,8 @@ Todo = geddy.model.register('Todo', Todo);
             <p>Let's add three properties onto the <code>todo</code> model:</p>
 
             <ul>
-            <li>Title</li>
-            <li>Status</li>
+            <li>title</li>
+            <li>status</li>
             <li>id</li>
             </ul>
 
@@ -281,9 +285,9 @@ this.property('status', 'string', {required: true});
 this.property('id', 'string', {required: true});
             </pre>
 
-            <p>The first argument of the property method is the name of the property you want to define, the second is the data type, and the third is an options object. We want all of ours to be required, so we made sure that our options object has <code>required</code> set to <code>true</code>.</p>
+            <p>The first argument of the property method is the name of the property you want to define, the second is the data type, and the third is an options object which can contain shortcuts for validation. We want all of ours to be required, so we made sure that our options object has <code>required</code> set to <code>true</code>.</p>
 
-            <p>While we're here, lets set up some validations:</p>
+            <p>There's also more detailed validation API. While we're here, lets use that API to set up some more validations:</p>
 
             <pre class="prettyprint">
 this.validatesPresent('title');
@@ -298,9 +302,11 @@ this.validatesWithFunction('status', function (status) {
 
             <p>For the 'status' property, we used a function to validate that the property is always set to either <code>open</code> or <code>done</code>.</p>
 
-            <h2 id="model-adapter">Creating a Todo model adapter</h2>
+            <p>For more information about Geddy's Models, you can check out the <a href="https://github.com/mde/geddy/wiki/Models">Model wiki page</a>.</p>
 
-            <p>Now that we've set up our <code>todo</code> model, we can create somewhere to store our models. For the purposes of this tutorial, we're just going to hang a <code>todos</code> array off of our global <code>geddy</code> object. If you want to make this app more robust after the tutorial, persistence might be a good place to start.</p>
+            <h2 id="model-adapter">Creating a Todo model-adapter</h2>
+
+            <p>Now that we've set up our <code>todo</code> model, we can create somewhere to store our models. For the purposes of this tutorial, we're just going to keep the data in memory. We'll hang a <code>todos</code> array off of our global <code>geddy</code> object to stick the data in. If you want to make this app more robust after the tutorial, you could write an adapter to put your data in a SQL database, or Redis, or even just write it to a text-file.</p>
 
             <h3>Editing your init.js file</h3>
 
@@ -318,11 +324,11 @@ if (geddy.config.environment != 'development') {
 
             <pre class="prettyprint">geddy.todos = [];</pre>
 
-            <p>There, now we've got a place to store our <code>todo</code>'s (at least until the server restarts).</p>
+            <p>There, now we've got a place to store our <code>todo</code>'s. This is in your application-memory, so it will disappear when you restart the server.</p>
 
             <h3>Creating the model adapter</h3>
 
-            <p>A model adapter is used as a go-between for models and data sources. Our data source is pretty simple (just and array!), so writing our model adapter should be pretty simple too.</p>
+            <p>A model-adapter provides the basic CRUD methods a model needs. Our data source is pretty simple (just an array!), so writing our model adapter should be pretty simple too.</p>
 
             <p>Create a directory in <code>lib</code> called <code>model_adapters</code></p>
 
@@ -342,7 +348,7 @@ exports.Todo = Todo;
 
             <h3>Require the model adapter in init.js</h3>
 
-            <p>So we set up a new <code>Todo</code> model adapter object. It's pretty barren right now, but we'll get to that soon. For now, we'll have to go back to <code>init.js</code> to add this model adapter into our app. After the <code>geddy.todos = [];</code> in <code>config/init.js</code> add these two lines:</p>
+            <p>So we set up a new <code>Todo</code> model-adapter object. It's pretty barren right now, but we'll get to that soon. For now, we'll have to go back to <code>init.js</code> and add some code so that it's loaded into our app when it starts up. After the <code>geddy.todos = [];</code> in <code>config/init.js</code> add these two lines:</p>
 
             <pre class="prettyprint">
 geddy.model.adapter = {};
@@ -351,7 +357,7 @@ geddy.model.adapter.Todo = require(process.cwd() + '/lib/model_adapters/todo').T
 
             <blockquote class="pull-right">We're working on making this nicer.</blockquote>
 
-            <p>We created a blank model adapter object, and add the <code>Todo</code> model adapter onto it.</p>
+            <p>We created a blank model-adapter object, and add the <code>Todo</code> model adapter onto it.</p>
 
             <h2 id="saving-todos">Saving todos</h2>
 
@@ -381,7 +387,7 @@ this.create = function (req, resp, params) {
 };
             </pre>
 
-            <p>Pretty simple right? We stubbed it out for you. So lets modify it a little bit:</p>
+            <p>Pretty simple, right? It's stubbed it out for you. So let's modify it a little bit:</p>
 
             <pre class="prettyprint">
 this.create = function (req, resp, params) {
@@ -395,7 +401,11 @@ this.create = function (req, resp, params) {
 };
             </pre>
 
-            <p>First, we create a new instance of the <code>Todo</code> model with <code>geddy.model.Todo.create</code>, passing in the title that our form will post up to us, and setting up the defaults for the id and status. Then we check to see if the model passed validation, if it did, we call the <code>save</code> method that we created on the model adapter and redirect the user back to the <code>/todos</code> route. If it didn't pass validation, we redirect the user back to the <code>/todos/add</code> route and pass an error as a query parameter. Geddy has sessions too, so this might be another good spot to improve the codebase after the tutorial.</p>
+            <p>First, we create a new instance of the <code>Todo</code> model with <code>geddy.model.Todo.create</code>, passing in the title that our form will post up to us, and setting up the defaults for the id and status.</p>
+
+            <p>Then we check to see if the model passed validation, if it did, we call the <code>save</code> method that we created on the model adapter and redirect the user back to the <code>/todos</code> route. If it didn't pass validation, we redirect the user back to the </code>/todos/add</code> route and pass an error as a query parameter.</p>
+
+            <p>Geddy has built-in sessions too, so this might be another good spot to improve your app after you finish the tutorial.</p>
 
             <h3>Edit add.html.ejs</h3>
 
@@ -434,13 +444,13 @@ this.create = function (req, resp, params) {
 
             <blockquote class="pull-right"><h4>Sidenote:</h4> If you want to make this a little prettier, you can copy the <a href="https://github.com/mde/geddy/blob/master/examples/todo_app/public/css/style.css">example app's style.css file</a> into your app.</blockquote>
 
-            <p>The other stuff is pretty self explanatory - we check to see if the error param is there, and if it is, display an error message. If not, we show some placeholder text.</p>
+            <p>The other stuff is pretty self explanatory - check to see if the error param is there, and if it is, display an error message. If not, show some placeholder text.</p>
 
-            <p>Go ahead and visit <a href="http://localhost:4000/todos/add">http://localhost:4000/todos/add</a> to see your template in action. Create a to do item while you're at it.</p>
+            <p>Go ahead and visit <a href="http://localhost:4000/todos/add">http://localhost:4000/todos/add</a> to see your template in action. Create a To Do item while you're at it.</p>
 
             <h2 id="list-todos">Listing all todos</h2>
 
-            <p>Now that we have user input to do items being added into our <code>geddy.todos</code> array, we should probably list them somewhere. Lets start in on the <code>index</code> action in the <code>todos</code> controller.</p>
+            <p>Now that we have user input To Do items being added into our <code>geddy.todos</code> array, we should probably list them somewhere. Lets start in on the <code>index</code> action in the <code>todos</code> controller.</p>
 
             <h3>Edit the index action to show all todos</h3>
 
@@ -452,7 +462,7 @@ this.index = function (req, resp, params) {
 };
             </pre>
 
-            <p>This part is really simple, just replace the <code>params</code> property in the template variable object with a <code>todos</code> property and set it to <code>geddy.todos</code>.</p>
+            <p>This part is really simple, just replace the <code>params</code> property in the template variable object with a <code>todos</code> property and set it to <code>geddy.todos</code>, to pass that list down into your view.</p>
 
             <pre class="prettyprint">
 this.index = function (req, resp, params) {
@@ -460,7 +470,7 @@ this.index = function (req, resp, params) {
 };
             </pre>
 
-            <p>Thats it for the controller, now onto the view.</p>
+            <p>That's it for the controller, now onto the view.</p>
 
             <h3>edit index.html.ejs</h3>
 
@@ -477,7 +487,7 @@ this.index = function (req, resp, params) {
 &lt;/div&gt;
             </pre>
 
-            <p>Looks a lot like the <code>add.html.ejs</code> template doesn't it. Again, we won't need the params stuff here, so take that out, and make your <code>index.html.ejs</code> template look like this:</p>
+            <p>Looks a lot like the <code>add.html.ejs</code> template doesn't it. Again, we won't need the params boilerplate here, so take that out, and make your <code>index.html.ejs</code> template look like this:</p>
 
             <pre class="prettyprint">
 &lt;div class=&quot;hero-unit&quot;&gt;
@@ -530,7 +540,7 @@ var Todo = new (function () {
 exports.Todo = Todo;
             </pre>
 
-            <p>Lets add a <code>load</code> method to this adapter:</p>
+            <p>Lets define a <code>load</code> method in this adapter, for getting one of the todos from the list:</p>
 
             <pre class="prettyprint">
 var Todo = new (function () {
@@ -554,7 +564,9 @@ var Todo = new (function () {
 exports.Todo = Todo;
             </pre>
 
-            <p>This <code>load</code> method takes an <code>id</code> and a <code>callback</code>. It loops through the items in <code>geddy.todos</code> and checks to see if the current item's <code>id</code> matches the passed in <code>id</code>. If it does, it calls the callback, passing the <code>todo</code> item back. If it doesn't find a match, it called the callback with a blank object. Now we need to use this method in the <code>todos</code> controller's show action.</p>
+            <p>This <code>load</code> method takes an <code>id</code> and a <code>callback</code>. It loops through the items in <code>geddy.todos</code> and checks to see if the current item's <code>id</code> matches the passed in <code>id</code>. If it does, it calls the callback, passing the <code>todo</code> item back. If it doesn't find a match, it calls the callback with a blank object. Now we need to use this method in the <code>todos</code> controller's show action.</p>
+
+            <p>This is a simple example that finds a single item by iterating the entire collection, but you could write an adapter that does a SQL-call to a database, or makes an API-call to a Web service.</p>
 
             <h3>Edit the show action to find a todo</h3>
 
@@ -594,7 +606,7 @@ this.show = function (req, resp, params) {
 &lt;/div&gt;
             </pre>
 
-            <p>Once again we're not going to need the params block, so lets remove it. Make your <code>show.html.ejs</code> look like this:</p>
+            <p>Once again we're not going to need the params boilerplate, so lets remove it. Make your <code>show.html.ejs</code> look like this:</p>
 
             <pre class="prettyprint">
 &lt;div class=&quot;hero-unit&quot;&gt;
@@ -629,7 +641,7 @@ this.show = function (req, resp, params) {
 &lt;/div&gt;
             </pre>
 
-            <p>We're doing a few more complicated things now. First off, you'll notice that we've got a script block in there. We thought we'd show you that you can do all this with ajax as well.</p>
+            <p>We're doing a few more complicated things now. First off, you'll notice that we've got a script block in there. It's nice to see that you can do all this with Ajax as well.</p>
 
             <p>This template is basically a big if statement. If the status is <code>open</code>, display the title of the <code>todo</code> and a button to finish it. It's got a hidden form in there as well, this is where the <code>PUT</code> request to <code>/todos/:id</code> get's it's data.</p>
 
@@ -667,7 +679,7 @@ this.save = function (todo, callback) {
 };
             </pre>
 
-            <p>We'll loop over all the <code>todo</code>'s in <code>geddy.todos</code> and if the id is already there, replace that <code>todo</code> with the new <code>todo</code> instance. If you were hooked up to a real DB here, you'd want to use it's update functionality instead.</p>
+            <p>This loops over all the <code>todo</code>'s in <code>geddy.todos</code> and if the id is already there, replace that <code>todo</code> with the new <code>todo</code> instance. If you were hooked up to a real DB here, you'd do a SQL UPDATE or similar here instead.</p>
 
             <h3>Edit the update action to find a todo, change the status, and save it</h3>
 
@@ -693,7 +705,7 @@ this.update = function (req, resp, params) {
 };
             </pre>
 
-            <p>We're taking the id that we sent up via the ajax <code>PUT</code> request on the <code>show</code> page and using the <code>load</code> method that we created earlier to find a <code>todo</code> item. Then we're setting it's <code>status</code> to be what we sent up in the params ('done'). Then we use the <code>save</code> method that we just updated to save over the existing <code>todo</code> item. Then, in case this isn't coming from an ajax request, we're redirecting the request over to the <code>show</code> action.</p>
+            <p>We're taking the id that we sent up via the ajax <code>PUT</code> request on the <code>show</code> page and using the <code>load</code> method that we created earlier to find a <code>todo</code> item. Then we're setting its <code>status</code> to be what we sent up in the params ('done'). Then we use the <code>save</code> method that we just updated to save over the existing <code>todo</code> item. Then, in case this isn't coming from an ajax request, we're redirecting the request over to the <code>show</code> action (hooray for progressive enhancment).</p>
 
             <h2 id="conclusion">Conclusion</h2>
 
@@ -713,7 +725,7 @@ this.update = function (req, resp, params) {
             <ul>
             <li>Change the <code>Main#index</code> route to point to the <code>Todos#index</code> action (hint, check out <code>config/router.js</code>)</li>
             <li>Add some logging with <code>geddy.log</code></li>
-            <li>Set up metrics by running <code>mkdir node_modules && npm install metrics</code>, and set <code>metrics: { port: 4001 }</code> in your <code>config/environment.js</code> file</li>
+            <li>Set up metrics by running <code>npm install metrics</code>, and uncomment the metrics entry (<code>metrics: { port: 4001 }</code>) in your <code>config/environment.js</code> file</li>
             </ul>
           </div>
         </div>
