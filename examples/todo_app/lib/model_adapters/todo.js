@@ -1,7 +1,5 @@
 var Todo = new (function () {
 
-  var Todo = geddy.model.Todo;
-
   this.load = function (id, callback) {
     for (var i in geddy.todos) {
       if (geddy.todos[i].id == id) {
@@ -11,14 +9,6 @@ var Todo = new (function () {
     }
     callback({});
   };
-
-  this.remove = function (id) {
-    for (var i in geddy.todos) {
-      if (geddy.todos[i].id == id) {
-        geddy.todos.splice(i,1);
-      }
-    }
-  }
 
   this.save = function (todo, callback) {
     for (var i in geddy.todos) {

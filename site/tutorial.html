@@ -54,6 +54,10 @@
         margin-top: 40px;
       }
 
+      .hero-unit ul li {
+        font-size: 16px;
+      }
+
       @media (max-width: 480px) {
         .hero-unit {
           padding: 20px 20px 30px 20px;
@@ -128,142 +132,124 @@
           </div>
         </div>
         <div class="span9">
-          <div class="hero-unit">
-            <h2 style="margin-top: 0">Introduction</h2>
-            <p>Welcome to the Geddy.js tutorial. We'll walk you through getting started with Geddy, and in the process make a simple in memory to do list.</p>
+          <div class="hero-unit" style="font-size: 75%">
+            <h2 style="margin-top: -20px">Introduction</h2>
+            <p>In this tutorial we'll go over how to get Geddy installed, and how to create an example to do list manager app.</p>
 
-            <h2>Installing Geddy</h2>
-            <p>If you already have <a href="http://nodejs.org">node.js</a> and <a href="npmjs.org">npm</a> installed, installing Geddy is easy: </p>
+            <p>We'll go over:</p>
 
-<!-- Install Example -->
-<pre class="codebox prettyprint" id="npm">
-npm install -g jake geddy
-</pre>
+            <ul>
+            <li>How to generate an app</li>
+            <li>Setting up a resource for us to use</li>
+            <li>Review how to use Bootstrap to automatically make a mobile version of your app</li>
+            <li>Using Geddy Models</li>
+            <li>Using a model adapter to interact with your data</li>
+            <li>How to use init.js in your app</li>
+            <li>How views in Geddy work</li>
+            <li>How to use controllers to tie everything together</li>
+            <li>How to set up custom routes</li>
+            </ul>
 
-            <p>If you want to install from source, you can always git clone the repo and make install</p>
- <!-- Install Example -->
-<pre class="codebox prettyprint" id="git">
-git clone git://github.com/mde/geddy.git
-cd geddy
-make && sudo make install
-</pre>
+            <h2>Installing Geddy:</h2>
 
-            <h2>Creating your first Geddy app</h2>
-            <p>Make sure you're in the directory where you store all your code, and run:</p>
-<!-- App Creation Example -->
-<pre class="codebox prettyprint" id="first-app">
-geddy app todo_app
-</pre>
+            <p>First, make sure that you have <a href="http://nodejs.org">node</a> installed on your machine.</p>
 
-            <h2>Running your first Geddy app</h2>
-            <p>Similarly, use the geddy executable to start your app inside your app directory: </p>
- <!-- App Creation Example -->
-<pre class="codebox prettyprint" id="start-app">
-cd todo_app
-geddy
-</pre>
+            <p>Next, install Jake and Geddy. Jake is a task system written in Javascript similar to Ruby's Rake.</p>
 
-            <h2>Viewing your app</h2>
-            <p>To view your app, go to <a href="http://localhost:4000/" target="_blank">http://localhost:4000/</a> in your browser. You should see an app similar to this:</p>
-            <p>{{insert image here}}</p>
+            <pre class="prettyprint">$&gt; npm install -g jake geddy</pre>
 
-            <h2>Generating your first resource</h2>
-            <p>Use the executable to generate a restful resource:</p>
- <!-- App Creation Example -->
-<pre class="codebox prettyprint" id="resource">
-geddy resource todo
-</pre>
-            <p>Your directory structure should look like this now:</p>
-<pre class="codebox prettyprint">
-./app
-./app/controllers
-./app/controllers/application.js
-./app/controllers/main.js
-./app/controllers/todos.js
-./app/models
-./app/models/todo.js
-./app/views
-./app/views/.DS_Store
-./app/views/layouts
-./app/views/layouts/application.html.ejs
-./app/views/main
-./app/views/main/index.html.ejs
-./app/views/todos
-./app/views/todos/add.html.ejs
-./app/views/todos/edit.html.ejs
-./app/views/todos/index.html.ejs
-./app/views/todos/show.html.ejs
-./config
-./config/development.js
-./config/environment.js
-./config/init.js
-./config/production.js
-./config/router.js
-./lib
-./log
-./public
-./public/.DS_Store
-./public/css
-./public/css/.DS_Store
-./public/css/bootstrap.css
-./public/css/bootstrap.min.css
-./public/css/bootstrap.responsive.css
-./public/css/bootstrap.responsive.min.css
-./public/css/style.css
-./public/favicon.ico
-./public/img
-./public/img/glyphicons-halflings-white.png
-./public/img/glyphicons-halflings.png
-./public/img/whitey.png
-./public/js
-./public/js/.DS_Store
-./public/js/bootstrap.js
-./public/js/bootstrap.min.js
-./public/js/jquery.min.js
-</pre>
+            <h2>Create Your first app</h2>
 
-            <h2>Todos Controller</h2>
-            <p>We'll be doing most of our work in the todos.js controller</p>
- <!-- App Creation Example -->
-<pre class="codebox prettyprint" id="controller">
-var Todos = function () {
-  this.respondsWith = ['html', 'json', 'js', 'txt'];
+            <p>Now lets use the <code>geddy</code> executable to generate a basic app structure.</p>
 
-  this.index = function (req, resp, params) {
-    this.respond({params: params});
-  };
+            <pre class="prettyprint">$&gt; geddy app todo_app</pre>
 
-  this.add = function (req, resp, params) {
-    this.respond({params: params});
-  };
+            <p>The <code>geddy</code> executable can do many things, to generate an app just type <code>geddy app {{app_name}}</code> where <code>{{app_name}}</code> is the name of the directory you want to put your app in. Geddy will create the directory and create a basic app structure for you.</p>
 
-  this.create = function (req, resp, params) {
-    // Save the resource, then display index page
-    this.redirect({controller: this.name});
-  };
+            <h2>Start Your App</h2>
 
-  this.show = function (req, resp, params) {
-    this.respond({params: params});
-  };
+            <p>To start your app, all you need to do is <code>cd</code> into your app's directory and run <code>geddy</code>.</p>
 
-  this.edit = function (req, resp, params) {
-    this.respond({params: params});
-  };
+            <pre class="prettyprint">$&gt; cd todo_app
+$&gt; geddy</pre>
 
-  this.update = function (req, resp, params) {
-    // Save the resource, then display the item page
-    this.redirect({controller: this.name, id: params.id});
-  };
+            <p>Geddy will default to running in development mode, which means your server will output all unhandled errors output debug logs.</p>
 
-  this.remove = function (req, resp, params) {
-    this.respond({params: params});
-  };
+            <h2>Check out your app</h2>
 
-};
+            <p>After running the <code>geddy</code> command, your app should be running on port 4000. Visit <a href="http://localhost:4000">http://localhost:4000</a> in your browser to see your app.</p>
 
-exports.Todos = Todos;
-</pre>
+            <blockquote style="margin-top: 20px; color: #666;" class="pull-right">
+              <h3 style="color: #666">check out your app on a mobile phone</h3>
 
+              <ul>
+              <li>point your mobile phone's browser to your computer's port 4000</li>
+              <li>OR open up your favorite phone simulator and go to <a href="http://localhost:4000">http://localhost:4000</a></li>
+              <li>OR resize your browser to at least 480px wide</li>
+              </ul>
+            </blockquote>
+
+            <h2>Generate a resource</h2>
+
+            <p>Now, lets actually get started building our To Do list manager. First, we'll need to generat the <code>todo</code> resource. We do this using the <code>geddy</code> executable as well:</p>
+
+            <pre class="prettyprint">geddy resource todo</pre>
+
+            <p>What did that do?</p>
+
+            <ul>
+            <li>It generated a <code>todo</code> model</li>
+            <li>It generated a <code>todos</code> controller</li>
+            <li>It generated views for:
+            <ul><li>an index of <code>todo</code>'s</li>
+            <li>a single <code>todo</code></li>
+            <li>creating a <code>todo</code></li>
+            <li>editing a <code>todo</code></li></ul></li>
+            <li>It generated these routes:
+            <ul><li><code>/todos</code> (GET)</li>
+            <li><code>/todos</code> (POST)</li>
+            <li><code>/todos/add</code> (GET)</li>
+            <li><code>/todos/:id/edit</code> (GET)</li>
+            <li><code>/todos/:id</code> (GET)</li>
+            <li><code>/todos/:id</code> (PUT)</li>
+            <li><code>/todos/:id</code> (DELETE)</li></ul></li>
+            </ul>
+
+            <p>Now, lets run the app again:  </p>
+
+            <pre class="prettyprint">geddy</pre>
+
+            <p>You should be able to see your new resource's index veiw at <a href="http://localhost:4000/todos">http://localhost:4000/todos</a></p>
+
+            <h2>Creating the Todo model</h2>
+
+            <h2>Creating a Todo model adapter</h2>
+
+            <h2>Editing your init.js</h2>
+
+            <h2>Saving todos</h2>
+
+            <p>edit the save method on the adapter to save a todo instance<br>edit the create action to save todo instance<br>edit add.html.ejs</p>
+
+            <h2>Listing all todos</h2>
+
+            <p>edit the index action to show all todo's<br>edit index.html.ejs</p>
+
+            <h2>Showing a todo</h2>
+
+            <ul>
+            <li>edit the show action to find a todo</li>
+            <li>edit show.html.ejs</li>
+            </ul>
+
+            <h2>Updating a todo</h2>
+
+            <ul>
+            <li>edit the update action to find a todo, change the status, and save it</li>
+            <li>edit show.html.ejs to send the update via ajax</li>
+            </ul>
+
+            <h2>Recap</h2>
           </div>
         </div>
       </div>

@@ -2,7 +2,7 @@
   <h3><%= todo.title; %></h3>
   <div class="pull-right">
   <% if (todo.status == 'open') { %>
-  <form id="finish-todo" class="hidden" action="/todos/update" method="POST">
+  <form id="finish-todo" class="hidden" action="/todos/<%= todo.id;%>">
     <input type="hidden" name="status" value="done"/>
     <input type="hidden" name="id" value="<%= todo.id; %>"/>
     <input type="hidden" name="title" value="<%= todo.title; %>">

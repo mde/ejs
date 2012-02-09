@@ -23,7 +23,6 @@ var Todos = function () {
   this.show = function (req, resp, params) {
     var self = this;
     geddy.model.adapter.Todo.load(params.id, function(todo){
-      console.log(todo);
       self.respond({params: params, todo: todo});
     });
   };
@@ -42,11 +41,6 @@ var Todos = function () {
       todo.save();
       self.redirect({controller: this.name, id: params.id});
     });
-  };
-
-  this.remove = function (req, resp, params) {
-    geddy.model.adapter.Todo.removeById(params.id);
-    this.respond({params: params});
   };
 
 };
