@@ -21,6 +21,11 @@ body {
   margin-bottom: 20px;
 }
 
+.geddy-welcome-box p {
+  max-width: 760px;
+  margin: 0 auto;
+}
+
 .geddy-welcome-box .btn-large {
   margin-top: 20px;
 }
