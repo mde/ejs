@@ -1,8 +1,11 @@
 
 var Todo = function () {
-  this.property('title', 'string', {required: true});
-  this.property('status', 'string', {required: true});
-  this.property('id', 'string', {required: true})
+
+  this.defineProperties({
+    title: {type: 'string', required: true}
+  , id: {type: 'string', required: true}
+  , status: {type: 'string', required: true}
+  });
 
   this.validatesPresent('title');
   this.validatesLength('title', {min: 5});
