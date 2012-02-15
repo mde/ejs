@@ -44,7 +44,7 @@ namespace('gen', function () {
         return names;
       };
 
-  desc('Creates a new Geddy app scaffold.');
+  // Creates a new Geddy app scaffold
   task('app', [], function (appName) {
     if (!appName) {
       throw new Error('No app-name specified.');
@@ -76,7 +76,7 @@ namespace('gen', function () {
     });
   }, {async: true});
 
-  desc('Creates a resource-based route with model and controller.');
+  // Creates a resource-based route with model and controller
   task('resource', function (name) {
     jake.Task['gen:model'].invoke(name);
     jake.Task['gen:controller'].invoke(name);
@@ -187,45 +187,29 @@ namespace('gen', function () {
 });
 
 namespace('doc', function () {
-  desc('Generate docs for Geddy');
   task('generate', ['doc:clobber'], function () {
     var cmd = '../node-jsdoc-toolkit/app/run.js -n -r=100 ' +
         '-t=../node-jsdoc-toolkit/templates/codeview -d=./doc/ ./lib';
     console.log('Generating docs ...');
-    exec(cmd, function (err, stdout, stderr) {
-      if (err) {
-        throw err;
-      }
-      if (stderr) {
-        console.log(stderr);
-      }
-      if (stdout) {
-        console.log(stdout);
-      }
+    jake.exec([cmd], function () {
       console.log('Done.');
       complete();
     });
   }, {async: true});
 
-  desc('Clobber the generated docs.');
   task('clobber', function () {
     var cmd = 'rm -fr ./doc/*';
-    exec(cmd, function (err, stdout, stderr) {
-      if (err) {
-        throw err;
-      }
-      if (stderr) {
-        console.log(stderr);
-      }
-      if (stdout) {
-        console.log(stdout);
-      }
+    jake.exec([cmd], function () {
       console.log('Clobbered old docs.');
       complete();
     });
   }, {async: true});
 
 });
+
+desc('Generate docs for Geddy');
+task('doc', ['doc:generate']);
+
 
 desc('Runs the tests.');
 task('test', function () {
