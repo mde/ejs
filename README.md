@@ -250,6 +250,17 @@ Here is an example of a model with some validations:
 
     User = geddy.model.registerModel('User', User);
 
+Alternatively, you can use the `defineProperties` method to lay out your model:
+
+    var User = function () {
+      this.defineProperties({
+        login:      {type: 'string', required: true}
+      , password:   {type: 'string', required: true}
+      , lastName:   {type: 'string'}
+      , firstName:  {type: 'string'}
+      });
+    }
+
 Creating an instance of one of these models is easy:
 
     var params = {

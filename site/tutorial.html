@@ -277,15 +277,23 @@ Todo = geddy.model.register('Todo', Todo);
             <li>id</li>
             </ul>
 
-            <p>To do this all we have to do is add some <code>this.property</code>'s onto the model function:</p>
+            <p>To do this all we have to do is define some properties using the `defineProperties` method:</p>
 
             <pre class="prettyprint">
-this.property('title', 'string', {required: true});
-this.property('status', 'string', {required: true});
-this.property('id', 'string', {required: true});
+var Todo = function () {
+  this.defineProperties({
+    title:    {type: 'string', required: true}
+  , status:   {type: 'string', required: true}
+  , id:       {type: 'string', required: true}
+  });
+};
+
+Todo = geddy.model.register('Todo', Todo);
             </pre>
 
-            <p>The first argument of the property method is the name of the property you want to define, the second is the data type, and the third is an options object which can contain shortcuts for validation. We want all of ours to be required, so we made sure that our options object has <code>required</code> set to <code>true</code>.</p>
+            <p>The `defineProperties` method takes any number of properties to be added to the model. The keys in the object will be added as properties on the model. The values are just objects that describe the properties. To define the type of the property, use the type option, we want ours to be strings. These properties should all be required, so set `required` to `true`.</p>
+
+            <p>To learn more, check out the <a href="https://github.com/mde/geddy/blob/master/README.md">readme</a>.</p>
 
             <p>There's also more detailed validation API. While we're here, lets use that API to set up some more validations:</p>
 
