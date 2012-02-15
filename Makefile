@@ -26,7 +26,7 @@ build:
 	@echo 'Geddy built.'
 
 install:
-	@mkdir -p $(DESTDIR)$(PREFIX)/bin \
+	@mkdir -p $(DESTDIR)$(PREFIX)/bin && \
 	  mkdir -p $(DESTDIR)$(PREFIX)/lib/node_modules/geddy && \
 		cp -R ./* $(DESTDIR)$(PREFIX)/lib/node_modules/geddy/ && \
 		ln -snf ../lib/node_modules/geddy/bin/cli.js $(DESTDIR)$(PREFIX)/bin/geddy && \
