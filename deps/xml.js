@@ -1,58 +1,7 @@
-/*  This work is licensed under Creative Commons GNU LGPL License.
-
-  License: http://creativecommons.org/licenses/LGPL/2.1/
-   Version: 0.9
-  Author:  Stefan Goessner/2006
-  Web:     http://goessner.net/ 
-*/
-function json2xml(o, tab) {
-   var toXml = function(v, name, ind) {
-      var xml = "";
-      if (v instanceof Array) {
-         for (var i=0, n=v.length; i<n; i++)
-            xml += ind + toXml(v[i], name, ind+"\t") + "\n";
-      }
-      else if (typeof(v) == "object") {
-         console.log('object');
-         var hasChild = false;
-         xml += ind + "<" + name;
-         for (var m in v) {
-            if (m.charAt(0) == "@")
-               xml += " " + m.substr(1) + "=\"" + v[m].toString() + "\"";
-            else
-               hasChild = true;
-         }
-         xml += hasChild ? ">" : "/>";
-         if (hasChild) {
-            for (var m in v) {
-               if (m == "#text")
-                  xml += v[m];
-               else if (m == "#cdata")
-                  xml += "<![CDATA[" + v[m] + "]]>";
-               else if (m.charAt(0) != "@")
-                  xml += toXml(v[m], m, ind+"\t");
-            }
-            xml += (xml.charAt(xml.length-1)=="\n"?ind:"") + "</" + name + ">";
-         }
-      }
-      else {
-         xml += ind + "<" + name + ">" + v.toString() +  "</" + name + ">";
-      }
-      return xml;
-   }, xml="";
-   for (var m in o)
-      xml += toXml(o[m], m, "");
-   return tab ? xml.replace(/\t/g, tab) : xml.replace(/\t|\n/g, "");
-}
-
-exports.XML_ = new (function XML() {
-  this.stringify = function(o) {
-    return json2xml(o);
-  };
-})();
 
 exports.XML = new (function () {
-  var INDENT_LEVEL = 4;
+  var whitespace = true
+    , indentLevel = 4;
 
   var tagFromType = function (item, prev) {
         var ret
@@ -82,40 +31,59 @@ exports.XML = new (function () {
         var pack
           , item
           , n
-          , currentIndent = (new Array(level * INDENT_LEVEL)).join(' ')
-          , nextIndent = (new Array((level + 1) * INDENT_LEVEL)).join(' ')
+          , currentIndent = (new Array(level * indentLevel)).join(' ')
+          , nextIndent = (new Array((level + 1) * indentLevel)).join(' ')
           , xml = '';
         switch (typeof o) {
           case 'string':
           case 'number':
           case 'boolean':
-            xml = o;
+            xml = o.toString();
             break;
           case 'object':
+            // Arrays
             if (o instanceof Array) {
+
+              // Pack the processed version of each item into an array that
+              // can be turned into a tag-list with a `join` method below
+              // As the list gets iterated, if all items are the same type,
+              // that's the tag-name for the individual tags. If the items are
+              // a mixed, the tag-name is 'record'
               pack = [];
               for (var i = 0, ii = o.length; i < ii; i++) {
                 item = o[i];
                 if (!name) {
+                  // Pass any previous tag-name, so it's possible to know if
+                  // all items are the same type, or it's mixed types
                   n = tagFromType(item, n);
                 }
                 pack.push(obj2xml(item, '', level + 1));
               }
+
+              // If this thing is attached to a named property on an object,
+              // use the name for the containing tag-name
               if (name) {
                 n = name;
               }
+
+              // If this is a top-level item, wrap in a top-level containing tag
               if (level == 0) {
                 xml += currentIndent + '<' + n + 's type="array">\n'
               }
               xml += nextIndent + '<' + n + '>' +
                   pack.join('</' + n + '>\n' + nextIndent +
                       '<' + n + '>') + '</' + n + '>\n';
+
+              // If this is a top-level item, close the top-level containing tag
               if (level == 0) {
                 xml += currentIndent + '</' + n + 's>';
               }
             }
+            // Generic objects
             else {
               n = name || 'object';
+
+              // If this is a top-level item, wrap in a top-level containing tag
               if (level == 0) {
                 xml = currentIndent + '<' + n + '>\n';
               }
@@ -129,22 +97,30 @@ exports.XML = new (function () {
                 }
                 else {
                   xml += '<' + p;
-                  if (item instanceof Array) {
-                    xml += ' type="array">\n'
+                  // Complex values, going to have items with multiple tags
+                  // inside
+                  if (typeof item == 'object') {
+                    if (item instanceof Array) {
+                      xml += ' type="array">\n'
+                    }
+                    else {
+                      xml += '>\n';
+                    }
                   }
-                  else if (typeof item == 'object') {
-                    xml += '>\n';
-                  }
+                  // Scalars, just a value and closing tag
                   else {
                     xml += '>'
                   }
                   xml += obj2xml(item, p, level + 1);
-                  if (item instanceof Array || typeof item == 'object') {
+
+                  // Objects and Arrays, need indentation before closing tag
+                  if (typeof item == 'object') {
                     xml += nextIndent;
                   }
                   xml += '</' + p + '>\n';
                 }
               }
+              // If this is a top-level item, close the top-level containing tag
               if (level == 0) {
                 xml += currentIndent + '</' + n + '>\n';
               }
@@ -156,10 +132,22 @@ exports.XML = new (function () {
         return xml;
       };
 
+  this.setNoWhitespace = function () {
+    indentLevel = 0;
+    whitespace = false;
+  };
+
+  this.setIndentLevel = function (level) {
+    indentLevel = level;
+  };
+
   this.stringify = function (o) {
     var xml = '';
     xml += '<?xml version="1.0" encoding="UTF-8"?>\n';
     xml += obj2xml(o, '', 0);
+    if (!whitespace) {
+      xml = xml.replace(/>\n/g, '>');
+    }
     return xml;
   };
 
