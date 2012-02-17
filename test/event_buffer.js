@@ -29,6 +29,7 @@ tests = new (function () {
 
 for (var p in tests) {
   if (typeof tests[p] == 'function') {
+    console.log('Running ' + p);
     tests[p]();
   }
 }
