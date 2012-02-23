@@ -1,0 +1,10 @@
+{
+  "validatesPresent": "Field {name} is required."
+, "validatesAbsent": "Field {name} must not be filled in."
+, "validatesConfirmed": "Field {name} and field {qual} must match."
+, "validatesFormat": "Field {name} is not correctly formatted."
+, "validatesExactLength": "Field {name} must be {qual} characters long."
+, "validatesMinLength": "Field {name} must be at least {min} characters long."
+, "validatesMaxLength": "Field {name} may not be more than {max} characters long."
+, "validatesWithFunction": "Field {name} is not valid."
+};
