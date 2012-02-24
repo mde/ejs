@@ -7,4 +7,4 @@
 , "validatesMinLength": "Field {name} must be at least {min} characters long."
 , "validatesMaxLength": "Field {name} may not be more than {max} characters long."
 , "validatesWithFunction": "Field {name} is not valid."
-};
+}
