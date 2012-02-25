@@ -1,10 +1,10 @@
 {
-  "validatesPresent": "Field {name} is required."
-, "validatesAbsent": "Field {name} must not be filled in."
-, "validatesConfirmed": "Field {name} and field {qual} must match."
-, "validatesFormat": "Field {name} is not correctly formatted."
-, "validatesExactLength": "Field {name} must be {qual} characters long."
-, "validatesMinLength": "Field {name} must be at least {min} characters long."
-, "validatesMaxLength": "Field {name} may not be more than {max} characters long."
-, "validatesWithFunction": "Field {name} is not valid."
+  "model.validatesPresent": "Field {name} is required."
+, "model.validatesAbsent": "Field {name} must not be filled in."
+, "model.validatesConfirmed": "Field {name} and field {qual} must match."
+, "model.validatesFormat": "Field {name} is not correctly formatted."
+, "model.validatesExactLength": "Field {name} must be {qual} characters long."
+, "model.validatesMinLength": "Field {name} must be at least {min} characters long."
+, "model.validatesMaxLength": "Field {name} may not be more than {max} characters long."
+, "model.validatesWithFunction": "Field {name} is not valid."
 }
