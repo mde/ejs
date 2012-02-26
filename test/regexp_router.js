@@ -37,8 +37,8 @@ tests = {
   testCreateResource: function() {
     router = new Router();
     var routes = router.resource('SnowDogs');
-    assert.ok(routes.length === 7)
-    for ( var i in routes ) {
+    assert.ok(routes.length === 11)
+    for (var i in routes) {
       assert.ok(route)
     }
   },
