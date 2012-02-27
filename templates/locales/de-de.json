@@ -1,0 +1,10 @@
+{
+  "model.validatesPresent": "\"{name}\" ist ein Pflichtfeld."
+, "model.validatesAbsent": "\"{name}\" darf nicht gefüllt sein."
+, "model.validatesConfirmed": "\"{name}\" und \"{qual}\" müssen übereinstimmen."
+, "model.validatesFormat": "\"{name}\" ist in ungültig formatiert."
+, "model.validatesExactLength": "\"{name}\" muss genau {qual} Zeichen lang sein."
+, "model.validatesMinLength": "\"{name}\" muss mindestens {min} Zeichen lang sein."
+, "model.validatesMaxLength": "\"{name}\" darf nicht länger als {max} Zeichen sein."
+, "model.validatesWithFunction": "\"{name}\" ist nicht gültig."
+}
