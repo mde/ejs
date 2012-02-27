@@ -1,0 +1,10 @@
+{
+  "model.validatesPresent": "\"{name}\" is required."
+, "model.validatesAbsent": "\"{name}\" must not be filled in."
+, "model.validatesConfirmed": "\"{name}\" and \"{qual}\" must match."
+, "model.validatesFormat": "\"{name}\" is not correctly formatted."
+, "model.validatesExactLength": "\"{name}\" must be {qual} characters long."
+, "model.validatesMinLength": "\"{name}\" must be at least {min} characters long."
+, "model.validatesMaxLength": "\"{name}\" may not be more than {max} characters long."
+, "model.validatesWithFunction": "\"{name}\" is not valid."
+}

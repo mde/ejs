@@ -1,0 +1,10 @@
+{
+  "model.validatesPresent": "「{name}」の入力が必要です。"
+, "model.validatesAbsent": "「{name}」の入力は不要です。"
+, "model.validatesConfirmed": "「{name}」と「{qual}」が一致しません。"
+, "model.validatesFormat": "「{name}」のフォーマットが正しくありません。"
+, "model.validatesExactLength": "「{name}」は{qual}文字でなければいけません。"
+, "model.validatesMinLength": "「{name}」は{min}文字以上でなければいけません。"
+, "model.validatesMaxLength": "「{name}」は{max}文字以内でなければいけません。"
+, "model.validatesWithFunction": "「{name}」は有効ではありません。"
+}
