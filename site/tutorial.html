@@ -6,24 +6,24 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width">
 
     <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
     <!--[if lt IE 9]>
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
 
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-    <script type="text/javascript" src="js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
 
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/bootstrap.min.responsive.css">
 
-    <link href="js/google-code-prettify/prettify.css" type="text/css" rel="stylesheet" />
-    <script type="text/javascript" src="js/google-code-prettify/prettify.js"></script>
+    <link rel="stylesheet" href="js/google-code-prettify/prettify.css">
+    <script src="js/google-code-prettify/prettify.js"></script>
 
     <!-- Le styles -->
-    <style type="text/css">
+    <style>
       @media (min-width: 980px) {
         body {
           padding-top: 60px;
@@ -437,9 +437,9 @@ this.create = function (req, resp, params) {
   &lt;h2&gt;Add a ToDo:&lt;/h2&gt;
   &lt;form action=&quot;/todos&quot; method=&quot;POST&quot;&gt;
     &lt;% if (params.error) {
-        var title = 'title not long enough, must be 5 characters or more.'
+        var title = 'title not long enough, must be 5 characters or more.';
       } else {
-        var title = 'enter title'
+        var title = 'enter title';
       }
     %&gt;
     &lt;input type=&quot;text&quot; class=&quot;span6&quot; placeholder=&quot;&lt;%= title %&gt;&quot; name=&quot;title&quot;&gt;
@@ -591,7 +591,7 @@ this.show = function (req, resp, params) {
             <pre class="prettyprint">
 this.show = function (req, resp, params) {
   var self = this;
-  geddy.model.adapter.Todo.load(params.id, function(todo){
+  geddy.model.adapter.Todo.load(params.id, function (todo) {
     self.respond({todo: todo});
   });
 };
@@ -629,18 +629,18 @@ this.show = function (req, resp, params) {
   &lt;span&gt;
     &lt;a href=&quot;#&quot; class=&quot;btn btn-primary btn-large&quot; id=&quot;finish-btn&quot;&gt;Finish To Do&lt;/a&gt;
   &lt;/span&gt;
-  &lt;script type=&quot;text/javascript&quot;&gt;
+  &lt;script&gt;
     var form = $('#finish-todo');
-    $('#finish-btn').click(function(e){
+    $('#finish-btn').click(function (e) {
       e.preventDefault();
       $.ajax({
-        type: &quot;PUT&quot;,
+        type: 'PUT',
         url: form.attr('action'),
         data: form.serialize()
-      }).done(function( msg ) {
+      }).done(function (msg) {
         $(e.target).replaceWith('&lt;p&gt;This todo is finished!&lt;/p&gt;');
       });
-    })
+    });
   &lt;/script&gt;
   &lt;% } else { %&gt;
     &lt;p&gt;This to do is finished!&lt;/p&gt;
@@ -705,7 +705,7 @@ this.update = function (req, resp, params) {
             <pre class="prettyprint">
 this.update = function (req, resp, params) {
   var self = this;
-  geddy.model.adapter.Todo.load(params.id, function(todo){
+  geddy.model.adapter.Todo.load(params.id, function (todo) {
     todo.status = params.status;
     todo.save();
     self.redirect({controller: this.name, id: params.id});
@@ -745,19 +745,17 @@ this.update = function (req, resp, params) {
 
     </div> <!-- /container -->
 
-    <script type="text/javascript">
-
+    <script>
       var _gaq = _gaq || [];
       _gaq.push(['_setAccount', 'UA-5555148-4']);
       _gaq.push(['_setDomainName', '.geddyjs.org']);
       _gaq.push(['_trackPageview']);
 
-      (function() {
+      (function () {
         var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
         ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
         var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
       })();
-
     </script>
 
   </body>
