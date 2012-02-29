@@ -143,7 +143,7 @@ tests = {
     router = new Router();
     var route = router.match('/:controller/:action/:id(.:format)','GET');
     var params = router.first({url: '/products/show/1'},'POST');
-    assert.equal(params, false);
+    assert.equal(params instanceof Error, true);
   },
 
   testSimpleRouteWithTwoOptionalSegments: function() {
