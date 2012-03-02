@@ -14,7 +14,8 @@ var fs = require('fs')
   , cmds
   , opts
   , usage
-  , cmd;
+  , cmd
+  , filepath;
 
 usage = ''
     + 'Geddy web framework for Node.js\n'
@@ -123,7 +124,11 @@ if (typeof opts.help != 'undefined') {
 else {
   // `geddy app foo` or `geddy resource bar` etc. -- run generators
   if (cmds.length) {
-    cmd = 'jake -t -f ' + __dirname + '/../Jakefile ';
+    filepath = __dirname + '/../Jakefile';
+    if (process.platform == 'win32') {
+      filepath = '"' + filepath + '"';
+    }
+    cmd = 'jake -t -f ' + filepath + ' ';
     if (cmds[0] != 'secret' && !cmds[1]) {
       throw new Error(cmds[0] + ' command requires another argument.');
     }
