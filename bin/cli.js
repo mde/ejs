@@ -5,6 +5,7 @@ require('../lib/geddy');
 
 var fs = require('fs')
   , exec = require('child_process').exec
+  , path = require('path')
   , parseopts = require('../lib/parseopts')
   , utils = require('../lib/utils/index')
   , App = require('../lib/app.js').App
@@ -124,7 +125,7 @@ if (typeof opts.help != 'undefined') {
 else {
   // `geddy app foo` or `geddy resource bar` etc. -- run generators
   if (cmds.length) {
-    filepath = __dirname + '/../Jakefile';
+    filepath = path.normalize(path.join(__dirname, '../Jakefile'));
     if (process.platform == 'win32') {
       filepath = '"' + filepath + '"';
     }
