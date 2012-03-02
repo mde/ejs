@@ -143,16 +143,18 @@ else {
       default:
         die(cmds[0] + ' is not a Geddy command.');
     }
-    cmd += ' generator=true'
+    cmd += ' generator=true';
     exec(cmd, function (err, stdout, stderr) {
       if (err) {
         throw err;
       }
-      else if (stderr) {
-        console.log(stderr);
-      }
       else {
-        console.log(utils.string.trim(stdout));
+        if (stderr) {
+          console.log(utils.string.trim(stderr));
+        }
+        if (stdout) {
+          console.log(utils.string.trim(stdout));
+        }
       }
     });
   }

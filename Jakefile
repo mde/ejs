@@ -51,30 +51,35 @@ namespace('gen', function () {
     }
     var dir = appName
       , templateDir = __dirname + '/templates/base'
-      , cmds = [
-          'mkdir -p ./' + dir
-        , 'mkdir -p ./' + dir + '/config'
-        , 'mkdir -p ./' + dir + '/app/models'
-        , 'mkdir -p ./' + dir + '/app/controllers'
-        , 'mkdir -p ./' + dir + '/lib'
-        , 'mkdir -p ./' + dir + '/log'
-        , 'mkdir -p ./' + dir + '/node_modules'
-        , 'cp -r ' + templateDir + '/views ' + dir + '/app/'
-        , 'cp -r ' + templateDir + '/public ' + dir
-        , 'cp ' + templateDir + '/router.js ' + dir + '/config/'
-        , 'cp ' + templateDir + '/init.js ' + dir + '/config/'
-        , 'cp ' + templateDir + '/environment.js ' + dir + '/config/'
-        , 'cp ' + templateDir + '/development.js ' + dir + '/config/'
-        , 'cp ' + templateDir + '/production.js ' + dir + '/config/'
-        , 'cp ' + templateDir + '/main.js ' + dir + '/app/controllers/'
-        , 'cp ' + templateDir + '/application.js ' + dir + '/app/controllers/'
-        , 'cp ' + templateDir + '/favicon.ico ' + dir + '/public/'
+      , mkdirs = [
+          dir
+        , dir + '/config'
+        , dir + '/app/models'
+        , dir + '/app/controllers'
+        , dir + '/lib'
+        , dir + '/log'
+        , dir + '/node_modules'
+        ]
+      , cps = [
+        , [templateDir + '/views', dir + '/app/']
+        , [templateDir + '/public', dir]
+        , [templateDir + '/router.js', dir + '/config/']
+        , [templateDir + '/init.js', dir + '/config/']
+        , [templateDir + '/environment.js', dir + '/config/']
+        , [templateDir + '/development.js', dir + '/config/']
+        , [templateDir + '/production.js', dir + '/config/']
+        , [templateDir + '/main.js', dir + '/app/controllers/']
+        , [templateDir + '/application.js', dir + '/app/controllers/']
+        , [templateDir + '/favicon.ico', dir + '/public/']
         ];
-    jake.exec(cmds, function () {
-      console.log('Created app ' + dir + '.');
-      complete();
+    mkdirs.forEach(function (dir) {
+      jake.mkdirP(dir);
     });
-  }, {async: true});
+    cps.forEach(function (cp) {
+      jake.cpR(cp[0], cp[1]);
+    });
+    console.log('Created app ' + dir + '.');
+  });
 
   // Creates a resource-based route with model and controller
   task('resource', function (name) {
