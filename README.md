@@ -98,9 +98,9 @@ Use `geddy resource` in your app directory to add a
 resource. The route will be set up automatically for you.
 
     mde@localhost:~/work/bytor$ geddy resource snow_dog
-    [ADDED] ./app/models/snow_dog.js
-    [ADDED] ./app/controllers/snow_dogs.js
-    Resource snow_dogs route added to ./config/router.js
+    [ADDED] app/models/snow_dog.js
+    [ADDED] app/controllers/snow_dogs.js
+    Resource snow_dogs route added to config/router.js
     Created view templates.
 
 Restart Geddy, and you'll see the new route working. Hit your
@@ -124,15 +124,18 @@ After adding a resource, a Geddy app is laid out like this:
     ./config/config.js
     ./config/router.js
     ./app
+    ./app/models
+    ./app/models/snow_dog.js
     ./app/controllers
     ./app/controllers/snow_dogs.js
     ./app/controllers/main.js
     ./app/controllers/application.js
     ./app/views
     ./app/views/snow_dogs
+    ./app/views/snow_dogs/edit.html.ejs
     ./app/views/snow_dogs/show.html.ejs
-    ./app/views/snow_dogs/add.html.ejs
     ./app/views/snow_dogs/index.html.ejs
+    ./app/views/snow_dogs/add.html.ejs
     ./public
 
 ### Resources and controllers
@@ -210,8 +213,8 @@ return in JSON format, pass your JavaScript object to the
 
     this.show = function (params) {
       // (Fetch some item by params.id)
-        item = {foo: 'FOO', bar: 1, baz: false};
-          this.respond(item);
+      item = {foo: 'FOO', bar: 1, baz: false};
+      this.respond(item);
     };
 
 ## Models and validations
@@ -254,20 +257,20 @@ Alternatively, you can use the `defineProperties` method to lay out your model:
 
     var User = function () {
       this.defineProperties({
-        login:      {type: 'string', required: true}
-      , password:   {type: 'string', required: true}
-      , lastName:   {type: 'string'}
-      , firstName:  {type: 'string'}
+        login: {type: 'string', required: true}
+      , password: {type: 'string', required: true}
+      , lastName: {type: 'string'}
+      , firstName: {type: 'string'}
       });
     }
 
 Creating an instance of one of these models is easy:
 
     var params = {
-      login: 'alex',
-      password: 'lerxst',
-      lastName: 'Lifeson',
-      firstName: 'Alex'
+      login: 'alex'
+    , password: 'lerxst'
+    , lastName: 'Lifeson'
+    , firstName: 'Alex'
     };
     var user = User.create(params);
 
@@ -279,7 +282,7 @@ is valid.
 
     // Leaving out the required password field
     var params = {
-      login: 'alex',
+      login: 'alex'
     };
     var user = User.create(params);
 
