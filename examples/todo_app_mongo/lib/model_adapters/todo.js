@@ -2,7 +2,7 @@ var Todo = new (function () {
 
   this.all = function (callback) {
     var todos = [];
-    geddy.db.todos.find().toArray(function(err, docs){
+    geddy.db.todos.find().sort({status: -1, title: 1}).toArray(function(err, docs){
 
       // if there's an error, return early
       if (err) {
