@@ -1,0 +1,28 @@
+<div class="hero-unit">
+  <h3><%= todo.title; %></h3>
+  <div class="pull-right">
+  <% if (todo.status == 'open') { %>
+  <form id="finish-todo" class="hidden" action="/todos/<%= todo.id;%>">
+    <input type="hidden" name="status" value="done"/>
+    <input type="hidden" name="id" value="<%= todo.id; %>"/>
+    <input type="hidden" name="title" value="<%= todo.title; %>">
+  </form>
+  <span><a href="#" class="btn btn-primary btn-large" id="finish-btn">Finish To Do</a></span>
+  <script type="text/javascript">
+    var form = $('#finish-todo');
+    $('#finish-btn').click(function(e){
+      e.preventDefault();
+      $.ajax({
+        type: "PUT",
+        url: form.attr('action'),
+        data: form.serialize()
+      }).done(function( msg ) {
+        $(e.target).replaceWith('<p>This todo is finished!</p>');
+      });
+    })
+  </script>
+  <% } else { %>
+    <p>This to do is finished!</p>
+  <% } %>
+  </div>
+</div>
