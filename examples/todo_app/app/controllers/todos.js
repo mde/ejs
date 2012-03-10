@@ -11,17 +11,21 @@ var Todos = function () {
   };
 
   this.create = function (req, resp, params) {
-    var todo = geddy.model.Todo.create({
-      title: params.title
-    , id: geddy.string.uuid(10)
-    , status: 'open'
+    var self = this
+      , todo = geddy.model.Todo.create({
+          title: params.title
+        , id: geddy.string.uuid(10)
+        , status: 'open'
+        });
+    todo.save(function (err, data) {
+      if (err) {
+        params.errors = err;
+        self.transfer('add');
+      }
+      else {
+        self.redirect({controller: self.name});
+      }
     });
-    if (todo.isValid()) {
-      todo.save();
-      this.redirect({controller: this.name});
-    } else {
-      this.redirect({controller: this.name, action: 'add?error=true'});
-    }
   };
 
   this.show = function (req, resp, params) {
@@ -40,10 +44,17 @@ var Todos = function () {
 
   this.update = function (req, resp, params) {
     var self = this;
-    geddy.model.adapter.Todo.load(params.id, function(todo){
-      todo.status = params.status;
-      todo.save();
-      self.redirect({controller: this.name, id: params.id});
+    geddy.model.adapter.Todo.load(params.id, function (todo) {
+      todo.status = params.status ? 'done' : 'open';
+      todo.save(function (err, data) {
+        if (err) {
+          params.errors = err;
+          self.transfer('edit');
+        }
+        else {
+          self.redirect({controller: self.name});
+        }
+      });
     });
   };
 

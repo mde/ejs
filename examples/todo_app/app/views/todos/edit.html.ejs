@@ -1,8 +1,4 @@
 <div class="hero-unit">
-  <h3>Params</h3>
-  <ul>
-  <% for (var p in params) { %>
-    <li><%= p + ': ' + params[p]; %></li>
-  <% } %>
-  </ul>
+  <h2>Update ToDo:</h2>
+  <%= partial('_form', {params: params, todo: todo}); %>
 </div>
