@@ -1,0 +1,31 @@
+  <%
+    var isUpdate = params.action == 'edit'
+      , action = isUpdate ? '/todos/' + todo.id + '?_method=PUT': '/todos'
+      , btnText = isUpdate ? 'Update' : 'Add'
+      , doneStatus = isUpdate ? 'checked' : ''
+      , errors = params.errors;
+  %>
+  <form id="todo-form" action="<%= action %>" method="POST">
+    <%  if (errors) {
+          for (var p in errors) { %>
+            <div><%=  errors[p];  %></div>
+    <%    }
+        }
+    %>
+    <div>
+      <%  if (isUpdate) { %>
+      <%= todo.title %>
+      <input type="hidden" class="span6" placeholder="<%= todo.title %>" name="title"/>
+      <%  }
+          else {%>
+      <input type="text" class="span6" placeholder="enter title" name="title"/>
+      <%  } %>
+    </div>
+    <div>
+      <input type="checkbox" name="status" <%= doneStatus  %> /> Done
+    </div>
+    <div>
+      <input type="submit" class="btn btn-primary" value="<%= btnText %>">
+    </div>
+  </form>
+
