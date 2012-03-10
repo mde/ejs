@@ -5,7 +5,6 @@ dist
 .idea/
 tags
 nbproject/
-development.js
 spec/browser/autogen_suite.js
 node_modules
 tmtags

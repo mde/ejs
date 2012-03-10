@@ -11,7 +11,11 @@ var Todos = function () {
   };
 
   this.create = function (req, resp, params) {
-    var todo = geddy.model.Todo.create({title: params.title, id: geddy.string.uuid(10), status: 'open'});
+    var todo = geddy.model.Todo.create({
+      title: params.title
+    , id: geddy.string.uuid(10)
+    , status: 'open'
+    });
     if (todo.isValid()) {
       todo.save();
       this.redirect({controller: this.name});
