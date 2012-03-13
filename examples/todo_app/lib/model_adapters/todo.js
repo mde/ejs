@@ -8,8 +8,7 @@ var Todo = new (function () {
 
     for (var i in geddy.todos) {
       if (geddy.todos[i].id == id) {
-        callback(null, geddy.todos[i]);
-        return;
+        return callback(null, geddy.todos[i]);
       }
     }
     callback({message: "To Do not found"}, null);
