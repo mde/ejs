@@ -1,13 +1,3 @@
 <div class="hero-unit">
-  <h2>Add a ToDo:</h2>
-  <form action="/todos" method="POST">
-    <% if (params.error) {
-        var title = 'title not long enough, must be 5 characters or more.'
-      } else {
-        var title = 'enter title'
-      }
-    %>
-    <input type="text" class="span6" placeholder="<%= title %>" name="title"/>
-    <input type="submit" class="btn btn-primary">
-  </form>
+  <%= partial('_form', {params: params}); %>
 </div>

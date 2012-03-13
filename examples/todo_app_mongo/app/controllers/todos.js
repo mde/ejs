@@ -14,16 +14,21 @@ var Todos = function () {
   };
 
   this.create = function (req, resp, params) {
-    var self = this;
-    var todo = geddy.model.Todo.create({title: params.title, id: geddy.string.uuid(10), status: 'open'});
-    if (todo.isValid()) {
-      todo.saved = true;
-      todo.save(function(){
-        self.redirect({controller: this.name});
-      });
-    } else {
-      this.redirect({controller: this.name, action: 'add?error=true'});
-    }
+    var self = this
+      , todo = geddy.model.Todo.create({
+          title: params.title
+        , id: geddy.string.uuid(10)
+        , status: 'open'
+        });
+    todo.save(function (err, data) {
+      if (err) {
+        params.errors = err;
+        self.transfer('add');
+      }
+      else {
+        self.redirect({controller: self.name});
+      }
+    });
   };
 
   this.show = function (req, resp, params) {
@@ -36,23 +41,39 @@ var Todos = function () {
   this.edit = function (req, resp, params) {
     var self = this;
     geddy.model.Todo.load(params.id, function(err, todo){
-      if (todo && !err) {
-        self.respond({params: params, todo: todo});
-      } else {
-        resp.end();
-      }
+      self.respond({params: params, todo: todo});
     });
   };
 
   this.update = function (req, resp, params) {
     var self = this;
-    geddy.model.adapter.Todo.load(params.id, function(err, todo){
+    geddy.model.adapter.Todo.load(params.id, function (err, todo) {
       todo.status = params.status;
-      todo.save(function(){
-        self.redirect({controller: this.name});
+      todo.title = params.title;
+      todo.save(function (err, data) {
+        if (err) {
+          params.errors = err;
+          self.transfer('edit');
+        }
+        else {
+          self.redirect({controller: self.name});
+        }
       });
     });
   };
+
+  this.remove = function (req, resp, params) {
+    var self = this;
+    geddy.model.adapter.Todo.remove(params.id, function(err){
+      if (err) {
+        params.errors = err;
+        self.transfer('edit');
+      }
+      else {
+        self.redirect({controller: self.name});
+      }
+    });
+  }
 
 };
 

@@ -41,7 +41,7 @@ var Todo = new (function () {
 
   };
 
-  this.save = function (todo, callback) {
+  this.save = function (todo, opts, callback) {
     // sometimes we won't need to pass a callback
     if (typeof callback != 'function') {
       callback = function(){};
@@ -49,31 +49,37 @@ var Todo = new (function () {
 
     // Mongo doesn't like it when you send functions to it
     // so lets make sure we're only using the properties
-    todo = {
+    cleanTodo = {
       id: todo.id
     , saved: todo.saved
     , title: todo.title
     , status: todo.status
     };
 
+    // Double check to see if this thing is valid
+    todo = geddy.model.Todo.create(cleanTodo);
+
+    if (!todo.isValid()) {
+      return callback(todo.errors, null);
+    }
+
     // Check to see if we have this to do item already
     geddy.db.todos.findOne({id: todo.id}, function(err, doc){
 
-      // if theres an error, log it and
       if (err) {
-        geddy.log.error(err);
         return callback(err, null);
       }
 
       // if we already have the to do item, update it with the new values
       if (doc) {
-        geddy.db.todos.update({id: todo.id}, todo, function(err, docs){
-          return callback(err, docs);
+        geddy.db.todos.update({id: todo.id}, cleanTodo, function(err, docs){
+          return callback(todo.errors, todo);
         });
       }
 
       // if we don't already have the to do item, save a new one
       else {
+        todo.saved = true;
         geddy.db.todos.save(todo, function(err, docs){
           return callback(err, docs);
         });
@@ -81,6 +87,16 @@ var Todo = new (function () {
 
     });
 
+  }
+
+  this.remove = function(id, callback) {
+    if (typeof callback != 'function') {
+      callback = function(){};
+    }
+
+    geddy.db.todos.remove({id: id}, function(err, res){
+      callback(err);
+    });
   }
 
 })();
