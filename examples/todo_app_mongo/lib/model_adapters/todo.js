@@ -49,12 +49,7 @@ var Todo = new (function () {
 
     // Mongo doesn't like it when you send functions to it
     // so lets make sure we're only using the properties
-    cleanTodo = {
-      id: todo.id
-    , saved: todo.saved
-    , title: todo.title
-    , status: todo.status
-    };
+    cleanTodo = todo.toObj();
 
     // Double check to see if this thing is valid
     todo = geddy.model.Todo.create(cleanTodo);
@@ -80,7 +75,7 @@ var Todo = new (function () {
       // if we don't already have the to do item, save a new one
       else {
         todo.saved = true;
-        geddy.db.todos.save(todo, function(err, docs){
+        geddy.db.todos.save(cleanTodo, function(err, docs){
           return callback(err, docs);
         });
       }
