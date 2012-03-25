@@ -9,6 +9,7 @@ var fs = require('fs')
   , parseopts = require('../lib/parseopts')
   , utils = require('../lib/utils/index')
   , App = require('../lib/app.js').App
+  , pkg = JSON.parse(fs.readFileSync(__dirname + '/../package.json').toString())
   , parser
   , args = process.argv.slice(2)
   , optsReg
@@ -18,6 +19,8 @@ var fs = require('fs')
   , cmd
   , filepath;
 
+geddy.version = pkg.version;
+
 usage = ''
     + 'Geddy web framework for Node.js\n'
     + '*********************************************************************************************\n'
@@ -26,12 +29,12 @@ usage = ''
     + '{Usage}: geddy [options]\n'
     + '\n'
     + '{Options}:\n'
-    + '  -e, --environment          Evironment config to use\n'
-    + '  -p, --port NUM             Port number, defaults to 4000\n'
-    + '  -n, --workers NUM          Number of worker processes to use, defaults to 2\n'
-    + '  -V, --version              Outputs the version of geddy that you have installed\n'
-    + '  -d, --debug                sets the log level to output debug messages to the console\n'
-    + '  -h, --help                 Outputs help information\n'
+    + '  -e,   --environment          Evironment config to use\n'
+    + '  -p,   --port NUM             Port number, defaults to 4000\n'
+    + '  -n,   --workers NUM          Number of worker processes to use, defaults to 2\n'
+    + '  -V/v, --version              Outputs the version of geddy that you have installed\n'
+    + '  -d,   --debug                Sets the log level to output debug messages to the console\n'
+    + '  -h,   --help                 Outputs help information\n'
     + '';
 
 optsReg = [
@@ -46,6 +49,9 @@ optsReg = [
   }
 , { full: 'version'
   , abbr: 'V'
+  }
+, { full: 'version'
+  , abbr: 'v'
   }
 , { full: 'help'
   , abbr: 'h'
@@ -121,6 +127,9 @@ var start = function () {
 
 if (typeof opts.help != 'undefined') {
   die(usage);
+}
+else if (typeof opts.version != 'undefined') {
+  die(geddy.version);
 }
 else {
   // `geddy app foo` or `geddy resource bar` etc. -- run generators
