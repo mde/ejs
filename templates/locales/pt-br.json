@@ -1,0 +1,17 @@
+{
+  "model.validatesPresent": "\"{name}\" é obrigatório."
+, "model.validatesAbsent": "\"{name}\" não deve ser preenchido."
+, "model.validatesConfirmed": "\"{name}\" e \"{qual}\" devem ser iguais."
+, "model.validatesFormat": "\"{name}\" com formato inválido."
+, "model.validatesExactLength": "\"{name}\" deve conter {qual} caracteres."
+, "model.validatesMinLength": "\"{name}\" deve ter ao menos {min} caracteres."
+, "model.validatesMaxLength": "\"{name}\" não pode ter mais de {max} caracteres."
+, "model.validatesWithFunction": "\"{name}\" é inválido."
+, "model.validatesNumber": "\"{name}\" deve ser um número."
+, "model.validatesInteger": "\"{name}\" deve ser um inteiro."
+, "model.validatesObject": "\"{name}\" deve ser um objeto."
+, "model.validatesArray": "\"{name}\" deve ser uma coleção."
+, "model.validatesDate": "\"{name}\" deve ser uma data válida."
+, "model.validatesDatetime": "\"{name}\" deve ser uma data e hora válida."
+, "model.validatesTime": "\"{name}\" deve ser uma hora válida."
+}

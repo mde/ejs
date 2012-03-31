@@ -5,8 +5,7 @@ if (geddy.config.environment != 'development') {
     geddy.log.error(JSON.stringify(err));
   });
 }
+geddy.todos = [];
 geddy.model.adapter = {};
 geddy.model.adapter.Todo = require(process.cwd() + '/lib/model_adapters/todo').Todo;
-
-geddy.todos = [];
 

@@ -5,16 +5,21 @@ require('../lib/geddy');
 
 var fs = require('fs')
   , exec = require('child_process').exec
+  , path = require('path')
   , parseopts = require('../lib/parseopts')
   , utils = require('../lib/utils/index')
   , App = require('../lib/app.js').App
+  , pkg = JSON.parse(fs.readFileSync(__dirname + '/../package.json').toString())
   , parser
   , args = process.argv.slice(2)
   , optsReg
   , cmds
   , opts
   , usage
-  , cmd;
+  , cmd
+  , filepath;
+
+geddy.version = pkg.version;
 
 usage = ''
     + 'Geddy web framework for Node.js\n'
@@ -24,12 +29,12 @@ usage = ''
     + '{Usage}: geddy [options]\n'
     + '\n'
     + '{Options}:\n'
-    + '  -e, --environment          Evironment config to use\n'
-    + '  -p, --port NUM             Port number, defaults to 4000\n'
-    + '  -n, --workers NUM          Number of worker processes to use, defaults to 2\n'
-    + '  -V, --version              Outputs the version of geddy that you have installed\n'
-    + '  -d, --debug                sets the log level to output debug messages to the console\n'
-    + '  -h, --help                 Outputs help information\n'
+    + '  -e,   --environment          Evironment config to use\n'
+    + '  -p,   --port NUM             Port number, defaults to 4000\n'
+    + '  -n,   --workers NUM          Number of worker processes to use, defaults to 2\n'
+    + '  -V/v, --version              Outputs the version of geddy that you have installed\n'
+    + '  -d,   --debug                Sets the log level to output debug messages to the console\n'
+    + '  -h,   --help                 Outputs help information\n'
     + '';
 
 optsReg = [
@@ -44,6 +49,9 @@ optsReg = [
   }
 , { full: 'version'
   , abbr: 'V'
+  }
+, { full: 'version'
+  , abbr: 'v'
   }
 , { full: 'help'
   , abbr: 'h'
@@ -120,10 +128,17 @@ var start = function () {
 if (typeof opts.help != 'undefined') {
   die(usage);
 }
+else if (typeof opts.version != 'undefined') {
+  die(geddy.version);
+}
 else {
   // `geddy app foo` or `geddy resource bar` etc. -- run generators
   if (cmds.length) {
-    cmd = 'jake -t -f /' + __dirname + '/../Jakefile ';
+    filepath = path.normalize(path.join(__dirname, '../Jakefile'));
+    if (process.platform == 'win32') {
+      filepath = '"' + filepath + '"';
+    }
+    cmd = 'jake -t -f ' + filepath + ' ';
     if (cmds[0] != 'secret' && !cmds[1]) {
       throw new Error(cmds[0] + ' command requires another argument.');
     }
@@ -143,16 +158,18 @@ else {
       default:
         die(cmds[0] + ' is not a Geddy command.');
     }
-    cmd += ' generator=true'
+    cmd += ' generator=true';
     exec(cmd, function (err, stdout, stderr) {
       if (err) {
         throw err;
       }
-      else if (stderr) {
-        console.log(stderr);
-      }
       else {
-        console.log(utils.string.trim(stdout));
+        if (stderr) {
+          console.log(utils.string.trim(stderr));
+        }
+        if (stdout) {
+          console.log(utils.string.trim(stdout));
+        }
       }
     });
   }

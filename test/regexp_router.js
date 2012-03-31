@@ -37,8 +37,8 @@ tests = {
   testCreateResource: function() {
     router = new Router();
     var routes = router.resource('SnowDogs');
-    assert.ok(routes.length === 7)
-    for ( var i in routes ) {
+    assert.ok(routes.length === 11)
+    for (var i in routes) {
       assert.ok(route)
     }
   },
@@ -143,7 +143,7 @@ tests = {
     router = new Router();
     var route = router.match('/:controller/:action/:id(.:format)','GET');
     var params = router.first({url: '/products/show/1'},'POST');
-    assert.equal(params, false);
+    assert.equal(params instanceof Error, true);
   },
 
   testSimpleRouteWithTwoOptionalSegments: function() {
@@ -319,6 +319,7 @@ tests = {
 
 for (var p in tests) {
   if (typeof tests[p] == 'function') {
+    console.log('Running ' + p);
     tests[p]();
   }
 }

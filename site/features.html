@@ -6,23 +6,23 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width">
 
     <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
     <!--[if lt IE 9]>
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
 
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-    <script type="text/javascript" src="js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
 
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/bootstrap.min.responsive.css">
 
-    <link href="js/google-code-prettify/prettify.css" type="text/css" rel="stylesheet" />
-    <script type="text/javascript" src="js/google-code-prettify/prettify.js"></script>
+    <link href="js/google-code-prettify/prettify.css" rel="stylesheet">
+    <script src="js/google-code-prettify/prettify.js"></script>
 
-    <style type="text/css">
+    <style>
 
       @media (min-width: 980px) {
         body {
@@ -159,17 +159,17 @@ User = geddy.model.registerModel('User', User);
 <!-- View Example -->
 <pre class="code-box prettyprint">
 // view logic
-<% if (localVar) { %>
+&lt;% if (localVar) { %&gt;
   // do some stuff with that local variable
-<% } %>
+&lt;% } %&gt;
 
 // display the value of a variable
-<%= user.login %>
+&lt;%= user.login %&gt;
 
 // just use regular js
-<% for (var i in user.posts) { %>
-  <%= user.posts[i].title %>
-<% } %>
+&lt;% for (var i in user.posts) { %&gt;
+  &lt;%= user.posts[i].title %&gt;
+&lt;% } %&gt;
 </pre>
 
         </div>
@@ -224,8 +224,8 @@ this.respondsWith = ['js', 'json'];
 
 this.show = function (params) {
   // (Fetch some item by params.id)
-    item = {foo: 'FOO', bar: 1, baz: false};
-      this.respond(item);
+  item = {foo: 'FOO', bar: 1, baz: false};
+  this.respond(item);
 };
 </pre>
 
@@ -247,13 +247,13 @@ this.show = function (params) {
 
 <!-- Clustering Example -->
 <pre class="code-box prettyprint">
-// just set the number of workers in your config
-"workers": 1
+  // just set the number of workers in your config
+  workers: 1
 
-// Geddy also handles process rotation
-"rotateWorkers": true,
-"rotationWindow": 7200000,
-"rotationTimeout": 300000,
+  // Geddy also handles process rotation
+, rotateWorkers: true
+, rotationWindow: 7200000
+, rotationTimeout: 300000
 </pre>
 
         </div>
@@ -302,13 +302,13 @@ timer.mark();
 <!-- Generators -->
 <pre class="code-box prettyprint">
 // generate an app
-$> geddy app test_app
+$&gt; geddy app test_app
 
 // generate a new resource
-$> geddy resource user
+$&gt; geddy resource user
 
 // start your app
-$> geddy
+$&gt; geddy
 </pre>
 
         </div>
@@ -329,8 +329,8 @@ $> geddy
 
 <!-- Bootstrap -->
 <pre class="code-box prettyprint" style="font-size: 90%">
-&lt;script type=&quot;text/javascript&quot; src=&quot;js/jquery.min.js&quot;&gt;
-&lt;script type=&quot;text/javascript&quot; src=&quot;js/bootstrap.min.js&quot;&gt;
+&lt;script src=&quot;js/jquery.min.js&quot;&gt;&lt;/script;&gt;
+&lt;script src=&quot;js/bootstrap.min.js&quot;&gt;&lt;/script;&gt;
 
 &lt;link rel=&quot;stylesheet&quot; href=&quot;css/bootstrap.min.css&quot;&gt;
 &lt;link rel=&quot;stylesheet&quot; href=&quot;css/bootstrap.responsive.css&quot;&gt;
@@ -361,7 +361,7 @@ geddy.log.info('Some info for you');
 geddy.log.warn('A warning!');
 
 // error
-geddy.log.Error('An error occurred');
+geddy.log.error('An error occurred');
 </pre>
 
         </div>
@@ -403,19 +403,17 @@ router.resource('users');
 
     </div> <!-- /container -->
 
-    <script type="text/javascript">
-
+    <script>
       var _gaq = _gaq || [];
       _gaq.push(['_setAccount', 'UA-5555148-4']);
       _gaq.push(['_setDomainName', '.geddyjs.org']);
       _gaq.push(['_trackPageview']);
 
-      (function() {
+      (function () {
         var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
         ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
         var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
       })();
-
     </script>
 
   </body>

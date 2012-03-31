@@ -1,6 +1,12 @@
 // Load the basic Geddy toolkit
 require('../lib/geddy');
 
+geddy.config = {
+  i18n: {
+    defaultLocale: 'en-us'
+  }
+};
+
 var model = require('../lib/model')
   , assert = require('assert')
   , tests;
@@ -197,6 +203,7 @@ var tests = new (function () {
 
 for (var p in tests) {
   if (typeof tests[p] == 'function') {
+    console.log('Running ' + p);
     tests[p]();
   }
 }

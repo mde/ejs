@@ -1,6 +1,6 @@
 
 var <%= names.constructor.plural %> = function () {
-  this.respondsWith = ['html', 'json', 'js', 'txt'];
+  this.respondsWith = ['html', 'json', 'xml', 'js', 'txt'];
 
   this.index = function (req, resp, params) {
     this.respond({params: params});
