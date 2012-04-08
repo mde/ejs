@@ -14,6 +14,8 @@ var Todo = function () {
     return status == 'open' || status == 'done';
   });
 
+  this.adapter = "Mongo";
+
 };
 
 Todo = geddy.model.register('Todo', Todo);
