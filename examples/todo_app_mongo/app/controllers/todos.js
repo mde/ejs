@@ -4,7 +4,9 @@ var Todos = function () {
 
   this.index = function (req, resp, params) {
     var self = this;
-    geddy.model.adapter.Todo.all({status: {'in': ['open','done']}}, {sort: {status: -1}}, function(err, todos){
+    geddy.model.adapter.Todo.all({status: {'in': ['open','done']}}
+    , {sort: {status: -1, title: 1}}
+    , function(err, todos){
       self.respond({params: params, todos: todos});
     });
   };
