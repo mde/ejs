@@ -1,0 +1,31 @@
+body {
+  padding-top: 60px;
+  padding-bottom: 40px;
+  background: url('../img/whitey.png');
+}
+
+.navbar-fixed-top {
+  box-shadow: 0px 0px 3px #000;
+  border-bottom: 1px solid #999;
+}
+
+.geddy-welcome-box {
+  text-align: center;
+  background-color: rgba(200, 200, 200, .5);
+  box-shadow: 0px 0px 3px #bababa;
+  border: 1px solid #EDEDED;
+}
+
+.geddy-welcome-box h1 {
+  line-height: 1.25;
+  margin-bottom: 20px;
+}
+
+.geddy-welcome-box p {
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.geddy-welcome-box .btn-large {
+  margin-top: 20px;
+}
