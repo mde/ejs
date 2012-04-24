@@ -24,3 +24,4 @@ examples/todo_app_mongo/log/stdout.2012-03-07T00:00:22.log
 examples/todo_app_mongo/log/stdout.log
 examples/demo
 examples/todo_app_mongo/log
+.log

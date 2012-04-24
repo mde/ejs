@@ -1,5 +1,5 @@
 
-var Modelcs = function () {
+var Things = function () {
   this.respondsWith = ['html', 'json', 'xml', 'js', 'txt'];
 
   this.index = function (req, resp, params) {
@@ -34,5 +34,5 @@ var Modelcs = function () {
 
 };
 
-exports.Modelcs = Modelcs;
+exports.Things = Things;
 

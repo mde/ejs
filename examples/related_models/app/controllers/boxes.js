@@ -1,5 +1,5 @@
 
-var Modelbs = function () {
+var Boxes = function () {
   this.respondsWith = ['html', 'json', 'xml', 'js', 'txt'];
 
   this.index = function (req, resp, params) {
@@ -34,5 +34,5 @@ var Modelbs = function () {
 
 };
 
-exports.Modelbs = Modelbs;
+exports.Boxes = Boxes;
 

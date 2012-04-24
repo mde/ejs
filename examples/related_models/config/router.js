@@ -32,8 +32,8 @@ router.match('/').to({controller: 'Main', action: 'index'});
 // Resource-based routes
 // router.resource('hemispheres');
 
-router.resource('modelas');
-router.resource('modelbs');
-router.resource('modelcs');
+router.resource('widgets');
+router.resource('things');
+router.resource('boxes');
 exports.router = router;
 
