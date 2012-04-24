@@ -4,7 +4,7 @@ var fs = require('fs')
   , exec = child_process.exec
   , inflection = require('./deps/inflection')
   , utils = require('./lib/utils')
-  , ejs = require('./lib/template/adapters/ejs/ejs')
+  , ejs = require('./lib/template/adapters/ejs')
   , createPackageTask;
 
 var JSPAT = /\.js$/;
