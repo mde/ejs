@@ -62,15 +62,17 @@ Routes are similar to Merb or Rails routes.
 
 **Basic routes**
 
-    router.match('/moving/pictures/:id').to(
-      {controller: 'Moving', action: 'pictures'});
+```javascript
+router.match('/moving/pictures/:id').to(
+  {controller: 'Moving', action: 'pictures'});
 
-    router.match('/farewells/:farewelltype/kings/:kingid').to(
-       {controller: 'Farewells', action: 'kings'});
+router.match('/farewells/:farewelltype/kings/:kingid').to(
+   {controller: 'Farewells', action: 'kings'});
 
-    //Can also match specific HTTP methods only
-    router.match('/xandadu', 'get').to(
-      {controller: 'Xandadu', action: 'specialHandler'});
+//Can also match specific HTTP methods only
+router.match('/xandadu', 'get').to(
+  {controller: 'Xandadu', action: 'specialHandler'});
+```
 
 **Resource-based routes**
 
@@ -168,37 +170,38 @@ DELETE */snow_dogs/:id[.extension]<br/>
 A simple controller that just responds with any
 form-post/query-string params looks like this:
 
-    var SnowDogs = function () {
-      this.respondsWith = ['text', 'json', 'html'];
+```javascript
+var SnowDogs = function () {
+  this.respondsWith = ['text', 'json', 'html'];
 
-      this.index = function (params) {
-        this.respond({params: params});
-      };
+  this.index = function (params) {
+    this.respond({params: params});
+  };
 
-      this.add = function (params) {
-        this.respond({params: params});
-      };
+  this.add = function (params) {
+    this.respond({params: params});
+  };
 
-      this.create = function (params) {
-        this.respond({params: params});
-      };
+  this.create = function (params) {
+    this.respond({params: params});
+  };
 
-      this.show = function (params) {
-        this.respond({params: params});
-      };
+  this.show = function (params) {
+    this.respond({params: params});
+  };
 
-      this.update = function (params) {
-        this.respond({params: params});
-      };
+  this.update = function (params) {
+    this.respond({params: params});
+  };
 
-      this.remove = function (params) {
-        this.respond({params: params});
-      };
+  this.remove = function (params) {
+    this.respond({params: params});
+  };
 
-    };
+};
 
-    exports.SnowDogs = SnowDogs;
-
+exports.SnowDogs = SnowDogs;
+```
 
 ## Content-negotiation
 
@@ -209,13 +212,15 @@ If you have a JSON-serializable JavaScript object you want to
 return in JSON format, pass your JavaScript object to the
 `respond` method in the action on that controller.
 
-    this.respondsWith = ['text', 'json'];
+```javascript
+this.respondsWith = ['text', 'json'];
 
-    this.show = function (params) {
-      // (Fetch some item by params.id)
-      item = {foo: 'FOO', bar: 1, baz: false};
-      this.respond(item);
-    };
+this.show = function (params) {
+  // (Fetch some item by params.id)
+  item = {foo: 'FOO', bar: 1, baz: false};
+  this.respond(item);
+};
+```
 
 ## Models and validations
 
@@ -225,54 +230,60 @@ Ruby's ActiveRecord or DataMapper.
 
 Here is an example of a model with some validations:
 
-    var User = function () {
-      this.property('login', 'string', {required: true});
-      this.property('password', 'string', {required: true});
-      this.property('lastName', 'string');
-      this.property('firstName', 'string');
+```javascript
+var User = function () {
+  this.property('login', 'string', {required: true});
+  this.property('password', 'string', {required: true});
+  this.property('lastName', 'string');
+  this.property('firstName', 'string');
 
-      this.validatesPresent('login');
-      this.validatesFormat('login', /[a-z]+/, {message: 'Subdivisions!'});
-      this.validatesLength('login', {min: 3});
-      this.validatesConfirmed('password', 'confirmPassword');
-      this.validatesWithFunction('password', function (s) {
-          // Something that returns true or false
-          return s.length > 0;
-      });
+  this.validatesPresent('login');
+  this.validatesFormat('login', /[a-z]+/, {message: 'Subdivisions!'});
+  this.validatesLength('login', {min: 3});
+  this.validatesConfirmed('password', 'confirmPassword');
+  this.validatesWithFunction('password', function (s) {
+      // Something that returns true or false
+      return s.length > 0;
+  });
 
-      // Can define methods for instances like this
-      this.someMethod = function () {
-        // Do some stuff
-      };
-    };
+  // Can define methods for instances like this
+  this.someMethod = function () {
+    // Do some stuff
+  };
+};
 
-    // Can also define them on the prototype
-    User.prototype.someOtherMethod = function () {
-      // Do some other stuff
-    };
+// Can also define them on the prototype
+User.prototype.someOtherMethod = function () {
+  // Do some other stuff
+};
 
-    User = geddy.model.registerModel('User', User);
+User = geddy.model.registerModel('User', User);
+```
 
 Alternatively, you can use the `defineProperties` method to lay out your model:
 
-    var User = function () {
-      this.defineProperties({
-        login: {type: 'string', required: true}
-      , password: {type: 'string', required: true}
-      , lastName: {type: 'string'}
-      , firstName: {type: 'string'}
-      });
-    }
+```javascript
+var User = function () {
+  this.defineProperties({
+    login: {type: 'string', required: true}
+  , password: {type: 'string', required: true}
+  , lastName: {type: 'string'}
+  , firstName: {type: 'string'}
+  });
+}
+```
 
 Creating an instance of one of these models is easy:
 
-    var params = {
-      login: 'alex'
-    , password: 'lerxst'
-    , lastName: 'Lifeson'
-    , firstName: 'Alex'
-    };
-    var user = User.create(params);
+```javascript
+var params = {
+  login: 'alex'
+, password: 'lerxst'
+, lastName: 'Lifeson'
+, firstName: 'Alex'
+};
+var user = User.create(params);
+```
 
 Data-validation happens on the call to `create`, and any
 validation errors show up inside an `errors` property on
@@ -280,16 +291,18 @@ the instance, keyed by field name. Instances have a `valid`
 method that returns a Boolean indicating whether the instance
 is valid.
 
-    // Leaving out the required password field
-    var params = {
-      login: 'alex'
-    };
-    var user = User.create(params);
+```javascript
+// Leaving out the required password field
+var params = {
+  login: 'alex'
+};
+var user = User.create(params);
 
-    // Prints 'false'
-    sys.puts(user.valid());
-    // Prints 'Field "password" is required'
-    sys.puts(user.errors.password);
+// Prints 'false'
+sys.puts(user.valid());
+// Prints 'Field "password" is required'
+sys.puts(user.errors.password);
+```
 
 ## Running the tests
 
