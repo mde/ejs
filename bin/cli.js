@@ -152,6 +152,9 @@ else {
       case 'controller':
         cmd += 'gen:bareController[' + cmds[1] + ']';
         break;
+      case 'model':
+        cmd += 'gen:model[' + cmds[1] + ']';
+        break;
       case 'secret':
         cmd += 'gen:secret';
         break;

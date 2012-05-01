@@ -22,7 +22,13 @@ var config = {
 , hostname: null
 , port: 4000
 , sessions: {
-    store: 'memory'
+	server: {
+        host : 'localhost'
+      , port : 27017
+      , db : 'testDB'
+      , collection : 'sessions'
+	}
+  , store: 'mongodb'
   , key: 'sid'
   , expiry: 14 * 24 * 60 * 60
   }
