@@ -16,27 +16,15 @@
  *
 */
 
-var config = {
-  detailedErrors: true
-, debug: true
-, hostname: null
-, port: 4000
-, sessions: {
-	server: {
-        host : 'localhost'
-      , port : 27017
-      , db : 'testDB'
-      , collection : 'sessions'
-	}
-  , store: 'mongodb'
-  , key: 'sid'
-  , expiry: 14 * 24 * 60 * 60
-  }
-, db: {
-    mongo: {
-      db: "todo"
-    }
-  }
+var Main = function () {
+  this.index = function (req, resp, params) {
+    this.respond(params, {
+      format: 'html'
+    , template: 'app/views/main/index'
+    });
+  };
 };
 
-module.exports = config;
+exports.Main = Main;
+
+

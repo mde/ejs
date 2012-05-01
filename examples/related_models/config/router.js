@@ -16,27 +16,24 @@
  *
 */
 
-var config = {
-  detailedErrors: true
-, debug: true
-, hostname: null
-, port: 4000
-, sessions: {
-	server: {
-        host : 'localhost'
-      , port : 27017
-      , db : 'testDB'
-      , collection : 'sessions'
-	}
-  , store: 'mongodb'
-  , key: 'sid'
-  , expiry: 14 * 24 * 60 * 60
-  }
-, db: {
-    mongo: {
-      db: "todo"
-    }
-  }
-};
 
-module.exports = config;
+var router = new geddy.RegExpRouter();
+router.match('/').to({controller: 'Main', action: 'index'});
+
+// Basic routes
+// router.match('/moving/pictures/:id').to(
+//    {controller: 'Moving', action: 'pictures'});
+// router.match('/farewells/:farewelltype/kings/:kingid').to(
+//    {controller: 'Farewells', action: 'kings'});
+// Can also match specific HTTP methods only
+// router.match('/xandadu', 'get').to(
+//    {controller: 'Xandadu', action: 'specialHandler'});
+//
+// Resource-based routes
+// router.resource('hemispheres');
+
+router.resource('widgets');
+router.resource('things');
+router.resource('boxes');
+exports.router = router;
+
