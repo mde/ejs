@@ -1,4 +1,4 @@
-router = new geddy.RegExpRouter();
+router = new geddy.RegExpRouter()
 router.match('/').to controller: 'Todos', action: 'index'
 
 router.resource 'todos'

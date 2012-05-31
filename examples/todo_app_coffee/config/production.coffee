@@ -8,5 +8,3 @@ config =
     expiry: 14 * 24 * 60 * 60
 
 module.exports = config
-
-

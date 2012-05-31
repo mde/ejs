@@ -1,5 +1,5 @@
 Todo = ->
-  this.defineProperties
+  @defineProperties
     title:
       type: 'string'
       required: true
@@ -10,12 +10,12 @@ Todo = ->
       type: 'string'
       required: true
 
-  this.validatesPresent 'title'
-  this.validatesLength 'title',
-    min: 5
+  @validatesPresent 'title'
+  @validatesLength 'title', min: 5
 
-  this.validatesWithFunction 'status', (status) ->
+  @validatesWithFunction 'status', (status) ->
     status == 'open' || status == 'done'
 
-Todo = geddy.model.register 'Todo', Todo
+  @adapter = 'Mongo'
 
+Todo = geddy.model.register 'Todo', Todo
