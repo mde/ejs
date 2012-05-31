@@ -1,1 +1,0 @@
-[Thu, 31 May 2012 04:16:13 GMT] ERROR 127.0.0.1 - - [Thu May 31 2012 00:16:13 GMT-0400 (EDT)] "GET /todos/bZvA7sdWfQ/edit 1.1" 500 35 "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/535.19 (KHTML, like Gecko) Ubuntu/12.04 Chromium/18.0.1025.151 Chrome/18.0.1025.151 Safari/535.19" 
