@@ -11,6 +11,7 @@ var fs = require('fs')
   , App = require('../lib/app.js').App
   , pkg = JSON.parse(fs.readFileSync(__dirname + '/../package.json').toString())
   , parser
+  , cwd = process.cwd()
   , args = process.argv.slice(2)
   , optsReg
   , cmds
@@ -178,7 +179,16 @@ else {
   }
   // Just `geddy` -- start the server
   else {
-    start();
+    var configPath = path.join(cwd, 'config')
+      , geddyApp = path.existsSync(configPath);
+
+    if(geddyApp) {
+      // Start the server
+      start();
+    } else {
+      // Display help if not in a geddy application
+      die(usage);
+    }
   }
 }
 
