@@ -1,0 +1,16 @@
+extends layout
+
+.hero-unit
+  h2 To Do List
+  a.btn.pull-right(href="/todos/add") Create a new To Do
+
+- if (todos && todos.length)
+  - for (var i in todos)
+    .row.todo-item
+      .span8
+        h3
+          a(href="/todos/" + todos[i].id + "/edit")= todos[i].title
+      .span4
+        h3=
+          i.icon-list-alt
+          todos[i].status
