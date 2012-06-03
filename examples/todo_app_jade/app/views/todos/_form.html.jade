@@ -1,0 +1,34 @@
+- var isUpdate = params.action == 'edit';
+- var formTitle = isUpdate ? 'Update this To Do Item' : 'Create a new To Do Item';
+- var action = isUpdate ? '/todos/' + todo.id + '?_method=PUT' : '/todos';
+- var deleteAction = isUpdate ? '/todos/' + todo.id + '?_method=DELETE' : '';
+- var btnText = isUpdate ? 'Update' : 'Add';
+- var doneStatus = isUpdate ? 'checked' : '';
+- var titleValue = isUpdate ? todo.title : '';
+- var errors = params.errors;
+
+form#todo-form.form-horizontal(action=action, method="POST")
+  fieldset
+    legend= formTitle
+    .control-group
+      label.control-label(for="title") Title
+      .controls
+        input.span6(type="text", placeholder="enter title", name="title", value=titleValue)
+        - if (errors)
+          p
+            - for (var p in errors)
+              div= errors[p]
+
+    - if (isUpdate)
+      .control-group
+        label(for="status") Status
+        .controls
+          select(name="status")
+            option open
+            option done
+
+    .form-actions
+      input.btn.btn-primary(type="submit", value=btnText)
+      - if (isUpdate)
+        button.btn.btn-danger(type="submit", formaction=deleteAction, formmethod="POST") Remove
+
