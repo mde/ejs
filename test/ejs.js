@@ -3,32 +3,157 @@ require('../lib/geddy');
 
 var Template = require('../lib/template/adapters/ejs/template.js').Template
   , assert = require('assert')
-  , tests;
+  , tests
+  , render = function (str, d) {
+      var data = d || {};
+      var templ = new Template({text: str});
+      templ.process({data: data});
+      return templ.markup;
+    };
 
-tests = new (function () {
+tests = {
+  'test rendering a single variable': function () {
+    var str = "<% var foo = 'FOO'; %><%= foo; %>"
+      , actual = render(str);
+    assert.equal('FOO', actual);
+  }
 
-  this.testRenderVar = function () {
-    // Create a template out of the markup in the file
-    var templ = new Template({text: "<% var foo = 'FOO'; %><%= foo; %>"});
-    templ.process({data: {}});
-    assert.equal('FOO', templ.markup);
-  };
+, 'test rendering passed-in data': function () {
+    var str = "<%= foo; %>"
+      , actual = render(str, {foo: 'FOO'});
+    assert.equal('FOO', actual);
+  }
 
-  this.testRenderData = function () {
-    // Create a template out of the markup in the file
-    var templ = new Template({text: "<%= foo; %>"});
-    templ.process({data: {foo: 'FOO'}});
-    assert.equal('FOO', templ.markup);
-  };
+, 'test escaping': function () {
+    assert.equal('&lt;script&gt;', render('<%= "<script>" %>'));
+    assert.equal('<script>', render('<%- "<script>" %>'));
+  }
 
-  this.testEscapeData = function () {
-    // Create a template out of the markup in the file
-    var templ = new Template({text: "<%= foo; %>"});
-    templ.process({data: {foo: '<FOO>'}});
-    assert.equal('&lt;FOO&gt;', templ.markup);
-  };
+, 'test HTML equality': function () {
+    assert.equal('<p>yay</p>', render('<p>yay</p>'));
+  }
 
-})();
+, 'test basic conditional': function () {
+    var str = '<% if (name) { %><p><%= name %></p><% } %>'
+      , actual = render(str, {name: 'mde'});
+    assert.equal('<p>mde</p>', actual);
+  }
+
+, 'test newlines': function () {
+    var html = '\n<p>mde</p>\n<p>mde@fleegix.org</p>\n'
+      , str = '<% if (name) { %>\n<p><%= name %></p>\n<p><%= email %></p>\n<% } %>'
+      , data = { name: 'mde', email: 'mde@fleegix.org' };
+    assert.equal(html, render(str, data));
+  }
+
+, 'test single quotes': function () {
+    var html = '<p>WAHOO</p>'
+      , str = "<p><%= up('wahoo') %></p>"
+      , data = {up: function (str){ return str.toUpperCase(); }};
+    assert.equal(html, render(str, data));
+  }
+
+, 'test single quotes in HTML': function () {
+    var html = '<p>WAHOO that\'s cool</p>'
+      , str = '<p><%= up(\'wahoo\') %> that\'s cool</p>'
+      , data = {up: function (str){ return str.toUpperCase(); }};
+    assert.equal(html, render(str, data));
+  }
+
+, 'test multiple single quotes': function () {
+    var html = "<p>couldn't shouldn't can't</p>"
+      , str = "<p>couldn't shouldn't can't</p>";
+    assert.equal(html, render(str));
+  }
+
+, 'test single quotes inside tags': function () {
+    var html = '<p>string</p>'
+      , str = "<p><%= 'string' %></p>";
+    assert.equal(html, render(str));
+  }
+
+, 'test back-slashes in the document': function () {
+    var html = "<p>backslash: '\\'</p>"
+      , str = "<p>backslash: '\\'</p>";
+    assert.equal(html, render(str));
+  }
+
+, 'test double quotes': function (){
+    var html = '<p>WAHOO</p>'
+      , str = '<p><%= up("wahoo") %></p>'
+      , data = {up: function (str){ return str.toUpperCase(); }};
+    assert.equal(html, render(str, data));
+  }
+
+, 'test multiple double quotes': function () {
+    var html = '<p>just a "test" wahoo</p>'
+      , str = '<p>just a "test" wahoo</p>';
+    assert.equal(html, render(str));
+  }
+
+, 'test whitespace': function (){
+    var html = '<p>foo</p>'
+      , str = '<p><%="foo"%></p>';
+    assert.equal(html, render(str));
+
+    var html = '<p>foo</p>'
+      , str = '<p><%=bar%></p>';
+    assert.equal(html, render(str, {bar: 'foo'}));
+  }
+
+, 'test iteration': function (){
+    var html = '<p>foo</p>',
+      str = '<% for (var key in items) { %>'
+        + '<p><%= items[key] %></p>'
+        + '<% } %>';
+    assert.equal(html, render(str, {items: ['foo']}));
+
+    var html = '<p>foo</p>',
+      str = '<% items.forEach(function (item){ %>'
+        + '<p><%= item %></p>'
+        + '<% }) %>';
+    assert.equal(html, render(str, {items: ['foo']}));
+  }
+
+, 'test slurp' : function () {
+    var expected = 'me\nhere'
+      , str = 'me<% %>\nhere';
+    assert.equal(expected, render(str));
+
+    var expected = 'mehere'
+      , str = 'me<% -%>\nhere';
+    assert.equal(expected, render(str));
+
+    var expected = 'me\nhere'
+      , str = 'me<% -%>\n\nhere';
+    assert.equal(expected, render(str));
+
+    var expected = 'me inbetween \nhere'
+      , str = 'me <%= x %> \nhere';
+    assert.equal(expected, render(str,{x:'inbetween'}));
+
+    var expected = 'me inbetween here'
+      , str = 'me <%= x -%> \nhere';
+    assert.equal(expected, render(str, {x:'inbetween'}));
+
+    var expected = 'me <p>inbetween</p> here'
+      , str = 'me <%- x -%> \nhere';
+    assert.equal(expected, render(str,{x:'<p>inbetween</p>'}));
+
+    var expected = '\n  Hallo 0\n\n  Hallo 1\n\n'
+      , str = '<% for(var i in [1,2]) { %>\n' +
+            '  Hallo <%= i %>\n' +
+            '<% } %>\n';
+    assert.equal(expected, render(str));
+
+    var expected = '  Hallo 0\n  Hallo 1\n'
+      , str = '<% for(var i in [1,2]) { -%>\n' +
+            '  Hallo <%= i %>\n' +
+            '<% } -%>\n';
+    assert.equal(expected, render(str));
+  }
+
+};
 
 for (var p in tests) {
   if (typeof tests[p] == 'function') {
