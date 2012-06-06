@@ -15,7 +15,7 @@
 # limitations under the License.
 #
 
-.PHONY: all build install clean uninstall
+.PHONY: all build install clean uninstall reinstall
 
 PREFIX=/usr/local
 DESTDIR=
@@ -40,3 +40,5 @@ uninstall:
 	@rm -f $(DESTDIR)$(PREFIX)/bin/geddy && \
 		rm -fr $(DESTDIR)$(PREFIX)/lib/node_modules/geddy/ && \
 		echo 'Geddy uninstalled.'
+
+reinstall: uninstall install

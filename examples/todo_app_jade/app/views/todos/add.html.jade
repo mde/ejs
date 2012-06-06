@@ -1,3 +1,4 @@
-extends layout
+extends ../layouts/application.html
 
-.hero-unit= partial('_form', {params: params, todo: todo})
+block content
+  .hero-unit= partial('_form', {params: params, todo: todo})
