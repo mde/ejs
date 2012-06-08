@@ -12,6 +12,7 @@ var Template = require('../lib/template/adapters/ejs/template.js').Template
     };
 
 tests = {
+
   'test rendering a single variable': function () {
     var str = "<% var foo = 'FOO'; %><%= foo; %>"
       , actual = render(str);
@@ -21,6 +22,18 @@ tests = {
 , 'test rendering passed-in data': function () {
     var str = "<%= foo; %>"
       , actual = render(str, {foo: 'FOO'});
+    assert.equal('FOO', actual);
+  }
+
+, 'test literal EJS': function () {
+    var str = "<%% var foo = 'FOO'; %>"
+      , actual = render(str);
+    assert.equal("<% var foo = 'FOO'; %>", actual);
+  }
+
+, 'test comments': function () {
+    var str = "<%# Blah blah blah %><% var foo = 'FOO'; %><%= foo; %>"
+      , actual = render(str);
     assert.equal('FOO', actual);
   }
 
@@ -115,6 +128,53 @@ tests = {
     assert.equal(html, render(str, {items: ['foo']}));
   }
 
+, 'test useful stack traces': function () {
+    var str = [
+      "A little somethin'",
+      "somethin'",
+      "<% if (name) { %>", // Failing line
+      "  <p><%= name %></p>",
+      "  <p><%= email %></p>",
+      "<% } %>"
+    ].join("\n");
+
+    try {
+      render(str)
+    }
+    catch(err) {
+      assert.ok(err.message.indexOf("name is not defined") > -1);
+      assert.deepEqual(err.name, "ReferenceError");
+      var lineno = parseInt(err.toString().match(/ejs:(\d+)\n/)[1]);
+      assert.deepEqual(lineno, 3,
+          "Error should been thrown on line 3, was thrown on line "+ lineno);
+    }
+  }
+
+, 'test useful stack traces multiline': function () {
+    var str = [
+      "A little somethin'",
+      "somethin'",
+      "<% var some = 'pretty';",
+      "   var multiline = 'javascript';",
+      "%>",
+      "<% if (name) { %>", // Failing line
+      "  <p><%= name %></p>",
+      "  <p><%= email %></p>",
+      "<% } %>"
+    ].join("\n");
+
+    try {
+      render(str)
+    }
+    catch (err) {
+      assert.ok(err.message.indexOf("name is not defined") > -1);
+      assert.deepEqual(err.name, "ReferenceError");
+      var lineno = parseInt(err.toString().match(/ejs:(\d+)\n/)[1]);
+      assert.deepEqual(lineno, 6,
+          "Error should been thrown on line 6, was thrown on line "+ lineno);
+    }
+  }
+
 , 'test slurp' : function () {
     var expected = 'me\nhere'
       , str = 'me<% %>\nhere';
@@ -152,6 +212,7 @@ tests = {
             '<% } -%>\n';
     assert.equal(expected, render(str));
   }
+
 
 };
 
