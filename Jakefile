@@ -1,3 +1,6 @@
+// Load the basic Geddy toolkit
+require('./lib/geddy')
+
 var fs = require('fs')
   , child_process = require('child_process')
   , path = require('path')
