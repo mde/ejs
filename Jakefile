@@ -205,7 +205,7 @@ namespace('doc', function () {
   }, {async: true});
 
   task('clobber', function () {
-    var cmd = 'rm -fr ./doc/*';
+    var cmd = 'rm -fr ./doc/**';
     jake.exec([cmd], function () {
       console.log('Clobbered old docs.');
       complete();
@@ -242,11 +242,11 @@ var p = new jake.NpmPublishTask('geddy', [
 , 'Jakefile'
 , 'README.md'
 , 'package.json'
-, 'bin/*'
-, 'deps/*'
-, 'lib/*'
-, 'templates/*'
-, 'test/*'
+, 'bin/**'
+, 'deps/**'
+, 'lib/**'
+, 'templates/**'
+, 'test/**'
 ]);
 
 // Don't create the package-tasks when being called as a generator
