@@ -109,7 +109,7 @@ Restart Geddy, and you'll see the new route working. Hit your
 new route -- for example, http://localhost:4000/snow_dogs.json,
 and you should see something like this:
 
-{"method":"index","params":{"extension":"json"}}
+    {"method":"index","params":{"extension":"json"}}
 
 The geddy generator utility also handles fancy pluralization
 between model and controller. Specify your resource-name as a
