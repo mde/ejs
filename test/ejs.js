@@ -1,13 +1,13 @@
 // Load the basic Geddy toolkit
 require('../lib/geddy');
 
-var Template = require('../lib/template/adapters/ejs/template.js').Template
+var Template = require('../lib/template/adapters/ejs').Template
   , assert = require('assert')
   , tests
-  , render = function (str, d) {
-      var data = d || {};
+  , render = function (str, data) {
+      data = data || {};
       var templ = new Template({text: str});
-      templ.process({data: data});
+      templ.process(data);
       return templ.markup;
     };
 
