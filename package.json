@@ -10,12 +10,12 @@
   "version": "0.4.2",
   "author": "Matthew Eernisse <mde@fleegix.org> (http://fleegix.org)",
   "dependencies": {
-    "jake": "0.2.x"
+    "jake": "0.3.x"
   },
   "bin": {
     "geddy": "./bin/cli.js"
   },
-  "main": "./lib",
+  "main": "./lib/geddy",
   "repository": {
     "type": "git",
     "url": "git://github.com/mde/geddy.git"
