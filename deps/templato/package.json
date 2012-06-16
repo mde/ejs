@@ -1,0 +1,18 @@
+{
+	"name": "templato",
+	"version": "0.1.0",
+	"description": "One interface to many template engines for browser and Node.js.",
+	"author": "Vadim Demedes <sbioko@gmail.com>",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/vdemedes/templato.git"
+	},
+	"dependencies": {
+		"eco": "1.1.0-rc-3",
+		"ejs": "0.7.1",
+		"jade": "0.26.1"
+	},
+	"engine": {
+		"node": ">= 0.4"
+	}
+}

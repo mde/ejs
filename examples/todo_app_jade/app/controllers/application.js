@@ -16,28 +16,10 @@
  *
 */
 
-var Adapter = function(data) {
-  var engine;
-
-  this.data = data.data;
-
-  // Load rendering engine
-  if(data.data.ext.match(/\.ejs$/)) engine = require('./ejs').Template;
-  if(data.data.ext.match(/\.jade$/)) engine = require('./jade').Template;
-  if(data.data.ext.match(/\.hbs$/)) engine = require('./handlebars').Template;
-  if(data.data.ext.match(/\.(mustache|ms|mu)$/)) engine = require('./mustache').Template;
-
-  // Create new instance of the rendering engine and return it
-  this.engine = new engine(data);
-  return this.engine;
+var Application = function () {
 };
 
-Adapter.prototype = new function() {
+exports.Application = Application;
 
-  this.process = function(data) {
-    return this.engine.process(data);
-  };
 
-};
 
-exports.Adapter = Adapter;
