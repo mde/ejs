@@ -1,26 +1,21 @@
 #!/usr/bin/env node
 
 // Load the basic Geddy toolkit
-require('../lib/geddy');
+var geddy = require('../lib/geddy');
 
-var fs = require('fs')
-  , exec = require('child_process').exec
+var exec = require('child_process').exec
   , path = require('path')
   , parseopts = require('../lib/parseopts')
   , utils = require('../lib/utils/index')
-  , App = require('../lib/app.js').App
-  , pkg = JSON.parse(fs.readFileSync(__dirname + '/../package.json').toString())
   , parser
   , cwd = process.cwd()
   , args = process.argv.slice(2)
-  , optsReg
+  , optsMap
   , cmds
   , opts
   , usage
   , cmd
   , filepath;
-
-geddy.version = pkg.version;
 
 usage = ''
     + 'Geddy web framework for Node.js\n'
@@ -30,7 +25,7 @@ usage = ''
     + '{Usage}: geddy [options]\n'
     + '\n'
     + '{Options}:\n'
-    + '  -e,   --environment          Environment config to use\n'
+    + '  -e,   --environment          Evironment config to use\n'
     + '  -p,   --port NUM             Port number, defaults to 4000\n'
     + '  -n,   --workers NUM          Number of worker processes to use, defaults to 2\n'
     + '  -V/v, --version              Outputs the version of geddy that you have installed\n'
@@ -38,7 +33,7 @@ usage = ''
     + '  -h,   --help                 Outputs help information\n'
     + '';
 
-optsReg = [
+optsMap = [
   { full: 'origins'
   , abbr: 'o'
   }
@@ -71,7 +66,7 @@ optsReg = [
   }
 ];
 
-parser = new parseopts.Parser(optsReg);
+parser = new parseopts.Parser(optsMap);
 parser.parse(args);
 cmds = parser.cmds;
 opts = parser.opts;
@@ -82,48 +77,8 @@ var die = function (str) {
 };
 
 var start = function () {
-
-  var cluster
-    , master
-    , worker
-    , m
-    , w
-    , app;
-
-  // Node 0.6
-  try {
-    cluster = require('cluster');
-    geddy.FD_HACK = false;
-    master = require('../lib/cluster/master')
-    worker = require('../lib/cluster/worker');
-  }
-  // Node 0.4
-  catch (e) {
-    geddy.FD_HACK = true;
-    master = require('../lib/cluster/hack_master')
-    worker = require('../lib/cluster/hack_worker');
-  }
-
-  // Master-process
-  if ((cluster && cluster.isMaster) ||
-      (geddy.FD_HACK && !opts.spawned)) {
-    m = new master.Master();
-    m.start(opts);
-  }
-  // Worker-process -- start up an app
-  else {
-    w = new worker.Worker();
-    geddy.worker = w;
-    w.init(function () {
-      geddy.mixin(geddy, w);
-      app = new App();
-      app.init(function () {
-        w.startServer();
-        geddy.mixin(geddy, app);
-      });
-    });
-  }
-
+  geddy.config(opts);
+  geddy.start();
 };
 
 if (typeof opts.help != 'undefined') {
