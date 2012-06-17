@@ -8,8 +8,8 @@ var TemplatoJade = (function() {
     }
   };
 
-  TemplatoJade.prototype.compile = function(template) {
-    return this.engine.compile(template);
+  TemplatoJade.prototype.compile = function(template, options) {
+    return this.engine.compile(template, options);
   };
 
   TemplatoJade.prototype.render = function(data, fn) {

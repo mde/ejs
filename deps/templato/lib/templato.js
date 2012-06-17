@@ -33,6 +33,7 @@ Templato = (function() {
 
   Templato.prototype.set = function(opts) {
     opts = opts || {};
+    this.options = opts.options || {};
 
     this.engine = (function() {
       switch(opts.engine) {
@@ -70,7 +71,7 @@ Templato = (function() {
   Templato.prototype.compile = function() {
     if(this.fn) return this.fn;
 
-    return this.fn = this.engine.compile(this.template);
+    return this.fn = this.engine.compile(this.template, this.options);
   };
 
   Templato.prototype.render = function(data) {

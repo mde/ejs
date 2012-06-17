@@ -14,8 +14,8 @@ var TemplatoHandlebars = (function() {
     }
   };
 
-  TemplatoHandlebars.prototype.compile = function(template) {
-    return this.engine.compile(template);
+  TemplatoHandlebars.prototype.compile = function(template, options) {
+    return this.engine.compile(template, options);
   };
 
   TemplatoHandlebars.prototype.render = function(data, fn) {

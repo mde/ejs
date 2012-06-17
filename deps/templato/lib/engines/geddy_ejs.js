@@ -6,8 +6,8 @@ var TemplatoGeddyEJS = (function() {
     this.engine = this.engine || require('../../../ejs');
   };
 
-  TemplatoGeddyEJS.prototype.compile = function(template) {
-    return this.engine.compile(template);
+  TemplatoGeddyEJS.prototype.compile = function(template, options) {
+    return this.engine.compile(template, options);
   };
 
   TemplatoGeddyEJS.prototype.render = function(data, fn) {

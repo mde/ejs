@@ -8,8 +8,8 @@ var TemplatoEJS = (function() {
     }
   };
 
-  TemplatoEJS.prototype.compile = function(template) {
-    return this.engine.compile(template);
+  TemplatoEJS.prototype.compile = function(template, options) {
+    return this.engine.compile(template, options);
   };
 
   TemplatoEJS.prototype.render = function(data, fn) {
