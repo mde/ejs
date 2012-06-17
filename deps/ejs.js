@@ -46,7 +46,7 @@ ejs.Template = function(params) {
 ejs.Template.prototype = new function() {
   var _REGEX = /(<%%)|(%%>)|(<%=)|(<%-)|(<%#)|(<%)|(%>)|(-%>)/;
 
-  exports.modes = {
+  this.modes = {
       EVAL: 'eval'
     , ESCAPED: 'escaped'
     , RAW: 'raw'
@@ -186,7 +186,7 @@ ejs.Template.prototype = new function() {
 
   this.parseTemplateText = function() {
     var str = this.templateText
-      , pat = exports._REGEX
+      , pat = this._REGEX
       , result = pat.exec(str)
       , arr = []
       , firstPos
@@ -238,24 +238,24 @@ ejs.Template.prototype = new function() {
 
     switch (line) {
       case '<%':
-        this.mode = exports.modes.EVAL;
+        this.mode = this.modes.EVAL;
         break;
       case '<%=':
-        this.mode = exports.modes.ESCAPED;
+        this.mode = this.modes.ESCAPED;
         break;
       case '<%-':
-        this.mode = exports.modes.RAW;
+        this.mode = this.modes.RAW;
         break;
       case '<%#':
-        this.mode = exports.modes.COMMENT;
+        this.mode = this.modes.COMMENT;
         break;
       case '<%%':
-        this.mode = exports.modes.LITERAL;
+        this.mode = this.modes.LITERAL;
         this.source += '__output += "' + line.replace('<%%', '<%') + '";';
         break;
       case '%>':
       case '-%>':
-        if(this.mode == exports.modes.LITERAL) _addOutput();
+        if(this.mode == this.modes.LITERAL) _addOutput();
 
         this.mode = null;
         this.truncate = line.indexOf('-') == 0;
@@ -265,25 +265,25 @@ ejs.Template.prototype = new function() {
         if (this.mode) {
           switch (this.mode) {
             // Just executing code
-            case exports.modes.EVAL:
+            case this.modes.EVAL:
               this.source += line;
               break;
             // Exec, esc, and output
-            case exports.modes.ESCAPED:
+            case this.modes.ESCAPED:
               // Add the exec'd, escaped result to the output
               this.source += '__output += utils.string.escapeXML(' +
                   line.replace(/;\S*/, '') + ');';
               break;
             // Exec and output
-            case exports.modes.RAW:
+            case this.modes.RAW:
               // Add the exec'd result to the output
               this.source += '__output += ' + line + ';';
               break;
-            case exports.modes.COMMENT:
+            case this.modes.COMMENT:
               // Do nothing
               break;
             // Literal <%% mode, append as raw output
-            case exports.modes.LITERAL:
+            case this.modes.LITERAL:
               _addOutput();
               break;
           }
