@@ -16,6 +16,7 @@ geddy.model = model;
 var User = function () {
   this.property('login', 'string', {required: true});
   this.property('password', 'string', {required: true});
+  this.property('confirmPassword', 'string', {required: true});
   this.property('lastName', 'string');
   this.property('firstName', 'string');
 
