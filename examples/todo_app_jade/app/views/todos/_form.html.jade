@@ -14,11 +14,11 @@ form#todo-form.form-horizontal(action=action, method="POST")
       label.control-label(for="title") Title
       .controls
         input.span6(placeholder="enter title", name="title", value=titleValue)
-        - if (errors)
+        - if(errors)
           p
-          - for (var p in errors)
+          - for(var p in errors)
             div= errors[p]
-    - if (isUpdate)
+    - if(isUpdate)
       .control-group
         label(for="status") Status
         .controls
@@ -27,5 +27,5 @@ form#todo-form.form-horizontal(action=action, method="POST")
             option done
     .form-actions
       input.btn.btn-primary(type="submit", value=btnText)
-      - if (isUpdate)
+      - if(isUpdate)
         button.btn.btn-danger(type="submit", formaction=deleteAction, formmethod="POST") Remove

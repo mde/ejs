@@ -2,8 +2,8 @@ var TemplatoGeddyEJS = (function() {
 
   function TemplatoGeddyEJS() {
     // Hardcoded for specifically Geddy's EJS implementation
-    // Location: `deps/ejs.js`
-    this.engine = this.engine || require('../../../ejs');
+    // Location: `lib/template/engines/ejs.js`
+    this.engine = this.engine || require('../../../../lib/template/engines/ejs');
   };
 
   TemplatoGeddyEJS.prototype.compile = function(template, options) {

@@ -1,46 +1,46 @@
-  <%
-    var isUpdate = params.action == 'edit'
-      , formTitle = isUpdate ? 'Update this To Do Item' : 'Create a new To Do Item'
-      , action = isUpdate ? '/todos/' + todo.id + '?_method=PUT' : '/todos'
-      , deleteAction = isUpdate ? '/todos/' + todo.id + '?_method=DELETE' : ''
-      , btnText = isUpdate ? 'Update' : 'Add'
-      , doneStatus = isUpdate ? 'checked' : ''
-      , titleValue = isUpdate ? todo.title : ''
-      , errors = params.errors;
-  %>
-  <form id="todo-form" class="form-horizontal" action="<%= action %>" method="POST">
-    <fieldset>
-      <legend><%= formTitle %></legend>
-      <div class="control-group">
-        <label for="title" class="control-label">Title</label>
-        <div class="controls">
-          <input type="text" class="span6" placeholder="enter title" name="title" value='<%= titleValue %>'/>
-          <%  if (errors) { %>
-            <p>
-            <% for (var p in errors) { %>
-              <div><%=  errors[p];  %></div>
-            <% } %>
-            </p>
+<%
+  var isUpdate = params.action == 'edit'
+    , formTitle = isUpdate ? 'Update this To Do Item' : 'Create a new To Do Item'
+    , action = isUpdate ? '/todos/' + todo.id + '?_method=PUT' : '/todos'
+    , deleteAction = isUpdate ? '/todos/' + todo.id + '?_method=DELETE' : ''
+    , btnText = isUpdate ? 'Update' : 'Add'
+    , doneStatus = isUpdate ? 'checked' : ''
+    , titleValue = isUpdate ? todo.title : ''
+    , errors = params.errors;
+%>
+<form id="todo-form" class="form-horizontal" action="<%= action %>" method="POST">
+  <fieldset>
+    <legend><%= formTitle %></legend>
+    <div class="control-group">
+      <label for="title" class="control-label">Title</label>
+      <div class="controls">
+        <input type="text" class="span6" placeholder="enter title" name="title" value='<%= titleValue %>'/>
+        <%  if (errors) { %>
+          <p>
+          <% for (var p in errors) { %>
+            <div><%=  errors[p];  %></div>
           <% } %>
-        </div>
-      </div>
-      <% if (isUpdate) { %>
-        <div class="control-group">
-          <label for="status">Status</label>
-          <div class="controls">
-            <select name="status">
-              <option>open</option>
-              <option>done</option>
-            </select>
-          </div>
-        </div>
-      <% } %>
-      <div class="form-actions">
-        <input type="submit" class="btn btn-primary" value="<%= btnText %>"/>
-        <% if (isUpdate) { %>
-          <button type="submit" formaction="<%= deleteAction %>" formmethod="POST" class="btn btn-danger">Remove</button>
+          </p>
         <% } %>
       </div>
-    </fieldset>
-  </form>
+    </div>
+    <% if (isUpdate) { %>
+      <div class="control-group">
+        <label for="status">Status</label>
+        <div class="controls">
+          <select name="status">
+            <option>open</option>
+            <option>done</option>
+          </select>
+        </div>
+      </div>
+    <% } %>
+    <div class="form-actions">
+      <input type="submit" class="btn btn-primary" value="<%= btnText %>"/>
+      <% if (isUpdate) { %>
+        <button type="submit" formaction="<%= deleteAction %>" formmethod="POST" class="btn btn-danger">Remove</button>
+      <% } %>
+    </div>
+  </fieldset>
+</form>
 
