@@ -254,5 +254,9 @@ var p = new jake.NpmPublishTask('geddy', [
 // Don't create the package-tasks when being called as a generator
 if (!process.env.generator) {
   jake.Task['npm:definePackage'].invoke();
+  var t = jake.TestTask('Geddy model-adapters', function () {
+    this.testName = 'testModelAdapters'
+    this.testFiles.include('lib/model/adapters/**/test.js');
+  });
 }
 
