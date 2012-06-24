@@ -9,7 +9,8 @@ geddy.config = {
 
 var model = require('../lib/model')
   , assert = require('assert')
-  , tests;
+  , tests
+  , _params;
 
 geddy.model = model;
 
@@ -32,57 +33,53 @@ User.prototype.someMethod = function () {
 
 User = geddy.model.register('User', User);
 
-var tests = new (function () {
-  var _params = {
-      login: 'zzz',
-      password: 'asdf',
-      confirmPassword: 'asdf',
-      firstName: 'Neil'
-    };
+_params = {
+  login: 'zzz',
+  password: 'asdf',
+  confirmPassword: 'asdf',
+  firstName: 'Neil'
+};
 
-  this.testValid = function () {
+var tests = {
+
+  'test validity': function () {
     var user = User.create(_params);
     assert.ok(user.isValid());
-  };
+  }
 
-  this.testShortLogin = function () {
+
+, 'test login is too short': function () {
     _params.login = 'zz'; // Too short, invalid
     var user = User.create(_params);
     assert.ok(typeof user.errors.login != 'undefined');
-  };
+  }
 
-  this.testInvalidLoginWithCustomMessage = function () {
+, 'test invalid login with custom error message': function () {
     _params.login = '2112'; // Contains numbers, invalid
     var user = User.create(_params);
     // Error message should be customized
     assert.ok(user.errors.login, 'Subdivisions!');
-  };
+  }
 
-  this.testNoLogin = function () {
+, 'test missing login': function () {
     delete _params.login; // Contains numbers, invalid
     var user = User.create(_params);
     // Error message should be customized
     assert.ok(typeof user.errors.login != 'undefined');
 
     _params.login = 'zzz'; // Restore to something valid
-  };
+  }
 
-  this.testNoConfirmPassword = function () {
+, 'test no password confirmation': function () {
     _params.confirmPassword = 'fdsa';
     var user = User.create(_params);
     // Error message should be customized
     assert.ok(typeof user.errors.password != 'undefined');
 
     _params.confirmPassword = 'asdf'; // Restore to something valid
-  };
-
-})();
-
-for (var p in tests) {
-  if (typeof tests[p] == 'function') {
-    console.log('Running ' + p);
-    tests[p]();
   }
-}
 
+};
+
+module.exports = tests;
 

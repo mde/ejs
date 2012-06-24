@@ -25,14 +25,14 @@ var ByTor = function () {
 
 ByTor = geddy.model.register('ByTor', ByTor);
 
-var tests = new (function () {
-  this.testAllOptional = function () {
+var tests = {
+  'test all properties optional': function () {
     var params = {};
     var byTor = ByTor.create(params);
     assert.ok(byTor.isValid());
-  };
+  }
 
-  this.testNumber = function () {
+, 'test number': function () {
     var byTor;
     // Actual number, valid
     byTor = ByTor.create({numberProp: 2112});
@@ -45,10 +45,9 @@ var tests = new (function () {
     // Non-numeric string, error
     byTor = ByTor.create({numberProp: 'Snow Dog'});
     assert.notStrictEqual(byTor.errors.numberProp, undefined);
+  }
 
-  };
-
-  this.testInt = function () {
+, 'test integer': function () {
     var byTor;
     // Actual int, valid
     byTor = ByTor.create({intProp: 2112});
@@ -69,10 +68,9 @@ var tests = new (function () {
     // Non-numeric string, error
     byTor = ByTor.create({intProp: 'away from here'});
     assert.notStrictEqual(byTor.errors.intProp, undefined);
+  }
 
-  };
-
-  this.testObject = function () {
+, 'test object': function () {
     var byTor;
     // Actual Object, valid
     byTor = ByTor.create({objectProp: {}});
@@ -85,10 +83,9 @@ var tests = new (function () {
     // string, should fail
     byTor = ByTor.create({objectProp: 'As gray traces of dawn ...'});
     assert.notStrictEqual(byTor.errors.objectProp, undefined);
+  }
 
-  };
-
-  this.testArray = function () {
+, 'test array': function () {
     var byTor;
     // Actual Array, valid
     byTor = ByTor.create({arrayProp: []});
@@ -101,10 +98,9 @@ var tests = new (function () {
     // string, should fail
     byTor = ByTor.create({arrayProp: 'As gray traces of dawn ...'});
     assert.notStrictEqual(byTor.errors.arrayProp, undefined);
+  }
 
-  };
-
-  this.testDate = function () {
+, 'test date': function () {
     var byTor;
     var dates = [
         '12/27/1968'
@@ -127,10 +123,9 @@ var tests = new (function () {
       assert.equal(byTor.dateProp.getMonth(), 11, 'Testing getMonth'); // Zero-based
       assert.equal(byTor.dateProp.getDate(), 27, 'Testing getDate');
     }
+  }
 
-  };
-
-  this.testDatetime = function () {
+, 'test datetime': function () {
     var byTor;
     var dates, dt;
     // Dates with no set time -- time should be set to 12 midnight
@@ -172,10 +167,9 @@ var tests = new (function () {
       assert.equal(byTor.datetimeProp.getMinutes(), 10);
       assert.equal(byTor.datetimeProp.getSeconds(), 3);
     }
+  }
 
-  };
-
-  this.testTime = function () {
+, 'test time': function () {
     var byTor;
     var dates, dt, vals;
     // Obj key is the input string, value is the list of values
@@ -196,16 +190,9 @@ var tests = new (function () {
       assert.equal(byTor.timeProp.getSeconds(), vals[2]);
       assert.equal(byTor.timeProp.getMilliseconds(), vals[3]);
     }
-
-  };
-
-})();
-
-for (var p in tests) {
-  if (typeof tests[p] == 'function') {
-    console.log('Running ' + p);
-    tests[p]();
   }
-}
 
+};
+
+module.exports = tests;
 
