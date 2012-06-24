@@ -216,7 +216,6 @@ tests = {
     assert.equal(expected, render(str));
   }
 
-
 };
 
 module.exports = tests;
