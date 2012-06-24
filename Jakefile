@@ -66,8 +66,22 @@ var p = new jake.NpmPublishTask('geddy', [
 jake.Task['npm:definePackage'].invoke();
 
 testTask = new jake.TestTask('Geddy', function () {
+  this.testName = 'testBase';
   this.testFiles.include('test/*.js');
+  this.showDescription = false;
 });
+
+desc('Run the Geddy tests');
+task('test', function () {
+  var t = jake.Task.testBase;
+  t.addListener('error', function (e) {
+    // TODO: Check the type of error, npm-install the libs, and re-run
+    console.error('If you have errors in the templating tests, ' +
+        'install jade and handlebars in the base geddy directory.');
+    throw e;
+  });
+  t.invoke();
+}, {async: true});
 
 testTask = new jake.TestTask('Geddy model-adapters', function () {
   this.testName = 'testModelAdapters'
