@@ -3,7 +3,8 @@ require('./lib/geddy')
 
 var fs = require('fs')
   , createPackageTask
-  , JSPAT = /\.js$/;
+  , JSPAT = /\.js$/
+  , testTask;
 
 namespace('doc', function () {
   task('generate', ['doc:clobber'], function () {
@@ -64,8 +65,13 @@ var p = new jake.NpmPublishTask('geddy', [
 // set up the package part included in the publish-task
 jake.Task['npm:definePackage'].invoke();
 
-var t = jake.TestTask('Geddy model-adapters', function () {
+testTask = new jake.TestTask('Geddy', function () {
+  this.testFiles.include('test/*.js');
+});
+
+testTask = new jake.TestTask('Geddy model-adapters', function () {
   this.testName = 'testModelAdapters'
   this.testFiles.include('lib/model/adapters/**/test.js');
 });
+
 

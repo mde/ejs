@@ -5,9 +5,9 @@ var SortedCollection = geddy.SortedCollection
   , assert = require('assert')
   , tests;
 
-tests = new (function () {
+tests = {
 
-  this.testNoDefault = function () {
+  'test no default value': function () {
     // Set up a collection, no default value for new items
     var c = new geddy.SortedCollection();
     // Add some items
@@ -30,9 +30,9 @@ tests = new (function () {
     c.setItem(2, 'cccc');
     var item = c.getItem(2);
     assert.equal('cccc', item);
-  };
+  }
 
-  this.testDefaultValue = function () {
+, 'test default value': function () {
     // Set up a collection, default value for new items is 'foo'
     var c = new geddy.SortedCollection('foo');
     // Add an item with no value -- should get
@@ -49,9 +49,9 @@ tests = new (function () {
     assert.equal(null, item);
     var item = c.getItem('testC');
     assert.equal(false, item);
-  };
+  }
 
-  this.testEach = function () {
+, 'test each': function () {
     var c = new geddy.SortedCollection()
       , str = '';
     // Add an item with no value -- should get
@@ -64,9 +64,9 @@ tests = new (function () {
       str += val + key;
     });
     assert.equal('AaBbCcDd', str);
-  };
+  }
 
-  this.testRemoveItem = function () {
+, 'test removing an item': function () {
     var c = new geddy.SortedCollection()
       , str = '';
     // Add an item with no value -- should get
@@ -84,14 +84,8 @@ tests = new (function () {
       str += val + key;
     });
     assert.equal('AaBbDd', str);
-  };
-
-})();
-
-for (var p in tests) {
-  if (typeof tests[p] == 'function') {
-    console.log('Running ' + p);
-    tests[p]();
   }
-}
 
+};
+
+module.exports = tests;

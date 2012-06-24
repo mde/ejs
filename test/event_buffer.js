@@ -7,9 +7,9 @@ var Stream = require('stream').Stream
   , assert = require('assert')
   , tests;
 
-tests = new (function () {
+tests = {
 
-  this.testEventBuffer = function () {
+  'test basic event buffer functionality': function () {
     var source = new Stream()
       , dest = new EventEmitter()
       , buff = new EventBuffer(source)
@@ -23,15 +23,8 @@ tests = new (function () {
     assert.equal('abcdef123456', data);
     source.emit('data', '---');
     assert.equal('abcdef123456---', data);
-  };
-
-})();
-
-for (var p in tests) {
-  if (typeof tests[p] == 'function') {
-    console.log('Running ' + p);
-    tests[p]();
   }
-}
 
+};
 
+module.exports = tests;
