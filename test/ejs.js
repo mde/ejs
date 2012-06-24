@@ -225,4 +225,3 @@ for (var p in tests) {
     tests[p]();
   }
 }
-

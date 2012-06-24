@@ -14,7 +14,7 @@
     <div class="control-group">
       <label for="title" class="control-label">Title</label>
       <div class="controls">
-        <input type="text" class="span6" placeholder="enter title" name="title" value='<%= titleValue %>'/>
+        <%- contentTag('input', titleValue, {type:'text', class:'span6', placeholder:'enter title', name:'title'}) %>
         <%  if (errors) { %>
           <p>
           <% for (var p in errors) { %>
@@ -36,9 +36,9 @@
       </div>
     <% } %>
     <div class="form-actions">
-      <input type="submit" class="btn btn-primary" value="<%= btnText %>"/>
+      <%- contentTag('input', btnText, {type: 'submit', class: 'btn btn-primary'}) %>
       <% if (isUpdate) { %>
-        <button type="submit" formaction="<%= deleteAction %>" formmethod="POST" class="btn btn-danger">Remove</button>
+        <%- contentTag('button', 'Remove', {type: 'submit', formaction: deleteAction, formmethod: 'POST', class: 'btn btn-danger'}) %>
       <% } %>
     </div>
   </fieldset>

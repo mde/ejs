@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+require('../../lib/geddy')
 require('./color');
 var data
   , engine_options
@@ -33,7 +34,7 @@ enginesText = [
 ];
 enginesTextHTML = [
     '<%- yieldHTML() %><p>some text in paragraph</p><%= content %>'
-  , '<%= yieldHTML(); %><p>some text in paragraph</p><%= content; %>'
+  , '<%- yieldHTML(); %><p>some text in paragraph</p><%= content; %>'
   , '!= yieldHTML()\np some text in paragraph\n= content'
   , '{{{yieldHTML}}}<p>some text in paragraph</p>{{content}}'
   , '{{{yieldHTML}}}<p>some text in paragraph</p>{{content}}'

@@ -13,7 +13,7 @@ form#todo-form.form-horizontal(action=action, method="POST")
     .control-group
       label.control-label(for="title") Title
       .controls
-        input.span6(placeholder="enter title", name="title", value=titleValue)
+        != contentTag('input', titleValue, { placeholder: 'enter title', name: 'title', class: 'span6' })
         - if(errors)
           p
           - for(var p in errors)
@@ -26,6 +26,6 @@ form#todo-form.form-horizontal(action=action, method="POST")
             option open
             option done
     .form-actions
-      input.btn.btn-primary(type="submit", value=btnText)
+      != contentTag('input', btnText, { type:'submit', class: 'btn btn-primary' })
       - if(isUpdate)
-        button.btn.btn-danger(type="submit", formaction=deleteAction, formmethod="POST") Remove
+        != contentTag('button', 'Remove', {class:'btn btn-danger', type:'submit', formaction: deleteAction, formmethod:'POST'})
