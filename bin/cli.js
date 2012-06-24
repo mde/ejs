@@ -90,7 +90,7 @@ else if (typeof opts.version != 'undefined') {
 else {
   // `geddy app foo` or `geddy resource bar` etc. -- run generators
   if (cmds.length) {
-    filepath = path.normalize(path.join(__dirname, '../Jakefile'));
+    filepath = path.normalize(path.join(__dirname, '..', 'templates', 'Jakefile'));
     if (process.platform == 'win32') {
       filepath = '"' + filepath + '"';
     }
@@ -117,7 +117,7 @@ else {
       default:
         die(cmds[0] + ' is not a Geddy command.');
     }
-    cmd += ' generator=true';
+    cmd += ' --quiet'
     exec(cmd, function (err, stdout, stderr) {
       if (err) {
         throw err;
