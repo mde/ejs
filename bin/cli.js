@@ -4,6 +4,7 @@
 var geddy = require('../lib/geddy');
 
 var exec = require('child_process').exec
+  , fs = require('fs')
   , path = require('path')
   , parseopts = require('../lib/parseopts')
   , utils = require('../lib/utils/index')
@@ -135,7 +136,9 @@ else {
   // Just `geddy` -- start the server
   else {
     var configPath = path.join(cwd, 'config')
-      , geddyApp = path.existsSync(configPath);
+      , existsSync = typeof fs.existsSync == 'function' ?
+          fs.existsSync : path.existsSync
+      , geddyApp = existsSync(configPath);
 
     if(geddyApp) {
       // Start the server
