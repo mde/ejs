@@ -1,6 +1,14 @@
 // Load the basic Geddy toolkit
 require('../lib/geddy');
 
+try {
+  require('handlebars');
+} catch(err) {
+  var events = new (require('events').EventEmitter)
+
+  events.emit('error', err);
+}
+
 var Templato = require('../deps/templato')
   , Adapter = require('../lib/template/adapters').Adapter
   , assert = require('assert')

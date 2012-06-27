@@ -75,10 +75,21 @@ desc('Run the Geddy tests');
 task('test', function () {
   var t = jake.Task.testBase;
   t.addListener('error', function (e) {
-    // TODO: Check the type of error, npm-install the libs, and re-run
-    console.error('If you have errors in the templating tests, ' +
-        'install jade and handlebars in the base geddy directory.');
-    throw e;
+    var errString = String(e)
+      , module
+      , cmd;
+
+    if(errString.match('Cannot find module')) {
+      module = errString.match(/'[a-zA-Z]*'/)[0].replace(/'/g, '')
+      cmd = 'sudo npm install -g ' + module;
+
+      console.log(module + ' is not installed, Jake will attempt to install it for you.');
+      jake.exec(cmd, function() {
+        console.log('done!');
+
+        t.invoke();
+      });
+    } else throw e;
   });
   t.invoke();
 }, {async: true});
