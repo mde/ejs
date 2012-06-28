@@ -3,6 +3,8 @@ require('../lib/geddy')
 
 var fs = require('fs')
   , path = require('path')
+  , existsSync = typeof fs.existsSync == 'function' ?
+      fs.existsSync : path.existsSync
   , inflection = require('../deps/inflection')
   , utils = require('../lib/utils')
   , ejs = require('../lib/template/adapters/ejs/template');
@@ -154,7 +156,7 @@ namespace('gen', function () {
     }
 
     // Create an app-layout if one doesn't exist
-    if (!path.existsSync(path.join(process.cwd(),
+    if (!existsSync(path.join(process.cwd(),
         'app/views/layouts/application.html.ejs'))) {
       jake.cpR(path.join(__dirname, '/views/layout.html.ejs'),
           'app/views/layouts/application.html.ejs');
