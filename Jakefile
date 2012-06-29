@@ -30,25 +30,6 @@ namespace('doc', function () {
 desc('Generate docs for Geddy');
 task('doc', ['doc:generate']);
 
-desc('Runs the tests.');
-task('test', function () {
-  var dir = process.cwd()
-    , dirList = fs.readdirSync(dir + '/test')
-    , fileName
-    , cmds = [];
-  for (var i = 0; i < dirList.length; i++) {
-    fileName = dirList[i];
-    // Any files ending in '.js'
-    if (JSPAT.test(fileName)) {
-      cmds.push('node ./test/' + fileName);
-    }
-  }
-  jake.exec(cmds, function () {
-    console.log('Tests passed.');
-    complete();
-  }, {stdout: true});
-}, {async: true});
-
 var p = new jake.NpmPublishTask('geddy', [
   'Makefile'
 , 'Jakefile'
@@ -74,22 +55,26 @@ testTask = new jake.TestTask('Geddy', function () {
 desc('Run the Geddy tests');
 task('test', function () {
   var t = jake.Task.testBase;
-  t.addListener('error', function (e) {
-    var errString = String(e)
-      , module
-      , cmd;
+  t.addListener('error', function (err) {
+    var module
+      , cmd
+      , errMsg = err.message;
 
-    if(errString.match('Cannot find module')) {
-      module = errString.match(/'[a-zA-Z]*'/)[0].replace(/'/g, '')
-      cmd = 'sudo npm install -g ' + module;
-
-      console.log(module + ' is not installed, Jake will attempt to install it for you.');
-      jake.exec(cmd, function() {
-        console.log('done!');
-
+    if (errMsg.match('Cannot find module')) {
+      module = errMsg.match(/'[a-zA-Z]*'/)[0].replace(/'/g, '')
+      cmd = 'npm install ' + module;
+      jake.logger.log(module + ' is not installed; Jake will attempt to install it for you.');
+      jake.exec(cmd, function () {
+        jake.logger.log('installed!');
+        t.addListener('complete', function () {
+          complete();
+        });
         t.invoke();
       });
-    } else throw e;
+    }
+    else {
+      throw err;
+    }
   });
   t.invoke();
 }, {async: true});
