@@ -135,18 +135,28 @@ else {
   }
   // Just `geddy` -- start the server
   else {
-    var configPath = path.join(cwd, 'config')
-      , existsSync = typeof fs.existsSync == 'function' ?
-          fs.existsSync : path.existsSync
-      , geddyApp = existsSync(configPath);
+    var relPath = '';
 
-    if(geddyApp) {
-      // Start the server
-      start();
-    } else {
-      // Display help if not in a geddy application
-      die(usage);
+    // Search for the `config` directory needed to run Geddy
+    // - up to 5 parent directories then show the usage
+    for(var i = 0, len = 5; i <= len; i++) {
+      var configPath = path.join(cwd, relPath, 'config')
+        , existsSync = typeof fs.existsSync == 'function' ?
+            fs.existsSync : path.existsSync
+        , geddyApp = existsSync(configPath);
+
+      if(geddyApp) {
+        break;
+      } else {
+        // If 5 directories up show usage
+        if(i === 5) die(usage);
+
+        // Add a relative parent directory
+        relPath += '../';
+        process.chdir(path.join(cwd, relPath));
+      }
     }
+    start(); // Start the server up
   }
 }
 
