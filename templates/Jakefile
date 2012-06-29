@@ -7,7 +7,8 @@ var fs = require('fs')
       fs.existsSync : path.existsSync
   , inflection = require('../deps/inflection')
   , utils = require('../lib/utils')
-  , ejs = require('../lib/template/adapters/ejs/template');
+  , adapter = require('../lib/template/adapters').Adapter
+  , templato = new (require('../deps/templato'));
 
 namespace('gen', function () {
   var _writeTemplate = function (name, filename, dirname, opts) {
@@ -17,8 +18,8 @@ namespace('gen', function () {
           , templ
           , filePath;
         // Render with the right model name
-        templ = new ejs.Template({text: text});
-        templ.process({data: {names: names}});
+        templ = new adapter({ data: {ext:'.ejs'}, text: text, templato: templato });
+        templ.process({names: names});
         filePath = path.join('app', dirname,
             names.filename[opts.inflection] + '.js');
         fs.writeFileSync(filePath, templ.markup, 'utf8');

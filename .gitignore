@@ -11,3 +11,4 @@ tmtags
 *.DS_Store
 examples/*/log/*
 .log
+npm-debug.log

@@ -13,12 +13,12 @@
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
 
-    <script type="text/javascript" src="/js/jquery.min.js"></script>
-    <script type="text/javascript" src="/js/bootstrap.min.js"></script>
+    <%- scriptLink('/js/jquery.min.js', { type: 'text/javascript' }) %>
+    <%- scriptLink('/js/bootstrap.min.js', { type: 'text/javascript' }) %>
 
-    <link rel="stylesheet" href="/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/css/style.css">
-    <link rel="stylesheet" href="/css/bootstrap.responsive.min.css">
+    <%- styleLink('/css/bootstrap.min.css', { rel: 'stylesheet' }) %>
+    <%- styleLink('/css/style.css', { rel: 'stylesheet' }) %>
+    <%- styleLink('/css/bootstrap.responsive.min.css', { rel: 'stylesheet' }) %>
 
     <!-- The fav and touch icons -->
     <link rel="shortcut icon" href="/images/favicon.ico">
