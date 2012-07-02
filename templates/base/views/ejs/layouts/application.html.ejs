@@ -13,12 +13,12 @@
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
 
-    <script type="text/javascript" src="/js/jquery.min.js"></script>
-    <script type="text/javascript" src="/js/bootstrap.min.js"></script>
+    <%- scriptLink('/js/jquery.min.js', {type:'text/javascript'}) %>
+    <%- scriptLink('/js/bootstrap.min.js', {type:'text/javascript'}) %>
 
-    <link rel="stylesheet" href="/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/css/style.css">
-    <link rel="stylesheet" href="/css/bootstrap.responsive.min.css">
+    <%- styleLink('/css/bootstrap.min.css', {rel:'stylesheet'}) %>
+    <%- styleLink('/css/style.css', {rel:'stylesheet'}) %>
+    <%- styleLink('/css/bootstrap.responsive.min.css', {rel:'stylesheet'}) %>
 
     <!-- The fav and touch icons -->
     <link rel="shortcut icon" href="/images/favicon.ico">
@@ -33,12 +33,12 @@
           <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
             <span class="i-bar"><i class="icon-chevron-down icon-white"></i></span>
           </a>
-          <a class="brand" href="/">Geddy App</a>
+          <%- linkTo('Geddy App', '/', { class: 'brand' }) %>
           <div class="nav-collapse">
             <ul class="nav">
-              <li class="active"><a href="/">Home</a></li>
-              <li><a href="http://geddyjs.org/tutorial.html">Tutorial</a></li>
-              <!--<li><a href="http://geddyjs.org/docs.html">Docs</a></li>-->
+              <li class="active"><%- linkTo('Home', '/') %></li>
+              <li><%- linkTo('Tutorial', 'http://geddyjs.org/tutorial.html') %></li>
+              <!--<li><%- linkTo('Docs', 'http://geddyjs.org/docs.html') %></li>-->
             </ul>
           </div><!--/.nav-collapse -->
         </div>

@@ -1,6 +1,7 @@
 // Load the basic Geddy toolkit
 require('../lib/geddy')
 
+// Dependencies
 var fs = require('fs')
   , path = require('path')
   , existsSync = typeof fs.existsSync == 'function' ?
@@ -11,173 +12,197 @@ var fs = require('fs')
   , templato = new (require('../deps/templato'));
 
 namespace('gen', function () {
-  var _writeTemplate = function (name, filename, dirname, opts) {
-        var names = _getInflections(name)
-          , text = fs.readFileSync(path.join(__dirname,
-                filename +'.ejs'), 'utf8').toString()
-          , templ
-          , filePath;
-        // Render with the right model name
-        templ = new adapter({ data: {ext:'.ejs'}, text: text, templato: templato });
-        templ.process({names: names});
-        filePath = path.join('app', dirname,
-            names.filename[opts.inflection] + '.js');
-        fs.writeFileSync(filePath, templ.markup, 'utf8');
-        console.log('[ADDED] ' + filePath);
-      }
 
-    , _getInflections = function (nameParam) {
-        var name = utils.string.snakeize(nameParam)
-          , namePlural = inflection.pluralize(name)
-          , names = {
-            filename: {
-              singular: name
-            , plural: namePlural
-            }
-          , constructor: {
-              singular: utils.string.camelize(name, true)
-            , plural: utils.string.camelize(namePlural, true)
-            }
-          , property: {
-              singular: utils.string.camelize(name)
-            , plural: utils.string.camelize(namePlural)
-            }
-          };
-        return names;
-      };
+  var _writeTemplate = function (name, filename, dirname, options) {
+    options = options || {};
+
+    var names = _getInflections(name)
+      , text = fs.readFileSync(path.join(__dirname, filename + '.ejs'), 'utf8').toString()
+      , templ
+      , filePath;
+
+    // Render with the right model name
+    templ = new adapter({ data: {ext: '.ejs'}, text: text, templato: templato });
+    templ.process({names: names});
+
+    // Write file
+    filePath = path.join('app', dirname, names.filename[options.inflection] + '.js');
+    fs.writeFileSync(filePath, templ.markup, 'utf8');
+
+    console.log('[ADDED] ' + filePath);
+  };
+
+  var _getInflections = function (nameParam) {
+    var name = utils.string.snakeize(nameParam)
+      , namePlural = inflection.pluralize(name);
+
+    return {
+      filename: {
+          singular: name
+        , plural: namePlural
+      },
+      constructor: {
+          singular: utils.string.camelize(name, true)
+        , plural: utils.string.camelize(namePlural, true)
+      },
+      property: {
+          singular: utils.string.camelize(name)
+        , plural: utils.string.camelize(namePlural)
+      }
+    };
+  };
 
   // Creates a new Geddy app scaffold
-  task('app', [], function (appName) {
-    if (!appName) {
-      throw new Error('No app-name specified.');
-    }
+  task('app', [], function(name, engine) {
+    if(!name) throw new Error('No app-name specified.');
+    if(!engine) engine = 'ejs';
+
     var mkdirs = [
-          ''
-        , 'config'
-        , 'app/models'
-        , 'app/controllers'
-        , 'lib'
-        , 'log'
-        , 'node_modules'
+            ''
+          , 'config'
+          , 'app/models'
+          , 'app/controllers'
+          , 'lib'
+          , 'log'
+          , 'node_modules'
         ]
       , cps = [
-        , ['views', 'app']
-        , ['public', '']
-        , ['router.js', 'config']
-        , ['init.js', 'config']
-        , ['environment.js', 'config']
-        , ['development.js', 'config']
-        , ['production.js', 'config']
-        , ['main.js', 'app/controllers']
-        , ['application.js', 'app/controllers']
-        , ['favicon.ico', 'public']
+            ['views/' + engine, 'app/views']
+          , ['public', '']
+          , ['router.js', 'config']
+          , ['init.js', 'config']
+          , ['environment.js', 'config']
+          , ['development.js', 'config']
+          , ['production.js', 'config']
+          , ['main.js', 'app/controllers']
+          , ['application.js', 'app/controllers']
+          , ['favicon.ico', 'public']
         ];
-    mkdirs.forEach(function (d) {
-      jake.mkdirP(path.join(appName, d));
+
+    mkdirs.forEach(function(dir) {
+      jake.mkdirP(path.join(name, dir));
     });
-    cps.forEach(function (cp) {
-      jake.cpR(path.join(__dirname, 'base', cp[0]),
-          path.join(appName, cp[1]));
+    cps.forEach(function(cp) {
+      jake.cpR(path.join(__dirname, 'base', cp[0]), path.join(name, cp[1]));
     });
-    console.log('Created app ' + appName + '.');
+
+    console.log('Created app ' + name + '.');
   });
 
-  // Creates a resource-based route with model and controller
-  task('resource', function (name) {
+  // Creates a resource(Model, Controller, Views and resource route)
+  task('resource', function(name, engine) {
     jake.Task['gen:model'].invoke(name);
     jake.Task['gen:controller'].invoke(name);
     jake.Task['gen:route'].invoke(name);
-    jake.Task['gen:views'].invoke(name);
+    jake.Task['gen:views'].invoke(name, { engine: engine });
   });
 
-  task('model', [], function (name) {
-    _writeTemplate(name, 'resource_model', 'models',
-        {inflection: 'singular'});
+  task('model', [], function(name) {
+    _writeTemplate(name, 'resource_model', 'models', { inflection: 'singular' });
   });
 
-  task('controller', [], function (name) {
-    _writeTemplate(name, 'resource_controller', 'controllers',
-        {inflection: 'plural'});
+  task('controller', [], function(name) {
+    _writeTemplate(name, 'resource_controller', 'controllers', { inflection: 'plural' });
   });
 
-  task('route', [], function (name, opts) {
+  task('route', [], function(name, options) {
+    options = options || {};
+
     var names = _getInflections(name)
-      , options = opts || {}
       , routeType = options.bare ? 'Bare' : 'Resource'
       , filePath = path.normalize('config/router.js')
-      , newRoute
       , text = fs.readFileSync(filePath, 'utf8').toString()
+      , newRoute
       , routeArr;
 
     if (options.bare) {
       newRoute = 'router.match(\'/' +  names.filename.plural +
-          '\').to({controller: \'' + names.constructor.plural +
-          '\', action: \'index\'});';
-    }
-    else {
-      newRoute = 'router.resource(\'' +  names.filename.plural + '\');'
-    }
+        '\').to({controller: \'' + names.constructor.plural +
+        '\', action: \'index\'});';
+    } else newRoute = 'router.resource(\'' +  names.filename.plural + '\');'
 
     // Don't add the same route over and over
-    if (text.indexOf(newRoute) == -1) {
+    if(text.indexOf(newRoute) == -1) {
       // Add the new resource route just above the export
       routerArr = text.split('exports.router');
       routerArr[0] += newRoute + '\n';
+
       text = routerArr.join('exports.router');
       fs.writeFileSync(filePath, text, 'utf8');
+
       console.log(routeType + ' ' + names.filename.plural +
-          ' route added to ' + filePath);
+        ' route added to ' + filePath);
     }
     else {
       console.log('(' + routeType + ' ' + names.filename.plural +
-          ' route already defined in ' + filePath + ')');
+        ' route already defined in ' + filePath + ')');
     }
   });
 
-  task('views', [], function (name, opts) {
+  task('views', [], function(name, options) {
+    options = options || {};
+
+    // If `engine` option isn't set then default to EJS
+    if(!options.engine) options.engine = 'ejs';
+
     var names = _getInflections(name)
-      , options = opts || {}
-      , viewDir = path.join('app/views', names.filename.plural)
-      , actions
+      , engine = options.engine
+      , appViewDir = path.join('app', 'views', names.filename.plural)
+      , templateViewDir = path.join(__dirname, 'views', engine)
       , cmds = []
-      , addActionView = function (action) {
-          jake.cpR(path.join(__dirname, 'views',
-              action + '.html.ejs'), viewDir);
-        };
+      , ext = '.html'
+      , appLayoutPath
+      , actions
+      , addActionView;
 
-    jake.mkdirP(viewDir);
+    // Set extension based on engine option
+    if(engine === 'ejs') ext += '.ejs';
+    if(engine === 'jade') ext += '.jade';
+    if(engine === 'handlebars') ext += '.hbs';
+    if(engine === 'mustache') ext += '.ms';
+
+    // Set application layout path
+    appLayoutPath = path.join('app', 'views', 'layouts', 'application');
+    // Copy template view to application path
+    addActionView = function(action) {
+      jake.cpR(path.join(templateViewDir, action + ext), appViewDir);
+    };
+
+    jake.mkdirP(appViewDir);
     jake.mkdirP('app/views/layouts');
-
     addActionView('index');
+
     // Add views for the other CRUD actions when doing a full-on resource
-    if (!options.bare) {
+    if(!options.bare) {
       ['add', 'edit', 'show'].forEach(function (action) {
         addActionView(action);
       });
     }
 
-    // Create an app-layout if one doesn't exist
-    if (!existsSync(path.join(process.cwd(),
-        'app/views/layouts/application.html.ejs'))) {
-      jake.cpR(path.join(__dirname, '/views/layout.html.ejs'),
-          'app/views/layouts/application.html.ejs');
+    // Create default layout if one doesn't exist
+    // Hack: There should be a better way to detect if a application layout exists
+    if(!existsSync(appLayoutPath + '.html.ejs') && !existsSync(appLayoutPath + '.html.jade') &&
+       !existsSync(appLayoutPath + '.html.hbs') && !existsSync(appLayoutPath + '.html.ms')) {
+      // Copy template layout file to apps application layout file
+      jake.cpR(path.join(templateViewDir, 'layout' + ext), appLayoutPath + ext);
     }
 
     console.log('Created view templates.');
   });
 
-  task('bareController', [], function (name) {
-    _writeTemplate(name, 'bare_controller', 'controllers',
-        {inflection: 'plural'});
-    jake.Task['gen:route'].invoke(name, {bare: true});
-    jake.Task['gen:views'].invoke(name, {bare: true});
+  task('bareController', [], function(name, engine) {
+    _writeTemplate(name, 'bare_controller', 'controllers', { inflection: 'plural' });
+
+    jake.Task['gen:route'].invoke(name, { bare: true });
+    jake.Task['gen:views'].invoke(name, { bare: true, engine: engine });
   });
 
-  task('secret', [], function (name) {
+  // Generate a new application secret in environment.js
+  task('secret', [], function(name) {
     var filename = path.join(process.cwd(), 'config/environment.js')
       , conf = fs.readFileSync(filename).toString()
-      , confArr
-      , secret = utils.string.uuid(128);
+      , secret = utils.string.uuid(128)
+      , confArr;
 
     // Remove any old secret
     conf = conf.replace(/\nconfig.secret.+;\n/, '');
@@ -186,8 +211,8 @@ namespace('gen', function () {
     conf = confArr[0] + "config.secret = '" + secret + "';\n\n" +
       'module.exports = config;' + confArr[1];
     fs.writeFileSync(filename, conf);
+
     console.log('app-secret added to environment.js config.');
   });
 
 });
-
