@@ -18,12 +18,13 @@ namespace('gen', function () {
 
     var names = _getInflections(name)
       , text = fs.readFileSync(path.join(__dirname, filename + '.ejs'), 'utf8').toString()
+      , bare = options.bare || false // Default to full controller
       , templ
       , filePath;
 
     // Render with the right model name
     templ = new adapter({ data: {ext: '.ejs'}, text: text, templato: templato });
-    templ.process({names: names});
+    templ.process({names: names, bare: bare});
 
     // Write file
     filePath = path.join('app', dirname, names.filename[options.inflection] + '.js');
@@ -102,7 +103,7 @@ namespace('gen', function () {
   });
 
   task('controller', [], function(name) {
-    _writeTemplate(name, 'resource_controller', 'controllers', { inflection: 'plural' });
+    _writeTemplate(name, 'resource_controller', 'controllers', { inflection: 'plural', bare: false });
   });
 
   task('route', [], function(name, options) {
@@ -191,7 +192,7 @@ namespace('gen', function () {
   });
 
   task('bareController', [], function(name, engine) {
-    _writeTemplate(name, 'bare_controller', 'controllers', { inflection: 'plural' });
+    _writeTemplate(name, 'resource_controller', 'controllers', { inflection: 'plural', bare: true });
 
     jake.Task['gen:route'].invoke(name, { bare: true });
     jake.Task['gen:views'].invoke(name, { bare: true, engine: engine });
