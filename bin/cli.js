@@ -21,34 +21,46 @@ var cwd = process.cwd()
   , die
   , start;
 
-// Help dialog
+// Usage dialog
 usage = [
     'Geddy web framework for Node.js'
   , ''
-  , 'With no flags, Geddy starts on port 4000, on http://localhost in development mode'
-  , ''
-  , 'Usage: geddy [options] [arguments]'
+  , 'Usage:'
+  , '  geddy [options/commands] [arguments]'
   , ''
   , 'Options:'
-  , '  --environment, -e   # Environment to use'
-  , '  --port, -p          # Port to connect to'
-  , '  --workers, -w       # Number of worker processes to use(default: 2)'
-  , '  --version, -v       # Output the version of Geddy installed'
-  , '  --debug, -d         # Sets the log level to output debug messages to the console'
-  , '  --help, -h          # Output the help dialog'
-  , '  --jade, -j          # Generate Jade templates for the app/resource/controller'
-  , '                        commands(Default: EJS)'
-  , '  --handle, -H        # Generate Handlebars templates for the'
-  , '                        app/resource/controller commands(Default: EJS)'
-  , '  --mustache, -m      # Generate Mustache templates for the'
-  , '                        app/resource/controller commands(Default: EJS)'
+  , '  --environment, -e   Environment to use'
+  , '  --port, -p          Port to connect to'
+  , '  --workers, -w       Number of worker processes to start(Default: 2)'
+  , '  --debug, -d         Sets the log level to output debug messages to'
+  , '                        the console'
+  , '  --help, -h          Output this usage dialog'
+  , '  --version, -v       Output the version of Geddy that\'s installed'
+  , '  --jade, -j          When generating views this will create Jade'
+  , '                        templates(Default: EJS)'
+  , '  --handle, -H        When generating views this will create Handlebars'
+  , '                        templates(Default: EJS)'
+  , '  --Mustache, -m      When generating views this will create Mustache'
+  , '                        templates(Default: EJS)'
   , ''
-  , '  app                 # Create a new Geddy application'
-  , '  resource            # Create a new resource'
-  , '                        (Views, Model, Controller and resource route)'
-  , '  secret              # Create new app secret in `environment.js`'
-  , '  controller          # Generate a new controller(views and routes included)'
-  , '  model               # Generate a new model'
+  , 'Commands:'
+  , '  app [name]          Create a new Geddy application'
+  , '  resource [name]     Create a new resource. A resource includes'
+  , '                        the views, model, controller and a route'
+  , '  secret              Generate a new application secret in'
+  , '                        `congig/environment`'
+  , '  controller [name]   Generate a new controller including views'
+  , '                        and and a route'
+  , '  model [name]        Generate a new model'
+  , ''
+  , 'Examples:'
+  , '  geddy                    Start Geddy on localhost:4000 in development mode'
+  , '                             or if the directory isn\'t a Geddy app it\'ll'
+  , '                             this usage dialog'
+  , '  geddy -p 3000            Start Geddy on port 3000'
+  , '  geddy -e production      Start Geddy in production mode'
+  , '  geddy resource users     Generate a users resource using EJS templates'
+  , '  geddy -j resource users  Generate a users resource using Jade templates'
   , ''
 ].join('\n');
 
@@ -56,21 +68,17 @@ usage = [
 optsMap = [
     { full: 'origins', abbr: 'o' }
   , { full: 'port', abbr: 'p' }
-  , { full: 'workers', abbr: 'n' } // Compat
-  , { full: 'workers', abbr: 'w' }
-  , { full: 'version', abbr: 'v' }
-  , { full: 'version', abbr: 'V' } // Compat
-  , { full: 'help', abbr: 'h' }
+  , { full: 'workers', abbr: ['n', 'w'] }
+  , { full: 'version', abbr: ['v', 'V'], args: false }
+  , { full: 'help', abbr: 'h', args: false }
   , { full: 'debug', abbr: 'd' }
   , { full: 'loglevel', abbr: 'l' }
   , { full: 'environment', abbr: 'e' }
-  , { full: 'spawned', abbr: 'Q' } // Compat
-  , { full: 'spawned', abbr: 'q' } // Compat
-  , { full: 'spawned', abbr: 's' }
-  , { full: 'jade', abbr: 'j' }
-  , { full: 'handle', abbr: 'H' }
-  , { full: 'handlebars', abbr: 'H' }
-  , { full: 'mustache', abbr: 'm' }
+  , { full: 'spawned', abbr: ['s', 'q', 'Q'] }
+  , { full: 'jade', abbr: 'j', args: false }
+  , { full: 'handle', abbr: 'H', args: false }
+  , { full: 'handlebars', abbr: 'H', args: false }
+  , { full: 'mustache', abbr: 'm', args: false }
 ];
 
 // Parse optsMap and generate options and cmd commands
