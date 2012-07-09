@@ -1,13 +1,12 @@
-
 var <%= names.constructor.plural %> = function () {
-  var _this = this;
+  var self = this;
   this.respondsWith = ['html', 'json', 'js', 'txt'];
 
   this.index = function (params) {
     <%= names.constructor.singular %>.all(function (err, items) {
       if (err) throw err;
       params.items = items;
-      _this.respond({params: params});
+      self.respond({params: params});
     });
   };
 
@@ -20,10 +19,10 @@ var <%= names.constructor.plural %> = function () {
     item.save(function (err, res) {
       if (err) {
         params.errors = err;
-        _this.transfer('add');
+        self.transfer('add');
       }
       else {
-        _this.redirect({controller: _this.name});
+        self.redirect({controller: self.name});
       }
     });
   };
@@ -32,7 +31,7 @@ var <%= names.constructor.plural %> = function () {
     <%= names.constructor.singular %>.find(params.id, function (err, items) {
       if (err) throw err;
       params.item = items[0];
-      _this.respond({params: params});
+      self.respond({params: params});
     });
   };
 
@@ -40,7 +39,7 @@ var <%= names.constructor.plural %> = function () {
     <%= names.constructor.singular %>.find(params.id, function (err, items) {
       if (err) throw err;
       geddy.util.meta.mixin(params, items[0]);
-      _this.respond({params: params});
+      self.respond({params: params});
     });
   };
 
@@ -48,10 +47,10 @@ var <%= names.constructor.plural %> = function () {
     <%= names.constructor.singular %>.update(params.id, params, function (err, res) {
       if (err) {
         params.errors = err;
-        _this.transfer('edit');
+        self.transfer('edit');
       }
       else {
-        _this.redirect({controller: _this.name});
+        self.redirect({controller: self.name});
       }
     });
   };
@@ -59,7 +58,7 @@ var <%= names.constructor.plural %> = function () {
   this.remove = function (params) {
     <%= names.constructor.singular %>.remove(params.id, function (err, items) {
       if (err) throw err;
-      _this.redirect({controller: _this.name});
+      self.redirect({controller: self.name});
     });
   };
 

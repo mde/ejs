@@ -17,6 +17,8 @@ var cwd = process.cwd()
   , opts
   , usage
   , cmd
+  , engineCmd
+  , modelCmd
   , filepath
   , die
   , start;
@@ -46,7 +48,9 @@ usage = [
   , 'Commands:'
   , '  app [name]          Create a new Geddy application'
   , '  resource [name]     Create a new resource. A resource includes'
-  , '                        the views, model, controller and a route'
+  , '                        a model, controller and route'
+  , '  scaffold [name]     Create a new scaffolding. Scaffolding includes'
+  , '                        the views, a model, controller and route'
   , '  secret              Generate a new application secret in'
   , '                        `congig/environment`'
   , '  controller [name]   Generate a new controller including views'
@@ -59,8 +63,10 @@ usage = [
   , '                             this usage dialog'
   , '  geddy -p 3000            Start Geddy on port 3000'
   , '  geddy -e production      Start Geddy in production mode'
-  , '  geddy resource users     Generate a users resource using EJS templates'
-  , '  geddy -j resource users  Generate a users resource using Jade templates'
+  , '  geddy -j scaffold user   Generate a users scaffolding using Jade templates'
+  , '  geddy resource user name admin:boolean'
+  , '                           Generate a users resource with the model properties'
+  , '                             name as a string and admin as a boolean'
   , ''
 ].join('\n');
 
@@ -107,6 +113,7 @@ if(opts.version) die(geddy.version);
 
 // `geddy app foo` or `geddy resource bar` etc. -- run generators
 if(cmds.length) {
+  // Get templates Jake file
   filepath = path.normalize(path.join(__dirname, '..', 'templates', 'Jakefile'));
 
   // Wrap quotes in case path has spaces
@@ -118,40 +125,41 @@ if(cmds.length) {
     throw new Error(cmds[0] + ' command requires another argument.');
   }
 
+  // Add engines to command
+  if(opts.jade) {
+    engineCmd = ',' + 'jade';
+  } else if(opts.handle) {
+    engineCmd = ',' + 'handlebars';
+  } else if(opts.mustache) {
+    engineCmd = ',' + 'mustache';
+  } else engineCmd = '';
+
+  // Get the model properties
+  if(cmds.slice(2).length > 0) {
+    modelCmd = ',' + cmds.slice(2).join(' ');
+  } else modelCmd = '';
+
+  // Add Jake argument based on commands
   switch(cmds[0]) {
     case 'app':
       // Generating application
-      cmd += 'gen:app[' + cmds[1];
-
-      if(opts.jade) cmd += ',' + 'jade';
-      if(opts.handle) cmd += ',' + 'handlebars';
-      if(opts.mustache) cmd += ',' + 'mustache';
-
-      cmd += ']';
+      cmd += '"gen:app[' + cmds[1] + engineCmd + ']"';
       break;
     case 'resource':
-      // Generating resources
-      cmd += 'gen:resource[' + cmds[1];
-
-      if(opts.jade) cmd += ',' + 'jade';
-      if(opts.handle) cmd += ',' + 'handlebars';
-      if(opts.mustache) cmd += ',' + 'mustache';
-
-      cmd += ']';
+      // Generating resource
+      cmd += '"gen:resource[' + cmds[1] + modelCmd + ']"';
+      break;
+    case 'scaffold':
+      // Generating application
+      cmd += '"gen:scaffold[' + cmds[1] + engineCmd + modelCmd + ']"';
       break;
     case 'controller':
       // Generating controller
-      cmd += 'gen:bareController[' + cmds[1];
-
-      if(opts.jade) cmd += ',' + 'jade';
-      if(opts.handle) cmd += ',' + 'handlebars';
-      if(opts.mustache) cmd += ',' + 'mustache';
-
-      cmd += ']';
+      cmd += '"gen:bareController[' + cmds[1] + engineCmd + ']"';
       break;
     case 'model':
       // Generating model
-      cmd += 'gen:model[' + cmds[1] + ']';
+      cmd += '"gen:model[' + cmds[1] + modelCmd + ']"';
       break;
     case 'secret':
       // Generating new app secret

@@ -24,7 +24,7 @@ namespace('gen', function () {
 
     // Render with the right model name
     templ = new adapter({ data: {ext: '.ejs'}, text: text, templato: templato });
-    templ.process({names: names, bare: bare});
+    templ.process({names: names, bare: bare, properties: options.properties});
 
     // Write file
     filePath = path.join('app', dirname, names.filename[options.inflection] + '.js');
@@ -51,6 +51,38 @@ namespace('gen', function () {
         , plural: utils.string.camelize(namePlural)
       }
     };
+  };
+
+  var _formatModelProperties = function(properties) {
+    if(!properties) return { 'id': 'string' };
+
+    var itemsArr = properties.split(' ')
+      , properties = {}
+      , name
+      , type
+      , customId
+      , i
+      , value;
+
+    // Go over each item and parse it's name and type and add to `arr`
+    for(i in itemsArr) {
+      value = itemsArr[i];
+      name = value.replace(/:.*/g, '');
+      type = value.replace(/[a-zA-Z]*:?/, '');
+
+      // Set defaults and alias's
+      if(!type) type = 'string';
+      if(type === 'integer') type = 'number';
+
+      properties[name] = type;
+    }
+
+    // Check to see if a `id` property exists if not, add it
+    // Note: reverseMerge moves the default(or changed default) objects to the beginning
+    //       of the object. Which is useful for our forEach hack in the model template
+    properties = utils.object.reverseMerge(properties, { 'id': 'string' });
+
+    return properties;
   };
 
   // Creates a new Geddy app scaffold
@@ -90,20 +122,96 @@ namespace('gen', function () {
     console.log('Created app ' + name + '.');
   });
 
-  // Creates a resource(Model, Controller, Views and resource route)
-  task('resource', function(name, engine) {
-    jake.Task['gen:model'].invoke(name);
+  // Creates a resource with a model, controller and a resource route
+  task('resource', function(name, modelProperties) {
+    jake.Task['gen:model'].invoke(name, modelProperties);
     jake.Task['gen:controller'].invoke(name);
     jake.Task['gen:route'].invoke(name);
-    jake.Task['gen:views'].invoke(name, { engine: engine });
+
+    // Create views folder but not actions
+    var names = _getInflections(name)
+    jake.mkdirP(path.join('app', 'views', names.filename.plural));
+    console.log('Created ' + names.filename.plural + ' view folder.');
   });
 
-  task('model', [], function(name) {
-    _writeTemplate(name, 'resource_model', 'models', { inflection: 'singular' });
+  // Creates a full scaffold with views, a model, controller and a resource route
+  task('scaffold', function(name, engine, modelProperties) {
+    var jsEnvironment = path.normalize('config/environment.js')
+      , coffeeEnvironment = path.normalize('config/environment.coffee')
+      , environmentPath
+      , environmentArr
+      , text
+      , splitText
+      , dbContent = '';
+
+    // Check if the environment file exists
+    if(existsSync(jsEnvironment)) {
+      environmentPath = jsEnvironment;
+    } else if(existsSync(coffeeEnvironment)) {
+      environmentPath = coffeeEnvironment;
+    }
+
+    jake.Task['gen:modelScaffold'].invoke(name, modelProperties);
+    jake.Task['gen:controllerScaffold'].invoke(name);
+    jake.Task['gen:route'].invoke(name);
+    jake.Task['gen:views'].invoke(name, {engine: engine });
+
+    // Add the following line to `config/environment.js/.coffee`
+    if(environmentPath) {
+      text = fs.readFileSync(environmentPath, 'utf8').toString();
+
+      // Create text to add to environment
+      if(environmentPath.match('.coffee')) {
+        dbContent = [
+            '  db:'
+          , '    mongo:'
+          , '      db: \'' + name + '\''
+        ].join('\n');
+        splitText = 'config = ';
+      } else if(environmentPath.match('.js')) {
+        dbContent = [
+            '  db: {'
+          , '    mongo: {'
+          , '      db: \'' + name + '\''
+          , '    }'
+          , '  }'
+        ].join('\n');
+        splitText = 'var config = {';
+      }
+
+      // Don't add the db config over and over
+      if(text.indexOf(dbContent) == -1) {
+        environmentArr = text.split(splitText);
+        environmentArr[0] += splitText + '\n' + dbContent + '\n';
+
+        text = environmentArr.join('');
+        fs.writeFileSync(environmentPath, text, 'utf8');
+
+        console.log('Database configuration added to ' + environmentPath);
+      } else console.log('(Database configuration already set in ' + environmentPath + ')');
+    }
+  });
+
+  task('model', [], function(name, properties) {
+    _writeTemplate(name, 'resource/model', 'models', {
+        inflection: 'singular'
+      , properties: _formatModelProperties(properties)
+    });
+  });
+
+  task('modelScaffold', [], function(name, properties) {
+    _writeTemplate(name, 'scaffold/model', 'models', {
+        inflection: 'singular'
+      , properties: _formatModelProperties(properties)
+    });
   });
 
   task('controller', [], function(name) {
-    _writeTemplate(name, 'resource_controller', 'controllers', { inflection: 'plural', bare: false });
+    _writeTemplate(name, 'resource/controller', 'controllers', { inflection: 'plural', bare: false });
+  });
+
+  task('controllerScaffold', [], function(name) {
+    _writeTemplate(name, 'scaffold/controller', 'controllers', { inflection: 'plural', bare: false });
   });
 
   task('route', [], function(name, options) {
@@ -111,33 +219,56 @@ namespace('gen', function () {
 
     var names = _getInflections(name)
       , routeType = options.bare ? 'Bare' : 'Resource'
-      , filePath = path.normalize('config/router.js')
-      , text = fs.readFileSync(filePath, 'utf8').toString()
-      , newRoute
-      , routeArr;
+      , jsRouter = path.normalize('config/router.js')
+      , coffeeRouter = path.normalize('config/router.coffee')
+      , routerPath
+      , routerArr
+      , text
+      , splitText
+      , newRoute;
 
-    if (options.bare) {
-      newRoute = 'router.match(\'/' +  names.filename.plural +
-        '\').to({controller: \'' + names.constructor.plural +
-        '\', action: \'index\'});';
-    } else newRoute = 'router.resource(\'' +  names.filename.plural + '\');'
-
-    // Don't add the same route over and over
-    if(text.indexOf(newRoute) == -1) {
-      // Add the new resource route just above the export
-      routerArr = text.split('exports.router');
-      routerArr[0] += newRoute + '\n';
-
-      text = routerArr.join('exports.router');
-      fs.writeFileSync(filePath, text, 'utf8');
-
-      console.log(routeType + ' ' + names.filename.plural +
-        ' route added to ' + filePath);
+    // Check if the router file exists
+    if(existsSync(jsRouter)) {
+      routerPath = jsRouter;
+    } else if(existsSync(coffeeRouter)) {
+      routerPath = coffeeRouter;
     }
-    else {
-      console.log('(' + routeType + ' ' + names.filename.plural +
-        ' route already defined in ' + filePath + ')');
-    }
+
+    if(routerPath) {
+      text = fs.readFileSync(routerPath, 'utf8');
+
+      if(routerPath.match('.coffee')) {
+        if(options.bare) {
+          newRoute = 'router.match(\'/' +  names.filename.plural +
+            '\').to controller: \'' + names.constructor.plural +
+            '\', action: \'index\'';
+        } else newRoute = 'router.resource \'' +  names.filename.plural + '\''
+      } else if(routerPath.match('.js')) {
+        if(options.bare) {
+          newRoute = 'router.match(\'/' +  names.filename.plural +
+            '\').to({controller: \'' + names.constructor.plural +
+            '\', action: \'index\'});';
+        } else newRoute = 'router.resource(\'' +  names.filename.plural + '\');';
+      }
+
+      // Don't add the same route over and over
+      if(text.indexOf(newRoute) == -1) {
+        // Add the new resource route just above the export
+        routerArr = text.split('exports.router');
+        routerArr[0] += newRoute + '\n';
+
+        text = routerArr.join('exports.router');
+        fs.writeFileSync(routerPath, text, 'utf8');
+
+        console.log(routeType + ' ' + names.filename.plural +
+          ' route added to ' + routerPath);
+      }
+      else {
+        console.log('(' + routeType + ' ' + names.filename.plural +
+          ' route already defined in ' + routerPath + ')');
+      }
+
+    } else console.log('There is no router file to add routes too.');
   });
 
   task('views', [], function(name, options) {
@@ -192,7 +323,7 @@ namespace('gen', function () {
   });
 
   task('bareController', [], function(name, engine) {
-    _writeTemplate(name, 'resource_controller', 'controllers', { inflection: 'plural', bare: true });
+    _writeTemplate(name, 'resource/controller', 'controllers', { inflection: 'plural', bare: true });
 
     jake.Task['gen:route'].invoke(name, { bare: true });
     jake.Task['gen:views'].invoke(name, { bare: true, engine: engine });
@@ -200,20 +331,39 @@ namespace('gen', function () {
 
   // Generate a new application secret in environment.js
   task('secret', [], function(name) {
-    var filename = path.join(process.cwd(), 'config/environment.js')
-      , conf = fs.readFileSync(filename).toString()
+    var jsEnvironment = path.normalize('config/environment.js')
+      , coffeeEnvironment = path.normalize('config/environment.coffee')
       , secret = utils.string.uuid(128)
-      , confArr;
+      , environmentPath
+      , environmentArr
+      , text
+      , splitText;
 
-    // Remove any old secret
-    conf = conf.replace(/\nconfig.secret.+;\n/, '');
+    // Check if the environment file exists
+    if(existsSync(jsEnvironment)) {
+      environmentPath = jsEnvironment;
+    } else if(existsSync(coffeeEnvironment)) {
+      environmentPath = coffeeEnvironment;
+    }
 
-    confArr = conf.split('module.exports = config;');
-    conf = confArr[0] + "config.secret = '" + secret + "';\n\n" +
-      'module.exports = config;' + confArr[1];
-    fs.writeFileSync(filename, conf);
+    if(environmentPath) {
+      text = fs.readFileSync(environmentPath, 'utf8').toString();
 
-    console.log('app-secret added to environment.js config.');
+      // Remove any old secret
+      text = text.replace(/\nconfig.secret.+\n/, '');
+
+      splitText = 'module.exports = config';
+      if(environmentPath.match('.js')) splitText += ';';
+
+      environmentArr = text.split(splitText);
+      environmentArr[0] += "config.secret = '" + secret + "'";
+      environmentArr[0] += environmentPath.match('.js') ? ';\n\n' : '\n\n';
+
+      text = environmentArr.join(splitText);
+      fs.writeFileSync(environmentPath, text, 'utf8');
+
+      console.log('app-secret added to ' + environmentPath + '.');
+    } else console.log('There is no environment config to add the secret too.');
   });
 
 });

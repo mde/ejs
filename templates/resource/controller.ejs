@@ -1,11 +1,10 @@
-
 var <%= names.constructor.plural %> = function () {
   this.respondsWith = ['html', 'json', 'xml', 'js', 'txt'];
 
   this.index = function (req, resp, params) {
     this.respond({params: params});
   };
-<% if(!bare) { %>
+<% if(!bare) { -%>
   this.add = function (req, resp, params) {
     this.respond({params: params});
   };
@@ -31,7 +30,7 @@ var <%= names.constructor.plural %> = function () {
   this.remove = function (req, resp, params) {
     this.respond({params: params});
   };
-<% } %>
+<% } -%>
 };
 
 exports.<%= names.constructor.plural %> = <%= names.constructor.plural %>;

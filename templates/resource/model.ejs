@@ -1,5 +1,17 @@
-
 var <%= names.constructor.singular %> = function () {
+
+  this.defineProperties({
+<% for(var i in properties) { -%>
+<%# Hack: ID property will always be first so we will manually take care of not inserting -%>
+<%# A leading comma -%>
+<% if(i === 'id') { -%>
+      <%= i %>: {type: '<%= properties[i] %>'}
+<% } else { -%>
+    , <%= i %>: {type: '<%= properties[i] %>'}
+<% } -%>
+<% } -%>
+  });
+
   /*
   this.property('login', 'string', {required: true});
   this.property('password', 'string', {required: true});

@@ -16,7 +16,12 @@ var Templato = require('../deps/templato')
 
 tests = {
 
-  'test rendering a single variable': function () {
+  'test empty template render': function() {
+    var actual = render('');
+    assert.equal('', actual);
+  }
+
+, 'test rendering a single variable': function () {
     var str = "<% var foo = 'FOO'; %><%= foo; %>"
       , actual = render(str);
     assert.equal('FOO', actual);
