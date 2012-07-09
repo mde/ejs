@@ -86,6 +86,16 @@ tests = {
     assert.equal('AaBbDd', str);
   }
 
+, 'test clone': function () {
+    var c = new geddy.SortedCollection()
+      , copy;
+    c.addItem('a', 'A');
+    c.addItem('b', 'B');
+    copy = c.clone();
+    assert.equal(2, copy.count);
+    assert.equal('A', copy.getItem('a'));
+  }
+
 };
 
 module.exports = tests;
