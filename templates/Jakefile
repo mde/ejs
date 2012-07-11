@@ -23,14 +23,14 @@ namespace('gen', function () {
       , filePath;
 
     // Render with the right model name
-    templ = new adapter({ data: {ext: '.ejs'}, text: text, templato: templato });
+    templ = new adapter({data: {ext: '.ejs'}, text: text, templato: templato});
     templ.process({names: names, bare: bare, properties: options.properties});
 
     // Write file
     filePath = path.join('app', dirname, names.filename[options.inflection] + '.js');
     fs.writeFileSync(filePath, templ.markup, 'utf8');
 
-    console.log('[ADDED] ' + filePath);
+    console.log('[Added] ' + filePath);
   };
 
   var _getInflections = function (nameParam) {
@@ -72,7 +72,7 @@ namespace('gen', function () {
 
       // Set defaults and alias's
       if(!type) type = 'string';
-      if(type === 'integer') type = 'number';
+      if(type === 'integer') type = 'int';
 
       properties[name] = type;
     }
@@ -80,14 +80,12 @@ namespace('gen', function () {
     // Check to see if a `id` property exists if not, add it
     // Note: reverseMerge moves the default(or changed default) objects to the beginning
     //       of the object. Which is useful for our forEach hack in the model template
-    properties = utils.object.reverseMerge(properties, { 'id': 'string' });
-
-    return properties;
+    return utils.object.reverseMerge(properties, { 'id': 'string' });
   };
 
   // Creates a new Geddy app scaffold
   task('app', [], function(name, engine) {
-    if(!name) throw new Error('No app-name specified.');
+    if(!name) throw new Error('No app name specified.');
     if(!engine) engine = 'ejs';
 
     var mkdirs = [
@@ -124,18 +122,28 @@ namespace('gen', function () {
 
   // Creates a resource with a model, controller and a resource route
   task('resource', function(name, modelProperties) {
+    if(!name) throw new Error('No resource name specified.');
+    var names = _getInflections(name);
+
     jake.Task['gen:model'].invoke(name, modelProperties);
     jake.Task['gen:controller'].invoke(name);
     jake.Task['gen:route'].invoke(name);
 
     // Create views folder but not actions
-    var names = _getInflections(name)
     jake.mkdirP(path.join('app', 'views', names.filename.plural));
-    console.log('Created ' + names.filename.plural + ' view folder.');
+
+    console.log('[Added] ' + names.filename.plural + ' view directory');
   });
 
   // Creates a full scaffold with views, a model, controller and a resource route
   task('scaffold', function(name, engine, modelProperties) {
+    if(!modelProperties && engine) {
+      modelProperties = engine;
+      engine = '';
+    }
+    if(!name) throw new Error('No scaffold name specified.');
+    if(!engine) engine = 'ejs';
+
     var jsEnvironment = path.normalize('config/environment.js')
       , coffeeEnvironment = path.normalize('config/environment.coffee')
       , environmentPath
@@ -152,9 +160,9 @@ namespace('gen', function () {
     }
 
     jake.Task['gen:modelScaffold'].invoke(name, modelProperties);
-    jake.Task['gen:controllerScaffold'].invoke(name);
+    jake.Task['gen:controllerScaffold'].invoke(name, {properties: modelProperties});
     jake.Task['gen:route'].invoke(name);
-    jake.Task['gen:views'].invoke(name, {engine: engine });
+    jake.Task['gen:viewsScaffold'].invoke(name, {engine: engine, properties: modelProperties});
 
     // Add the following line to `config/environment.js/.coffee`
     if(environmentPath) {
@@ -180,19 +188,21 @@ namespace('gen', function () {
       }
 
       // Don't add the db config over and over
-      if(text.indexOf(dbContent) == -1) {
+      if(text.indexOf('db:') == -1) {
         environmentArr = text.split(splitText);
         environmentArr[0] += splitText + '\n' + dbContent + '\n';
 
         text = environmentArr.join('');
         fs.writeFileSync(environmentPath, text, 'utf8');
 
-        console.log('Database configuration added to ' + environmentPath);
-      } else console.log('(Database configuration already set in ' + environmentPath + ')');
+        console.log('[Added] Database configuration to ' + environmentPath);
+      } else console.log('Database configuration already set in ' + environmentPath);
     }
   });
 
   task('model', [], function(name, properties) {
+    if(!name) throw new Error('No model name specified.');
+
     _writeTemplate(name, 'resource/model', 'models', {
         inflection: 'singular'
       , properties: _formatModelProperties(properties)
@@ -200,6 +210,8 @@ namespace('gen', function () {
   });
 
   task('modelScaffold', [], function(name, properties) {
+    if(!name) throw new Error('No model name specified.');
+
     _writeTemplate(name, 'scaffold/model', 'models', {
         inflection: 'singular'
       , properties: _formatModelProperties(properties)
@@ -207,14 +219,33 @@ namespace('gen', function () {
   });
 
   task('controller', [], function(name) {
-    _writeTemplate(name, 'resource/controller', 'controllers', { inflection: 'plural', bare: false });
+    if(!name) throw new Error('No controller name specified.');
+
+    _writeTemplate(name, 'resource/controller', 'controllers', {inflection: 'plural', bare: false});
   });
 
-  task('controllerScaffold', [], function(name) {
-    _writeTemplate(name, 'scaffold/controller', 'controllers', { inflection: 'plural', bare: false });
+  task('controllerScaffold', [], function(name, options) {
+    if(!name) throw new Error('No controller name specified.');
+    options = options || {};
+
+    _writeTemplate(name, 'scaffold/controller', 'controllers', {
+        inflection: 'plural'
+      , bare: false
+      , properties: _formatModelProperties(options.properties)
+    });
+  });
+
+  task('bareController', [], function(name, engine) {
+    if(!name) throw new Error('No controller name specified.');
+    if(!engine) engine = 'ejs';
+
+    _writeTemplate(name, 'resource/controller', 'controllers', {inflection: 'plural', bare: true});
+    jake.Task['gen:route'].invoke(name, {bare: true});
+    jake.Task['gen:views'].invoke(name, {bare: true, engine: engine});
   });
 
   task('route', [], function(name, options) {
+    if(!name) throw new Error('No route name specified.');
     options = options || {};
 
     var names = _getInflections(name)
@@ -260,22 +291,24 @@ namespace('gen', function () {
         text = routerArr.join('exports.router');
         fs.writeFileSync(routerPath, text, 'utf8');
 
-        console.log(routeType + ' ' + names.filename.plural +
+        console.log('[Added] ' + routeType + ' ' + names.filename.plural +
           ' route added to ' + routerPath);
       }
       else {
-        console.log('(' + routeType + ' ' + names.filename.plural +
-          ' route already defined in ' + routerPath + ')');
+        console.log(routeType + ' ' + names.filename.plural + ' route already defined in ' +
+          routerPath);
       }
 
-    } else console.log('There is no router file to add routes too.');
+    } else console.log('There is no router file to add routes too');
   });
 
   task('views', [], function(name, options) {
+    if(!name) throw new Error('No view name specified.');
+
     options = options || {};
 
-    // If `engine` option isn't set then default to EJS
-    if(!options.engine) options.engine = 'ejs';
+    // Option defaults
+    options.engine = options.engine || 'ejs';
 
     var names = _getInflections(name)
       , engine = options.engine
@@ -319,18 +352,72 @@ namespace('gen', function () {
       jake.cpR(path.join(templateViewDir, 'layout' + ext), appLayoutPath + ext);
     }
 
-    console.log('Created view templates.');
+    console.log('[Added] View templates');
   });
 
-  task('bareController', [], function(name, engine) {
-    _writeTemplate(name, 'resource/controller', 'controllers', { inflection: 'plural', bare: true });
+  task('viewsScaffold', function(name, options) {
+    if(!name) throw new Error('No view name specified.');
 
-    jake.Task['gen:route'].invoke(name, { bare: true });
-    jake.Task['gen:views'].invoke(name, { bare: true, engine: engine });
+    options = options || {};
+
+    // Option defaults
+    options.engine = options.engine || 'ejs';
+
+    var names = _getInflections(name)
+      , engine = options.engine
+      , appViewDir = path.join('app', 'views', names.filename.plural)
+      , templateViewDir = path.join(__dirname, 'scaffold', 'views', engine)
+      , cmds = []
+      , ext = '.html'
+      , appLayoutPath
+      , actions
+      , addActionView
+      , text
+      , templ;
+
+    // Set extension based on engine option
+    if(engine === 'ejs') ext += '.ejs';
+    if(engine === 'jade') ext += '.jade';
+    if(engine === 'handlebars') ext += '.hbs';
+    if(engine === 'mustache') ext += '.ms';
+
+    // Set application layout path
+    appLayoutPath = path.join('app', 'views', 'layouts', 'application');
+
+    // Function to compile the template
+    addActionView = function(action) {
+      text = fs.readFileSync(path.join(templateViewDir, action + ext + '.ejs')).toString();
+
+      // Compile template text
+      templ = new adapter({data: {ext: '.ejs'}, text: text, templato: templato});
+      templ.process({names: names, properties: _formatModelProperties(options.properties)});
+
+      // Write file
+      fs.writeFileSync(path.join(appViewDir, action + ext),
+        templ.markup.replace(/<@/g, '<%').replace(/@>/g, '%>'), 'utf8');
+    };
+
+    jake.mkdirP(appViewDir);
+    jake.mkdirP('app/views/layouts');
+
+    // Add views for the other CRUD actions when doing a full-on resource
+    ['index', 'add', 'show', 'edit'].forEach(function(action) {
+      addActionView(action);
+    });
+
+    // Create default layout if one doesn't exist
+    // Hack: There should be a better way to detect if a application layout exists
+    if(!existsSync(appLayoutPath + '.html.ejs') && !existsSync(appLayoutPath + '.html.jade') &&
+       !existsSync(appLayoutPath + '.html.hbs') && !existsSync(appLayoutPath + '.html.ms')) {
+      // Copy template layout file to apps application layout file
+      jake.cpR(path.join(templateViewDir, 'layout' + ext), appLayoutPath + ext);
+    }
+
+    console.log('[Added] View templates');
   });
 
   // Generate a new application secret in environment.js
-  task('secret', [], function(name) {
+  task('secret', [], function() {
     var jsEnvironment = path.normalize('config/environment.js')
       , coffeeEnvironment = path.normalize('config/environment.coffee')
       , secret = utils.string.uuid(128)
@@ -362,8 +449,8 @@ namespace('gen', function () {
       text = environmentArr.join(splitText);
       fs.writeFileSync(environmentPath, text, 'utf8');
 
-      console.log('app-secret added to ' + environmentPath + '.');
-    } else console.log('There is no environment config to add the secret too.');
+      console.log('[Added] Application secret to \'' + environmentPath + '\'');
+    } else console.log('There is no environment config to add the secret too');
   });
 
 });

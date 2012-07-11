@@ -1,0 +1,39 @@
+.hero-unit
+  form#<%= names.property.singular %>-form.form-horizontal(action="/<%= names.property.plural %>/<@= params.id @>?_method=PUT", method="POST")
+    fieldset
+      legend Update this <%= names.constructor.singular %>
+      if params.errors
+        .control-group
+          ul
+          for err in params.errors
+            li= err
+
+<% for(var i in properties) { -%>
+      .control-group
+        label(for="<%= i %>") <%= i %>
+        .controls
+<% if(properties[i] === 'string') { -%>
+<% if(i === 'password') { -%>
+          != contentTag('input', '', {type:'password', class:'span6', placeholder:'enter <%= i %>', name:'<%= i %>'})
+<% } else { -%>
+          != contentTag('input', '', {type:'text', class:'span6', placeholder:'enter <%= i %>', name:'<%= i %>'})
+<% } -%>
+<% } else if(properties[i] === 'number' || properties[i] === 'int') { -%>
+          != contentTag('input', '', {type:'number', class:'span2', placeholder:'enter <%= i %>', name:'<%= i %>'})
+<% } else if(properties[i] === 'boolean') { -%>
+          select.span1(name="<%= i %>")
+            option(selected) false
+            option true
+<% } else if(properties[i] === 'datetime') {  -%>
+          != contentTag('input', '', {type:'datetime', class:'span3', name:'<%= i %>'})
+<% } else if(properties[i] === 'date') { -%>
+          != contentTag('input', '', {type:'date', class:'span2', name:'<%= i %>'})
+<% } else { -%>
+          = properties[i]
+<% } -%>
+<% if(i !== 'id') { -%>
+<% } -%>
+<% } -%>
+      .form-actions
+        != contentTag('input', 'Save', {type: 'submit', class: 'btn btn-primary'})
+        != contentTag('button', 'Remove', {type: 'submit', formaction: '/<%= names.property.plural %>/' + params.id + '?_method=DELETE', formmethod: 'POST', class: 'btn btn-danger'})

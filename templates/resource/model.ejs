@@ -5,7 +5,7 @@ var <%= names.constructor.singular %> = function () {
 <%# Hack: ID property will always be first so we will manually take care of not inserting -%>
 <%# A leading comma -%>
 <% if(i === 'id') { -%>
-      <%= i %>: {type: '<%= properties[i] %>'}
+      <%= i %>: {type: '<%= properties[i] %>', required: true}
 <% } else { -%>
     , <%= i %>: {type: '<%= properties[i] %>'}
 <% } -%>

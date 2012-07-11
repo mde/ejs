@@ -1,37 +1,78 @@
 var <%= names.constructor.plural %> = function () {
+  var <%= names.constructor.singular %> = geddy.model.adapter.<%= names.constructor.singular %>;
   this.respondsWith = ['html', 'json', 'xml', 'js', 'txt'];
 
   this.index = function (req, resp, params) {
-    this.respond({params: params});
+    var self = this;
+
+    <%= names.constructor.singular %>.all(function(err, <%= names.property.plural %>) {
+      self.respond({params: params, <%= names.property.plural %>: <%= names.property.plural %>});
+    });
   };
-<% if(!bare) { -%>
+<% if(!bare) { %>
   this.add = function (req, resp, params) {
     this.respond({params: params});
   };
 
   this.create = function (req, resp, params) {
-    // Save the resource, then display index page
-    this.redirect({controller: this.name});
+    params.id = params.id || geddy.string.uuid(10);
+    var self = this
+      , <%= names.property.singular %> = geddy.model.<%= names.constructor.singular %>.create(params);
+
+    <%= names.property.singular %>.save(function(err, data) {
+      if(err) {
+        params.errors = err;
+        self.transfer('add');
+      } else self.redirect({controller: self.name});
+    });
   };
 
   this.show = function (req, resp, params) {
-    this.respond({params: params});
+    var self = this;
+
+    <%= names.constructor.singular %>.load(params.id, function(err, <%= names.property.singular %>) {
+      self.respond({params: params, <%= names.property.singular %>: <%= names.property.singular %>});
+    });
   };
 
   this.edit = function (req, resp, params) {
-    this.respond({params: params});
+    var self = this;
+
+    <%= names.constructor.singular %>.load(params.id, function(err, <%= names.property.singular %>) {
+      self.respond({params: params, <%= names.property.singular %>: <%= names.property.singular %>});
+    });
   };
 
   this.update = function (req, resp, params) {
-    // Save the resource, then display the item page
-    this.redirect({controller: this.name, id: params.id});
+    var self = this;
+
+    <%= names.constructor.singular %>.load(params.id, function(err, <%= names.property.singular %>) {
+      <%= names.constructor.singular %>.save(function(err, data) {
+<% for(var prop in properties) { -%>
+<% if(prop !== 'id') { -%>
+        <%= names.property.singular %>.<%= prop %> = params.<%= prop %>;
+<% } -%>
+<% } -%>
+
+        if(err) {
+          params.errors = err;
+          self.transfer('edit');
+        } else self.redirect({controller: self.name});
+      });
+    });
   };
 
   this.remove = function (req, resp, params) {
-    this.respond({params: params});
+    var self = this;
+
+    <%= names.constructor.singular %>.remove(params.id, function(err) {
+      if(err) {
+        params.errors = err;
+        self.transfer('edit');
+      } else self.redirect({controller: self.name});
+    });
   };
-<% } -%>
+<% } %>
 };
 
 exports.<%= names.constructor.plural %> = <%= names.constructor.plural %>;
-
