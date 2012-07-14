@@ -33,21 +33,21 @@ namespace('gen', function () {
     console.log('[Added] ' + filePath);
   };
 
-  var _getInflections = function (nameParam) {
-    var name = utils.string.snakeize(nameParam)
-      , namePlural = inflection.pluralize(name);
+  var _getInflections = function (name) {
+    var nameSingular = inflection.singularize(utils.string.snakeize(name))
+      , namePlural = inflection.pluralize(nameSingular);
 
     return {
       filename: {
-          singular: name
+          singular: nameSingular
         , plural: namePlural
       },
       constructor: {
-          singular: utils.string.camelize(name, true)
+          singular: utils.string.camelize(nameSingular, true)
         , plural: utils.string.camelize(namePlural, true)
       },
       property: {
-          singular: utils.string.camelize(name)
+          singular: utils.string.camelize(nameSingular)
         , plural: utils.string.camelize(namePlural)
       }
     };
