@@ -1,5 +1,5 @@
 .hero-unit
-  form#<%= names.property.singular %>-form.form-horizontal(action="/<%= names.property.plural %>/<@= params.id @>?_method=PUT", method="POST")
+  form#<%= names.property.singular %>-form.form-horizontal(action="/<%= names.url.plural %>/" + params.id + "?_method=PUT", method="POST")
     fieldset
       legend Update this <%= names.constructor.singular %>
       if params.errors
@@ -9,6 +9,7 @@
             li= err
 
 <% for(var i in properties) { -%>
+<% if(i !== 'id') { -%>
       .control-group
         label(for="<%= i %>") <%= i %>
         .controls
@@ -31,9 +32,8 @@
 <% } else { -%>
           = properties[i]
 <% } -%>
-<% if(i !== 'id') { -%>
 <% } -%>
 <% } -%>
       .form-actions
         != contentTag('input', 'Save', {type: 'submit', class: 'btn btn-primary'})
-        != contentTag('button', 'Remove', {type: 'submit', formaction: '/<%= names.property.plural %>/' + params.id + '?_method=DELETE', formmethod: 'POST', class: 'btn btn-danger'})
+        != contentTag('button', 'Remove', {type: 'submit', formaction: '/<%= names.url.plural %>/' + params.id + '?_method=DELETE', formmethod: 'POST', class: 'btn btn-danger'})

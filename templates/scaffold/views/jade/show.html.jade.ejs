@@ -1,6 +1,6 @@
 .hero-unit
   h2= <%= names.property.singular %>.id
-  != linkTo('Edit this <%= names.property.singular %>', {controller: '<%= names.property.plural %>', action: 'edit', id: params.id}, {class: 'btn pull-right'})
+  != linkTo('Edit this <%= names.property.singular %>', edit<%= names.constructor.singular %>Path(params.id), {class: 'btn pull-right'})
 
 h2 <%= names.constructor.singular %> Properties
 each property in <%= names.property.singular %>

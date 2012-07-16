@@ -6,7 +6,6 @@ var fs = require('fs')
   , path = require('path')
   , existsSync = typeof fs.existsSync == 'function' ?
       fs.existsSync : path.existsSync
-  , inflection = require('../deps/inflection')
   , utils = require('../lib/utils')
   , adapter = require('../lib/template/adapters').Adapter
   , templato = new (require('../deps/templato'));
@@ -16,7 +15,7 @@ namespace('gen', function () {
   var _writeTemplate = function (name, filename, dirname, options) {
     options = options || {};
 
-    var names = _getInflections(name)
+    var names = utils.string.inflection(name)
       , text = fs.readFileSync(path.join(__dirname, filename + '.ejs'), 'utf8').toString()
       , bare = options.bare || false // Default to full controller
       , templ
@@ -31,26 +30,6 @@ namespace('gen', function () {
     fs.writeFileSync(filePath, templ.markup, 'utf8');
 
     console.log('[Added] ' + filePath);
-  };
-
-  var _getInflections = function (name) {
-    var nameSingular = inflection.singularize(utils.string.snakeize(name))
-      , namePlural = inflection.pluralize(nameSingular);
-
-    return {
-      filename: {
-          singular: nameSingular
-        , plural: namePlural
-      },
-      constructor: {
-          singular: utils.string.camelize(nameSingular, true)
-        , plural: utils.string.camelize(namePlural, true)
-      },
-      property: {
-          singular: utils.string.camelize(nameSingular)
-        , plural: utils.string.camelize(namePlural)
-      }
-    };
   };
 
   var _formatModelProperties = function(properties) {
@@ -123,7 +102,7 @@ namespace('gen', function () {
   // Creates a resource with a model, controller and a resource route
   task('resource', function(name, modelProperties) {
     if(!name) throw new Error('No resource name specified.');
-    var names = _getInflections(name);
+    var names = utils.string.inflection(name);
 
     jake.Task['gen:model'].invoke(name, modelProperties);
     jake.Task['gen:controller'].invoke(name);
@@ -248,7 +227,7 @@ namespace('gen', function () {
     if(!name) throw new Error('No route name specified.');
     options = options || {};
 
-    var names = _getInflections(name)
+    var names = utils.string.inflection(name)
       , routeType = options.bare ? 'Bare' : 'Resource'
       , jsRouter = path.normalize('config/router.js')
       , coffeeRouter = path.normalize('config/router.coffee')
@@ -310,7 +289,7 @@ namespace('gen', function () {
     // Option defaults
     options.engine = options.engine || 'ejs';
 
-    var names = _getInflections(name)
+    var names = utils.string.inflection(name)
       , engine = options.engine
       , appViewDir = path.join('app', 'views', names.filename.plural)
       , templateViewDir = path.join(__dirname, 'views', engine)
@@ -363,7 +342,7 @@ namespace('gen', function () {
     // Option defaults
     options.engine = options.engine || 'ejs';
 
-    var names = _getInflections(name)
+    var names = utils.string.inflection(name)
       , engine = options.engine
       , appViewDir = path.join('app', 'views', names.filename.plural)
       , templateViewDir = path.join(__dirname, 'scaffold', 'views', engine)

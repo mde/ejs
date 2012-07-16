@@ -1,5 +1,5 @@
 .hero-unit
-  form#<%= names.property.singular %>-form.form-horizontal(action="/<%= names.property.plural %>", method="POST")
+  form#<%= names.property.singular %>-form.form-horizontal(action="/<%= names.url.plural %>", method="POST")
     fieldset
       legend Create a new <%= names.constructor.singular %>
       if params.errors
@@ -9,6 +9,7 @@
             li= err
 
 <% for(var i in properties) { -%>
+<% if(i !== 'id') { -%>
       .control-group
         label(for="<%= i %>") <%= i %>
         .controls
@@ -31,7 +32,6 @@
 <% } else { -%>
           = properties[i]
 <% } -%>
-<% if(i !== 'id') { -%>
 <% } -%>
 <% } -%>
       .form-actions

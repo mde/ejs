@@ -1,6 +1,6 @@
 <div class="hero-unit">
   <h2><@= <%= names.property.singular %>.id @></h2>
-  <@- linkTo('Edit this <%= names.property.singular %>', {controller: '<%= names.property.plural %>', action: 'edit', id: params.id}, {class: 'btn pull-right'}); @>
+  <@- linkTo('Edit this <%= names.property.singular %>', edit<%= names.constructor.singular %>Path(params.id), {class: 'btn pull-right'}); @>
 </div>
 
 <h2><%= names.constructor.singular %> Properties</h2>
