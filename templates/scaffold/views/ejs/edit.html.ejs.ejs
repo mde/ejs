@@ -18,16 +18,21 @@
         <div class="controls">
 <% if(properties[i] === 'string') { -%>
 <% if(i === 'password') { -%>
-          <@- contentTag('input', '', {type:'password', class:'span6', placeholder:'enter <%= i %>', name:'<%= i %>'}) @>
+          <@- contentTag('input', <%= names.property.singular %>.<%= i %>, {type:'password', class:'span6', placeholder:'enter <%= i %>', name:'<%= i %>'}) @>
 <% } else { -%>
-          <@- contentTag('input', '', {type:'text', class:'span6', placeholder:'enter <%= i %>', name:'<%= i %>'}) @>
+          <@- contentTag('input', <%= names.property.singular %>.<%= i %>, {type:'text', class:'span6', placeholder:'enter <%= i %>', name:'<%= i %>'}) @>
 <% } -%>
 <% } else if(properties[i] === 'number' || properties[i] === 'int') { -%>
-          <@- contentTag('input', '', {type:'number', class:'span2', placeholder:'enter <%= i %>', name:'<%= i %>'}) @>
+          <@- contentTag('input', <%= names.property.singular %>.<%= i %>, {type:'number', class:'span2', placeholder:'enter <%= i %>', name:'<%= i %>'}) @>
 <% } else if(properties[i] === 'boolean') { -%>
           <select name="<%= i %>", class="span1">
+            <@ if(<%= names.property.singular %>.<%= i %>) { @>
+            <option>false</option>
+            <option selected>true</option>
+            <@ } else { -@>
             <option selected>false</option>
             <option>true</option>
+            <@ } -@>
           </select>
 <% } else if(properties[i] === 'datetime') {  -%>
           <@- contentTag('input', '', {type:'datetime', class:'span3', name:'<%= i %>'}) @>

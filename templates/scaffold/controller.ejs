@@ -30,7 +30,7 @@ var <%= names.constructor.plural %> = function () {
     var self = this;
 
     geddy.model.adapter.<%= names.constructor.singular %>.load(params.id, function(err, <%= names.property.singular %>) {
-      self.respond({params: params, <%= names.property.singular %>: <%= names.property.singular %>});
+      self.respond({params: params, <%= names.property.singular %>: <%= names.property.singular %>.toObj()});
     });
   };
 
