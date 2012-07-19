@@ -67,6 +67,9 @@ usage = [
   , '  geddy resource user name admin:boolean'
   , '                           Generate a users resource with the model properties'
   , '                             name as a string and admin as a boolean'
+  , '  geddy scaffold user name:string:default'
+  , '                           Generate a users scaffolding user name as the default'
+  , '                             value to display data with'
   , ''
 ].join('\n');
 

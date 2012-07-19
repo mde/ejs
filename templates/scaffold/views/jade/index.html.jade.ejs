@@ -6,7 +6,7 @@ if <%= names.property.plural %>
   each <%= names.property.singular %> in <%= names.property.plural %>
     .row.list-item
       .span8
-        h3!= linkTo(<%= names.property.singular %>.id, <%= names.property.singular %>Path(<%= names.property.singular %>.id))
+        h3!= linkTo(<%= names.property.singular %>.<%= properties['default'].name %>, <%= names.property.singular %>Path(<%= names.property.singular %>.id))
       .span4
         h3
           i.icon-list-alt

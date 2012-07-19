@@ -2,12 +2,14 @@ var <%= names.constructor.singular %> = function () {
 
   this.defineProperties({
 <% for(var i in properties) { -%>
-<%# Hack: ID property will always be first so we will manually take care of not inserting -%>
-<%# A leading comma -%>
-<% if(i === 'id') { -%>
-      <%= i %>: {type: '<%= properties[i] %>', required: true}
+<% if(i === 'default') { -%>
+      <%= properties[i].name %>: {type: '<%= properties[i].type %>', required: true}
 <% } else { -%>
-    , <%= i %>: {type: '<%= properties[i] %>'}
+<% if(i === 'id') { -%>
+    , <%= properties[i].name %>: {type: '<%= properties[i].type %>', required: true}
+<% } else { -%>
+    , <%= properties[i].name %>: {type: '<%= properties[i].type %>'}
+<% } -%>
 <% } -%>
 <% } -%>
   });
