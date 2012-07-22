@@ -69,14 +69,14 @@ task('test', function () {
         t.addListener('complete', function () {
           complete();
         });
-        t.invoke();
+        t.invoke.apply(t, arguments);
       });
     }
     else {
       throw err;
     }
   });
-  t.invoke();
+  t.invoke.apply(t, arguments);
 }, {async: true});
 
 testTask = new jake.TestTask('Geddy model-adapters', function () {
