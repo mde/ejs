@@ -59,10 +59,12 @@ task('test', function () {
   t.addListener('error', function (err) {
     var module
       , cmd
-      , errMsg = err.message;
+      , errMsg = err.message
+      , match = errMsg.match('Cannot find module')
+      , absModuleName = errMsg.match(/'[a-zA-Z]*'/);
 
-    if (errMsg.match('Cannot find module')) {
-      module = errMsg.match(/'[a-zA-Z]*'/)[0].replace(/'/g, '')
+    if (match && absModuleName) {
+      module = absModuleName[0].replace(/'/g, '');
       cmd = 'npm install ' + module;
       jake.logger.log(module + ' is not installed; Jake will attempt to install it for you.');
       jake.exec(cmd, function () {
