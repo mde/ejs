@@ -11,6 +11,9 @@ for(var i in Helpers) {
   helpers[i] = Helpers[i].action;
 }
 
+// Register dummy data for use with empty path options in urlFor
+helpers.registerData({params: {method: 'GET', controller: 'Tasks', action: 'Index'}});
+
 tests = {
 
   'test link for scriptLink': function() {
@@ -196,6 +199,36 @@ tests = {
 , 'test relative path with controller and action in urlFor': function() {
     var object = { controller: 'tasks', action: 'new', relPath: true }
       , result = '/tasks/new';
+    assert.equal(helpers.urlFor(object), result);
+  }
+
+, 'test no relPath set explicitly in urlFor': function() {
+    var object = { controller: 'tasks', action: 'new' }
+      , result = '/tasks/new';
+    assert.equal(helpers.urlFor(object), result);
+  }
+
+, 'test empty controller with action in urlFor': function() {
+    var object = { action: 'new' }
+      , result = '/tasks/new';
+    assert.equal(helpers.urlFor(object), result);
+  }
+
+, 'test empty controller and action with id in urlFor': function() {
+    var object = { id: '123' }
+      , result = '/tasks/123';
+    assert.equal(helpers.urlFor(object), result);
+  }
+
+, 'test empty controller with id and action in urlFor': function() {
+    var object = { id: '123', action: 'edit' }
+      , result = '/tasks/123/edit';
+    assert.equal(helpers.urlFor(object), result);
+  }
+
+, 'test empty action with controller and id in urlFor': function() {
+    var object = { controller: 'tasks', id: '123' }
+      , result = '/tasks/123';
     assert.equal(helpers.urlFor(object), result);
   }
 
