@@ -142,7 +142,8 @@ namespace('gen', function () {
     if(!name) throw new Error('No scaffold name specified.');
     if(!engine) engine = 'ejs';
 
-    var jsEnvironment = path.normalize('config/environment.js')
+    var names = utils.string.inflection(name)
+      , jsEnvironment = path.normalize('config/environment.js')
       , coffeeEnvironment = path.normalize('config/environment.coffee')
       , environmentPath
       , environmentArr
@@ -171,14 +172,14 @@ namespace('gen', function () {
         dbContent = [
             '  db:'
           , '    mongo:'
-          , '      db: \'' + name + '\''
+          , '      db: \'' + names.property.plural + '\''
         ].join('\n');
         splitText = 'config = ';
       } else if(environmentPath.match('.js')) {
         dbContent = [
             '  db: {'
           , '    mongo: {'
-          , '      db: \'' + name + '\''
+          , '      db: \'' + names.property.plural + '\''
           , '    }'
           , '  }'
         ].join('\n');

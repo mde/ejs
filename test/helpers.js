@@ -223,6 +223,18 @@ tests = {
     assert.equal(helpers.urlFor(object), result);
   }
 
+, 'test file protocol in urlFor': function() {
+    var object = { host: 'somehost.com', protocol: 'file' }
+      , result = 'file:///somehost.com';
+    assert.equal(helpers.urlFor(object), result);
+  }
+
+, 'test alternative slashed protocol in urlFor': function() {
+    var object = { host: 'somehost.com', protocol: 'z39.50r' }
+      , result = 'z39.50r://somehost.com';
+    assert.equal(helpers.urlFor(object), result);
+  }
+
 };
 
 module.exports = tests;
