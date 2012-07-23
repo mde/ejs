@@ -66,6 +66,16 @@ tests = {
     assert.equal(string, '<a data-go-to="http://google.com" href="http://google.com">http://google.com</a>');
   }
 
+, 'test array for data in contentTag': function() {
+    var string = helpers.contentTag('a', 'http://google.com', { omg: ['odd input'] });
+    assert.equal(string, '<a href="http://google.com" omg="odd input">http://google.com</a>');
+  }
+
+, 'test array with multiple items for data in contentTag': function() {
+    var string = helpers.contentTag('a', 'http://google.com', { omg: ['odd input', 'this is weird'] });
+    assert.equal(string, '<a href="http://google.com" omg="odd input this is weird">http://google.com</a>');
+  }
+
 , 'test normal data attributes in contentTag': function() {
     var string = helpers.contentTag('a', 'http://google.com', { dataGoTo: 'http://google.com' });
     assert.equal(string, '<a data-go-to="http://google.com" href="http://google.com">http://google.com</a>');
