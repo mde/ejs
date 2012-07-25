@@ -43,7 +43,8 @@ namespace('gen', function () {
       , i
       , value;
 
-    for(i in itemsArr) {
+    i = -1;
+    while(++i < itemsArr.length) {
       value = itemsArr[i];
       name = value.replace(/:.*/g, '');
       type = value.replace(/[a-zA-Z]*:?/, '');
