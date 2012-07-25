@@ -152,11 +152,21 @@ namespace('gen', function () {
       , dbContent = '';
 
     // Check if the environment file exists
-    if(existsSync(jsEnvironment)) {
-      environmentPath = jsEnvironment;
-    } else if(existsSync(coffeeEnvironment)) {
-      environmentPath = coffeeEnvironment;
-    }
+    utils.fileUtils.searchParentPath(jsEnvironment, function(err) {
+      if(err) {
+        var jsErr = err;
+        // If jsEnvironment wasn't found, try finding coffee variant
+        utils.fileUtils.searchParentPath(coffeeEnvironment, function(err) {
+          if(err) {
+            throw jsErr;
+          } else {
+            environmentPath = coffeeEnvironment;
+          }
+        });
+      } else {
+        environmentPath = jsEnvironment;
+      }
+    });
 
     jake.Task['gen:modelScaffold'].invoke(name, modelProperties);
     jake.Task['gen:controllerScaffold'].invoke(name, {properties: modelProperties});
@@ -258,11 +268,21 @@ namespace('gen', function () {
       , newRoute;
 
     // Check if the router file exists
-    if(existsSync(jsRouter)) {
-      routerPath = jsRouter;
-    } else if(existsSync(coffeeRouter)) {
-      routerPath = coffeeRouter;
-    }
+    utils.fileUtils.searchParentPath(jsRouter, function(err) {
+      if(err) {
+        var jsErr = err;
+        // If jsEnvironment wasn't found, try finding coffee variant
+        utils.fileUtils.searchParentPath(coffeeRouter, function(err) {
+          if(err) {
+            throw jsErr;
+          } else {
+            routerPath = coffeeRouter;
+          }
+        });
+      } else {
+        routerPath = jsRouter;
+      }
+    });
 
     if(routerPath) {
       text = fs.readFileSync(routerPath, 'utf8');
@@ -355,7 +375,9 @@ namespace('gen', function () {
   });
 
   task('viewsScaffold', function(name, options) {
-    if(!name) throw new Error('No view name specified.');
+    if(!name) {
+      throw new Error('No view name specified.');
+    }
 
     options = options || {};
 
@@ -426,11 +448,21 @@ namespace('gen', function () {
       , splitText;
 
     // Check if the environment file exists
-    if(existsSync(jsEnvironment)) {
-      environmentPath = jsEnvironment;
-    } else if(existsSync(coffeeEnvironment)) {
-      environmentPath = coffeeEnvironment;
-    }
+    utils.fileUtils.searchParentPath(jsEnvironment, function(err) {
+      if(err) {
+        var jsErr = err;
+        // If jsEnvironment wasn't found, try finding coffee variant
+        utils.fileUtils.searchParentPath(coffeeEnvironment, function(err) {
+          if(err) {
+            throw jsErr;
+          } else {
+            environmentPath = coffeeEnvironment;
+          }
+        });
+      } else {
+        environmentPath = jsEnvironment;
+      }
+    });
 
     if(environmentPath) {
       text = fs.readFileSync(environmentPath, 'utf8').toString();
