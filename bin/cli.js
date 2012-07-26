@@ -3,7 +3,6 @@
 // Dependencies
 var geddy = require('../lib/geddy')
   , exec = require('child_process').exec
-  , fs = require('fs')
   , path = require('path')
   , parseopts = require('../lib/parseopts')
   , utils = require('../lib/utils/index');

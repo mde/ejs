@@ -4,8 +4,6 @@ require('../lib/geddy')
 // Dependencies
 var fs = require('fs')
   , path = require('path')
-  , existsSync = typeof fs.existsSync == 'function' ?
-      fs.existsSync : path.existsSync
   , utils = require('../lib/utils')
   , adapter = require('../lib/template/adapters').Adapter
   , templato = new (require('../deps/templato'));
@@ -372,8 +370,8 @@ namespace('gen', function () {
 
     // Create default layout if one doesn't exist
     // Hack: There should be a better way to detect if a application layout exists
-    if(!existsSync(appLayoutPath + '.html.ejs') && !existsSync(appLayoutPath + '.html.jade') &&
-       !existsSync(appLayoutPath + '.html.hbs') && !existsSync(appLayoutPath + '.html.ms')) {
+    if(!utils.compat.existsSync(appLayoutPath + '.html.ejs') && !utils.compat.existsSync(appLayoutPath + '.html.jade') &&
+       !utils.compat.existsSync(appLayoutPath + '.html.hbs') && !utils.compat.existsSync(appLayoutPath + '.html.ms')) {
       // Copy template layout file to apps application layout file
       jake.cpR(path.join(templateViewDir, 'layout' + ext), appLayoutPath + ext);
     }
@@ -435,8 +433,8 @@ namespace('gen', function () {
 
     // Create default layout if one doesn't exist
     // Hack: There should be a better way to detect if a application layout exists
-    if(!existsSync(appLayoutPath + '.html.ejs') && !existsSync(appLayoutPath + '.html.jade') &&
-       !existsSync(appLayoutPath + '.html.hbs') && !existsSync(appLayoutPath + '.html.ms')) {
+    if(!utils.compat.existsSync(appLayoutPath + '.html.ejs') && !utils.compat.existsSync(appLayoutPath + '.html.jade') &&
+       !utils.compat.existsSync(appLayoutPath + '.html.hbs') && !utils.compat.existsSync(appLayoutPath + '.html.ms')) {
       // Copy template layout file to apps application layout file
       jake.cpR(path.join(templateViewDir, 'layout' + ext), appLayoutPath + ext);
     }

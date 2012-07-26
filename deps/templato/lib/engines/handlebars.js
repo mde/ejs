@@ -16,6 +16,18 @@ var TemplatoHandlebars = (function() {
     return fn(data);
   };
 
+  // Iterate over a object of helpers and assign them by name
+  TemplatoHandlebars.prototype.registerHelper = function(data) {
+    var helper;
+
+    for(helper in data) {
+      // Only functions are allowed to be assigned
+      if(typeof data[helper] === 'function') {
+        this.engine.registerHelper(helper, data[helper]);
+      }
+    }
+  };
+
   return TemplatoHandlebars;
 
 })();
