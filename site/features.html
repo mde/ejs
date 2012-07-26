@@ -151,8 +151,9 @@ User = geddy.model.registerModel('User', User);
           <h3>Views</h3>
         </div>
         <div class="span4">
-          <h4>A templating system you already know how to use</h4>
-          <p>Geddy uses EJS for templating. This means you get to use the same Javascript you know and love to create your templates. The syntax is very similar to ERB, so if you have experience with rails you should be able to jump right in.
+          <h4>Support for multiple template languages</h4>
+          <p>Geddy supports multiple template languages such as Jade, Handlebars, Mustache and EJS. You don't have to do anything to switch between them just change the file extension and Geddy will handle what engine to use.</p>
+          <p>Geddy includes a EJS engine so you don't have to install anything to use EJS, it's ready out of the box.</p>
         </div>
         <div class="span6">
 
@@ -170,6 +171,36 @@ User = geddy.model.registerModel('User', User);
 &lt;% for (var i in user.posts) { %&gt;
   &lt;%= user.posts[i].title %&gt;
 &lt;% } %&gt;
+</pre>
+
+        </div>
+      </div>
+
+      <!-- View Helpers -->
+      <div class="row">
+        <div class="span2 heading-box">
+          <h3>View Helpers</h3>
+        </div>
+        <div class="span4">
+          <h4>Useful View Helpers</h4>
+          <p>Geddy has multiple view helpers for use with HTML tags, text manipulation and url generation. Geddy also has action which are helpers that create links to various routes defined in your routes file.</p>
+          <p><small>Note: View helpers are pretty new, if you'd like others please suggest them, we'd gladly add any new helpers.</small></p>
+        </div>
+        <div class="span6">
+
+<!-- View Helpers Example -->
+<pre class="code-box prettyprint">
+// HTML tags
+scriptLink('/js/script.js');
+// => &lt;script src="/js/script.js"&gt;&lt;/script&gt;
+
+// URL generation
+urlFor({ host: 'somehost.com', protocol: 'https' })
+// => 'https://somehost.com'
+
+// Text manipulation
+truncate('Once upon a time in a world')
+// => 'Once up...'
 </pre>
 
         </div>
@@ -291,24 +322,30 @@ timer.mark();
       <!-- Generators -->
       <div class="row">
         <div class="span2 heading-box">
-          <h3>Executable</h3>
+          <h3>Generators</h3>
         </div>
         <div class="span4">
-          <h4>Generate your initial app and all it's resources</h4>
-          <p>Use the <code>geddy</code> executable to generate geddy apps and resources. <code>geddy app test_app</code> will generate a geddy app called test_app in the test_app directory. <code>geddy resource user</code> will generate a Users controller, a User model, a bunch of associated views, and all the RESTful routes needed for CRUD operations on a User.</p>
+          <h4>Geddy generators are powerful and very helpful when creating applications</h4>
+          <p>Geddy generators are extremely useful in Geddy, creating new applications, scaffolding and resources fast. There are numerous generators that will make it easy to create new pieces to exists applications like scaffold, resource, model, controller and application secret generators. </p>
         </div>
         <div class="span6">
 
 <!-- Generators -->
 <pre class="code-box prettyprint">
 // generate an app
-$&gt; geddy app test_app
+$ geddy app test_app
 
 // generate a new resource
-$&gt; geddy resource user
+$ geddy resource user name:string
+
+// generate a new scaffolding
+$ geddy scaffold user name:string password:string
+
+// generate a new application secret
+$ geddy secret
 
 // start your app
-$&gt; geddy
+$ geddy
 </pre>
 
         </div>

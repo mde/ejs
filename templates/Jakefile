@@ -293,13 +293,17 @@ namespace('gen', function () {
           newRoute = 'router.match(\'/' +  names.filename.plural +
             '\').to controller: \'' + names.constructor.plural +
             '\', action: \'index\'';
-        } else newRoute = 'router.resource \'' +  names.filename.plural + '\''
+        } else {
+          newRoute = 'router.resource \'' +  names.filename.plural + '\'';
+        }
       } else if(routerPath.match('.js')) {
         if(options.bare) {
           newRoute = 'router.match(\'/' +  names.filename.plural +
             '\').to({controller: \'' + names.constructor.plural +
             '\', action: \'index\'});';
-        } else newRoute = 'router.resource(\'' +  names.filename.plural + '\');';
+        } else {
+          newRoute = 'router.resource(\'' +  names.filename.plural + '\');';
+        }
       }
 
       // Don't add the same route over and over
@@ -319,7 +323,9 @@ namespace('gen', function () {
           routerPath);
       }
 
-    } else console.log('There is no router file to add routes too');
+    } else {
+      console.log('There is no router file to add routes too');
+    }
   });
 
   task('views', [], function(name, options) {

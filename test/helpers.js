@@ -97,7 +97,7 @@ tests = {
   }
 
 , 'test standard truncate': function() {
-    var string = helpers.truncateHTML('Once upon a time in a world', { length: 10 });
+    var string = helpers.truncate('Once upon a time in a world', { length: 10 });
     assert.equal(string, 'Once up...');
   }
 
