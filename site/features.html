@@ -112,6 +112,36 @@
         <h1>Features</h1>
         <p class="pull-right">Geddy has you covered</p>
       </div>
+
+
+      <!-- routes -->
+      <div class="row">
+        <div class="span2 heading-box">
+          <h3>Routes</h3>
+        </div>
+        <div class="span4">
+          <h4>Easy to use Routing API</h4>
+          <p>Routes are easy with Geddy. Just match a url to a controller and an action. You can specify http methods, formats, and url params.</p>
+        </div>
+        <div class="span6">
+
+<!-- Bootstrap -->
+<pre class="code-box prettyprint" style="font-size: 90%">
+// standard main route
+router.match('/').to({controller: 'Main', action: 'index'});
+
+// a custom route
+router.match('/moving/pictures/:id').to({controller: 'Moving', action: 'pictures'});
+
+// a restful resource route
+router.resource('users');
+</pre>
+
+        </div>
+      </div>
+
+      <hr/>
+
       <div class="row">
         <div class="span2 heading-box">
           <h3>Models</h3>
@@ -244,8 +274,8 @@ exports.User = User;
           <h3>Content Negotiation</h3>
         </div>
         <div class="span4">
-          <h4>Automatic json and jsonp support</h4>
-          <p>Geddy handles content formats for you - add a <code>.json</code> to your url, and you'll get json back. Add a <code>.js?callback=foo</code> to your url and you'll have a jsonp response. Awesome, huh?</p>
+          <h4>Automatically respond with the right content-type</h4>
+          <p>Geddy handles content formats for you. Ask for an HTML file, and Geddy will render a template and return it. Use a <code>.json</code> on your url, and you'll get a JSONized data-object back. Add a <code>.js?callback=foo</code> to your url and you'll have a jsonp response. Awesome, huh? If you're feeling enterprisey, Geddy can even return you XML.</p>
         </div>
         <div class="span6">
 
@@ -272,7 +302,7 @@ this.show = function (params) {
         </div>
         <div class="span4">
           <h4>No code needed for clustering</h4>
-          <p>Geddy automatically handles multi-process clustering for you. It works with 0.6.x and it's backwards compatible with node 0.4.x; scale your node apps across your server's core without any extra work.</p>
+          <p>Geddy automatically handles multi-process clustering for you. It works with 0.8.x and it's backward-compatible with Node 0.6.x; scale your Node apps across your server's cores without any extra work.</p>
         </div>
         <div class="span6">
 
@@ -299,7 +329,7 @@ this.show = function (params) {
         </div>
         <div class="span4">
           <h4>Automatically Instrumented Controllers</h4>
-          <p>With geddy, all your controller actions and requests are instrumented automatically. All you need to do is enable metrics in your config. hit up port 4001 /metrics to collect them periodically.</p>
+          <p>With Geddy, all your controller actions and requests are instrumented automatically. All you need to do is enable metrics in your config. hit up port 4001 /metrics to collect them periodically.</p>
         </div>
         <div class="span6">
 
@@ -326,7 +356,7 @@ timer.mark();
         </div>
         <div class="span4">
           <h4>Geddy generators are powerful and very helpful when creating applications</h4>
-          <p>Geddy generators are extremely useful in Geddy, creating new applications, scaffolding and resources fast. There are numerous generators that will make it easy to create new pieces to exists applications like scaffold, resource, model, controller and application secret generators. </p>
+          <p>Geddy generators are extremely useful, creating new applications, scaffolding and resources fast. There are numerous generators that will make it easy to create new pieces to exists applications like scaffold, resource, model, controller and application-secret generators. </p>
         </div>
         <div class="span6">
 
@@ -399,34 +429,6 @@ geddy.log.warn('A warning!');
 
 // error
 geddy.log.error('An error occurred');
-</pre>
-
-        </div>
-      </div>
-
-      <hr/>
-
-      <!-- routes -->
-      <div class="row">
-        <div class="span2 heading-box">
-          <h3>Routes</h3>
-        </div>
-        <div class="span4">
-          <h4>Easy to use Routing API</h4>
-          <p>Routes are easy with Geddy. Just match a url to a controller and an action. You can specify http methods, formats, and url params.</p>
-        </div>
-        <div class="span6">
-
-<!-- Bootstrap -->
-<pre class="code-box prettyprint" style="font-size: 90%">
-// standard main route
-router.match('/').to({controller: 'Main', action: 'index'});
-
-// a custom route
-router.match('/moving/pictures/:id').to({controller: 'Moving', action: 'pictures'});
-
-// a restful resource route
-router.resource('users');
 </pre>
 
         </div>
