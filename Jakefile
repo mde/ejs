@@ -42,10 +42,6 @@ var p = new jake.NpmPublishTask('geddy', [
 , 'test/**'
 ]);
 
-// TODO: This is hacky -- need a better way to poke Jake to
-// set up the package part included in the publish-task
-jake.Task['npm:definePackage'].invoke();
-
 testTask = new jake.TestTask('Geddy', function () {
   this.testName = 'testBase';
   this.testFiles.include('test/*.js');
