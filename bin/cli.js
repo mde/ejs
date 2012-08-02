@@ -4,8 +4,8 @@
 var geddy = require('../lib/geddy')
   , exec = require('child_process').exec
   , path = require('path')
-  , parseopts = require('../lib/parseopts')
-  , utils = require('../lib/utils/index');
+  , utils = require('utilities')
+  , parseopts = require('../lib/parseopts');
 
 // Variables
 var cwd = process.cwd()
@@ -173,19 +173,25 @@ if(cmds.length) {
 
   cmd += ' --quiet';
   exec(cmd, function(err, stdout, stderr) {
-    if(err) throw err;
-
-    if(stderr) console.log(utils.string.trim(stderr));
-    if(stdout) console.log(utils.string.trim(stdout));
+    if(err) {
+      throw err;
+    }
+    if (stderr) {
+      console.log(utils.string.trim(stderr));
+    }
+    if (stdout) {
+      console.log(utils.string.trim(stdout));
+    }
   });
 }
 // Just `geddy` -- start the server
 else {
   // Search for 'config' directory in parent directories
-  utils.fileUtils.searchParentPath('config', function(err, filePath) {
-    if(err) {
+  utils.file.searchParentPath('config', function(err, filePath) {
+    if (err) {
       die(usage);
-    } else {
+    }
+    else {
       start();
     }
   });
