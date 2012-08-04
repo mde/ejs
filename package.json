@@ -10,7 +10,8 @@
   "version": "0.4.4",
   "author": "Matthew Eernisse <mde@fleegix.org> (http://fleegix.org)",
   "dependencies": {
-    "jake": "0.3.x"
+    "jake": "0.3.x",
+    "utilities": "0.1.x"
   },
   "bin": {
     "geddy": "./bin/cli.js"
