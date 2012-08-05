@@ -13,3 +13,4 @@ tmtags
 examples/*/log/*
 .log
 npm-debug.log
+doc/
