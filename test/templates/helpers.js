@@ -1,7 +1,22 @@
-// Load the basic Geddy toolkit
-require('../lib/geddy');
+/*
+ * Geddy JavaScript Web development framework
+ * Copyright 2112 Matthew Eernisse (mde@fleegix.org)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+*/
 
-var Helpers = require('../lib/template/helpers/index')
+var Helpers = require('../../lib/template/helpers/index')
   , assert = require('assert')
   , helpers = {}
   , tests;
@@ -10,6 +25,9 @@ var Helpers = require('../lib/template/helpers/index')
 for(var i in Helpers) {
   helpers[i] = Helpers[i].action;
 }
+
+// Register dummy data for use with empty path options in urlFor
+helpers.registerData({params: {method: 'GET', controller: 'Tasks', action: 'Index'}});
 
 tests = {
 
@@ -63,6 +81,16 @@ tests = {
     assert.equal(string, '<a data-go-to="http://google.com" href="http://google.com">http://google.com</a>');
   }
 
+, 'test array for data in contentTag': function() {
+    var string = helpers.contentTag('a', 'http://google.com', { omg: ['odd input'] });
+    assert.equal(string, '<a href="http://google.com" omg="odd input">http://google.com</a>');
+  }
+
+, 'test array with multiple items for data in contentTag': function() {
+    var string = helpers.contentTag('a', 'http://google.com', { omg: ['odd input', 'this is weird'] });
+    assert.equal(string, '<a href="http://google.com" omg="odd input this is weird">http://google.com</a>');
+  }
+
 , 'test normal data attributes in contentTag': function() {
     var string = helpers.contentTag('a', 'http://google.com', { dataGoTo: 'http://google.com' });
     assert.equal(string, '<a data-go-to="http://google.com" href="http://google.com">http://google.com</a>');
@@ -84,7 +112,7 @@ tests = {
   }
 
 , 'test standard truncate': function() {
-    var string = helpers.truncateHTML('Once upon a time in a world', { length: 10 });
+    var string = helpers.truncate('Once upon a time in a world', { length: 10 });
     assert.equal(string, 'Once up...');
   }
 
@@ -199,6 +227,36 @@ tests = {
     assert.equal(helpers.urlFor(object), result);
   }
 
+, 'test no relPath set explicitly in urlFor': function() {
+    var object = { controller: 'tasks', action: 'new' }
+      , result = '/tasks/new';
+    assert.equal(helpers.urlFor(object), result);
+  }
+
+, 'test empty controller with action in urlFor': function() {
+    var object = { action: 'new' }
+      , result = '/tasks/new';
+    assert.equal(helpers.urlFor(object), result);
+  }
+
+, 'test empty controller and action with id in urlFor': function() {
+    var object = { id: '123' }
+      , result = '/tasks/123';
+    assert.equal(helpers.urlFor(object), result);
+  }
+
+, 'test empty controller with id and action in urlFor': function() {
+    var object = { id: '123', action: 'edit' }
+      , result = '/tasks/123/edit';
+    assert.equal(helpers.urlFor(object), result);
+  }
+
+, 'test empty action with controller and id in urlFor': function() {
+    var object = { controller: 'tasks', id: '123' }
+      , result = '/tasks/123';
+    assert.equal(helpers.urlFor(object), result);
+  }
+
 , 'test https protocol in urlFor': function() {
     var object = { host: 'somehost.com', protocol: 'https' }
       , result = 'https://somehost.com';
@@ -220,6 +278,18 @@ tests = {
 , 'test fragments in urlFor': function() {
     var object = { host: 'somehost.com', anchor: 'submit' }
       , result = 'http://somehost.com#submit';
+    assert.equal(helpers.urlFor(object), result);
+  }
+
+, 'test file protocol in urlFor': function() {
+    var object = { host: 'somehost.com', protocol: 'file' }
+      , result = 'file:///somehost.com';
+    assert.equal(helpers.urlFor(object), result);
+  }
+
+, 'test alternative slashed protocol in urlFor': function() {
+    var object = { host: 'somehost.com', protocol: 'z39.50r' }
+      , result = 'z39.50r://somehost.com';
     assert.equal(helpers.urlFor(object), result);
   }
 

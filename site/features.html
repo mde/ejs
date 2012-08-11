@@ -112,6 +112,36 @@
         <h1>Features</h1>
         <p class="pull-right">Geddy has you covered</p>
       </div>
+
+
+      <!-- routes -->
+      <div class="row">
+        <div class="span2 heading-box">
+          <h3>Routes</h3>
+        </div>
+        <div class="span4">
+          <h4>Easy to use Routing API</h4>
+          <p>Routes are easy with Geddy. Just match a url to a controller and an action. You can specify http methods, formats, and url params.</p>
+        </div>
+        <div class="span6">
+
+<!-- Bootstrap -->
+<pre class="code-box prettyprint" style="font-size: 90%">
+// standard main route
+router.match('/').to({controller: 'Main', action: 'index'});
+
+// a custom route
+router.match('/moving/pictures/:id').to({controller: 'Moving', action: 'pictures'});
+
+// a restful resource route
+router.resource('users');
+</pre>
+
+        </div>
+      </div>
+
+      <hr/>
+
       <div class="row">
         <div class="span2 heading-box">
           <h3>Models</h3>
@@ -151,8 +181,9 @@ User = geddy.model.registerModel('User', User);
           <h3>Views</h3>
         </div>
         <div class="span4">
-          <h4>A templating system you already know how to use</h4>
-          <p>Geddy uses EJS for templating. This means you get to use the same Javascript you know and love to create your templates. The syntax is very similar to ERB, so if you have experience with rails you should be able to jump right in.
+          <h4>Support for multiple template languages</h4>
+          <p>Geddy supports multiple template languages such as Jade, Handlebars, Mustache and EJS. You don't have to do anything to switch between them just change the file extension and Geddy will handle what engine to use.</p>
+          <p>Geddy includes a EJS engine so you don't have to install anything to use EJS, it's ready out of the box.</p>
         </div>
         <div class="span6">
 
@@ -170,6 +201,36 @@ User = geddy.model.registerModel('User', User);
 &lt;% for (var i in user.posts) { %&gt;
   &lt;%= user.posts[i].title %&gt;
 &lt;% } %&gt;
+</pre>
+
+        </div>
+      </div>
+
+      <!-- View Helpers -->
+      <div class="row">
+        <div class="span2 heading-box">
+          <h3>View Helpers</h3>
+        </div>
+        <div class="span4">
+          <h4>Useful View Helpers</h4>
+          <p>Geddy has multiple view helpers for use with HTML tags, text manipulation and url generation. Geddy also has action which are helpers that create links to various routes defined in your routes file.</p>
+          <p><small>Note: View helpers are pretty new, if you'd like others please suggest them, we'd gladly add any new helpers.</small></p>
+        </div>
+        <div class="span6">
+
+<!-- View Helpers Example -->
+<pre class="code-box prettyprint">
+// HTML tags
+scriptLink('/js/script.js');
+// => &lt;script src="/js/script.js"&gt;&lt;/script&gt;
+
+// URL generation
+urlFor({ host: 'somehost.com', protocol: 'https' })
+// => 'https://somehost.com'
+
+// Text manipulation
+truncate('Once upon a time in a world')
+// => 'Once up...'
 </pre>
 
         </div>
@@ -213,8 +274,8 @@ exports.User = User;
           <h3>Content Negotiation</h3>
         </div>
         <div class="span4">
-          <h4>Automatic json and jsonp support</h4>
-          <p>Geddy handles content formats for you - add a <code>.json</code> to your url, and you'll get json back. Add a <code>.js?callback=foo</code> to your url and you'll have a jsonp response. Awesome, huh?</p>
+          <h4>Automatically respond with the right content-type</h4>
+          <p>Geddy handles content formats for you. Ask for an HTML file, and Geddy will render a template and return it. Use a <code>.json</code> on your url, and you'll get a JSONized data-object back. Add a <code>.js?callback=foo</code> to your url and you'll have a jsonp response. Awesome, huh? If you're feeling enterprisey, Geddy can even return you XML.</p>
         </div>
         <div class="span6">
 
@@ -241,7 +302,7 @@ this.show = function (params) {
         </div>
         <div class="span4">
           <h4>No code needed for clustering</h4>
-          <p>Geddy automatically handles multi-process clustering for you. It works with 0.6.x and it's backwards compatible with node 0.4.x; scale your node apps across your server's core without any extra work.</p>
+          <p>Geddy automatically handles multi-process clustering for you. It works with 0.8.x and it's backward-compatible with Node 0.6.x; scale your Node apps across your server's cores without any extra work.</p>
         </div>
         <div class="span6">
 
@@ -268,7 +329,7 @@ this.show = function (params) {
         </div>
         <div class="span4">
           <h4>Automatically Instrumented Controllers</h4>
-          <p>With geddy, all your controller actions and requests are instrumented automatically. All you need to do is enable metrics in your config. hit up port 4001 /metrics to collect them periodically.</p>
+          <p>With Geddy, all your controller actions and requests are instrumented automatically. All you need to do is enable metrics in your config. hit up port 4001 /metrics to collect them periodically.</p>
         </div>
         <div class="span6">
 
@@ -291,24 +352,30 @@ timer.mark();
       <!-- Generators -->
       <div class="row">
         <div class="span2 heading-box">
-          <h3>Executable</h3>
+          <h3>Generators</h3>
         </div>
         <div class="span4">
-          <h4>Generate your initial app and all it's resources</h4>
-          <p>Use the <code>geddy</code> executable to generate geddy apps and resources. <code>geddy app test_app</code> will generate a geddy app called test_app in the test_app directory. <code>geddy resource user</code> will generate a Users controller, a User model, a bunch of associated views, and all the RESTful routes needed for CRUD operations on a User.</p>
+          <h4>Geddy generators are powerful and very helpful when creating applications</h4>
+          <p>Geddy generators are extremely useful, creating new applications, scaffolding and resources fast. There are numerous generators that will make it easy to create new pieces to exists applications like scaffold, resource, model, controller and application-secret generators. </p>
         </div>
         <div class="span6">
 
 <!-- Generators -->
 <pre class="code-box prettyprint">
 // generate an app
-$&gt; geddy app test_app
+$ geddy app test_app
 
 // generate a new resource
-$&gt; geddy resource user
+$ geddy resource user name:string
+
+// generate a new scaffolding
+$ geddy scaffold user name:string password:string
+
+// generate a new application secret
+$ geddy secret
 
 // start your app
-$&gt; geddy
+$ geddy
 </pre>
 
         </div>
@@ -362,34 +429,6 @@ geddy.log.warn('A warning!');
 
 // error
 geddy.log.error('An error occurred');
-</pre>
-
-        </div>
-      </div>
-
-      <hr/>
-
-      <!-- routes -->
-      <div class="row">
-        <div class="span2 heading-box">
-          <h3>Routes</h3>
-        </div>
-        <div class="span4">
-          <h4>Easy to use Routing API</h4>
-          <p>Routes are easy with Geddy. Just match a url to a controller and an action. You can specify http methods, formats, and url params.</p>
-        </div>
-        <div class="span6">
-
-<!-- Bootstrap -->
-<pre class="code-box prettyprint" style="font-size: 90%">
-// standard main route
-router.match('/').to({controller: 'Main', action: 'index'});
-
-// a custom route
-router.match('/moving/pictures/:id').to({controller: 'Moving', action: 'pictures'});
-
-// a restful resource route
-router.resource('users');
 </pre>
 
         </div>

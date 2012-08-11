@@ -3,7 +3,6 @@
 // Dependencies
 var geddy = require('../lib/geddy')
   , exec = require('child_process').exec
-  , fs = require('fs')
   , path = require('path')
   , parseopts = require('../lib/parseopts')
   , utils = require('../lib/utils/index');
@@ -36,26 +35,26 @@ usage = [
   , '  --workers, -w       Number of worker processes to start(Default: 2)'
   , '  --debug, -d         Sets the log level to output debug messages to'
   , '                        the console'
-  , '  --help, -h          Output this usage dialog'
-  , '  --version, -v       Output the version of Geddy that\'s installed'
   , '  --jade, -j          When generating views this will create Jade'
   , '                        templates(Default: EJS)'
   , '  --handle, -H        When generating views this will create Handlebars'
   , '                        templates(Default: EJS)'
-  , '  --Mustache, -m      When generating views this will create Mustache'
+  , '  --mustache, -m      When generating views this will create Mustache'
   , '                        templates(Default: EJS)'
+  , '  --help, -h          Output this usage dialog'
+  , '  --version, -v       Output the version of Geddy that\'s installed'
   , ''
   , 'Commands:'
-  , '  app [name]          Create a new Geddy application'
-  , '  resource [name]     Create a new resource. A resource includes'
-  , '                        a model, controller and route'
-  , '  scaffold [name]     Create a new scaffolding. Scaffolding includes'
-  , '                        the views, a model, controller and route'
-  , '  secret              Generate a new application secret in'
-  , '                        `congig/environment`'
-  , '  controller [name]   Generate a new controller including views'
-  , '                        and and a route'
-  , '  model [name]        Generate a new model'
+  , '  app <name>                  Create a new Geddy application'
+  , '  resource <name> [attrs]     Create a new resource. A resource includes'
+  , '                                a model, controller and route'
+  , '  scaffold <name> [attrs]     Create a new scaffolding. Scaffolding includes'
+  , '                                the views, a model, controller and route'
+  , '  secret                      Generate a new application secret in'
+  , '                                `congig/environment`'
+  , '  controller <name>          Generate a new controller including an index view'
+  , '                                and and a route'
+  , '  model <name> [attrs]        Generate a new model'
   , ''
   , 'Examples:'
   , '  geddy                    Start Geddy on localhost:4000 in development mode'
@@ -67,6 +66,9 @@ usage = [
   , '  geddy resource user name admin:boolean'
   , '                           Generate a users resource with the model properties'
   , '                             name as a string and admin as a boolean'
+  , '  geddy scaffold user name:string:default'
+  , '                           Generate a users scaffolding user name as the default'
+  , '                             value to display data with'
   , ''
 ].join('\n');
 
@@ -179,26 +181,12 @@ if(cmds.length) {
 }
 // Just `geddy` -- start the server
 else {
-  var relPath = '';
-
-  // Search for the `config` directory needed to run Geddy
-  // - up to 5 parent directories then show the usage
-  for(var i = 0, len = utils.file.maxParentDir; i <= len; i++) {
-    var configPath = path.join(cwd, relPath, 'config')
-      , existsSync = typeof fs.existsSync == 'function' ?
-          fs.existsSync : path.existsSync
-      , geddyApp = existsSync(configPath);
-
-    if(geddyApp) {
-      break;
+  // Search for 'config' directory in parent directories
+  utils.fileUtils.searchParentPath('config', function(err, filePath) {
+    if(err) {
+      die(usage);
     } else {
-      // If 5 directories up show usage
-      if(i === len) die(usage);
-
-      // Add a relative parent directory
-      relPath += '../';
-      process.chdir(path.join(cwd, relPath));
+      start();
     }
-  }
-  start(); // Start the server up
+  });
 }

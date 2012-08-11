@@ -34,6 +34,7 @@ Templato = (function() {
   Templato.prototype.set = function(opts) {
     opts = opts || {};
     this.options = opts.options || {};
+    this.engineName = opts.engine;
 
     this.engine = (function() {
       switch(opts.engine) {
@@ -84,6 +85,12 @@ Templato = (function() {
     }
     for(helper in Templato.helpers) {
       data[helper] = Templato.helpers[helper];
+    }
+
+    // If engine is handlebars or mustache register function helpers
+    if(this.engineName === 'handlebars' || this.engineName === 'mustache') {
+      // Register all helpers with handlebars native registerHelpers method
+      this.engine.registerHelper(data);
     }
 
     return this.engine.render(data, this.compile());

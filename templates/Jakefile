@@ -4,8 +4,6 @@ require('../lib/geddy')
 // Dependencies
 var fs = require('fs')
   , path = require('path')
-  , existsSync = typeof fs.existsSync == 'function' ?
-      fs.existsSync : path.existsSync
   , utils = require('../lib/utils')
   , adapter = require('../lib/template/adapters').Adapter
   , templato = new (require('../deps/templato'));
@@ -33,33 +31,53 @@ namespace('gen', function () {
   };
 
   var _formatModelProperties = function(properties) {
-    if(!properties) return { 'id': 'string' };
+    var obj = {'default': {name: 'id', type: 'string'}};
+    if(!properties) return obj;
 
     var itemsArr = properties.split(' ')
-      , properties = {}
       , name
       , type
-      , customId
+      , args
       , i
       , value;
 
-    // Go over each item and parse it's name and type and add to `arr`
-    for(i in itemsArr) {
+    i = -1;
+    while(++i < itemsArr.length) {
       value = itemsArr[i];
       name = value.replace(/:.*/g, '');
       type = value.replace(/[a-zA-Z]*:?/, '');
+      args = type.replace(/[a-zA-Z]*:?/, '');
 
-      // Set defaults and alias's
+      // Take off any args on the type
+      type = type.replace(/:.*/g, '');
+
+      // Defaults and alias's
       if(!type) type = 'string';
       if(type === 'integer') type = 'int';
+      if(type === 'bool') type = 'boolean';
+      if(args === 'def') args = 'default';
+      if(type === 'default' || type === 'def') {
+        // If the type is `default` assume they want `string`
+        // type and want this property to be default
+        type = 'string';
+        args = 'default';
+      }
 
-      properties[name] = type;
+      // Set it as default if given the `default` argument
+      if(args === 'default') {
+        obj['default'] = {name: name, type: type};
+        // Add the original ID property
+        obj['id'] = obj['id'] || {name: 'id', type: 'string'};
+      } else {
+        // If ID property is given and it matches the default
+        // then rewrite the default with the new ID property
+        if(name === 'id' && obj['default'].name === 'id') {
+          obj['default'] = {name: name, type: type};
+        } else obj[name] = {name: name, type: type};
+      }
     }
 
-    // Check to see if a `id` property exists if not, add it
-    // Note: reverseMerge moves the default(or changed default) objects to the beginning
-    //       of the object. Which is useful for our forEach hack in the model template
-    return utils.object.reverseMerge(properties, { 'id': 'string' });
+    return obj;
   };
 
   // Creates a new Geddy app scaffold
@@ -123,7 +141,8 @@ namespace('gen', function () {
     if(!name) throw new Error('No scaffold name specified.');
     if(!engine) engine = 'ejs';
 
-    var jsEnvironment = path.normalize('config/environment.js')
+    var names = utils.string.inflection(name)
+      , jsEnvironment = path.normalize('config/environment.js')
       , coffeeEnvironment = path.normalize('config/environment.coffee')
       , environmentPath
       , environmentArr
@@ -132,11 +151,21 @@ namespace('gen', function () {
       , dbContent = '';
 
     // Check if the environment file exists
-    if(existsSync(jsEnvironment)) {
-      environmentPath = jsEnvironment;
-    } else if(existsSync(coffeeEnvironment)) {
-      environmentPath = coffeeEnvironment;
-    }
+    utils.fileUtils.searchParentPath(jsEnvironment, function(err) {
+      if(err) {
+        var jsErr = err;
+        // If jsEnvironment wasn't found, try finding coffee variant
+        utils.fileUtils.searchParentPath(coffeeEnvironment, function(err) {
+          if(err) {
+            throw jsErr;
+          } else {
+            environmentPath = coffeeEnvironment;
+          }
+        });
+      } else {
+        environmentPath = jsEnvironment;
+      }
+    });
 
     jake.Task['gen:modelScaffold'].invoke(name, modelProperties);
     jake.Task['gen:controllerScaffold'].invoke(name, {properties: modelProperties});
@@ -152,14 +181,14 @@ namespace('gen', function () {
         dbContent = [
             '  db:'
           , '    mongo:'
-          , '      db: \'' + name + '\''
+          , '      db: \'' + names.property.plural + '\''
         ].join('\n');
         splitText = 'config = ';
       } else if(environmentPath.match('.js')) {
         dbContent = [
             '  db: {'
           , '    mongo: {'
-          , '      db: \'' + name + '\''
+          , '      db: \'' + names.property.plural + '\''
           , '    }'
           , '  }'
         ].join('\n');
@@ -238,11 +267,21 @@ namespace('gen', function () {
       , newRoute;
 
     // Check if the router file exists
-    if(existsSync(jsRouter)) {
-      routerPath = jsRouter;
-    } else if(existsSync(coffeeRouter)) {
-      routerPath = coffeeRouter;
-    }
+    utils.fileUtils.searchParentPath(jsRouter, function(err) {
+      if(err) {
+        var jsErr = err;
+        // If jsEnvironment wasn't found, try finding coffee variant
+        utils.fileUtils.searchParentPath(coffeeRouter, function(err) {
+          if(err) {
+            throw jsErr;
+          } else {
+            routerPath = coffeeRouter;
+          }
+        });
+      } else {
+        routerPath = jsRouter;
+      }
+    });
 
     if(routerPath) {
       text = fs.readFileSync(routerPath, 'utf8');
@@ -252,13 +291,17 @@ namespace('gen', function () {
           newRoute = 'router.match(\'/' +  names.filename.plural +
             '\').to controller: \'' + names.constructor.plural +
             '\', action: \'index\'';
-        } else newRoute = 'router.resource \'' +  names.filename.plural + '\''
+        } else {
+          newRoute = 'router.resource \'' +  names.filename.plural + '\'';
+        }
       } else if(routerPath.match('.js')) {
         if(options.bare) {
           newRoute = 'router.match(\'/' +  names.filename.plural +
             '\').to({controller: \'' + names.constructor.plural +
             '\', action: \'index\'});';
-        } else newRoute = 'router.resource(\'' +  names.filename.plural + '\');';
+        } else {
+          newRoute = 'router.resource(\'' +  names.filename.plural + '\');';
+        }
       }
 
       // Don't add the same route over and over
@@ -278,7 +321,9 @@ namespace('gen', function () {
           routerPath);
       }
 
-    } else console.log('There is no router file to add routes too');
+    } else {
+      console.log('There is no router file to add routes too');
+    }
   });
 
   task('views', [], function(name, options) {
@@ -325,8 +370,8 @@ namespace('gen', function () {
 
     // Create default layout if one doesn't exist
     // Hack: There should be a better way to detect if a application layout exists
-    if(!existsSync(appLayoutPath + '.html.ejs') && !existsSync(appLayoutPath + '.html.jade') &&
-       !existsSync(appLayoutPath + '.html.hbs') && !existsSync(appLayoutPath + '.html.ms')) {
+    if(!utils.compat.existsSync(appLayoutPath + '.html.ejs') && !utils.compat.existsSync(appLayoutPath + '.html.jade') &&
+       !utils.compat.existsSync(appLayoutPath + '.html.hbs') && !utils.compat.existsSync(appLayoutPath + '.html.ms')) {
       // Copy template layout file to apps application layout file
       jake.cpR(path.join(templateViewDir, 'layout' + ext), appLayoutPath + ext);
     }
@@ -335,7 +380,9 @@ namespace('gen', function () {
   });
 
   task('viewsScaffold', function(name, options) {
-    if(!name) throw new Error('No view name specified.');
+    if(!name) {
+      throw new Error('No view name specified.');
+    }
 
     options = options || {};
 
@@ -386,8 +433,8 @@ namespace('gen', function () {
 
     // Create default layout if one doesn't exist
     // Hack: There should be a better way to detect if a application layout exists
-    if(!existsSync(appLayoutPath + '.html.ejs') && !existsSync(appLayoutPath + '.html.jade') &&
-       !existsSync(appLayoutPath + '.html.hbs') && !existsSync(appLayoutPath + '.html.ms')) {
+    if(!utils.compat.existsSync(appLayoutPath + '.html.ejs') && !utils.compat.existsSync(appLayoutPath + '.html.jade') &&
+       !utils.compat.existsSync(appLayoutPath + '.html.hbs') && !utils.compat.existsSync(appLayoutPath + '.html.ms')) {
       // Copy template layout file to apps application layout file
       jake.cpR(path.join(templateViewDir, 'layout' + ext), appLayoutPath + ext);
     }
@@ -406,11 +453,21 @@ namespace('gen', function () {
       , splitText;
 
     // Check if the environment file exists
-    if(existsSync(jsEnvironment)) {
-      environmentPath = jsEnvironment;
-    } else if(existsSync(coffeeEnvironment)) {
-      environmentPath = coffeeEnvironment;
-    }
+    utils.fileUtils.searchParentPath(jsEnvironment, function(err) {
+      if(err) {
+        var jsErr = err;
+        // If jsEnvironment wasn't found, try finding coffee variant
+        utils.fileUtils.searchParentPath(coffeeEnvironment, function(err) {
+          if(err) {
+            throw jsErr;
+          } else {
+            environmentPath = coffeeEnvironment;
+          }
+        });
+      } else {
+        environmentPath = jsEnvironment;
+      }
+    });
 
     if(environmentPath) {
       text = fs.readFileSync(environmentPath, 'utf8').toString();

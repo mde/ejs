@@ -1,5 +1,5 @@
 // Load the basic Geddy toolkit
-require('../lib/geddy');
+require('../../lib/geddy');
 
 geddy.config = {
   i18n: {
@@ -7,7 +7,7 @@ geddy.config = {
   }
 };
 
-var model = require('../lib/model')
+var model = require('../../lib/model')
   , assert = require('assert')
   , tests;
 

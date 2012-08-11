@@ -1,8 +1,8 @@
 require('../../color');
 
-var TemplatoHandlebars = (function() {
+var TemplatoMustache = (function() {
 
-  function TemplatoHandlebars() {
+  function TemplatoMustache() {
     try {
       this.engine = this.engine || require('handlebars');
     } catch(err) {
@@ -14,16 +14,28 @@ var TemplatoHandlebars = (function() {
     }
   };
 
-  TemplatoHandlebars.prototype.compile = function(template, options) {
+  TemplatoMustache.prototype.compile = function(template, options) {
     return this.engine.compile(template, options);
   };
 
-  TemplatoHandlebars.prototype.render = function(data, fn) {
+  TemplatoMustache.prototype.render = function(data, fn) {
     return fn(data);
   };
 
-  return TemplatoHandlebars;
+  // Iterate over a object of helpers and assign them by name
+  TemplatoMustache.prototype.registerHelper = function(data) {
+    var helper;
+
+    for(helper in data) {
+      // Only functions are allowed to be assigned
+      if(typeof data[helper] === 'function') {
+        this.engine.registerHelper(helper, data[helper]);
+      }
+    }
+  };
+
+  return TemplatoMustache;
 
 })();
 
-module.exports = TemplatoHandlebars;
+module.exports = TemplatoMustache;

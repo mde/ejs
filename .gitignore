@@ -1,3 +1,4 @@
+v8.log
 *.swp
 *.swo
 auth_info.js
@@ -12,3 +13,4 @@ tmtags
 examples/*/log/*
 .log
 npm-debug.log
+doc/

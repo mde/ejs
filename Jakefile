@@ -42,13 +42,10 @@ var p = new jake.NpmPublishTask('geddy', [
 , 'test/**'
 ]);
 
-// TODO: This is hacky -- need a better way to poke Jake to
-// set up the package part included in the publish-task
-jake.Task['npm:definePackage'].invoke();
-
 testTask = new jake.TestTask('Geddy', function () {
   this.testName = 'testBase';
   this.testFiles.include('test/*.js');
+  this.testFiles.include('test/**/*.js');
   this.showDescription = false;
 });
 
@@ -58,10 +55,12 @@ task('test', function () {
   t.addListener('error', function (err) {
     var module
       , cmd
-      , errMsg = err.message;
+      , errMsg = err.message
+      , match = errMsg.match('Cannot find module')
+      , absModuleName = errMsg.match(/'[a-zA-Z]*'/);
 
-    if (errMsg.match('Cannot find module')) {
-      module = errMsg.match(/'[a-zA-Z]*'/)[0].replace(/'/g, '')
+    if (match && absModuleName) {
+      module = absModuleName[0].replace(/'/g, '');
       cmd = 'npm install ' + module;
       jake.logger.log(module + ' is not installed; Jake will attempt to install it for you.');
       jake.exec(cmd, function () {
@@ -69,14 +68,14 @@ task('test', function () {
         t.addListener('complete', function () {
           complete();
         });
-        t.invoke();
+        t.invoke.apply(t, arguments);
       });
     }
     else {
       throw err;
     }
   });
-  t.invoke();
+  t.invoke.apply(t, arguments);
 }, {async: true});
 
 testTask = new jake.TestTask('Geddy model-adapters', function () {

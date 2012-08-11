@@ -1,7 +1,7 @@
 // Load the basic Geddy toolkit
-require('../lib/geddy');
+require('../../lib/geddy');
 
-var Router = require('../lib/routers/regexp_router').RegExpRouter
+var Router = require('../../lib/routers/regexp_router').RegExpRouter
   , assert = require('assert')
   , tests;
 
