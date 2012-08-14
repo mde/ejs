@@ -4,7 +4,7 @@ require('../lib/geddy')
 // Dependencies
 var fs = require('fs')
   , path = require('path')
-  , utils = require('../lib/utils')
+  , utils = require('../node_modules/utilities')
   , adapter = require('../lib/template/adapters').Adapter
   , templato = new (require('../deps/templato'));
 
@@ -13,7 +13,7 @@ namespace('gen', function () {
   var _writeTemplate = function (name, filename, dirname, options) {
     options = options || {};
 
-    var names = utils.string.inflection(name)
+    var names = utils.string.getInflections(name)
       , text = fs.readFileSync(path.join(__dirname, filename + '.ejs'), 'utf8').toString()
       , bare = options.bare || false // Default to full controller
       , templ
@@ -120,7 +120,7 @@ namespace('gen', function () {
   // Creates a resource with a model, controller and a resource route
   task('resource', function(name, modelProperties) {
     if(!name) throw new Error('No resource name specified.');
-    var names = utils.string.inflection(name);
+    var names = utils.string.getInflections(name);
 
     jake.Task['gen:model'].invoke(name, modelProperties);
     jake.Task['gen:controller'].invoke(name);
@@ -141,7 +141,7 @@ namespace('gen', function () {
     if(!name) throw new Error('No scaffold name specified.');
     if(!engine) engine = 'ejs';
 
-    var names = utils.string.inflection(name)
+    var names = utils.string.getInflections(name)
       , jsEnvironment = path.normalize('config/environment.js')
       , coffeeEnvironment = path.normalize('config/environment.coffee')
       , environmentPath
@@ -151,11 +151,11 @@ namespace('gen', function () {
       , dbContent = '';
 
     // Check if the environment file exists
-    utils.fileUtils.searchParentPath(jsEnvironment, function(err) {
+    utils.file.searchParentPath(jsEnvironment, function(err) {
       if(err) {
         var jsErr = err;
         // If jsEnvironment wasn't found, try finding coffee variant
-        utils.fileUtils.searchParentPath(coffeeEnvironment, function(err) {
+        utils.file.searchParentPath(coffeeEnvironment, function(err) {
           if(err) {
             throw jsErr;
           } else {
@@ -256,7 +256,7 @@ namespace('gen', function () {
     if(!name) throw new Error('No route name specified.');
     options = options || {};
 
-    var names = utils.string.inflection(name)
+    var names = utils.string.getInflections(name)
       , routeType = options.bare ? 'Bare' : 'Resource'
       , jsRouter = path.normalize('config/router.js')
       , coffeeRouter = path.normalize('config/router.coffee')
@@ -267,11 +267,11 @@ namespace('gen', function () {
       , newRoute;
 
     // Check if the router file exists
-    utils.fileUtils.searchParentPath(jsRouter, function(err) {
+    utils.file.searchParentPath(jsRouter, function(err) {
       if(err) {
         var jsErr = err;
         // If jsEnvironment wasn't found, try finding coffee variant
-        utils.fileUtils.searchParentPath(coffeeRouter, function(err) {
+        utils.file.searchParentPath(coffeeRouter, function(err) {
           if(err) {
             throw jsErr;
           } else {
@@ -334,7 +334,7 @@ namespace('gen', function () {
     // Option defaults
     options.engine = options.engine || 'ejs';
 
-    var names = utils.string.inflection(name)
+    var names = utils.string.getInflections(name)
       , engine = options.engine
       , appViewDir = path.join('app', 'views', names.filename.plural)
       , templateViewDir = path.join(__dirname, 'views', engine)
@@ -389,7 +389,7 @@ namespace('gen', function () {
     // Option defaults
     options.engine = options.engine || 'ejs';
 
-    var names = utils.string.inflection(name)
+    var names = utils.string.getInflections(name)
       , engine = options.engine
       , appViewDir = path.join('app', 'views', names.filename.plural)
       , templateViewDir = path.join(__dirname, 'scaffold', 'views', engine)
@@ -453,11 +453,11 @@ namespace('gen', function () {
       , splitText;
 
     // Check if the environment file exists
-    utils.fileUtils.searchParentPath(jsEnvironment, function(err) {
+    utils.file.searchParentPath(jsEnvironment, function(err) {
       if(err) {
         var jsErr = err;
         // If jsEnvironment wasn't found, try finding coffee variant
-        utils.fileUtils.searchParentPath(coffeeEnvironment, function(err) {
+        utils.file.searchParentPath(coffeeEnvironment, function(err) {
           if(err) {
             throw jsErr;
           } else {
