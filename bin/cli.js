@@ -123,7 +123,7 @@ if(cmds.length) {
   cmd = 'jake -t -f ' + filepath + ' ';
 
   // If command isn't secret and has no other argument
-  if (cmds[0] !== 'secret' && !cmds[1]) {
+  if ((cmds[0] != 'secret' && cmds[0] != 'db:init') && !cmds[1]) {
     throw new Error(cmds[0] + ' command requires another argument.');
   }
 
@@ -143,6 +143,10 @@ if(cmds.length) {
 
   // Add Jake argument based on commands
   switch(cmds[0]) {
+    case 'db:init':
+      // Generating application
+      cmd += '"db:init"';
+      break;
     case 'app':
       // Generating application
       cmd += '"gen:app[' + cmds[1] + engineCmd + ']"';

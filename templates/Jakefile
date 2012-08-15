@@ -4,9 +4,55 @@ require('../lib/geddy')
 // Dependencies
 var fs = require('fs')
   , path = require('path')
-  , utils = require('../node_modules/utilities')
+  , utils = require('../lib/utils')
   , adapter = require('../lib/template/adapters').Adapter
   , templato = new (require('../deps/templato'));
+
+namespace('env', function () {
+  task('init', function () {
+    geddy.model = require('model');
+    geddy.config = require('../lib/config').readConfig();
+
+    require('../lib/init').init(complete);
+
+    jake.addListener('complete', function (e) {
+      jake.Task['env:cleanup'].invoke();
+    });
+  });
+
+  task('cleanup', function () {
+    // Disconnect all the adapters
+    adapters = geddy.model.loadedAdapters;
+    for (var p in adapters) {
+      adapters[p].disconnect();
+    }
+  });
+
+}, {async: true});
+
+namespace('db', function () {
+  task('retrofit', ['env:init'], function () {
+    var createTable
+      , adapters
+      , adapter
+      , models = Object.keys(geddy.model.descriptionRegistry);
+    createTable = function () {
+      if ((m = models.shift())) {
+        console.log('Creating table for ' + m);
+        adapter = geddy.model.adapters[m];
+        adapter.createTable(m, function (err, data) {
+          if (err) { throw err }
+          createTable();
+        });
+      }
+      else {
+        complete();
+      }
+    };
+    createTable();
+  }, {async: true});
+
+});
 
 namespace('gen', function () {
 
