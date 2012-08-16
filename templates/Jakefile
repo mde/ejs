@@ -94,7 +94,7 @@ namespace('gen', function () {
 
   var _formatModelProperties = function(properties) {
     var obj = {'default': {name: 'id', type: 'string'}};
-    if(!properties) return obj;
+    if (!properties) return obj;
 
     var itemsArr = properties.split(' ')
       , name
@@ -114,11 +114,11 @@ namespace('gen', function () {
       type = type.replace(/:.*/g, '');
 
       // Defaults and alias's
-      if(!type) type = 'string';
-      if(type === 'integer') type = 'int';
-      if(type === 'bool') type = 'boolean';
-      if(args === 'def') args = 'default';
-      if(type === 'default' || type === 'def') {
+      if (!type) type = 'string';
+      if (type === 'integer') type = 'int';
+      if (type === 'bool') type = 'boolean';
+      if (args === 'def') args = 'default';
+      if (type === 'default' || type === 'def') {
         // If the type is `default` assume they want `string`
         // type and want this property to be default
         type = 'string';
@@ -126,14 +126,14 @@ namespace('gen', function () {
       }
 
       // Set it as default if given the `default` argument
-      if(args === 'default') {
+      if (args === 'default') {
         obj['default'] = {name: name, type: type};
         // Add the original ID property
         obj['id'] = obj['id'] || {name: 'id', type: 'string'};
       } else {
         // If ID property is given and it matches the default
         // then rewrite the default with the new ID property
-        if(name === 'id' && obj['default'].name === 'id') {
+        if (name === 'id' && obj['default'].name === 'id') {
           obj['default'] = {name: name, type: type};
         } else obj[name] = {name: name, type: type};
       }
@@ -144,8 +144,8 @@ namespace('gen', function () {
 
   // Creates a new Geddy app scaffold
   task('app', [], function(name, engine) {
-    if(!name) throw new Error('No app name specified.');
-    if(!engine) engine = 'ejs';
+    if (!name) throw new Error('No app name specified.');
+    if (!engine) engine = 'ejs';
 
     var mkdirs = [
             ''
@@ -181,7 +181,7 @@ namespace('gen', function () {
 
   // Creates a resource with a model, controller and a resource route
   task('resource', function(name, modelProperties) {
-    if(!name) throw new Error('No resource name specified.');
+    if (!name) throw new Error('No resource name specified.');
     var names = utils.string.getInflections(name);
 
     jake.Task['gen:model'].invoke(name, modelProperties);
@@ -196,12 +196,12 @@ namespace('gen', function () {
 
   // Creates a full scaffold with views, a model, controller and a resource route
   task('scaffold', function(name, engine, modelProperties) {
-    if(!modelProperties && engine) {
+    if (!modelProperties && engine) {
       modelProperties = engine;
       engine = '';
     }
-    if(!name) throw new Error('No scaffold name specified.');
-    if(!engine) engine = 'ejs';
+    if (!name) throw new Error('No scaffold name specified.');
+    if (!engine) engine = 'ejs';
 
     var names = utils.string.getInflections(name)
       , jsEnvironment = path.normalize('config/environment.js')
@@ -214,11 +214,11 @@ namespace('gen', function () {
 
     // Check if the environment file exists
     utils.file.searchParentPath(jsEnvironment, function(err) {
-      if(err) {
+      if (err) {
         var jsErr = err;
         // If jsEnvironment wasn't found, try finding coffee variant
         utils.file.searchParentPath(coffeeEnvironment, function(err) {
-          if(err) {
+          if (err) {
             throw jsErr;
           } else {
             environmentPath = coffeeEnvironment;
@@ -235,18 +235,18 @@ namespace('gen', function () {
     jake.Task['gen:viewsScaffold'].invoke(name, {engine: engine, properties: modelProperties});
 
     // Add the following line to `config/environment.js/.coffee`
-    if(environmentPath) {
+    if (environmentPath) {
       text = fs.readFileSync(environmentPath, 'utf8').toString();
 
       // Create text to add to environment
-      if(environmentPath.match('.coffee')) {
+      if (environmentPath.match('.coffee')) {
         dbContent = [
             '  db:'
           , '    mongo:'
           , '      db: \'' + names.property.plural + '\''
         ].join('\n');
         splitText = 'config = ';
-      } else if(environmentPath.match('.js')) {
+      } else if (environmentPath.match('.js')) {
         dbContent = [
             '  db: {'
           , '    mongo: {'
@@ -258,7 +258,7 @@ namespace('gen', function () {
       }
 
       // Don't add the db config over and over
-      if(text.indexOf('db:') == -1) {
+      if (text.indexOf('db:') == -1) {
         environmentArr = text.split(splitText);
         environmentArr[0] += splitText + '\n' + dbContent + '\n';
 
@@ -271,7 +271,7 @@ namespace('gen', function () {
   });
 
   task('model', [], function(name, properties) {
-    if(!name) throw new Error('No model name specified.');
+    if (!name) throw new Error('No model name specified.');
 
     _writeTemplate(name, 'resource/model', 'models', {
         inflection: 'singular'
@@ -280,7 +280,7 @@ namespace('gen', function () {
   });
 
   task('modelScaffold', [], function(name, properties) {
-    if(!name) throw new Error('No model name specified.');
+    if (!name) throw new Error('No model name specified.');
 
     _writeTemplate(name, 'scaffold/model', 'models', {
         inflection: 'singular'
@@ -289,13 +289,13 @@ namespace('gen', function () {
   });
 
   task('controller', [], function(name) {
-    if(!name) throw new Error('No controller name specified.');
+    if (!name) throw new Error('No controller name specified.');
 
     _writeTemplate(name, 'resource/controller', 'controllers', {inflection: 'plural', bare: false});
   });
 
   task('controllerScaffold', [], function(name, options) {
-    if(!name) throw new Error('No controller name specified.');
+    if (!name) throw new Error('No controller name specified.');
     options = options || {};
 
     _writeTemplate(name, 'scaffold/controller', 'controllers', {
@@ -306,8 +306,8 @@ namespace('gen', function () {
   });
 
   task('bareController', [], function(name, engine) {
-    if(!name) throw new Error('No controller name specified.');
-    if(!engine) engine = 'ejs';
+    if (!name) throw new Error('No controller name specified.');
+    if (!engine) engine = 'ejs';
 
     _writeTemplate(name, 'resource/controller', 'controllers', {inflection: 'plural', bare: true});
     jake.Task['gen:route'].invoke(name, {bare: true});
@@ -315,7 +315,7 @@ namespace('gen', function () {
   });
 
   task('route', [], function(name, options) {
-    if(!name) throw new Error('No route name specified.');
+    if (!name) throw new Error('No route name specified.');
     options = options || {};
 
     var names = utils.string.getInflections(name)
@@ -330,11 +330,11 @@ namespace('gen', function () {
 
     // Check if the router file exists
     utils.file.searchParentPath(jsRouter, function(err) {
-      if(err) {
+      if (err) {
         var jsErr = err;
         // If jsEnvironment wasn't found, try finding coffee variant
         utils.file.searchParentPath(coffeeRouter, function(err) {
-          if(err) {
+          if (err) {
             throw jsErr;
           } else {
             routerPath = coffeeRouter;
@@ -345,19 +345,19 @@ namespace('gen', function () {
       }
     });
 
-    if(routerPath) {
+    if (routerPath) {
       text = fs.readFileSync(routerPath, 'utf8');
 
-      if(routerPath.match('.coffee')) {
-        if(options.bare) {
+      if (routerPath.match('.coffee')) {
+        if (options.bare) {
           newRoute = 'router.match(\'/' +  names.filename.plural +
             '\').to controller: \'' + names.constructor.plural +
             '\', action: \'index\'';
         } else {
           newRoute = 'router.resource \'' +  names.filename.plural + '\'';
         }
-      } else if(routerPath.match('.js')) {
-        if(options.bare) {
+      } else if (routerPath.match('.js')) {
+        if (options.bare) {
           newRoute = 'router.match(\'/' +  names.filename.plural +
             '\').to({controller: \'' + names.constructor.plural +
             '\', action: \'index\'});';
@@ -367,7 +367,7 @@ namespace('gen', function () {
       }
 
       // Don't add the same route over and over
-      if(text.indexOf(newRoute) == -1) {
+      if (text.indexOf(newRoute) == -1) {
         // Add the new resource route just above the export
         routerArr = text.split('exports.router');
         routerArr[0] += newRoute + '\n';
@@ -389,7 +389,7 @@ namespace('gen', function () {
   });
 
   task('views', [], function(name, options) {
-    if(!name) throw new Error('No view name specified.');
+    if (!name) throw new Error('No view name specified.');
 
     options = options || {};
 
@@ -407,10 +407,10 @@ namespace('gen', function () {
       , addActionView;
 
     // Set extension based on engine option
-    if(engine === 'ejs') ext += '.ejs';
-    if(engine === 'jade') ext += '.jade';
-    if(engine === 'handlebars') ext += '.hbs';
-    if(engine === 'mustache') ext += '.ms';
+    if (engine === 'ejs') ext += '.ejs';
+    if (engine === 'jade') ext += '.jade';
+    if (engine === 'handlebars') ext += '.hbs';
+    if (engine === 'mustache') ext += '.ms';
 
     // Set application layout path
     appLayoutPath = path.join('app', 'views', 'layouts', 'application');
@@ -424,7 +424,7 @@ namespace('gen', function () {
     addActionView('index');
 
     // Add views for the other CRUD actions when doing a full-on resource
-    if(!options.bare) {
+    if (!options.bare) {
       ['add', 'edit', 'show'].forEach(function (action) {
         addActionView(action);
       });
@@ -432,8 +432,8 @@ namespace('gen', function () {
 
     // Create default layout if one doesn't exist
     // Hack: There should be a better way to detect if a application layout exists
-    if(!utils.compat.existsSync(appLayoutPath + '.html.ejs') && !utils.compat.existsSync(appLayoutPath + '.html.jade') &&
-       !utils.compat.existsSync(appLayoutPath + '.html.hbs') && !utils.compat.existsSync(appLayoutPath + '.html.ms')) {
+    if (!utils.file.existsSync(appLayoutPath + '.html.ejs') && !utils.file.existsSync(appLayoutPath + '.html.jade') &&
+       !utils.file.existsSync(appLayoutPath + '.html.hbs') && !utils.file.existsSync(appLayoutPath + '.html.ms')) {
       // Copy template layout file to apps application layout file
       jake.cpR(path.join(templateViewDir, 'layout' + ext), appLayoutPath + ext);
     }
@@ -442,7 +442,7 @@ namespace('gen', function () {
   });
 
   task('viewsScaffold', function(name, options) {
-    if(!name) {
+    if (!name) {
       throw new Error('No view name specified.');
     }
 
@@ -464,10 +464,10 @@ namespace('gen', function () {
       , templ;
 
     // Set extension based on engine option
-    if(engine === 'ejs') ext += '.ejs';
-    if(engine === 'jade') ext += '.jade';
-    if(engine === 'handlebars') ext += '.hbs';
-    if(engine === 'mustache') ext += '.ms';
+    if (engine === 'ejs') ext += '.ejs';
+    if (engine === 'jade') ext += '.jade';
+    if (engine === 'handlebars') ext += '.hbs';
+    if (engine === 'mustache') ext += '.ms';
 
     // Set application layout path
     appLayoutPath = path.join('app', 'views', 'layouts', 'application');
@@ -495,8 +495,8 @@ namespace('gen', function () {
 
     // Create default layout if one doesn't exist
     // Hack: There should be a better way to detect if a application layout exists
-    if(!utils.compat.existsSync(appLayoutPath + '.html.ejs') && !utils.compat.existsSync(appLayoutPath + '.html.jade') &&
-       !utils.compat.existsSync(appLayoutPath + '.html.hbs') && !utils.compat.existsSync(appLayoutPath + '.html.ms')) {
+    if (!utils.file.existsSync(appLayoutPath + '.html.ejs') && !utils.file.existsSync(appLayoutPath + '.html.jade') &&
+       !utils.file.existsSync(appLayoutPath + '.html.hbs') && !utils.file.existsSync(appLayoutPath + '.html.ms')) {
       // Copy template layout file to apps application layout file
       jake.cpR(path.join(templateViewDir, 'layout' + ext), appLayoutPath + ext);
     }
@@ -516,11 +516,11 @@ namespace('gen', function () {
 
     // Check if the environment file exists
     utils.file.searchParentPath(jsEnvironment, function(err) {
-      if(err) {
+      if (err) {
         var jsErr = err;
         // If jsEnvironment wasn't found, try finding coffee variant
         utils.file.searchParentPath(coffeeEnvironment, function(err) {
-          if(err) {
+          if (err) {
             throw jsErr;
           } else {
             environmentPath = coffeeEnvironment;
@@ -531,14 +531,14 @@ namespace('gen', function () {
       }
     });
 
-    if(environmentPath) {
+    if (environmentPath) {
       text = fs.readFileSync(environmentPath, 'utf8').toString();
 
       // Remove any old secret
       text = text.replace(/\nconfig.secret.+\n/, '');
 
       splitText = 'module.exports = config';
-      if(environmentPath.match('.js')) splitText += ';';
+      if (environmentPath.match('.js')) splitText += ';';
 
       environmentArr = text.split(splitText);
       environmentArr[0] += "config.secret = '" + secret + "'";
@@ -548,7 +548,8 @@ namespace('gen', function () {
       fs.writeFileSync(environmentPath, text, 'utf8');
 
       console.log('[Added] Application secret to \'' + environmentPath + '\'');
-    } else console.log('There is no environment config to add the secret too');
+    }
+    else console.log('There is no environment config to add the app-secret to.');
   });
 
 });
