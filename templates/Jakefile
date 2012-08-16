@@ -10,8 +10,8 @@ var fs = require('fs')
 
 namespace('env', function () {
   task('init', function () {
-    geddy.model = require('model');
     geddy.config = require('../lib/config').readConfig();
+    geddy.model = require('model');
 
     require('../lib/init').init(complete);
 
@@ -22,22 +22,28 @@ namespace('env', function () {
 
   task('cleanup', function () {
     // Disconnect all the adapters
-    adapters = geddy.model.loadedAdapters;
+    adapters = geddy.model.loadedAdapters
+    , adapter;
     for (var p in adapters) {
-      adapters[p].disconnect();
+      adapter = adapters[p];
+      if (typeof adapter.disconnect == 'function') {
+        adapter.disconnect();
+      }
     }
   });
 
 }, {async: true});
 
 namespace('db', function () {
-  task('retrofit', ['env:init'], function () {
-    var createTable
+
+  task('createTable', ['env:init'], function (name) {
+    var modelName = typeof name == 'string' ? [name] : name
+      , createTable
       , adapters
       , adapter
-      , models = Object.keys(geddy.model.descriptionRegistry);
+      , modelNames = Object.keys(geddy.model.descriptionRegistry);
     createTable = function () {
-      if ((m = models.shift())) {
+      if ((m = modelNames.shift())) {
         console.log('Creating table for ' + m);
         adapter = geddy.model.adapters[m];
         adapter.createTable(m, function (err, data) {
@@ -50,6 +56,16 @@ namespace('db', function () {
       }
     };
     createTable();
+
+  }, {async: true});
+
+  task('retrofit', ['env:init'], function () {
+    var modelNames = Object.keys(geddy.model.descriptionRegistry)
+      , createTask = jake.Task['db:createTable'];
+      createTask.once('complete', function () {
+        complete();
+      });
+      createTask.invoke(modelNames);
   }, {async: true});
 
 });
