@@ -144,8 +144,12 @@ if(cmds.length) {
   // Add Jake argument based on commands
   switch(cmds[0]) {
     case 'db:init':
-      // Generating application
+      // Create DBs
       cmd += '"db:init"';
+      break;
+    case 'db:createTable':
+      // Create DBs
+      cmd += '"db:createTable[' + cmds[1] + ']"';
       break;
     case 'app':
       // Generating application
@@ -175,7 +179,7 @@ if(cmds.length) {
       die(cmds[0] + ' is not a Geddy command.');
   }
 
-  //cmd += ' --quiet';
+  cmd += ' --quiet';
   exec(cmd, function(err, stdout, stderr) {
     if(err) {
       throw err;
