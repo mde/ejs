@@ -4,7 +4,7 @@ var <%= names.constructor.plural %> = function () {
   this.index = function (req, resp, params) {
     var self = this;
 
-    geddy.model.adapter.<%= names.constructor.singular %>.all(function(err, <%= names.property.plural %>) {
+    geddy.model.<%= names.constructor.singular %>.all(function(err, <%= names.property.plural %>) {
       self.respond({params: params, <%= names.property.plural %>: <%= names.property.plural %>});
     });
   };
@@ -30,7 +30,7 @@ var <%= names.constructor.plural %> = function () {
   this.show = function (req, resp, params) {
     var self = this;
 
-    geddy.model.adapter.<%= names.constructor.singular %>.load(params.id, function(err, <%= names.property.singular %>) {
+    geddy.model.<%= names.constructor.singular %>.load(params.id, function(err, <%= names.property.singular %>) {
       self.respond({params: params, <%= names.property.singular %>: <%= names.property.singular %>.toObj()});
     });
   };
@@ -38,7 +38,7 @@ var <%= names.constructor.plural %> = function () {
   this.edit = function (req, resp, params) {
     var self = this;
 
-    geddy.model.adapter.<%= names.constructor.singular %>.load(params.id, function(err, <%= names.property.singular %>) {
+    geddy.model.<%= names.constructor.singular %>.load(params.id, function(err, <%= names.property.singular %>) {
       self.respond({params: params, <%= names.property.singular %>: <%= names.property.singular %>});
     });
   };
@@ -46,7 +46,7 @@ var <%= names.constructor.plural %> = function () {
   this.update = function (req, resp, params) {
     var self = this;
 
-    geddy.model.adapter.<%= names.constructor.singular %>.load(params.id, function(err, <%= names.property.singular %>) {
+    geddy.model.<%= names.constructor.singular %>.load(params.id, function(err, <%= names.property.singular %>) {
 <% for(var i in properties) { -%>
       <%= names.property.singular %>.<%= properties[i].name %> = params.<%= properties[i].name %>;
 <% } -%>
@@ -63,7 +63,7 @@ var <%= names.constructor.plural %> = function () {
   this.remove = function (req, resp, params) {
     var self = this;
 
-    geddy.model.adapter.<%= names.constructor.singular %>.remove(params.id, function(err) {
+    geddy.model.<%= names.constructor.singular %>.remove(params.id, function(err) {
       if(err) {
         params.errors = err;
         self.transfer('edit');
