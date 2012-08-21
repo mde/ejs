@@ -3,13 +3,12 @@ var <%= names.constructor.singular %> = function () {
   this.defineProperties({
 <% for(var i in properties) { -%>
 <% if(i === 'default') { -%>
-      <%# Handle optional, locally defined ids %>
-<% } else { -%>
-<% if(i === 'id') { -%>
-    , <%= properties[i].name %>: {type: '<%= properties[i].type %>', required: true}
-<% } else { -%>
-    , <%= properties[i].name %>: {type: '<%= properties[i].type %>'}
+<% if(properties[i].name !== 'id') { -%>
+    <%= properties[i].name %>: {type: '<%= properties[i].type %>', required: true},
 <% } -%>
+<% } else { -%>
+<% if(i !== 'id') -%>
+    <%= properties[i].name %>: {type: '<%= properties[i].type %>'},
 <% } -%>
 <% } -%>
   });
