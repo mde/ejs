@@ -211,7 +211,7 @@ namespace('gen', function () {
       jake.mkdirP(path.join(name, dir));
     });
     cps.forEach(function (cp) {
-      jake.cpR(path.join(__dirname, 'base', cp[0]), path.join(name, cp[1]));
+      jake.cpR(path.join(__dirname, 'base', cp[0]), path.join(name, cp[1]), {silent: true});
     });
 
     console.log('Created app ' + name + '.');
@@ -238,6 +238,7 @@ namespace('gen', function () {
     modelTask.invoke(name, modelProperties);
 
   }, {async: true});
+
 
   // Creates a full scaffold with views, a model, controller and a resource route
   task('scaffold', function (name, engine, modelProperties) {

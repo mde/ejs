@@ -48,7 +48,9 @@ var <%= names.constructor.plural %> = function () {
 
     geddy.model.<%= names.constructor.singular %>.load(params.id, function(err, <%= names.property.singular %>) {
 <% for(var i in properties) { -%>
+<% if(properties[i].name !== 'id') { -%>
       <%= names.property.singular %>.<%= properties[i].name %> = params.<%= properties[i].name %>;
+<% } -%>
 <% } -%>
 
       <%= names.property.singular %>.save(function(err, data) {
