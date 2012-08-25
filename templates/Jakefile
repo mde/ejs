@@ -52,11 +52,22 @@ namespace('gen', function () {
       type = type.replace(/:.*/g, '');
 
       // Defaults and alias's
-      if(!type) type = 'string';
-      if(type === 'integer') type = 'int';
-      if(type === 'bool') type = 'boolean';
-      if(args === 'def') args = 'default';
-      if(type === 'default' || type === 'def') {
+      if (!type) {
+        type = 'string';
+      }
+      if (type === 'text') {
+        type = 'string';
+      }
+      if (type === 'integer') {
+        type = 'int';
+      }
+      if (type === 'bool') {
+        type = 'boolean';
+      }
+      if (args === 'def') {
+        args = 'default';
+      }
+      if (type === 'default' || type === 'def') {
         // If the type is `default` assume they want `string`
         // type and want this property to be default
         type = 'string';
