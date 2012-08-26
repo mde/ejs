@@ -14,7 +14,7 @@
 <% for(var i in properties) { -%>
 <% if(properties[i].name !== 'id') { -%>
       <div class="control-group">
-        <label for="<%= properties[i].name %>"><%= properties[i].name %></label>
+        <label for="<%= properties[i].name %>" class="control-label"><%= properties[i].name %></label>
         <div class="controls">
 <% if(properties[i].type === 'string') { -%>
 <% if(properties[i].name === 'password') { -%>

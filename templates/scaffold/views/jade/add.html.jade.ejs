@@ -11,7 +11,7 @@
 <% for(var i in properties) { -%>
 <% if(properties[i].name !== 'id') { -%>
       .control-group
-        label(for="<%= properties[i].name %>") <%= properties[i].name %>
+        label(for="<%= properties[i].name %>", class="control-label") <%= properties[i].name %>
         .controls
 <% if(properties[i].type === 'string') { -%>
 <% if(properties[i].name === 'password') { -%>
