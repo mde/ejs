@@ -55,26 +55,28 @@ namespace('gen', function () {
       if (!type) {
         type = 'string';
       }
-      if (type === 'text') {
-        type = 'string';
-      }
-      if (type === 'integer') {
-        type = 'int';
-      }
-      if (type === 'bool') {
-        type = 'boolean';
-      }
       if (args === 'def') {
         args = 'default';
       }
-      if (type === 'default' || type === 'def') {
-        // If the type is `default` assume they want `string`
-        // type and want this property to be default
-        type = 'string';
-        args = 'default';
+
+      switch(type) {
+        case 'text':
+          type = 'string';
+          break;
+        case 'integer':
+          type = 'int';
+          break;
+        case 'bool':
+          type = 'boolean';
+          break;
+        case 'default':
+        case 'def':
+          type = 'string';
+          args = 'default';
+          break;
       }
 
-      // Set it as default if given the `default` argument
+      // Set property as default if given the `default` argument
       if(args === 'default') {
         obj['default'] = {name: name, type: type};
         // Add the original ID property
@@ -84,7 +86,10 @@ namespace('gen', function () {
         // then rewrite the default with the new ID property
         if(name === 'id' && obj['default'].name === 'id') {
           obj['default'] = {name: name, type: type};
-        } else obj[name] = {name: name, type: type};
+        } else {
+          // Add the property normally
+          obj[name] = {name: name, type: type};
+        }
       }
     }
 
