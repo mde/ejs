@@ -100,10 +100,9 @@ namespace('db', function () {
 
 namespace('gen', function () {
 
-  var _writeTemplate = function (name, filename, dirname, options) {
-    options = options || {};
-
-    var names = utils.string.getInflections(name)
+  var _writeTemplate = function (name, filename, dirname, opts) {
+    var options = opts || {}
+      , names = utils.string.getInflections(name)
       , text = fs.readFileSync(path.join(__dirname, filename + '.ejs'), 'utf8').toString()
       , bare = options.bare || false // Default to full controller
       , templ
@@ -121,7 +120,7 @@ namespace('gen', function () {
   };
 
   var _formatModelProperties = function (properties) {
-    var obj = {'default': {name: 'id', type: 'string'}};
+    var obj = {'default': {name: 'id', type: 'int'}};
     if (!properties) {
       return obj;
     }
@@ -159,7 +158,7 @@ namespace('gen', function () {
       if (args === 'default') {
         obj['default'] = {name: name, type: type};
         // Add the original ID property
-        obj['id'] = obj['id'] || {name: 'id', type: 'string'};
+        obj['id'] = obj['id'] || {name: 'id', type: 'int'};
       }
       else {
         // If ID property is given and it matches the default
@@ -263,17 +262,21 @@ namespace('gen', function () {
           {engine: engine, properties: modelProperties});
       complete();
     });
-    modelTask.invoke(name, modelProperties);
+    modelTask.invoke(name, modelProperties, 'scaffold');
 
   }, {async: true});
 
-  task('model', function (name, properties) {
+  task('model', function (name, properties, modelPath) {
     var createTableTask;
     if (!name) {
       throw new Error('No model name specified.');
     }
+    if (!modelPath) {
+      modelPath = 'resource';
+    }
+    modelPath += '/model';
 
-    _writeTemplate(name, 'resource/model', 'models', {
+    _writeTemplate(name, modelPath, 'models', {
         inflection: 'singular'
       , properties: _formatModelProperties(properties)
     });
