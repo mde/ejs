@@ -109,7 +109,7 @@ tests = {
 , 'test simple route parses': function () {
     router = new Router();
     var route = router.match('/:controller/:action/:id');
-    var params = router.first({url: '/products/show/1'},'GET');
+    var params = router.first('/products/show/1','GET');
     assert.ok(params);
     assert.equal(params.controller, 'Products');
     assert.equal(params.action, 'show');
@@ -121,7 +121,7 @@ tests = {
 , 'test simple route parses with optional segment': function () {
     router = new Router();
     var route = router.match('/:controller/:action/:id(.:format)');
-    var params = router.first({url: '/products/show/1.html'},'GET');
+    var params = router.first('/products/show/1.html','GET');
     assert.ok(params);
     assert.equal(params.controller, 'Products');
     assert.equal(params.action, 'show');
@@ -133,7 +133,7 @@ tests = {
 , 'test simple route parses with optional segment missing': function () {
     router = new Router();
     var route = router.match('/:controller/:action/:id(.:format)','GET');
-    var params = router.first({url: '/products/show/1'},'GET');
+    var params = router.first('/products/show/1','GET');
     assert.ok(params);
     assert.equal(params.controller, 'Products');
     assert.equal(params.action, 'show');
@@ -145,14 +145,14 @@ tests = {
 , 'test simple route failing due to bad method': function () {
     router = new Router();
     var route = router.match('/:controller/:action/:id(.:format)','GET');
-    var params = router.first({url: '/products/show/1'},'POST');
+    var params = router.first('/products/show/1','POST');
     assert.equal(params instanceof Error, true);
   }
 
 , 'test simple route with two optional segments': function () {
     router = new Router();
     var route = router.match('/:controller/:action(/:id)(.:format)','GET');
-    var params = router.first({url: '/products/show'},'GET');
+    var params = router.first('/products/show','GET');
     assert.ok(params);
     assert.equal(params.controller, 'Products');
     assert.equal(params.action, 'show');
@@ -164,7 +164,7 @@ tests = {
 , 'test simple route with two optional segments with first used': function () {
     router = new Router();
     var route = router.match('/:controller/:action(/:id)(.:format)','GET');
-    var params = router.first({url: '/products/show/1'},'GET');
+    var params = router.first('/products/show/1','GET');
     assert.ok(params);
     assert.equal(params.controller, 'Products');
     assert.equal(params.action, 'show');
@@ -176,7 +176,7 @@ tests = {
 , 'test simple route with two optional segments with second used': function () {
     router = new Router();
     var route = router.match('/:controller/:action(/:id)(.:format)','GET');
-    var params = router.first({url: '/products/show.html'},'GET');
+    var params = router.first('/products/show.html','GET');
     assert.ok(params);
     assert.equal(params.controller, 'Products');
     assert.equal(params.action, 'show');
@@ -188,7 +188,7 @@ tests = {
 , 'test simple route with two optional segments with both used': function () {
     router = new Router();
     var route = router.match('/:controller/:action(/:id)(.:format)','GET');
-    var params = router.first({url: '/products/show/1.html'},'GET');
+    var params = router.first('/products/show/1.html','GET');
     assert.ok(params);
     assert.equal(params.controller, 'Products');
     assert.equal(params.action, 'show');
@@ -202,7 +202,7 @@ tests = {
 , 'test GET': function () {
     router = new Router();
     var route = router.match('/:controller/:action(/:id)(.:format)','GET');
-    var params = router.first({url: '/products/show/1.html'},'GET');
+    var params = router.first('/products/show/1.html','GET');
     assert.ok(params);
     assert.equal(params.method, 'GET');
   }
@@ -210,7 +210,7 @@ tests = {
 , 'test POST': function () {
     router = new Router();
     var route = router.match('/:controller/:action(/:id)(.:format)','POST');
-    var params = router.first({url: '/products/show/1.html'},'POST');
+    var params = router.first('/products/show/1.html','POST');
     assert.ok(params);
     assert.equal(params.method, 'POST');
   }
@@ -218,7 +218,7 @@ tests = {
 , 'test PUT': function () {
     router = new Router();
     var route = router.match('/:controller/:action(/:id)(.:format)','PUT');
-    var params = router.first({url: '/products/show/1.html'},'PUT');
+    var params = router.first('/products/show/1.html','PUT');
     assert.ok(params);
     assert.equal(params.method, 'PUT');
   }
@@ -226,7 +226,7 @@ tests = {
 , 'test DELETE': function () {
     router = new Router();
     var route = router.match('/:controller/:action(/:id)(.:format)','DELETE');
-    var params = router.first({url: '/products/show/1.html'},'DELETE');
+    var params = router.first('/products/show/1.html','DELETE');
     assert.ok(params);
     assert.equal(params.method, 'DELETE');
   }
@@ -237,33 +237,33 @@ tests = {
     router = new Router();
     var routes = router.resource('SnowDogs');
     // index
-    assert.ok(router.first({url: '/snow_dogs'},'GET'));
-    assert.ok(router.first({url: '/snow_dogs.html'},'GET'));
-    assert.equal(router.first({url:'/snow_dogs'},'GET').action, 'index');
+    assert.ok(router.first('/snow_dogs','GET'));
+    assert.ok(router.first('/snow_dogs.html','GET'));
+    assert.equal(router.first('/snow_dogs','GET').action, 'index');
     // show
-    assert.ok(router.first({url:'/snow_dogs/1'},'GET'));
-    assert.ok(router.first({url:'/snow_dogs/1.html'},'GET'));
-    assert.equal(router.first({url:'/snow_dogs/1'},'GET').action, 'show');
+    assert.ok(router.first('/snow_dogs/1','GET'));
+    assert.ok(router.first('/snow_dogs/1.html','GET'));
+    assert.equal(router.first('/snow_dogs/1','GET').action, 'show');
     // add form
-    assert.ok(router.first({url:'/snow_dogs/add'},'GET'));
-    assert.ok(router.first({url:'/snow_dogs/add.html'},'GET'));
-    assert.equal(router.first({url:'/snow_dogs/add'},'GET').action, 'add');
+    assert.ok(router.first('/snow_dogs/add','GET'));
+    assert.ok(router.first('/snow_dogs/add.html','GET'));
+    assert.equal(router.first('/snow_dogs/add','GET').action, 'add');
     // edit form
-    assert.ok(router.first({url:'/snow_dogs/1/edit'},'GET'));
-    assert.ok(router.first({url:'/snow_dogs/1/edit.html'},'GET'));
-    assert.equal(router.first({url:'/snow_dogs/1/edit'},'GET').action, 'edit');
+    assert.ok(router.first('/snow_dogs/1/edit','GET'));
+    assert.ok(router.first('/snow_dogs/1/edit.html','GET'));
+    assert.equal(router.first('/snow_dogs/1/edit','GET').action, 'edit');
     // create
-    assert.ok(router.first({url:'/snow_dogs'},'POST'));
-    assert.ok(router.first({url:'/snow_dogs.html'},'POST'));
-    assert.equal(router.first({url:'/snow_dogs'},'POST').action, 'create');
+    assert.ok(router.first('/snow_dogs','POST'));
+    assert.ok(router.first('/snow_dogs.html','POST'));
+    assert.equal(router.first('/snow_dogs','POST').action, 'create');
     // update
-    assert.ok(router.first({url:'/snow_dogs/1'},'PUT'));
-    assert.ok(router.first({url:'/snow_dogs/1.html'},'PUT'));
-    assert.equal(router.first({url:'/snow_dogs/1'},'PUT').action, 'update');
+    assert.ok(router.first('/snow_dogs/1','PUT'));
+    assert.ok(router.first('/snow_dogs/1.html','PUT'));
+    assert.equal(router.first('/snow_dogs/1','PUT').action, 'update');
     // delete
-    assert.ok(router.first({url:'/snow_dogs/1'},'DELETE'));
-    assert.ok(router.first({url:'/snow_dogs/1.html'},'DELETE'));
-    assert.equal(router.first({url:'/snow_dogs/1'},'DELETE').action, 'remove');
+    assert.ok(router.first('/snow_dogs/1','DELETE'));
+    assert.ok(router.first('/snow_dogs/1.html','DELETE'));
+    assert.equal(router.first('/snow_dogs/1','DELETE').action, 'remove');
   }
 
 // url generation time nao
