@@ -20,13 +20,18 @@ var Log = exports = module.exports = function Log(level, stream, print, loggly) 
     if ('string' == typeof level) level = exports[level.toUpperCase()];
     this.level = level || exports.DEBUG;
     this.stream = stream || process.stdout;
+    this.writing = true;
+    if (stream === null) {
+      this.stream = stream;
+      this.writing = false;
+    }
     this.print = print || false;
     if (loggly && typeof loggly.log == 'function') {
       this.loggly = loggly;
     } else {
       this.loggly = false;
     }
-    if (this.stream.readable) this.read(level);
+    if (this.writing && this.stream.readable) this.read(level);
 };
 /**
  * System is unusable.
@@ -131,7 +136,10 @@ Log.prototype = {
      */
     log: function(levelStr, msg) {
         if (exports[levelStr] <= this.level) {
-            this.stream.write('[' + new Date().toUTCString() + ']' + ' ' + levelStr + ' ' + msg + '\n');
+            if (this.writing) {
+              this.stream.write('[' + new Date().toUTCString() + ']' + ' ' + levelStr + ' ' + msg + '\n');
+            }
+
             if (this.print) {
               coloredLevelStr = '';
               if (levelStr === 'ERROR')   { coloredLevelStr = levelStr.red; }
@@ -145,7 +153,9 @@ Log.prototype = {
               this.loggly.log({eventType: levelStr, message: msg});
             }
         } else if (levelStr == 'ACCESS') {
-          this.stream.write(msg + '\n');
+          if (this.writing) {
+            this.stream.write(msg + '\n');
+          }
         }
     },
     /**
