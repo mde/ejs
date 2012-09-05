@@ -17,20 +17,24 @@
 */
 
 
-var router = new geddy.RegExpRouter();
-router.match('/').to({controller: 'Main', action: 'index'});
+var router = exports.router = new geddy.RegExpRouter();
+
+router.get('/').to('Main.index');
 
 // Basic routes
-// router.match('/moving/pictures/:id').to(
-//    {controller: 'Moving', action: 'pictures'});
-// router.match('/farewells/:farewelltype/kings/:kingid').to(
-//    {controller: 'Farewells', action: 'kings'});
+// router.match('/moving/pictures/:id', 'GET').to('Moving.pictures');
+//
+// router.match('/farewells/:farewelltype/kings/:kingid', 'GET').to('Farewells.kings');
+//
 // Can also match specific HTTP methods only
-// router.match('/xandadu', 'get').to(
-//    {controller: 'Xandadu', action: 'specialHandler'});
+// router.get('/xandadu').to('Xanadu.specialHandler');
+// router.del('/xandadu/:id').to('Xanadu.killItWithFire');
 //
 // Resource-based routes
 // router.resource('hemispheres');
-
-exports.router = router;
-
+//
+// Nested Resource-based routes
+// router.resource('hemispheres', function(){
+//   this.resource('countries');
+//   this.get('/print(.:format)').to('Hemispheres.print');
+// });
