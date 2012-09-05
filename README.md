@@ -1,6 +1,8 @@
 ## Geddy web framework for Node.js
 - - -
 
+[![build status](https://secure.travis-ci.org/mde/geddy.png)](http://travis-ci.org/mde/geddy)
+
 ### Goals
 
   * Easy to use

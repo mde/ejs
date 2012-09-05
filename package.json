@@ -16,6 +16,9 @@
   "bin": {
     "geddy": "./bin/cli.js"
   },
+  "scripts": {
+    "test": "jake test"
+  },
   "main": "./lib/geddy",
   "repository": {
     "type": "git",
