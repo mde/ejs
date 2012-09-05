@@ -14,8 +14,12 @@ var <%= names.constructor.plural %> = function () {
   };
 
   this.create = function (req, resp, params) {
+<% for(var i in properties) { -%>
+<% if(properties[i].name === 'id' && properties[i].type === 'string') { -%>
     params.id = params.id || geddy.string.uuid(10);
 
+<% } -%>
+<% } -%>
     var self = this
       , <%= names.property.singular %> = geddy.model.<%= names.constructor.singular %>.create(params);
 
@@ -47,11 +51,7 @@ var <%= names.constructor.plural %> = function () {
     var self = this;
 
     geddy.model.<%= names.constructor.singular %>.load(params.id, function(err, <%= names.property.singular %>) {
-<% for(var i in properties) { -%>
-<% if(properties[i].name !== 'id') { -%>
-      <%= names.property.singular %>.<%= properties[i].name %> = params.<%= properties[i].name %>;
-<% } -%>
-<% } -%>
+      <%= names.property.singular %>.updateAttributes(params);
 
       <%= names.property.singular %>.save(function(err, data) {
         if(err) {
