@@ -12,6 +12,7 @@
   "dependencies": {
     "jake": "0.3.x",
     "utilities": "0.0.x",
+    "model": "0.0.x",
     "barista": "0.0.x"
   },
   "bin": {
