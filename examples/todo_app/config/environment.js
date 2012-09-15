@@ -1,8 +1,8 @@
 var config = {
 
-  metrics: {
-    port: 4001
-  }
+  //metrics: {
+  //  port: 4001
+  //}
 
 };
 
