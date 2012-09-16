@@ -17,7 +17,7 @@
 */
 
 
-var router = exports.router = new geddy.RegExpRouter();
+var router = new geddy.RegExpRouter();
 
 router.get('/').to('Main.index');
 
@@ -38,3 +38,5 @@ router.get('/').to('Main.index');
 //   this.resource('countries');
 //   this.get('/print(.:format)').to('Hemispheres.print');
 // });
+
+exports.router = router;
