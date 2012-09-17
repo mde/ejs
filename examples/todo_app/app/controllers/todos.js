@@ -4,7 +4,7 @@ var Todos = function () {
 
   this.index = function (req, resp, params) {
     var self = this;
-    geddy.model.adapter.Todo.all(function(err, todos){
+    geddy.model.Todo.all(function(err, todos){
       self.respond({params: params, todos: todos});
     });
   };
@@ -17,7 +17,6 @@ var Todos = function () {
     var self = this
       , todo = geddy.model.Todo.create({
           title: params.title
-        , id: geddy.string.uuid(10)
         , status: 'open'
         });
     todo.save(function (err, data) {
@@ -33,7 +32,7 @@ var Todos = function () {
 
   this.show = function (req, resp, params) {
     var self = this;
-    geddy.model.adapter.Todo.load(params.id, function(err, todo){
+    geddy.model.Todo.first(params.id, function(err, todo){
       self.respond({params: params, todo: todo});
     });
   };
@@ -47,7 +46,7 @@ var Todos = function () {
 
   this.update = function (req, resp, params) {
     var self = this;
-    geddy.model.adapter.Todo.load(params.id, function (err, todo) {
+    geddy.model.Todo.first(params.id, function (err, todo) {
       todo.status = params.status;
       todo.title = params.title;
       todo.save(function (err, data) {

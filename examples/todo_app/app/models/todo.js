@@ -3,7 +3,6 @@ var Todo = function () {
 
   this.defineProperties({
     title: {type: 'string', required: true}
-  , id: {type: 'string', required: true}
   , status: {type: 'string', required: true}
   });
 
