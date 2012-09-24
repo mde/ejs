@@ -62,7 +62,7 @@ var <%= names.constructor.plural %> = function () {
     });
   };
 
-  this.remove = function (req, resp, params) {
+  this.destroy = function (req, resp, params) {
     var self = this;
 
     geddy.model.<%= names.constructor.singular %>.remove(params.id, function(err) {
