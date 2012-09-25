@@ -115,7 +115,9 @@ namespace('gen', function () {
 
     // Write file
     fileDir = path.join('app', dirname);
-    if (!fs.existsSync(fileDir)) fs.mkdirSync(fileDir);
+    if (!utils.file.existsSync(fileDir)) {
+      fs.mkdirSync(fileDir);
+    }
 
     filePath = path.join(fileDir, names.filename[options.inflection] + '.js');
     fs.writeFileSync(filePath, templ.markup, 'utf8');
