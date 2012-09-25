@@ -31,7 +31,7 @@ var Templato = require('../../deps/templato')
 
 tests = {
 
-  'test empty template render': function() {
+  'test empty template render': function () {
     var actual = render('');
     assert.equal('', actual);
   }
@@ -85,14 +85,14 @@ tests = {
 , 'test single quotes': function () {
     var html = '<p>WAHOO</p>'
       , str = "<p><%= up('wahoo') %></p>"
-      , data = {up: function (str){ return str.toUpperCase(); }};
+      , data = {up: function (str) { return str.toUpperCase(); }};
     assert.equal(html, render(str, data));
   }
 
 , 'test single quotes in HTML': function () {
     var html = '<p>WAHOO that\'s cool</p>'
       , str = '<p><%= up(\'wahoo\') %> that\'s cool</p>'
-      , data = {up: function (str){ return str.toUpperCase(); }};
+      , data = {up: function (str) { return str.toUpperCase(); }};
     assert.equal(html, render(str, data));
   }
 
@@ -114,10 +114,10 @@ tests = {
     assert.equal(html, render(str));
   }
 
-, 'test double quotes': function (){
+, 'test double quotes': function () {
     var html = '<p>WAHOO</p>'
       , str = '<p><%= up("wahoo") %></p>'
-      , data = {up: function (str){ return str.toUpperCase(); }};
+      , data = {up: function (str) { return str.toUpperCase(); }};
     assert.equal(html, render(str, data));
   }
 
@@ -127,7 +127,7 @@ tests = {
     assert.equal(html, render(str));
   }
 
-, 'test whitespace': function (){
+, 'test whitespace': function () {
     var html = '<p>foo</p>'
       , str = '<p><%="foo"%></p>';
     assert.equal(html, render(str));
@@ -137,7 +137,7 @@ tests = {
     assert.equal(html, render(str, {bar: 'foo'}));
   }
 
-, 'test iteration': function (){
+, 'test iteration': function () {
     var html = '<p>foo</p>',
       str = '<% for (var key in items) { %>'
         + '<p><%= items[key] %></p>'
@@ -145,7 +145,7 @@ tests = {
     assert.equal(html, render(str, {items: ['foo']}));
 
     var html = '<p>foo</p>',
-      str = '<% items.forEach(function (item){ %>'
+      str = '<% items.forEach(function (item) { %>'
         + '<p><%= item %></p>'
         + '<% }) %>';
     assert.equal(html, render(str, {items: ['foo']}));
@@ -164,7 +164,7 @@ tests = {
     try {
       render(str)
     }
-    catch(err) {
+    catch (err) {
       assert.ok(err.message.indexOf("name is not defined") > -1);
       assert.deepEqual(err.name, "ReferenceError");
       var lineno = parseInt(err.toString().match(/ejs:(\d+)\n/)[1]);
@@ -224,13 +224,13 @@ tests = {
     assert.equal(expected, render(str,{x:'<p>inbetween</p>'}));
 
     var expected = '\n  Hallo 0\n\n  Hallo 1\n\n'
-      , str = '<% for(var i in [1,2]) { %>\n' +
+      , str = '<% for (var i in [1,2]) { %>\n' +
             '  Hallo <%= i %>\n' +
             '<% } %>\n';
     assert.equal(expected, render(str));
 
     var expected = '  Hallo 0\n  Hallo 1\n'
-      , str = '<% for(var i in [1,2]) { -%>\n' +
+      , str = '<% for (var i in [1,2]) { -%>\n' +
             '  Hallo <%= i %>\n' +
             '<% } -%>\n';
     assert.equal(expected, render(str));

@@ -99,27 +99,33 @@ opts = parser.opts;
 opts.handle = opts.handlebars || opts.handle;
 
 // Exit the process with a message
-die = function(str) {
+die = function (str) {
   console.log(str);
   process.exit();
 };
 
 // Start Geddy with options
-start = function() {
+start = function () {
   geddy.config(opts);
   geddy.start();
 };
 
-if(opts.help) die(usage);
-if(opts.version) die(geddy.version);
+if (opts.help) {
+  die(usage);
+}
+if (opts.version) {
+  die(geddy.version);
+}
 
 // `geddy app foo` or `geddy resource bar` etc. -- run generators
-if(cmds.length) {
+if (cmds.length) {
   // Get templates Jake file
   filepath = path.normalize(path.join(__dirname, '..', 'templates', 'Jakefile'));
 
   // Wrap quotes in case path has spaces
-  if(process.platform === 'win32') filepath = '"' + filepath + '"';
+  if (process.platform === 'win32') {
+    filepath = '"' + filepath + '"';
+  }
   cmd = 'jake -t -f ' + filepath + ' ';
 
   // If command isn't secret and has no other argument
@@ -128,21 +134,21 @@ if(cmds.length) {
   }
 
   // Add engines to command
-  if(opts.jade) {
+  if (opts.jade) {
     engineCmd = ',' + 'jade';
-  } else if(opts.handle) {
+  } else if (opts.handle) {
     engineCmd = ',' + 'handlebars';
-  } else if(opts.mustache) {
+  } else if (opts.mustache) {
     engineCmd = ',' + 'mustache';
   } else engineCmd = '';
 
   // Get the model properties
-  if(cmds.slice(2).length > 0) {
+  if (cmds.slice(2).length > 0) {
     modelCmd = ',' + cmds.slice(2).join(' ');
   } else modelCmd = '';
 
   // Add Jake argument based on commands
-  switch(cmds[0]) {
+  switch (cmds[0]) {
     case 'db:init':
       // Create DBs
       cmd += '"db:init"';
@@ -180,8 +186,8 @@ if(cmds.length) {
   }
 
   //cmd += ' --quiet';
-  exec(cmd, function(err, stdout, stderr) {
-    if(err) {
+  exec(cmd, function (err, stdout, stderr) {
+    if (err) {
       throw err;
     }
     if (stderr) {
@@ -195,7 +201,7 @@ if(cmds.length) {
 // Just `geddy` -- start the server
 else {
   // Search for 'config' directory in parent directories
-  utils.file.searchParentPath('config', function(err, filePath) {
+  utils.file.searchParentPath('config', function (err, filePath) {
     if (err) {
       die(usage);
     }

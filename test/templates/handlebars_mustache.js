@@ -18,7 +18,7 @@
 
 try {
   require('handlebars');
-} catch(err) {
+} catch (err) {
   var events = new (require('events').EventEmitter)
 
   events.emit('error', err);
@@ -30,7 +30,7 @@ var Templato = require('../../deps/templato')
   , tests
   , render;
 
-render = function(string, data) {
+render = function (string, data) {
   var templato = new Templato
     , templ;
   data = data || {};
@@ -69,10 +69,10 @@ tests = {
     assert.equal(html, render(str));
   }
 
-, 'test double quotes': function (){
+, 'test double quotes': function () {
     var html = '<p>WAHOO</p>'
       , str = '<p>{{up "wahoo"}}</p>'
-      , data = {up: function (str){ return str.toUpperCase(); }};
+      , data = {up: function (str) { return str.toUpperCase(); }};
     assert.equal(html, render(str, data));
   }
 
@@ -82,7 +82,7 @@ tests = {
     assert.equal(html, render(str));
   }
 
-, 'test iteration': function (){
+, 'test iteration': function () {
     var html = '<p>foo</p>',
       str = '<p>{{#items}}{{foo}}{{/items}}</p>';
     assert.equal(html, render(str, {items: [{foo: 'foo'}]}));

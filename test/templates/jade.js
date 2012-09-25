@@ -18,7 +18,7 @@
 
 try {
   require('jade');
-} catch(err) {
+} catch (err) {
   var events = new (require('events').EventEmitter)
 
   events.emit('error', err);
@@ -30,7 +30,7 @@ var Templato = require('../../deps/templato')
   , tests
   , render;
 
-render = function(string, data) {
+render = function (string, data) {
   var templato = new Templato
     , templ;
   data = data || {};
@@ -70,7 +70,7 @@ tests = {
   }
 
 , 'test basic conditional': function () {
-    var str = '- if(name)\n  p= name'
+    var str = '- if (name)\n  p= name'
       , actual = render(str, {name: 'mde'});
     assert.equal('<p>mde</p>', actual);
   }
@@ -78,14 +78,14 @@ tests = {
 , 'test single quotes': function () {
     var html = '<p>WAHOO</p>'
       , str = "p= up('wahoo')"
-      , data = {up: function (str){ return str.toUpperCase(); }};
+      , data = {up: function (str) { return str.toUpperCase(); }};
     assert.equal(html, render(str, data));
   }
 
 , 'test single quotes in HTML': function () {
     var html = "<p>WAHOO that's cool</p>"
       , str = "p= up('wahoo')\n |  that's cool"
-      , data = {up: function (str){ return str.toUpperCase(); }};
+      , data = {up: function (str) { return str.toUpperCase(); }};
     assert.equal(html, render(str, data));
   }
 
@@ -101,10 +101,10 @@ tests = {
     assert.equal(html, render(str));
   }
 
-, 'test double quotes': function (){
+, 'test double quotes': function () {
     var html = '<p>WAHOO</p>'
       , str = 'p= up("wahoo")'
-      , data = {up: function (str){ return str.toUpperCase(); }};
+      , data = {up: function (str) { return str.toUpperCase(); }};
     assert.equal(html, render(str, data));
   }
 
@@ -114,13 +114,13 @@ tests = {
     assert.equal(html, render(str));
   }
 
-, 'test iteration': function (){
+, 'test iteration': function () {
     var html = '<p>foo</p>',
-      str = '- for(var i in items)\n  p= items[i]';
+      str = '- for (var i in items)\n  p= items[i]';
     assert.equal(html, render(str, {items: ['foo']}));
 
     var html = '<p>foo</p>',
-      str = '- items.forEach(function(item) {\n  p= item\n- })';
+      str = '- items.forEach(function (item) {\n  p= item\n- })';
     assert.equal(html, render(str, {items: ['foo']}));
   }
 
