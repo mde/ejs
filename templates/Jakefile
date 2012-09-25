@@ -106,6 +106,7 @@ namespace('gen', function () {
       , text = fs.readFileSync(path.join(__dirname, filename + '.ejs'), 'utf8').toString()
       , bare = options.bare || false // Default to full controller
       , templ
+      , fileDir
       , filePath;
 
     // Render with the right model name
@@ -113,7 +114,10 @@ namespace('gen', function () {
     templ.process({names: names, bare: bare, properties: options.properties});
 
     // Write file
-    filePath = path.join('app', dirname, names.filename[options.inflection] + '.js');
+    fileDir = path.join('app', dirname);
+    if (!fs.existsSync(fileDir)) fs.mkdirSync(fileDir);
+
+    filePath = path.join(fileDir, names.filename[options.inflection] + '.js');
     fs.writeFileSync(filePath, templ.markup, 'utf8');
 
     console.log('[Added] ' + filePath);
