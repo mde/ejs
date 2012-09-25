@@ -179,10 +179,10 @@ if(cmds.length) {
       die(cmds[0] + ' is not a Geddy command.');
   }
 
-  if(!opts.debug) {
+  if (!opts.debug) {
     cmd += ' --quiet';
   }
-  
+
   exec(cmd, function(err, stdout, stderr) {
     if(err) {
       throw err;
