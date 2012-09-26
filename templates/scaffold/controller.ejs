@@ -27,7 +27,9 @@ var <%= names.constructor.plural %> = function () {
       if(err) {
         params.errors = err;
         self.transfer('add');
-      } else self.redirect({controller: self.name});
+      } else {
+        self.redirect({controller: self.name});
+      }
     });
   };
 
@@ -57,7 +59,9 @@ var <%= names.constructor.plural %> = function () {
         if(err) {
           params.errors = err;
           self.transfer('edit');
-        } else self.redirect({controller: self.name});
+        } else {
+          self.redirect({controller: self.name});
+        }
       });
     });
   };
@@ -69,7 +73,9 @@ var <%= names.constructor.plural %> = function () {
       if(err) {
         params.errors = err;
         self.transfer('edit');
-      } else self.redirect({controller: self.name});
+      } else {
+        self.redirect({controller: self.name});
+      }
     });
   };
 <% } %>
