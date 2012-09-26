@@ -24,8 +24,8 @@ try {
   events.emit('error', err);
 }
 
-var Templato = require('../../deps/templato')
-  , Adapter = require('../../lib/template/adapters').Adapter
+var Templato = require('../../../deps/templato')
+  , Adapter = require('../../../lib/template/adapters').Adapter
   , assert = require('assert')
   , tests
   , render;

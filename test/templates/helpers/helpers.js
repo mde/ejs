@@ -16,7 +16,7 @@
  *
 */
 
-var Helpers = require('../../lib/template/helpers/index')
+var Helpers = require('../../../lib/template/helpers/index')
   , assert = require('assert')
   , helpers = {}
   , tests;
@@ -27,7 +27,7 @@ for (var i in Helpers) {
 }
 
 // Register dummy data for use with empty path options in urlFor
-helpers.registerData({params: {method: 'GET', controller: 'Tasks', action: 'Index'}});
+helpers.registerData({params: {controller: 'tasks', action: 'index'}});
 
 tests = {
 

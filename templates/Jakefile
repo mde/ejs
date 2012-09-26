@@ -210,6 +210,7 @@ namespace('gen', function () {
           , 'config'
           , 'app/models'
           , 'app/controllers'
+          , 'app/helpers'
           , 'lib'
           , 'log'
           , 'node_modules'

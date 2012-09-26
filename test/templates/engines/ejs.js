@@ -16,8 +16,8 @@
  *
 */
 
-var Templato = require('../../deps/templato')
-  , Template = require('../../lib/template/adapters/ejs').Template
+var Templato = require('../../../deps/templato')
+  , Template = require('../../../lib/template/adapters/ejs').Template
   , assert = require('assert')
   , tests
   , render = function (str, data) {
