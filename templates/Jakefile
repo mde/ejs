@@ -9,13 +9,15 @@ var fs = require('fs')
   , templato = new (require('../deps/templato'));
 
 namespace('env', function () {
-  task('init', function () {
+  task('init', function (environment) {
 
     jake.addListener('complete', function (e) {
       jake.Task['env:cleanup'].invoke();
     });
 
-    geddy.config = require('../lib/config').readConfig();
+    geddy.config = require('../lib/config').readConfig({
+      environment: environment || 'development'
+    });
     geddy.model = require('model');
 
     require('../lib/init').init(geddy, function () {
@@ -36,7 +38,38 @@ namespace('env', function () {
     }
   });
 
-}, {async: true});
+});
+
+namespace('console', function () {
+
+  task('start', ['env:init'], {async: true}, function (environment) {
+    var env = environment || 'development'
+      , t = jake.Task['env:init'];
+    t.addListener('complete', function () {
+      var readline = require('readline')
+        , rl = readline.createInterface({
+            input: process.stdin
+          , output: process.stdout
+          });
+      rl.setPrompt('>>> ');
+      rl.prompt();
+      rl.addListener('line', function (line) {
+        try {
+          console.log(global.eval(line));
+        }
+        catch (e) {
+          console.log(e.stack);
+        }
+        rl.prompt();
+      });
+      rl.addListener('close', function () {
+        console.log('Exiting ...');
+        complete();
+      });
+    });
+    t.invoke(env);
+  });
+});
 
 namespace('db', function () {
 
