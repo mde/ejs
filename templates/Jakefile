@@ -64,9 +64,43 @@ namespace('console', function () {
       });
       rl.addListener('close', function () {
         console.log('Exiting ...');
-        complete();
+        return complete();
       });
     });
+
+    global.capture = function (err, data) {
+      return global.results = {
+        err: err
+      , data: data
+      };
+    }
+
+    global.echo = function (err, data) {
+      capture(err, data);
+      if (err) {
+        console.log('Error: ', err);
+      }
+      if (data) {
+        if (data.length) {
+          for (var i in data) {
+            if (data[i] && data[i].toData) {
+              console.log(data[i].toData());
+            } else {
+              console.log(data[i]);
+            }
+          }
+        } else {
+          if (data && data.toData) {
+            console.log(data.toData());
+          } else {
+            console.log(data);
+          }
+        }
+      } else {
+        console.log('No data');
+      }
+    }
+
     t.invoke(env);
   });
 });
