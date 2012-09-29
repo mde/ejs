@@ -174,7 +174,7 @@
 
 
             <h2 id="executable">Using the Geddy command</h2>
-            <p>Now that we have Geddy installed we need to learn how to use its command from the CLI. There are a few commands and options that help with the development process of creating applications using Geddy. Here we will go over what each of them do. Note If no arguments are given Geddy will start up the server if it's a Geddy application, otherwise it will show the help dialog.</p>
+            <p>Now that we have Geddy installed we need to learn how to use its command from the CLI. There are a few commands and options that help with the development process of creating applications using Geddy. Here we will go over what each of them do. Note if no arguments are given Geddy will start up the server if it's a Geddy application, otherwise it will show the help dialog.</p>
 
             <h4>Options:</h4>
             <ul>
@@ -207,7 +207,7 @@
 
               <li><code>secret</code> doesn't take any arguments, it will find your <code>config/environment</code> file and create a new secret in it deleting any other secret.</li>
 
-              <li><code>controller</code> takes a single argument being a name. It will create a new controller, a route and a index view. If you also include the options <code>--jade</code>, <code>--handle</code> or <code>--mustache</code> you can substitute the template language to your liking.</li>
+              <li><code>controller</code> takes a single argument being a name. It will create a new controller, a route and an index view. If you also include the options <code>--jade</code>, <code>--handle</code> or <code>--mustache</code> you can substitute the template language to your liking.</li>
 
               <li><code>model</code> takes one or more arguments, the first being a name and the others being a set of model properties. We won't go over model properties right now but you can learn about them <a href="#model-properties">here</a>. This will create a new model including the model properties given.</li>
 
@@ -217,66 +217,73 @@
             </ul>
 
             <h4 id="model-properties">Model properties</h4>
-            <p>There are a couple commands(<code>resource</code>, <code>model</code> and <code>scaffold</code>) that also include a model properties argument. This is a list seperated by spaces that include the property, it's type and an optional default setting. Below are some examples of how they are used in the commands.</p>
+            <p>There are a three commands(<code>resource</code>, <code>model</code> and <code>scaffold</code>) that also include model property arguments. This is a list seperated by spaces that include the property, it's type and an optional default setting. Below are some examples of how they are used in the commands.</p>
 
             <pre class="prettyprint">$ geddy scaffold user name:string</pre>
-            <p>The example above example will create our normal scaffolding and include a <code>name</code> option that's a <code>string</code> type. If no type is given it will default to <code>string</code>.</p>
+            <p>The example above example will create our normal scaffolding and include a <code>name</code> property of type <code>string</code>. If no type is given it will default to <code>string</code>.</p>
 
             <pre class="prettyprint">$ geddy scaffold user name:default</pre>
-            <p>This example creates scaffolding but includes <code>name</code> as the default property that will be used when displaying the content in the views. In this example the property <code>name</code> is given the type <code>string</code> because no type was given, you could of also written it <code>name:string:default</code>, or you could've used a different type of course. the <code>default</code> setting also includes a alias called <code>def</code>, if no default property is given it will use <code>id</code> as the default.</p>
+            <p>This example creates scaffolding but includes <code>name</code> as the default property that will be used when displaying the content in the views. In this example the property <code>name</code> is given the type <code>string</code> because no type was given, you could of also writte  <code>name:string:default</code>, or you could've used a different type of course. the <code>default</code> setting also includes an alias called <code>def</code>. If no default property is given Geddy will use <code>id</code> as the display property.</property>
 
             <pre class="prettyprint">$ geddy scaffold user name:default id:number</pre>
-            <p>As the above examples this creates are scaffold, and this time we use <code>name</code> type <code>string</code> as the default property we also overwrite the included <code>id</code> property. If no id property is given Geddy will use include <code>id</code> type <code>string</code></p>
+            <p>As the above examples this creates are scaffold, and this time we use <code>name</code> type <code>string</code> as the default property we also overwrite the included <code>id</code> property. If no id property is given Geddy will use include <code>id</code> type <code>int</code></p>
 
-            <blockquote class="pull-right">(Note a ID property will <i>always</i> be created)</blockquote>
+            <p>Note: an ID property will <i>always</i> be created.</p>
 
             <h2 id="scaffolding">Scaffolding application tutorial</h2>
-            <p>This will be a short tutorial as scaffolding will do almost everything for us, I won't go into detail on what it does as it will be covered in exstensive detail in the <a href="#resources">resources</a> tutorial. The source for this tutorial will be <a href="https://github.com/mde/geddy/tree/master/examples/todo_app_mongo">here</a></p>
+            <p>This will be a short tutorial as scaffolding will do almost everything for us, I won't go into detail on what it does as it will be covered in exstensive detail in the <a href="#resources">resources</a> tutorial. The source for this tutorial will be <a href="https://github.com/mde/geddy/tree/master/examples/todo_app">here</a></p>
 
             <p>First we'll create our application, this will create a base so we can start on.</p>
             <pre class="prettyprint">$ geddy app todo_app</pre>
 
-            <p>Now you can start the application up by simply doing <code>$ cd todo_app && geddy</code>, Then open your browser to localhost:4000, and you'll find the hello world page.</p>
+            <!-- TODO: Should I explain what Geddy did? e.g. folder structure and important files, what goes where, etc. -->
+
+            <p>Now you can start the application up by simply doing <code>$ cd todo_app && geddy</code>, Then open your browser to <a href="http://localhost:4000/">localhost:4000</a>, and you'll find the hello world page.</p>
 
             <p>So now we want to create a scaffold that will be used to create our todo items. We will create a title and status property so that we have some attributes to use.</p>
-            <pre class="prettyprint">$ geddy scaffold todo title status</pre>
+            <pre class="prettyprint">$ geddy scaffold todo title:default status</pre>
 
-            <p>Now that we've created a scaffolding we should install the mondodb-wrapper package and install a <a href="http://www.mongodb.org/downloads">mongodb</a> server if you haven't already. This is because scaffolding will create a default model adapater for us that uses mongodb.</p>
+            <!-- TODO: Should I explain what Geddy did? e.g. show user.js, explain why the properties are string (by default), explain there's a default id property and that title is used for display. Show the different views and explain some controller actions. Wow that's a lot for a simple command-->
+
+            <p>Now that we've created a scaffolding we should install the mondodb-wrapper package and install a <a href="http://www.mongodb.org/downloads">mongodb</a> server if you haven't already. This is because scaffolding will create a default model adapater for us that uses mongodb. Optionally you could change the defaultAdapter to 'memory' in config/development.js (<code>defaultAdapter = 'memory'</code>) and skip this step</p>
             <pre class="prettyprint">$ [sudo] npm install -g mongodb-wrapper</pre>
             <p>Once that gets installed and we start our mongodb server up we can start up Geddy to test our application. <code>$ geddy</code></p>
 
-            <p>Open your browser to localhost:4000/todos and you'll get a list of the todos which should be empty. Go ahead and look around, you can create show edit and delete todo items. We're going to make a few changes though.</p>
+            <p>Open your browser to <a href="http://localhost:4000/todos">localhost:4000/todos</a> and you'll get a list of the todos which should be empty. Go ahead and look around, you can create show edit and delete todo items. We're going to make a few changes though.</p>
 
-            <p>The first thing we'll do it edit the model some so open 'app/models/todo.js' in your editor, and make these changes.</p>
+            <p>The first thing we'll do is to add some validation to our Todo model. So open 'app/models/todo.js' in your editor and add the following lines anywhere inside the constructor function</p>
             <pre class="prettyprint">
+var Todo = function () {
 ...
-this.defineProperties({
-    id: {type: 'string', required: true}
-  , title: {type: 'string', required: true}
-  , status: {type: 'string', required: true}
-});
+  // Add this inside the constructor function
+  this.validatesPresent('title');
+  this.validatesLength('title', {min: 5});
 
-this.validatesPresent('title');
-this.validatesLength('title', {min: 5});
-
-this.validatesWithFunction('status', function (status) {
-  return status == 'open' || status == 'done';
-});
+  this.validatesWithFunction('status', function (status) {
+    return status == 'open' || status == 'done';
+  });
 ...
+};
+Todo = geddy.model.register('Todo', Todo);
             </pre>
-            <p>Here we are making it so the title property is required and have a minumum of 5 characters. We also made it so the status acts like a boolean attribute but uses custom names instead of true/false. Now we'll need to edit the edit and add views to reflect the status changes.</p>
+          <p>Here we are making it so the title property is required and have a minumum of 5 characters. We also made it so the status acts like a boolean attribute but uses custom names instead of true/false. Now we'll need to edit the 'edit' and 'add' views to reflect the status changes.</p>
+          <!--TODO: We could use the helper 'contentTag('select', '', {class:'span6', name:'status', options: ['open', 'done']})' if we merge it instead -->
+          <!-- TODO: Consider using partials for edit/add forms when using geddy scaffold-->
+          <!-- TODO: Consider changing the views used by scaffold, they could look better (specially show and index)-->
             <pre class="prettyprint">
 ...
-&lt;label for="status"&gt;status&lt;/label&gt;
-&lt;div class="controls"&gt;
-  &lt;select name="status", class="span1"&gt;
-    &lt;option&gt;open&lt;/option&gt;
-    &lt;option&gt;done&lt;/option&gt;
-  &lt;/select&gt;
+&lt;div class="control-group"&gt;
+  &lt;label for="status" class="control-label"&gt;status&lt;/label&gt;
+  &lt;div class="controls"&gt;
+    &lt;select name="status" class="span6"&gt;
+      &lt;option&gt;open&lt;/option&gt;
+      &lt;option&gt;done&lt;/option&gt;
+    &lt;/select&gt;
+  &lt;/div&gt;
 &lt;/div&gt;
 ...
             </pre>
-            <p>Now that we've made the needed changes, restart Geddy to update our model changes, now we've got a good todo application running and didn't really have to do anything. Scaffolding is very good when you don't need to do much. To learn more about models and applications keep reading and follow the <a href="#resources">resource</a> application tutorial</p>
+            <p>Now that we've made the needed changes, restart Geddy to update our model changes, now we've got a good todo application running and didn't really have to do anything. Scaffolding is very good when you don't need to do much. To learn more about models and applications keep reading and follow the <a href="#resources">resource</a> application tutorial to get a better understanding of views and controller which we didn't really cover in the Scaffold Tutorial.</p>
 
             <h2 id="resources">Resource application tutorial</h2>
 
