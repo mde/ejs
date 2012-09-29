@@ -149,10 +149,11 @@
           <div class="tutorial">
 
             <h2 id="introduction">Welcome to the Geddy Tutorial</h2>
-            <p>In this tutorial we'll learn how to use Geddy by creating a simple todo manager applciation. There will be two created applications one created from scaffolding(<a href="https://github.com/mde/geddy/tree/master/examples/todo_app_mongo">Finished version</a>) and one created from using resources(<a href="https://github.com/mde/geddy/tree/master/examples/todo_app">Finished version</a>).</p>
+            <p>In this tutorial we'll learn how to use Geddy by creating a simple todo manager applciation. There will be two created applications one created from scaffolding and one created from using resources. See the <!--TODO: Consider adding a link to a 'running' verison--><a href="https://github.com/mde/geddy/tree/master/examples/todo_app">finished version</a>.</p>
 
             <h4>In this tutorial we'll cover:</h4>
             <ul>
+              <!-- TODO: Review if there're are more/less topics-->
               <li>Creating the base application</li>
               <li>Learning how to use the Geddy executable</li>
               <li>Setting up RESTful routes for our app</li>
@@ -168,11 +169,12 @@
             <p>Next, install Geddy from <a href="http://npmjs.org/">NPM</a>, this will also install <a href="https://github.com/mde/jake">Jake</a>:</p>
             <pre class="prettyprint">$ [sudo] npm install -g geddy</pre>
 
-            <blockquote class="pull-right">(Note installing packages globally may require super-user access)</blockquote>
+            <p>We need to install it globally (-g) so we can use geddy generators or start the server. More on this later. 
+            Note: installing packages globally may require super-user access. </p>
 
 
             <h2 id="executable">Using the Geddy command</h2>
-            <p>Now that we have Geddy installed we need to learn how to use it's command from the CLI. There are a few commands and options that help with the development process of creating applications using Geddy. Here we will go over what each of them do. Note If no arguments are given Geddy will start up the server if it's a Geddy application, otherwise it will show the help dialog.</p>
+            <p>Now that we have Geddy installed we need to learn how to use its command from the CLI. There are a few commands and options that help with the development process of creating applications using Geddy. Here we will go over what each of them do. Note If no arguments are given Geddy will start up the server if it's a Geddy application, otherwise it will show the help dialog.</p>
 
             <h4>Options:</h4>
             <ul>
@@ -191,7 +193,7 @@
             <ul>
               <li><code>app &lt;name&gt;</code>: Create a new Geddy application</li>
               <li><code>resource &lt;name&gt; [model attributes]</code>: Create a new Geddy resource. Resources include a model, controller and a route</li>
-              <li><code>scaffold &lt;name&gt; [model attributes]</code>: Creates a new Geddy scaffolding. Scaffolding includes everything Resources have as well as views and a default model adapter</li>
+              <li><code>scaffold &lt;name&gt; [model attributes]</code>: Creates a new Geddy scaffolding. Scaffolding includes everything Resources have as well as views</li>
               <li><code>secret</code>: Generate a new application secret in `config/environment`</li>
               <li><code>controller &lt;name&gt;</code>: Generate a new controller including an index view and a route</li>
               <li><code>model &lt;name&gt; [model attributes]</code>: Generate a new model</li>
