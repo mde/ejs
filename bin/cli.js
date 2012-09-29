@@ -126,10 +126,12 @@ if (cmds.length) {
   if (process.platform === 'win32') {
     filepath = '"' + filepath + '"';
   }
-  cmd = 'jake -t -f ' + filepath + ' ';
+  cmd = '-t -f ' + filepath + ' ';
 
-  // If command isn't secret and has no other argument
-  if ((cmds[0] != 'secret' && cmds[0] != 'db:init') && !cmds[1]) {
+  // Some commands take only one arg
+  if (!(cmds[0] == 'secret' ||
+      cmds[0] == 'db:init' ||
+      cmds[0] == 'console') && !cmds[1]) {
     throw new Error(cmds[0] + ' command requires another argument.');
   }
 
@@ -149,33 +151,37 @@ if (cmds.length) {
 
   // Add Jake argument based on commands
   switch (cmds[0]) {
+    case 'console':
+      // Create DBs
+      cmd += 'console:start[' + (cmds[1] || 'development') + ']';
+      break;
     case 'db:init':
       // Create DBs
-      cmd += '"db:init"';
+      cmd += 'db:init';
       break;
     case 'db:createTable':
       // Create DBs
-      cmd += '"db:createTable[' + cmds[1] + ']"';
+      cmd += 'db:createTable[' + cmds[1] + ']';
       break;
     case 'app':
       // Generating application
-      cmd += '"gen:app[' + cmds[1] + engineCmd + ']"';
+      cmd += 'gen:app[' + cmds[1] + engineCmd + ']';
       break;
     case 'resource':
       // Generating resource
-      cmd += '"gen:resource[' + cmds[1] + modelCmd + ']"';
+      cmd += 'gen:resource[' + cmds[1] + modelCmd + ']';
       break;
     case 'scaffold':
       // Generating application
-      cmd += '"gen:scaffold[' + cmds[1] + engineCmd + modelCmd + ']"';
+      cmd += 'gen:scaffold[' + cmds[1] + engineCmd + modelCmd + ']';
       break;
     case 'controller':
       // Generating controller
-      cmd += '"gen:bareController[' + cmds[1] + engineCmd + ']"';
+      cmd += 'gen:bareController[' + cmds[1] + engineCmd + ']';
       break;
     case 'model':
       // Generating model
-      cmd += '"gen:model[' + cmds[1] + modelCmd + ']"';
+      cmd += 'gen:model[' + cmds[1] + modelCmd + ']';
       break;
     case 'secret':
       // Generating new app secret
@@ -189,17 +195,9 @@ if (cmds.length) {
     cmd += ' --quiet';
   }
 
-  exec(cmd, function(err, stdout, stderr) {
-    if(err) {
-      throw err;
-    }
-    if (stderr) {
-      console.log(utils.string.trim(stderr));
-    }
-    if (stdout) {
-      console.log(utils.string.trim(stdout));
-    }
-  });
+  cmd = cmd.split(' ');
+  var jake = require('jake');
+  jake.run.apply(jake, cmd);
 }
 // Just `geddy` -- start the server
 else {
