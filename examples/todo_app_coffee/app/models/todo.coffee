@@ -16,6 +16,6 @@ Todo = ->
   @validatesWithFunction 'status', (status) ->
     status == 'open' || status == 'done'
 
-  @adapter = 'Mongo'
+  @adapter = 'mongo'
 
 Todo = geddy.model.register 'Todo', Todo
