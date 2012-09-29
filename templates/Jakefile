@@ -9,13 +9,15 @@ var fs = require('fs')
   , templato = new (require('../deps/templato'));
 
 namespace('env', function () {
-  task('init', function () {
+  task('init', function (environment) {
 
     jake.addListener('complete', function (e) {
       jake.Task['env:cleanup'].invoke();
     });
 
-    geddy.config = require('../lib/config').readConfig();
+    geddy.config = require('../lib/config').readConfig({
+      environment: environment || 'development'
+    });
     geddy.model = require('model');
 
     require('../lib/init').init(geddy, function () {
@@ -36,7 +38,72 @@ namespace('env', function () {
     }
   });
 
-}, {async: true});
+});
+
+namespace('console', function () {
+
+  task('start', ['env:init'], {async: true}, function (environment) {
+    var env = environment || 'development'
+      , t = jake.Task['env:init'];
+    t.addListener('complete', function () {
+      var readline = require('readline')
+        , rl = readline.createInterface({
+            input: process.stdin
+          , output: process.stdout
+          });
+      rl.setPrompt('>>> ');
+      rl.prompt();
+      rl.addListener('line', function (line) {
+        try {
+          console.log(global.eval(line));
+        }
+        catch (e) {
+          console.log(e.stack);
+        }
+        rl.prompt();
+      });
+      rl.addListener('close', function () {
+        console.log('Exiting ...');
+        return complete();
+      });
+    });
+
+    global.capture = function (err, data) {
+      return global.results = {
+        err: err
+      , data: data
+      };
+    }
+
+    global.echo = function (err, data) {
+      capture(err, data);
+      if (err) {
+        console.log('Error: ', err);
+      }
+      if (data) {
+        if (data.length) {
+          for (var i in data) {
+            if (data[i] && data[i].toData) {
+              console.log(data[i].toData());
+            } else {
+              console.log(data[i]);
+            }
+          }
+        } else {
+          if (data && data.toData) {
+            console.log(data.toData());
+          } else {
+            console.log(data);
+          }
+        }
+      } else {
+        console.log('No data');
+      }
+    }
+
+    t.invoke(env);
+  });
+});
 
 namespace('db', function () {
 
