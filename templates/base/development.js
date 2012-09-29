@@ -21,6 +21,14 @@ var config = {
 , debug: true
 , hostname: null
 , port: 4000
+, model: {
+    defaultAdapter: 'mongo'
+	}
+, db: {
+    mongo: {
+      dbname: 'local'
+    }
+  }
 , sessions: {
     store: 'memory'
   , key: 'sid'

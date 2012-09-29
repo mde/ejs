@@ -20,6 +20,16 @@ var config = {
   detailedErrors: false
 , hostname: null
 , port: 4000
+/* TODO: Define a defaultAdapter. You can use postgresdb, memory, mongo or riak. 
+, model: {
+    defaultAdapter: 'mongo'
+	}
+, db: {
+    mongo: {
+      dbname: 'local'
+    }
+  }
+ */
 , sessions: {
     store: 'cookie'
   , key: 'sid'
