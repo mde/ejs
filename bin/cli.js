@@ -122,10 +122,6 @@ if (cmds.length) {
   // Get templates Jake file
   filepath = path.normalize(path.join(__dirname, '..', 'templates', 'Jakefile'));
 
-  // Wrap quotes in case path has spaces
-  if (process.platform === 'win32') {
-    filepath = '"' + filepath + '"';
-  }
   cmd = '-t -f ' + filepath + ' ';
 
   // Some commands take only one arg
