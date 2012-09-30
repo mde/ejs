@@ -13,7 +13,8 @@
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <!--TODO: Use the cdn instead of the line below <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>-->
+    <script src="file:///home/miguelmadero/code/geddy/templates/base/public/js/jquery.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
 
     <link rel="stylesheet" href="css/bootstrap.min.css">
@@ -97,7 +98,8 @@
     <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
   </head>
 
-  <body style="background-image: url(http://subtlepatterns.com/patterns/whitey.png); background-attachment: initial; background-origin: initial; background-clip: initial; background-color: initial; background-position: initial initial; background-repeat: initial initial; " onload="prettyPrint()">
+  <!-- TODO: add background-image: url(http://subtlepatterns.com/patterns/whitey.png);-->
+  <body style="background-attachment: initial; background-origin: initial; background-clip: initial; background-color: initial; background-position: initial initial; background-repeat: initial initial; " onload="prettyPrint()">
 
     <div class="navbar navbar-fixed-top">
       <div class="navbar-inner">
@@ -292,7 +294,7 @@ Todo = geddy.model.register('Todo', Todo);
 
             <p>Now let's try out our new application by doing <code>$ cd todo_app && geddy</code> command, your app should be running on port 4000. Visit <a href="http://localhost:4000">http://localhost:4000</a> in your browser to see your app.</p>
 
-            <h4>optional: check out your app on a mobile phone</h4>
+            <h4>Optional: check out your app on a mobile phone</h4>
             <ul>
               <li>point your mobile phone's browser to your computer's port 4000</li>
               <li>OR open up your favorite phone simulator and go to <a href="http://localhost:4000">http://localhost:4000</a></li>
@@ -301,13 +303,13 @@ Todo = geddy.model.register('Todo', Todo);
 
             <h3>Generate a resource</h3>
             <p>Now, lets actually get started building our To Do list manager. First, we'll need to generate the <code>todo</code> resource. We do this using the <code>geddy</code> executable as well:</p>
-            <pre class="prettyprint">$ geddy resource todo name string</pre>
+            <pre class="prettyprint">$ geddy resource todo title:string status</pre>
 
             <p>What did that do?</p>
             <ul>
               <li>It generated a <code>todo</code> model including the given model properties</li>
               <li>It generated a <code>todos</code> controller</li>
-              <li>It created a <code>todos</code> view directory</li>
+              <li>It created a <code>todos</code> view directory</li>. Please note the folder is empty since resource won't generate any views for you. 
               <li>It generated these routes from a resource route:
                 <ul>
                   <li><code>/todos</code> (GET)</li>
@@ -335,8 +337,10 @@ Todo = geddy.model.register('Todo', Todo);
 
             <p>We won't go into to much detail here, as it should be pretty self explanatory but I'll go through some things.</p>
 
-            <p>First we'll create the _form partial template, this will hold all the form data for edit and add actions.</p>
+            <p>First we'll create the _form partial template, this will hold all the form data for edit and add actions
+              .</p>
             <pre class="prettyprint">
+              <!-- TODO: Consider using the view helper for the select tage if we merge that change-->
 &lt;%
   var isUpdate = params.action == 'edit'
     , formTitle = isUpdate ? 'Update this To Do Item' : 'Create a new To Do Item'
@@ -383,7 +387,7 @@ Todo = geddy.model.register('Todo', Todo);
   &lt;/fieldset&gt;
 &lt;/form&gt;
             </pre>
-            <p>Here we created a couple variables so we can tell if it's for a edit or add action, then if we have any errors we dislay them. Also we are using a couple view helpers(contentTag) which are helpful with dealing with assets, links, etc. You can read more about our view helpers <a href="https://github.com/mde/geddy/wiki/View-Helpers">here</a>.</p>
+            <p>Here we created a couple variables so we can tell if it's for a edit or add action, then if we have any errors we dislay them. Also we are using a couple view helpers (contentTag) which are helpful with dealing with assets, links, etc. You can read more about our view helpers <a href="https://github.com/mde/geddy/wiki/View-Helpers">here</a>.</p>
 
             <p>Now that we've created a base for our add and edit actions, we'll do them now. They're simple sense they just use the _form partial</p>
             <pre class="prettyprint">
@@ -472,60 +476,16 @@ this.validatesWithFunction('status', function (status) {
 
             <p>For more information about Geddy's Models, you can check out the <a href="https://github.com/mde/geddy/wiki/Models">Model wiki page</a>.</p>
 
-            <h4>Creating a Todo model-adapter</h4>
+            <h3>The Todo model-adapter</h3>
 
-            <p>Now that we've set up our <code>todo</code> model, we can create somewhere to store our models. For the purposes of this tutorial, we're just going to keep the data in memory. We'll hang a <code>todos</code> array off of our global <code>geddy</code> object to stick the data in. If you want to make this app more robust after the tutorial, you could write an adapter to put your data in a SQL database, or Redis, or even just write it to a text-file.</p>
+            <p>Now that we've set up our <code>todo</code> model, we need to define a way to store it. To keep our models persistance agnostic, Geddy uses model-adapters. By default it will use mongo. For the purpose of this tutorial we will change the defaultAdapter to memory editing config/development.js. 
 
-            <h4>Editing your init.js file</h4>
-
-            <p>Open up your <code>config/init.js</code> file. All that should be in there now is a global uncaught exception handler.</p>
-
-            <pre class="prettyprint">
-if (geddy.config.environment != 'development') {
-  process.addListener('uncaughtException', function (err) {
-    geddy.log.error(JSON.stringify(err));
-  });
-}
-            </pre>
-
-            <p>Right after that block of code, lets hang our array off the <code>geddy</code> global:</p>
-
-            <pre class="prettyprint">geddy.todos = [];</pre>
+            <pre class="prettyprint">defaultAdapter = 'memory'</pre>
 
             <p>There, now we've got a place to store our <code>todo</code>'s. This is in your application-memory, so it will disappear when you restart the server.</p>
 
-            <h4>Creating the model adapter</h3>
-
-            <p>A model-adapter provides the basic CRUD methods a model needs. Our data source is pretty simple (just an array!), so writing our model adapter should be pretty simple too.</p>
-
-            <p>Create a directory in <code>lib</code> called <code>model_adapters</code></p>
-
-            <pre class="prettyprint">$ mkdir lib/model_adapters</pre>
-
-            <p>And create a file in <code>lib/model_adapters</code> called <code>todo.js</code></p>
-
-            <pre class="prettyprint">$ touch lib/model_adapters/todo.js</pre>
-
-            <p>Lets open up that file and add in some boilerplate code:</p>
-
-            <pre class="prettyprint">
-var Todo = new (function () {
-})();
-exports.Todo = Todo;
-            </pre>
-
-            <h4>Require the model adapter in init.js</h4>
-
-            <p>So we set up a new <code>Todo</code> model-adapter object. It's pretty barren right now, but we'll get to that soon. For now, we'll have to go back to <code>init.js</code> and add some code so that it's loaded into our app when it starts up. After the <code>geddy.todos = [];</code> in <code>config/init.js</code> add these two lines:</p>
-
-            <pre class="prettyprint">
-geddy.model.adapter = {};
-geddy.model.adapter.Todo = require(process.cwd() + '/lib/model_adapters/todo').Todo;
-            </pre>
-
-            <blockquote class="pull-right">We're working on making this nicer.</blockquote>
-
-            <p>We created a blank model-adapter object, and add the <code>Todo</code> model adapter onto it.</p>
+            <h4>Optional: use mongo for persistence </h4>
+            <p>Install a <a href="http://www.mongodb.org/downloads">mongodb</a> server if you haven't already and <code> $ [sudo] npm install -g mongodb-wrapper</code> to install the required mongodb-wrapper and leave the <code>defaultAdapter = 'mongo'</code> in config/development.js to use mongo instead of the memory adapter. </p>
 
             <h3 id="saving-todos">Saving todos</h3>
 
@@ -758,7 +718,7 @@ this.update = function (req, resp, params) {
 
     </div> <!-- /container -->
 
-    <script>
+    <!--TODO: Add scripts back<script>
       var _gaq = _gaq || [];
       _gaq.push(['_setAccount', 'UA-5555148-4']);
       _gaq.push(['_setDomainName', '.geddyjs.org']);
@@ -769,7 +729,7 @@ this.update = function (req, resp, params) {
         ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
         var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
       })();
-    </script>
+    </script>-->
 
   </body>
 </html>
