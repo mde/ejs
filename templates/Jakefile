@@ -198,7 +198,7 @@ namespace('gen', function () {
       return obj;
     }
 
-    var itemsArr = properties.split(' ')
+    var itemsArr = properties.split('%')
       , name
       , type
       , args
