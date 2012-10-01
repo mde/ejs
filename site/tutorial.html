@@ -266,8 +266,7 @@ var Todo = function () {
   });
 ...
 };
-Todo = geddy.model.register('Todo', Todo);
-            </pre>
+Todo = geddy.model.register('Todo', Todo);</pre>
           <p>Here we are making it so the title property is required and have a minumum of 5 characters. We also made it so the status acts like a boolean attribute but uses custom names instead of true/false. Now we'll need to edit the 'edit' and 'add' views to reflect the status changes.</p>
           <!--TODO: We could use the helper 'contentTag('select', '', {class:'span6', name:'status', options: ['open', 'done']})' if we merge it instead -->
           <!-- TODO: Consider using partials for edit/add forms when using geddy scaffold-->
@@ -283,8 +282,7 @@ Todo = geddy.model.register('Todo', Todo);
     &lt;/select&gt;
   &lt;/div&gt;
 &lt;/div&gt;
-...
-            </pre>
+...</pre>
             <p>Now that we've made the needed changes, restart Geddy to update our model changes, now we've got a good todo application running and didn't really have to do anything. Scaffolding is very good when you don't need to do much. To learn more about models and applications keep reading and follow the <a href="#resources">resource</a> application tutorial to get a better understanding of views and controller which we didn't really cover in the Scaffold Tutorial.</p>
 
             <h2 id="resources">Resource application tutorial</h2>
@@ -347,7 +345,8 @@ Todo = geddy.model.register('Todo', Todo);
     , action = isUpdate ? todoPath(params.id) + '?_method=PUT' : todosPath
     , deleteAction = isUpdate ? todoPath(params.id) + '?_method=DELETE' : ''
     , btnText = isUpdate ? 'Update' : 'Add'
-    , doneStatus = isUpdate ? 'checked' : ''
+    , doneSelectAttributes = isUpdate && todo.status === 'done' ? "selected=true" : ''
+    , openSelectAttributes = isUpdate && todo.status === 'open' ? "selected=true" : ''
     , titleValue = isUpdate ? todo.title : ''
     , errors = params.errors;
 %&gt;
@@ -369,11 +368,11 @@ Todo = geddy.model.register('Todo', Todo);
     &lt;/div&gt;
     &lt;% if (isUpdate) { %&gt;
       &lt;div class="control-group"&gt;
-        &lt;label for="status"&gt;Status&lt;/label&gt;
+        &lt;label for="status" class="control-label"&gt;Status&lt;/label&gt;
         &lt;div class="controls"&gt;
-          &lt;select name="status"&gt;
-            &lt;option&gt;open&lt;/option&gt;
-            &lt;option&gt;done&lt;/option&gt;
+          &lt;select name="status" class="span6"&gt;
+            &lt;option &lt;%=openSelectAttributes%&gt;&gt;open&lt;/option&gt;
+            &lt;option &lt;%=doneSelectAttributes%&gt;&gt;done&lt;/option&gt;
           &lt;/select&gt;
         &lt;/div&gt;
       &lt;/div&gt;
@@ -385,29 +384,33 @@ Todo = geddy.model.register('Todo', Todo);
       &lt;% } %&gt;
     &lt;/div&gt;
   &lt;/fieldset&gt;
-&lt;/form&gt;
-            </pre>
+&lt;/form&gt;</pre>
+
             <p>Here we created a couple variables so we can tell if it's for a edit or add action, then if we have any errors we dislay them. Also we are using a couple view helpers (contentTag) which are helpful with dealing with assets, links, etc. You can read more about our view helpers <a href="https://github.com/mde/geddy/wiki/View-Helpers">here</a>.</p>
 
-            <p>Now that we've created a base for our add and edit actions, we'll do them now. They're simple sense they just use the _form partial</p>
+            <p>Now that we've created a base for our add and edit actions, we'll do them now. They're simple they just use the _form partial. Add the following code to add.html.ejs</p>
             <pre class="prettyprint">
 &lt;div class="hero-unit"&gt;
   &lt;%= partial('_form', {params: params}); %&gt;
-&lt;/div&gt;
-            </pre>
+&lt;/div&gt;</pre>
+
+            <p>The edit view is slightly different because we will need to pass the todo object to the partial. Modify <code>app/views/todos/edit.html.ejs</code> with the following code</p>
+
+            <pre class="prettyprint">&lt;%= partial('_form', {params: params, todo: todo}); %&gt;</pre>
+
             <p>This template will be for both add and edit actions. We just create a partial from _form and include all the params.</p>
 
             <p>Now that we have views that will create todo items let's create the show action so we can view the todo items we create.</p>
             <pre class="prettyprint">
 &lt;div class="hero-unit"&gt;
+  &lt;%- linkTo('Edit this todo', editTodoPath(params.id), {class: 'btn pull-right'}); %&gt;
   &lt;h3&gt;Params&lt;/h3&gt;
   &lt;ul&gt;
   &lt;% for (var p in params) { %&gt;
     &lt;li&gt;&lt;%= p + ': ' + params[p]; %&gt;&lt;/li&gt;
   &lt;% } %&gt;
   &lt;/ul&gt;
-&lt;/div&gt;
-            </pre>
+&lt;/div&gt;</pre>
             <p>I will leave the show action to you for a exercise, but herre I just loop through the params and show them.</p>
 
             <p>Finally we need to create the index action to link everything together.</p>
@@ -420,16 +423,16 @@ Todo = geddy.model.register('Todo', Todo);
   &lt;% for (var i in todos) { %&gt;
   &lt;div class="row todo-item"&gt;
     &lt;div class="span8"&gt;
-        &lt;h3&gt;&lt;%- linkTo(todos[i].title, editTodoPath(todos[i].id)) %&gt;&lt;/h3&gt;
+        &lt;h3&gt;&lt;%- linkTo(todos[i].title, todoPath(todos[i].id)) %&gt;&lt;/h3&gt;
     &lt;/div&gt;
     &lt;div class="span4"&gt;&lt;h3&gt;&lt;i class="icon-list-alt"&gt;&lt;/i&gt;&lt;%= todos[i].status; %&gt;&lt;/h3&gt;&lt;/div&gt;
   &lt;/div&gt;
   &lt;% } %&gt;
-&lt;% } %&gt;
-            </pre>
+&lt;% } %&gt;</pre>
+
             <p>For the index action we just have a link to add new items, and a list of ll the items, with a link to each of their edit paths. If you notice we're using special helpers here, that create links to the path specified.</p>
 
-            <h3>Creating the Todo model</h3>
+            <h3>The Todo model</h3>
             <p>We're ready to start in on modeling our data. Geddy provides us with some pretty cool tools to do this:</p>
             <ul>
               <li>Validation</li>
@@ -446,15 +449,14 @@ Todo = geddy.model.register('Todo', Todo);
 var Todo = function () {
 
   this.defineProperties({
-      id: {type: 'string', required: true}
-    , title: {type: 'string'}
+      title: {type: 'string'}
     , status: {type: 'string'}
   });
 
 };
 
-Todo = geddy.model.register('Todo', Todo);
-            </pre>
+Todo = geddy.model.register('Todo', Todo);</pre>
+
             <p>The `defineProperties` method takes any number of properties to be added to the model. The keys in the object will be added as properties on the model. The values are just objects that describe the properties. When we ran the scaffold command it created these for us. But we want to change it so they are all `required` so set `title` and `status` to match `id` now.</p>
 
             <p>To learn more, check out the <a href="https://github.com/mde/geddy/blob/master/README.md">readme</a>.</p>
@@ -467,8 +469,7 @@ this.validatesLength('title', {min: 5});
 
 this.validatesWithFunction('status', function (status) {
   return status == 'open' || status == 'done';
-});
-            </pre>
+});</pre>
 
             <p>For the <code>title</code> property, we made sure that the property is always present and we made sure that the <code>title</code> property is a minimum of 5 characters long.</p>
 
@@ -487,206 +488,107 @@ this.validatesWithFunction('status', function (status) {
             <h4>Optional: use mongo for persistence </h4>
             <p>Install a <a href="http://www.mongodb.org/downloads">mongodb</a> server if you haven't already and <code> $ [sudo] npm install -g mongodb-wrapper</code> to install the required mongodb-wrapper and leave the <code>defaultAdapter = 'mongo'</code> in config/development.js to use mongo instead of the memory adapter. </p>
 
-            <h3 id="saving-todos">Saving todos</h3>
+            <h3>The Todo Controller</h3>
+            <p>TODO: add some intro about controllers. Explain what Geddy adds by default and what we're about to change</p>
 
-            <p>Now that we have our model and model adapter in place, we can start in on the app logic. Lets start with adding to do items to our to do list.</p>
+            <h4 id="saving-todos">Saving todos</h4>
 
-            <h4>Edit the save method on the adapter to save a todo instance</h4>
-
-            <p>When working with data, the first place you should go is the model adapter. We need to be able to save an instance of our <code>Todo</code> model to our <code>geddy.todos</code> array. So open up <code>lib/model_adapters/todo.js</code> and add in a <code>save</code> method:</p>
-
-            <pre class="prettyprint">
-this.save = function (todo) {
-  todo.saved = true;
-  geddy.todos.push(todo);
-};
-            </pre>
-
-            <p>All we have to do is set the instance's <code>saved</code> property to true and push the item into the <code>geddy.todos</code> array. Now lets move on to the controller <code>create</code> action.</p>
-
-            <h4>Edit the create action to save a todo instance</h4>
-
-            <p>Go ahead and take a look at the <code>create</code> action in <code>app/controllers/todos.js</code></p>
+            <p>To save a todo we need edit the create action in <code>app/controllers/todos.js</code>. It's not doing much at the momment so lets modify it a little bit.</p>
 
             <pre class="prettyprint">
 this.create = function (req, resp, params) {
-  // Save the resource, then display index page
-  this.redirect({controller: this.name});
-};
-            </pre>
+  var self = this
+    , todo = geddy.model.Todo.create({title:params.title, status:'open'});
 
-            <p>Pretty simple, right? It's stubbed it out for you. So let's modify it a little bit:</p>
+  todo.save(function(err, data) {
+    if (err) {
+      params.errors = err;
+      self.transfer('add');
+    } else {
+      self.redirect({controller: self.name});
+    }
+  });
+};</pre>
 
-            <pre class="prettyprint">
-this.create = function (req, resp, params) {
-  var todo = geddy.model.Todo.create({title: params.title, id: geddy.string.uuid(10), status: 'open'});
-  if (todo.isValid()) {
-    todo.save();
-    this.redirect({controller: this.name});
-  } else {
-    this.redirect({controller: this.name, action: 'add?error=true'});
-  }
-};
-            </pre>
+            <p>First, we create a new instance of the <code>Todo</code> model with <code>geddy.model.Todo.create</code>, passing in the title that our form will post up to us, and setting up the default status.</p>
 
-            <p>First, we create a new instance of the <code>Todo</code> model with <code>geddy.model.Todo.create</code>, passing in the title that our form will post up to us, and setting up the defaults for the id and status.</p>
-
-            <p>Then we check to see if the model passed validation, if it did, we call the <code>save</code> method that we created on the model adapter and redirect the user back to the <code>/todos</code> route. If it didn't pass validation, we redirect the user back to the </code>/todos/add</code> route and pass an error as a query parameter.</p>
-
-            <p>Geddy has built-in sessions too, so this might be another good spot to improve your app after you finish the tutorial.</p>
+            <p>Then we call we call the <code>save</code> method and redirect the user back to the /todos route. Internally, save does two things. It validates the model based on the rules we defined earlier. This is similar to calling <code>todo.isValid()</code>. If the model was valid, it will delegate to the model adapter configured previously to actually persist the model. If either step fails, you will get an error collection as the first parameter of the function and we we redirect the user back to the /todos/add route. Otherwise we redirect to the controller default action <code>self.redirect({controller: self.name});</code>.</p>
 
             <h3 id="list-todos">Listing all todos</h3>
 
-            <p>Now that we have user input To Do items being added into our <code>geddy.todos</code> array, we should probably list them somewhere. Lets start in on the <code>index</code> action in the <code>todos</code> controller.</p>
+            <p>Now that we we can create To Do items, we should probably list them somewhere. Lets change the <code>index</code> action in the <code>todos</code> controller.</p>
 
             <h4>Edit the index action to show all todos</h4>
 
-            <p>Open up <code>/app/controllers/todos.js</code> again and take a look at the <code>index</code> action. It should look something like this:</p>
+            <p>Open up <code>/app/controllers/todos.js</code> again and replace the current implementaton with the following code.</p>
 
             <pre class="prettyprint">
 this.index = function (req, resp, params) {
-  this.respond({params: params});
-};
-            </pre>
+  var self = this;
 
-            <p>This part is really simple, just replace the <code>params</code> property in the template variable object with a <code>todos</code> property and set it to <code>geddy.todos</code>, to pass that list down into your view.</p>
+  geddy.model.Todo.all(function(err, todos) {
+    self.respond({params: params, todos: todos});
+  });
+};</pre>
 
-            <pre class="prettyprint">
-this.index = function (req, resp, params) {
-  this.respond({todos: geddy.todos});
-};
-            </pre>
+            <p>This part is a bit simpler and it follows a similar pattern. Instead of calling create in <code>geddy.model.Todo</code> this time we simply call <code>all</code> and we pass the data back to the view for rendering</p>
 
             <p>Now that we can can load todo items you can test it by starting up Geddy and go to <a href="http://localhost:4000/todos">http://localhost:4000/todos</a> and you can view the list of items.</p>
 
             <h3 id="show-todo">Showing a todo</h3>
 
-            <p>Now that we have our index action working as expected, we should probably work on the <code>show</code> controller action.</p>
-
-            <h4>Create a load method in the model adapter</h4>
-            <p>Open up your model adapter again (<code>/lib/model_adapters/todo.js</code>) - by now, it should look something like this: </p>
-            <pre class="prettyprint">
-var Todo = new (function () {
-
-  this.save = function (todo) {
-    todo.saved = true;
-    geddy.todos.push(todo);
-  };
-
-})();
-
-exports.Todo = Todo;
-            </pre>
-
-            <p>Lets define a <code>load</code> method in this adapter, for getting one of the todos from the list:</p>
-            <pre class="prettyprint">
-var Todo = new (function () {
-
-  this.load = function (id, callback) {
-    for (var i in geddy.todos) {
-      if (geddy.todos[i].id == id) {
-        return callback(geddy.todos[i]);
-      }
-    }
-    callback({});
-  };
-
-  this.save = function (todo) {
-    todo.saved = true;
-    geddy.todos.push(todo);
-  };
-
-})();
-
-exports.Todo = Todo;
-            </pre>
-
-            <p>This <code>load</code> method takes an <code>id</code> and a <code>callback</code>. It loops through the items in <code>geddy.todos</code> and checks to see if the current item's <code>id</code> matches the passed in <code>id</code>. If it does, it calls the callback, passing the <code>todo</code> item back. If it doesn't find a match, it calls the callback with a blank object. Now we need to use this method in the <code>todos</code> controller's show action.</p>
-
-            <p>This is a simple example that finds a single item by iterating the entire collection, but you could write an adapter that does a SQL-call to a database, or makes an API-call to a Web service.</p>
+            <p>Now that we have our index action working as expected, we should probably work on the <code>show</code> controller action to display todo details.</p>
 
             <h4>Edit the show action to find a todo</h4>
 
-            <p>Open up your <code>todos</code> controller again and take a look at it's <code>show</code> action. It should look something like this:</p>
-
-            <pre class="prettyprint">
-this.show = function (req, resp, params) {
-  this.respond({params: params});
-};
-            </pre>
-
-            <p>Lets use the load method that we just created:</p>
+            <p>Open up your <code>todos</code> controller again. This time we need to edit the show action to make it look like the following code.</p>
 
             <pre class="prettyprint">
 this.show = function (req, resp, params) {
   var self = this;
-  geddy.model.adapter.Todo.load(params.id, function (todo) {
-    self.respond({todo: todo});
+
+  geddy.model.Todo.load(params.id, function(err, todo) {
+    self.respond({params: params, todo: todo.toObj()});
   });
-};
-            </pre>
-            <p>Now we have a working show action in the controller to load items from the list.</p>
+};</pre>
+            <p>Now we have a working show action in the controller to load items.</p>
 
             <h3 id="update-todo">Updating a todo</h3>
 
-            <h4>Edit the save method in the model adapter to save over existing todos</h4>
-
-            <p>Open up your model adapter again. We're going to want to change the save method to allow for saving over existing model instances. You're <code>save</code> method should look something like this:</p>
-
-            <pre class="prettyprint">
-this.save = function (todo, callback) {
-  todo.saved = true;
-  geddy.todos.push(todo);
-};
-            </pre>
-
-            <p>Lets edit it to look like this:</p>
-
-            <pre class="prettyprint">
-this.save = function (todo, callback) {
-  for (var i in geddy.todos) {
-
-    // if it's already there, save it
-    if (geddy.todos[i].id == todo.id) {
-      geddy.todos[i] = todo;
-      return;
-    }
-
-  }
-  todo.saved = true;
-  geddy.todos.push(todo);
-
-};
-            </pre>
-
-            <p>This loops over all the <code>todo</code>'s in <code>geddy.todos</code> and if the id is already there, replace that <code>todo</code> with the new <code>todo</code> instance. If you were hooked up to a real DB here, you'd do a SQL UPDATE or similar here instead.</p>
-
             <h4>Edit the update action to find a todo, change the status, and save it</h4>
 
-            <p>Alright, now that we have our <code>save</code> method in order, lets edit the <code>update</code> action in the <code>todos</code> controller. It should look something like this right now:</p>
+            <p>Alright, now that we can view our todos lets edit the <code>update</code> action in the <code>todos</code> controller. It should look something like this.</p>
 
             <pre class="prettyprint">
-this.update = function (req, resp, params) {
-  // Save the resource, then display the item page
-  this.redirect({controller: this.name, id: params.id});
-};
-            </pre>
-
-            <p>You'll want to edit it to make it look like this:</p>
-
-            <pre class="prettyprint">
-this.update = function (req, resp, params) {
+this.edit = function (req, resp, params) {
   var self = this;
-  geddy.model.adapter.Todo.load(params.id, function (todo) {
-    todo.status = params.status;
-    todo.save();
-    self.redirect({controller: this.name, id: params.id});
+
+  geddy.model.Todo.load(params.id, function(err, todo) {
+    self.respond({params: params, todo: todo});
   });
 };
-            </pre>
 
-            <p>We're taking the id that we sent up via the ajax <code>PUT</code> request on the <code>show</code> page and using the <code>load</code> method that we created earlier to find a <code>todo</code> item. Then we're setting its <code>status</code> to be what we sent up in the params ('done'). Then we use the <code>save</code> method that we just updated to save over the existing <code>todo</code> item. Then, in case this isn't coming from an ajax request, we're redirecting the request over to the <code>show</code> action (hooray for progressive enhancment).</p>
+this.update = function (req, resp, params) {
+  var self = this;
 
+  geddy.model.Todo.load(params.id, function(err, todo) {
+    todo.updateAttributes(params);
+
+    todo.save(function(err, data) {
+      if (err) {
+        params.errors = err;
+        self.transfer('edit');
+      } else {
+        self.redirect({controller: self.name});
+      }
+    });
+  });
+};</pre>
+
+            <h3 id="delete-todo">Deleting a todo</h3>
+
+            <p>The delete is really simple specially now that you're familiar with the pattern. This time you will have to call remove passing the id of the todo you want to delete. We will leave the details as an excercise. Remember that you can always compare your solution to the <a href="https://github.com/mde/geddy/tree/master/examples/todo_app">final version</a>.</p>
+            
             <h3 id="conclusion">Conclusion</h3>
 
             <p>At this point you should have a working To Do List app!</p>
@@ -706,6 +608,7 @@ this.update = function (req, resp, params) {
             <li>Change the <code>Main#index</code> route to point to the <code>Todos#index</code> action (hint, check out <code>config/router.js</code>)</li>
             <li>Add some logging with <code>geddy.log</code></li>
             <li>Set up metrics by running <code>npm install metrics</code>, and uncomment the metrics entry (<code>metrics: { port: 4001 }</code>) in your <code>config/environment.js</code> file</li>
+            <li>Configure mongo, riak or postgress and use it instead of the memory modelAdapter. See how easy it's to switch</li>
             </ul>
 
           </div>
