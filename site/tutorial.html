@@ -151,13 +151,13 @@
           <div class="tutorial">
 
             <h2 id="introduction">Welcome to the Geddy Tutorial</h2>
-            <p>In this tutorial we'll learn how to use Geddy by creating a simple todo manager applciation. There will be two created applications one created from scaffolding and one created from using resources. See the <a href="https://github.com/mde/geddy/tree/master/examples/todo_app">finished version</a>.</p>
+
+            <p>In this tutorial we'll learn how to use Geddy by creating a simple todo manager applciation. We will create two applications one using scaffolding and one using resources. See the <a href="https://github.com/mde/geddy/tree/master/examples/todo_app">finished version</a>.</p>
 
             <h4>In this tutorial we'll cover:</h4>
             <ul>
-              <li>Creating the base application</li>
+              <li>Creating a Geddy application</li>
               <li>Learning how to use the Geddy executable</li>
-              <li>Setting up RESTful routes for our app</li>
               <li>Using Geddy models</li>
               <li>How views in Geddy work</li>
               <li>How to use controllers to tie everything together</li>
@@ -197,10 +197,11 @@
               <li><code>secret</code>: Generate a new application secret in `config/environment`</li>
               <li><code>controller &lt;name&gt;</code>: Generate a new controller including an index view and a route</li>
               <li><code>model &lt;name&gt; [model attributes]</code>: Generate a new model</li>
+              <li><code>console</code>: opens a console in the context of geddy</li>
             </ul>
 
             <h4>How to use Geddy commands</h4>
-            <p>Each of Geddy's commands(<code>app</code>, <code>resource</code>, <code>controller</code>, etc.) take a command or set of commands(excluding <code>secret</code>). Here we'll learn how to use those commands.</p>
+            <p>Each of Geddy's commands(<code>app</code>, <code>resource</code>, <code>controller</code>, etc.) take a command or set of commands(excluding <code>secret</code> and <code>console</code>). Here we'll learn how to use those commands.</p>
 
             <ul>
               <li><code>app</code> takes a single argument being the name you'd like, then it will generate a base application. If no name is given the command will fail.</li>
@@ -209,34 +210,35 @@
 
               <li><code>controller</code> takes a single argument being a name. It will create a new controller, a route and an index view. If you also include the options <code>--jade</code>, <code>--handle</code> or <code>--mustache</code> you can substitute the template language to your liking.</li>
 
-              <li><code>model</code> takes one or more arguments, the first being a name and the others being a set of model properties. We won't go over model properties right now but you can learn about them <a href="#model-properties">here</a>. This will create a new model including the model properties given.</li>
+              <li><code>model</code> takes one or more arguments, the first being a name and the others being a set of model properties. We won't go over model properties right now but you can learn about them in the next section. This will create a new model including the model properties given.</li>
 
-              <li><code>resource</code> takes one or more arguments, the first being a name and the others being a set of model properties. We won't go over model properties right now but you can learn about them <a href="#model-properties">here</a>. This will create a controller, a model including the given model properties and a resource route.</li>
+              <li><code>resource</code> takes one or more arguments, the first being a name and the others being a set of model properties. This will create a controller, a model including the given model properties and a resource route.</li>
 
-              <li><code>scaffold</code> takes one or more arguments, the first being a name and the others being a set of model properties. We won't go over model properties right now but you can learn about them <a href="#model-properties">here</a>. Scaffolding includes a controller, a model including the given model properties as well as a default model adapter a resource route and will create all views. If you also include the options <code>--jade</code>, <code>--handle</code> or <code>--mustache</code> you can substitute the template language to your liking.</li>
+              <li><code>scaffold</code> takes one or more arguments, the first being a name and the others being a set of model properties. Scaffolding includes a controller, a model including the given model properties as well as a default model adapter a resource route and will create all views. If you also include the options <code>--jade</code>, <code>--handle</code> or <code>--mustache</code> you can substitute the template language to your liking.</li>
+              <li><code>console</code> doesn't take any arguments, it will start a geddy console.
             </ul>
 
             <h4 id="model-properties">Model properties</h4>
-            <p>There are a three commands(<code>resource</code>, <code>model</code> and <code>scaffold</code>) that also include model property arguments. This is a list seperated by spaces that include the property, it's type and an optional default setting. Below are some examples of how they are used in the commands.</p>
+            <p>There are a three commands(<code>resource</code>, <code>model</code> and <code>scaffold</code>) that also include model property arguments. This is a list seperated by spaces that include the property, its type and an optional default setting. Below are some examples of how they are used in the commands.</p>
 
             <pre class="prettyprint">$ geddy scaffold user name:string</pre>
-            <p>The example above example will create our normal scaffolding and include a <code>name</code> property of type <code>string</code>. If no type is given it will default to <code>string</code>.</p>
+            <p>The example above will create our normal scaffolding and include a <code>name</code> property of type <code>string</code>. If no type is given it will default to <code>string</code>.</p>
 
             <pre class="prettyprint">$ geddy scaffold user name:default</pre>
-            <p>This example creates scaffolding but includes <code>name</code> as the default property that will be used when displaying the content in the views. In this example the property <code>name</code> is given the type <code>string</code> because no type was given, you could of also writte  <code>name:string:default</code>, or you could've used a different type of course. the <code>default</code> setting also includes an alias called <code>def</code>. If no default property is given Geddy will use <code>id</code> as the display property.</property>
+            <p>This example creates scaffolding but includes <code>name</code> as the default property that will be used when displaying the content in the views. In this example the property <code>name</code> is given the type <code>string</code> because no type was given, you could of also writte  <code>name:string:default</code>, or you could've used a different type of course. The <code>default</code> setting also includes an alias called <code>def</code>. If no default property is given Geddy will use <code>id</code> as the display property.</property>
 
-            <pre class="prettyprint">$ geddy scaffold user name:default id:number</pre>
-            <p>As the above examples this creates are scaffold, and this time we use <code>name</code> type <code>string</code> as the default property we also overwrite the included <code>id</code> property. If no id property is given Geddy will use include <code>id</code> type <code>int</code></p>
+            <pre class="prettyprint">$ geddy scaffold user name:default id:int</pre>
+            <p>This time we used <code>name</code> type <code>string</code> as the default property. We also overwrote the included <code>id</code> property with a different type (by default it's a string). 
 
             <p>Note: an ID property will <i>always</i> be created.</p>
 
             <h2 id="scaffolding">Scaffolding application tutorial</h2>
-            <p>This will be a short tutorial as scaffolding will do almost everything for us, I won't go into detail on what it does as it will be covered in exstensive detail in the <a href="#resources">resources</a> tutorial. The source for this tutorial will be <a href="https://github.com/mde/geddy/tree/master/examples/todo_app">here</a></p>
+            <p>This will be a short tutorial as scaffolding will do almost everything for us, I won't go into detail on what it does as it will be covered in exstensive detail in the <a href="#resources">resources tutorial</a>. The source for this tutorial will be <a href="https://github.com/mde/geddy/tree/master/examples/todo_app">here</a>.</p>
 
             <p>First we'll create our application, this will create a base so we can start on.</p>
             <pre class="prettyprint">$ geddy app todo_app</pre>
 
-            <p>Lets spend some time reviewing what geddy did. The previous command created a lot. During the tutorial we will edit and review some of this files, but we'll briefly explain what they are now so you get familiar with the base application.</p>
+            <p>Let's spend some time reviewing what geddy did. The previous command created a lot. During the tutorial we will edit and review some of this files, but we'll briefly explain what they are now so you get familiar with the base application.</p>
 
             <ul>
               <li><code>app/controllers</code>: contains the base controller and the main controller. All controllers will go in this folder</li>
@@ -247,19 +249,24 @@
               <li><code>config/init.js</code>: this is where you write code that will be run only once your app starts.</li>
               <li><code>config/production.js</code>: configuration for the production environment</li>
               <li><code>config/router.js</code>: contains route settings. It has some examples and you can learn more about <a href="https://github.com/mde/geddy/wiki/Using-the-Router">routes from the Wiki.</a></li>
-              <li><code>public/</code>: contains static assets that will be served directly by geddy's server. </li>
-              <!-- TODO: Add a summary of what bootstrap is and a link to TB-->
-              <li><code>public/css/</code>: Geddy uses <a href="">twitter bootstrap</a>. These are referenced by the layout file (<code>application.html.ejs</code>)</li>
+              <li><code>public/</code>: contains static assets that will be served directly by geddy's server </li>
+              <li><code>public/css/</code>: Geddy uses <a href="http://twitter.github.com/bootstrap/">twitter bootstrap</a>. These are referenced by the layout file (<code>application.html.ejs</code>)</li>
               <li><code>public/img/</code>: contains a few images used by twitter bootstrap. Your images will usually go here as well</li>
               <li><code>public/js/</code>: bootstrap and jquery scripts</li>
             </ul>  
 
-            <p>Now you can start the application up by simply doing <code>$ cd todo_app && geddy</code>, Then open your browser to <a href="http://localhost:4000/">localhost:4000</a>, and you'll find the hello world page.</p>
+            <p>Now from your app's root simply start geddy</p> 
 
-            <p>So now we want to create a scaffold that will be used to create our todo items. We will create a title and status property so that we have some attributes to use.</p>
+            <pre class="prettyprint">
+$ cd todo_app 
+$ geddy</pre>
+            
+            <p>Then open your browser to <a href="http://localhost:4000/">localhost:4000</a>, and you'll find the hello world page.</p>
+
+            <p>So now we want to create a scaffold to manage our todo items. We will create a title and status property so that we have some attributes to use.</p>
             <pre class="prettyprint">$ geddy scaffold todo title:default status</pre>
 
-            <p>We are almost done. Now you have to start the geddy</p>
+            <p>We are almost done. Now you have to restart geddy</p>
             <pre class="prettyprint">$ geddy</pre>
 
             <p>Open your browser to <a href="http://localhost:4000/todos">localhost:4000/todos</a> and you'll get a list of the todos which should be empty. Go ahead and look around, you can create show edit and delete todo items. We're going to make a few changes though.</p>
@@ -278,46 +285,40 @@ var Todo = function () {
 ...
 };
 Todo = geddy.model.register('Todo', Todo);</pre>
-          <p>Here we are making it so the title property is required and have a minumum of 5 characters. We also made it so the status acts like a boolean attribute but uses custom names instead of true/false. Now we'll need to edit the 'edit' and 'add' views to reflect the status changes.</p>
-          <!--TODO: We could use the helper 'contentTag('select', '', {class:'span6', name:'status', options: ['open', 'done']})' if we merge it instead -->
-          <pre class="prettyprint">
-...
-&lt;div class="control-group"&gt;
-  &lt;label for="status" class="control-label"&gt;status&lt;/label&gt;
-  &lt;div class="controls"&gt;
-    &lt;select name="status" class="span6"&gt;
-      &lt;option&gt;open&lt;/option&gt;
-      &lt;option&gt;done&lt;/option&gt;
-    &lt;/select&gt;
-  &lt;/div&gt;
-&lt;/div&gt;
-...</pre>
 
-            <p>Now that we've made the needed changes, restart Geddy to update our model changes, now we've got a good todo application running and didn't really have to do anything. Scaffolding is very good when you don't need to do much. To learn more about models and applications keep reading and follow the <a href="#resources">resource</a> application tutorial to get a better understanding of views and controller which we didn't really cover in the Scaffold Tutorial.</p>
+            <p>Here we are making it so the title property is required and have a minumum of 5 characters. We also made it so the status acts like a boolean attribute but uses custom names instead of true/false. We should also change our <code>edit</code> and <code>add</code> views to limit the options, but we will do it as part of the <a href="#resources">resources tutorial</a>, for now we will leave the views the way they are.</p>
+          
+            <p>Now that we've made the needed changes, restart Geddy to update our model changes. Go and play with the app again, create a todo item, try to edit and test the validation rules. We've got a good todo application running and didn't really have to do much. Scaffolding is very good when you need something simple to get you started. To learn more about controllers and views keep reading and follow the <a href="#resources">resources tutorial</a>.</p>
 
             <h2 id="resources">Resource application tutorial</h2>
 
             <p>Let's start by using the <code>geddy</code> executable to generate a basic app-structure.</p>
             <pre class="prettyprint">$ geddy app todo_app</pre>
 
-            <p>Now let's try out our new application by doing <code>$ cd todo_app && geddy</code> command, your app should be running on port 4000. Visit <a href="http://localhost:4000">http://localhost:4000</a> in your browser to see your app.</p>
+            <p>Now let's try out our new application by running geddy from your application's root</p>
+
+            <pre class="prettyprint">
+$ cd todo_app 
+$ geddy</pre> 
+            
+            <p>Your app should be running on port 4000. Visit <a href="http://localhost:4000">http://localhost:4000</a> in your browser to see your app.</p>
 
             <h4>Optional: check out your app on a mobile phone</h4>
             <ul>
-              <li>point your mobile phone's browser to your computer's port 4000</li>
+              <li>point your mobile phone's browser to your computer on port 4000</li>
               <li>OR open up your favorite phone simulator and go to <a href="http://localhost:4000">http://localhost:4000</a></li>
               <li>OR resize your browser to at least 480px wide</li>
             </ul>
 
             <h3>Generate a resource</h3>
-            <p>Now, lets actually get started building our To Do list manager. First, we'll need to generate the <code>todo</code> resource. We do this using the <code>geddy</code> executable as well:</p>
+            <p>Now, let's get started building our To Do list manager. First, we'll need to generate the <code>todo</code> resource. We do this using the <code>geddy</code> executable as well:</p>
             <pre class="prettyprint">$ geddy resource todo title:string status</pre>
 
             <p>What did that do?</p>
             <ul>
               <li>It generated a <code>todo</code> model including the given model properties</li>
               <li>It generated a <code>todos</code> controller</li>
-              <li>It created a <code>todos</code> view directory</li>. Please note the folder is empty since resource won't generate any views for you. 
+              <li>It created a <code>todos</code> view directory. Please note the folder is empty since resource won't generate any views for you. </li>
               <li>It generated these routes from a resource route:
                 <ul>
                   <li><code>/todos</code> (GET)</li>
@@ -331,21 +332,19 @@ Todo = geddy.model.register('Todo', Todo);</pre>
               </li>
             </ul>
 
-            <p>Now lets restart Geddy so our changes are updated. <code>$ geddy</code> Once it starts up point your browser to <a href="http://localhost:4000/todos.json">http://localhost:4000/todos.json</a> to view the index action in JSON. We don't currently have any views but we're about to do that now.</p>
-
             <h3>Creating the Todo views</h3>
-            <p>To start creating our views, create a few files in 'app/views/todos', those being:</p>
+            <p>To start creating our views, create a few files in <code>app/views/todos</code>, those being:</p>
             <ul>
-              <li>_form.html.ejs</li>
-              <li>add.html.ejs</li>
-              <li>edit.html.ejs</li>
-              <li>index.html.ejs</li>
-              <li>show.html.ejs</li>
+              <li><code>_form.html.ejs</code></li>
+              <li><code>add.html.ejs</code></li>
+              <li><code>edit.html.ejs</code></li>
+              <li><code>index.html.ejs</code></li>
+              <li><code>show.html.ejs</code></li>
             </ul>
 
             <p>We won't go into to much detail here, as it should be pretty self explanatory but I'll go through some things.</p>
 
-            <p>First we'll create the _form partial template, this will hold all the form data for edit and add actions
+            <p>First we'll create the <code>_form.html.ejs</code> partial template, this will hold all the form data for edit and add actions
               .</p>
             <pre class="prettyprint">
 &lt;%
@@ -397,31 +396,32 @@ Todo = geddy.model.register('Todo', Todo);</pre>
 
             <p>Here we created a couple variables so we can tell if it's for a edit or add action, then if we have any errors we dislay them. Also we are using a couple view helpers (contentTag) which are helpful with dealing with assets, links, etc. You can read more about our view helpers <a href="https://github.com/mde/geddy/wiki/View-Helpers">here</a>.</p>
 
-            <p>Now that we've created a base for our add and edit actions, we'll do them now. They're simple they just use the _form partial. Add the following code to add.html.ejs</p>
+            <p>Now that we've created a base for our add and edit actions, we'll do them now. They're simple they just use the _form partial. Add the following code to <code>add.html.ejs</code></p>
             <pre class="prettyprint">
 &lt;div class="hero-unit"&gt;
   &lt;%= partial('_form', {params: params}); %&gt;
 &lt;/div&gt;</pre>
 
-            <p>The edit view is slightly different because we will need to pass the todo object to the partial. Modify <code>app/views/todos/edit.html.ejs</code> with the following code</p>
+            <p>The edit view is slightly different because we will need to pass the todo object to the partial. Modify <code>app/views/todos/edit.html.ejs</code> with the following code:</p>
 
-            <pre class="prettyprint">&lt;%= partial('_form', {params: params, todo: todo}); %&gt;</pre>
+            <pre class="prettyprint">
+&lt;div class="hero-unit"&gt;
+  &lt;%= partial('_form', {params: params, todo: todo}); %&gt;
+&lt;/div&gt;</pre>
 
-            <p>This template will be for both add and edit actions. We just create a partial from _form and include all the params.</p>
+            <p>Now that we have views that will create todo items let's add a simple <code>show.html.ejs</code> just so we can test everything end to end. In the following code I just loop through the params.</p>
 
-            <p>Now that we have views that will create todo items let's create the show action so we can view the todo items we create.</p>
             <pre class="prettyprint">
 &lt;div class="hero-unit"&gt;
   &lt;%- linkTo('Edit this todo', editTodoPath(params.id), {class: 'btn pull-right'}); %&gt;
   &lt;h3&gt;Params&lt;/h3&gt;
   &lt;ul&gt;
-  &lt;% for (var p in params) { %&gt;
+  &lt;% for (var p in todo) { %&gt;
     &lt;li&gt;&lt;%= p + ': ' + params[p]; %&gt;&lt;/li&gt;
   &lt;% } %&gt;
   &lt;/ul&gt;
 &lt;/div&gt;</pre>
-            <p>I will leave the show action to you for a exercise, but herre I just loop through the params and show them.</p>
-
+            
             <p>Finally we need to create the index action to link everything together.</p>
             <pre class="prettyprint">
 &lt;div class="hero-unit"&gt;
@@ -439,7 +439,7 @@ Todo = geddy.model.register('Todo', Todo);</pre>
   &lt;% } %&gt;
 &lt;% } %&gt;</pre>
 
-            <p>For the index action we just have a link to add new items, and a list of ll the items, with a link to each of their edit paths. If you notice we're using special helpers here, that create links to the path specified.</p>
+            <p>For the index action we just have a link to add new items, and a list of all the items, with a link to each of their edit paths. If you notice we're using special helpers here, that create links to the path specified.</p>
 
             <h3>The Todo model</h3>
             <p>We're ready to start in on modeling our data. Geddy provides us with some pretty cool tools to do this:</p>
@@ -451,7 +451,7 @@ Todo = geddy.model.register('Todo', Todo);</pre>
             </ul>
             <p>These tools should look somewhat familiar to anyone who's used an ORM-system like Ruby's ActiveRecord, or DataMapper.</p>
 
-            <p>Go ahead and open up <code>app/models/todo.js</code>. Read through the commented out code there for some ideas on what you can do with models. We'll be writing our model from scratch for this tutorial, so lets leave that commented out. (It's been deleted in the example app.)</p>
+            <p>Go ahead and open up <code>app/models/todo.js</code>. Read through the commented out code there for some ideas on what you can do with models. We'll be writing our model from scratch for this tutorial, so let's leave that commented out.</p>
 
             <p>So, minus the commented out code, you should have a file that looks like this:</p>
             <pre class="prettyprint">
@@ -466,43 +466,51 @@ var Todo = function () {
 
 Todo = geddy.model.register('Todo', Todo);</pre>
 
-            <p>The `defineProperties` method takes any number of properties to be added to the model. The keys in the object will be added as properties on the model. The values are just objects that describe the properties. When we ran the scaffold command it created these for us. But we want to change it so they are all `required` so set `title` and `status` to match `id` now.</p>
+            <p>The <code>defineProperties</code> method takes any number of properties to be added to the model. The keys in the object will be added as properties on the model. The values are just objects that describe the properties. When we ran the scaffold command it created these for us. But we want to change it so they are all `required`. To learn more, check out the <a href="https://github.com/mde/geddy/blob/master/README.md">readme</a>.</p>
 
-            <p>To learn more, check out the <a href="https://github.com/mde/geddy/blob/master/README.md">readme</a>.</p>
-
-            <p>There's also more detailed validation API. While we're here, lets use that API to set up some more validations:</p>
+            <p>There's also a more detailed validation API. While we're here, let's add some validation as well. The final code should look like this:</p>
 
             <pre class="prettyprint">
-this.validatesPresent('title');
-this.validatesLength('title', {min: 5});
+var Todo = function () {
 
-this.validatesWithFunction('status', function (status) {
-  return status == 'open' || status == 'done';
-});</pre>
+  this.defineProperties({
+      title: {type: 'string'}
+    , status: {type: 'string'}
+  });
+  
+  this.validatesPresent('title');
+  this.validatesLength('title', {min: 5});
+
+  this.validatesWithFunction('status', function (status) {
+    return status == 'open' || status == 'done';
+  });
+};
+
+Todo = geddy.model.register('Todo', Todo);</pre>
 
             <p>For the <code>title</code> property, we made sure that the property is always present and we made sure that the <code>title</code> property is a minimum of 5 characters long.</p>
 
-            <p>For the 'status' property, we used a function to validate that the property is always set to either <code>open</code> or <code>done</code>.</p>
+            <p>For the <code>status</code> property, we used a function to validate that the property is always set to either <code>open</code> or <code>done</code>.</p>
 
             <p>For more information about Geddy's Models, you can check out the <a href="https://github.com/mde/geddy/wiki/Models">Model wiki page</a>.</p>
 
             <h3>The Todo model-adapter</h3>
 
-            <p>Now that we've set up our <code>todo</code> model, we need to define a way to store it. To keep our models persistance agnostic, Geddy uses model-adapters. By default it will use mongo. For the purpose of this tutorial we will change the defaultAdapter to memory editing config/development.js. 
+            <p>Now that we've set up our <code>todo</code> model, we need to define a way to store it. To keep our models persistance agnostic, Geddy uses model-adapters. By default it will store objects in memory using the <code>memory</code> model adapter. You can change the default memoryAdapter in <code>config/development.js</code>. 
 
             <pre class="prettyprint">defaultAdapter = 'memory'</pre>
 
-            <p>There, now we've got a place to store our <code>todo</code>'s. This is in your application-memory, so it will disappear when you restart the server.</p>
+            <p>Now we've got a place to store our <code>todo</code>'s. This is in your application's memory, so it will disappear when you restart the server.</p>
 
             <h4>Optional: use mongo for persistence </h4>
-            <p>Install a <a href="http://www.mongodb.org/downloads">mongodb</a> server if you haven't already and <code> $ [sudo] npm install -g mongodb-wrapper</code> to install the required mongodb-wrapper and leave the <code>defaultAdapter = 'mongo'</code> in config/development.js to use mongo instead of the memory adapter. </p>
+            <p>Install a <a href="http://www.mongodb.org/downloads">mongodb</a> server if you haven't already and <code> $ [sudo] npm install -g mongodb-wrapper</code> to install the required mongodb-wrapper and set <code>defaultAdapter = 'mongo'</code> in config/development.js instead of the memory adapter. You will also have to specify the db configuration <code>db: { mongo: { dbname: 'model_test' }</code>. For more information see the <a href="https://github.com/mde/geddy/wiki/Model-Adapters">Model Adapter Wiki Page</a></p>
 
             <h3>The Todo Controller</h3>
-            <p>TODO: add some intro about controllers. Explain what Geddy adds by default and what we're about to change</p>
+            <p>Controllers sit between the views and models. They are also the entry point of our code. When a user gets a page a function in a controller, also called a controller acton, will get invoked. The controller will usually interact with the model and pass it to the view. The pattern isn't as black and white, but for the purpose of the tutorial, let's move on to actually write some controller actions.</p>
 
             <h4 id="saving-todos">Saving todos</h4>
 
-            <p>To save a todo we need edit the create action in <code>app/controllers/todos.js</code>. It's not doing much at the momment so lets modify it a little bit.</p>
+            <p>To save a todo we need to edit the <code>create</code> action in <code>app/controllers/todos.js</code>. It's not doing much at the momment so lets modify it a little bit.</p>
 
             <pre class="prettyprint">
 this.create = function (req, resp, params) {
@@ -521,13 +529,11 @@ this.create = function (req, resp, params) {
 
             <p>First, we create a new instance of the <code>Todo</code> model with <code>geddy.model.Todo.create</code>, passing in the title that our form will post up to us, and setting up the default status.</p>
 
-            <p>Then we call we call the <code>save</code> method and redirect the user back to the /todos route. Internally, save does two things. It validates the model based on the rules we defined earlier. This is similar to calling <code>todo.isValid()</code>. If the model was valid, it will delegate to the model adapter configured previously to actually persist the model. If either step fails, you will get an error collection as the first parameter of the function and we we redirect the user back to the /todos/add route. Otherwise we redirect to the controller default action <code>self.redirect({controller: self.name});</code>.</p>
+            <p>Then we call we call the <code>save</code> method. Internally, save does two things. It validates the model based on the rules we defined earlier. This is similar to calling <code>todo.isValid()</code>. If the model was valid, it will delegate to the model adapter configured previously to actually persist the model. If either step fails, you will get an error collection as the first parameter of the function and we redirect the user back to the /todos/add route. Otherwise we redirect to the controller's default action <code>self.redirect({controller: self.name});</code>.</p>
 
-            <h3 id="list-todos">Listing all todos</h3>
+            <h4 id="list-todos">Listing all todos</h4>
 
             <p>Now that we we can create To Do items, we should probably list them somewhere. Lets change the <code>index</code> action in the <code>todos</code> controller.</p>
-
-            <h4>Edit the index action to show all todos</h4>
 
             <p>Open up <code>/app/controllers/todos.js</code> again and replace the current implementaton with the following code.</p>
 
@@ -542,31 +548,25 @@ this.index = function (req, resp, params) {
 
             <p>This part is a bit simpler and it follows a similar pattern. Instead of calling create in <code>geddy.model.Todo</code> this time we simply call <code>all</code> and we pass the data back to the view for rendering</p>
 
-            <p>Now that we can can load todo items you can test it by starting up Geddy and go to <a href="http://localhost:4000/todos">http://localhost:4000/todos</a> and you can view the list of items.</p>
+            <p>Now that we can can load todo items you can test it by starting up Geddy and going to <a href="http://localhost:4000/todos">localhost:4000/todos</a> and you can view the list of items.</p>
 
-            <h3 id="show-todo">Showing a todo</h3>
+            <h4 id="show-todo">Showing a todo</h4>
 
-            <p>Now that we have our index action working as expected, we should probably work on the <code>show</code> controller action to display todo details.</p>
-
-            <h4>Edit the show action to find a todo</h4>
-
-            <p>Open up your <code>todos</code> controller again. This time we need to edit the show action to make it look like the following code.</p>
+            <p>Now that we have our index action working as expected, we should work on the <code>show</code> controller action to display todo details.</p>
 
             <pre class="prettyprint">
 this.show = function (req, resp, params) {
   var self = this;
 
   geddy.model.Todo.load(params.id, function(err, todo) {
-    self.respond({params: params, todo: todo.toObj()});
+    self.respond({params: params, todo: todo});
   });
 };</pre>
             <p>Now we have a working show action in the controller to load items.</p>
 
-            <h3 id="update-todo">Updating a todo</h3>
+            <h4 id="update-todo">Updating a todo</h4>
 
-            <h4>Edit the update action to find a todo, change the status, and save it</h4>
-
-            <p>Alright, now that we can view our todos lets edit the <code>update</code> action in the <code>todos</code> controller. It should look something like this.</p>
+            <p>Alright, now that we can view our todos let's edit the <code>update</code> and <code>edit</code> actions in the <code>todos</code> controller. They should look something like this:</p>
 
             <pre class="prettyprint">
 this.edit = function (req, resp, params) {
@@ -614,10 +614,11 @@ this.update = function (req, resp, params) {
             <p>If you want to explore a little more, here are some other things you could do:</p>
 
             <ul>
-            <li>Change the <code>Main#index</code> route to point to the <code>Todos#index</code> action (hint, check out <code>config/router.js</code>)</li>
-            <li>Add some logging with <code>geddy.log</code></li>
-            <li>Set up metrics by running <code>npm install metrics</code>, and uncomment the metrics entry (<code>metrics: { port: 4001 }</code>) in your <code>config/environment.js</code> file</li>
-            <li>Configure mongo, riak or postgress and use it instead of the memory modelAdapter. See how easy it's to switch</li>
+              <li>Change the <code>Main#index</code> route to point to the <code>Todos#index</code> action (hint, check out <code>config/router.js</code>)</li>
+              <li>Add some logging with <code>geddy.log</code></li>
+              <!-- Removed this item because metrics isn't working-->
+              <!--<li>Set up metrics by running <code>npm install metrics</code>, and uncomment the metrics entry (<code>metrics: { port: 4001 }</code>) in your <code>config/environment.js</code> file</li>-->
+              <li>Configure mongo, riak or postgress and use it instead of the memory modelAdapter. See how easy it's to switch</li>
             </ul>
 
           </div>
