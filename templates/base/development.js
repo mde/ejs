@@ -22,13 +22,8 @@ var config = {
 , hostname: null
 , port: 4000
 , model: {
-    defaultAdapter: 'mongo'
+    defaultAdapter: 'memory'
 	}
-, db: {
-    mongo: {
-      dbname: 'local'
-    }
-  }
 , sessions: {
     store: 'memory'
   , key: 'sid'

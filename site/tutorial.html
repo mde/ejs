@@ -155,12 +155,10 @@
 
             <h4>In this tutorial we'll cover:</h4>
             <ul>
-              <!-- TODO: Review if there're are more/less topics-->
               <li>Creating the base application</li>
               <li>Learning how to use the Geddy executable</li>
               <li>Setting up RESTful routes for our app</li>
               <li>Using Geddy models</li>
-              <li>How to use init.js in your applications startup</li>
               <li>How views in Geddy work</li>
               <li>How to use controllers to tie everything together</li>
             </ul>
@@ -239,6 +237,23 @@
             <pre class="prettyprint">$ geddy app todo_app</pre>
 
             <!-- TODO: Should I explain what Geddy did? e.g. folder structure and important files, what goes where, etc. -->
+            <p>Lets spend some time reviewing what geddy did. The previous command created a lot. During the tutorial we will edit and review some of this files, but we'll briefly explain what they are now so you get familiar with the base application.</p>
+
+            <ul>
+              <li><code>app/controllers</code>: contains the base controller and the main controller. All controllers will go in this folder</li>
+              <li><code>app/views/layouts/application.html.ejs</code>: layout used by default by all the views</li>
+              <li><code>app/views/main/index.html.ejs</code>: main view displayed when you visit the root of your web application</li>
+              <li><code>config/development.js</code>: configuration for the development environment</li>
+              <li><code>config/environment.js</code>: configuration for all your environments</li>
+              <li><code>config/init.js</code>: this is where you write code that will be run only once your app starts.</li>
+              <li><code>config/production.js</code>: configuration for the production environment</li>
+              <li><code>config/router.js</code>: contains route settings. It has some examples and you can learn more about <a href="https://github.com/mde/geddy/wiki/Using-the-Router"routes from the Wiki.</a></li>
+              <li><code>public/</code>: contains static assets that will be served directly by geddy's server. </li>
+              <!-- TODO: Add a summary of what bootstrap is and a link to TB-->
+              <li><code>public/css/</code>: Geddy uses <a href="">twitter bootstrap</a>. These are referenced by the layout file (<code>application.html.ejs</code>)</li>
+              <li><code>public/img/</code>: contains a few images used by twitter bootstrap. Your images will usually go here as well</li>
+              <li><code>public/js/</code>: bootstrap and jquery scripts</li>
+            </ul>  
 
             <p>Now you can start the application up by simply doing <code>$ cd todo_app && geddy</code>, Then open your browser to <a href="http://localhost:4000/">localhost:4000</a>, and you'll find the hello world page.</p>
 
