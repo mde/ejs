@@ -151,7 +151,7 @@
           <div class="tutorial">
 
             <h2 id="introduction">Welcome to the Geddy Tutorial</h2>
-            <p>In this tutorial we'll learn how to use Geddy by creating a simple todo manager applciation. There will be two created applications one created from scaffolding and one created from using resources. See the <!--TODO: Consider adding a link to a 'running' verison--><a href="https://github.com/mde/geddy/tree/master/examples/todo_app">finished version</a>.</p>
+            <p>In this tutorial we'll learn how to use Geddy by creating a simple todo manager applciation. There will be two created applications one created from scaffolding and one created from using resources. See the <a href="https://github.com/mde/geddy/tree/master/examples/todo_app">finished version</a>.</p>
 
             <h4>In this tutorial we'll cover:</h4>
             <ul>
@@ -236,7 +236,6 @@
             <p>First we'll create our application, this will create a base so we can start on.</p>
             <pre class="prettyprint">$ geddy app todo_app</pre>
 
-            <!-- TODO: Should I explain what Geddy did? e.g. folder structure and important files, what goes where, etc. -->
             <p>Lets spend some time reviewing what geddy did. The previous command created a lot. During the tutorial we will edit and review some of this files, but we'll briefly explain what they are now so you get familiar with the base application.</p>
 
             <ul>
@@ -247,7 +246,7 @@
               <li><code>config/environment.js</code>: configuration for all your environments</li>
               <li><code>config/init.js</code>: this is where you write code that will be run only once your app starts.</li>
               <li><code>config/production.js</code>: configuration for the production environment</li>
-              <li><code>config/router.js</code>: contains route settings. It has some examples and you can learn more about <a href="https://github.com/mde/geddy/wiki/Using-the-Router"routes from the Wiki.</a></li>
+              <li><code>config/router.js</code>: contains route settings. It has some examples and you can learn more about <a href="https://github.com/mde/geddy/wiki/Using-the-Router">routes from the Wiki.</a></li>
               <li><code>public/</code>: contains static assets that will be served directly by geddy's server. </li>
               <!-- TODO: Add a summary of what bootstrap is and a link to TB-->
               <li><code>public/css/</code>: Geddy uses <a href="">twitter bootstrap</a>. These are referenced by the layout file (<code>application.html.ejs</code>)</li>
@@ -260,11 +259,8 @@
             <p>So now we want to create a scaffold that will be used to create our todo items. We will create a title and status property so that we have some attributes to use.</p>
             <pre class="prettyprint">$ geddy scaffold todo title:default status</pre>
 
-            <!-- TODO: Should I explain what Geddy did? e.g. show user.js, explain why the properties are string (by default), explain there's a default id property and that title is used for display. Show the different views and explain some controller actions. Wow that's a lot for a simple command-->
-
-            <p>Now that we've created a scaffolding we should install the mondodb-wrapper package and install a <a href="http://www.mongodb.org/downloads">mongodb</a> server if you haven't already. This is because scaffolding will create a default model adapater for us that uses mongodb. Optionally you could change the defaultAdapter to 'memory' in config/development.js (<code>defaultAdapter = 'memory'</code>) and skip this step</p>
-            <pre class="prettyprint">$ [sudo] npm install -g mongodb-wrapper</pre>
-            <p>Once that gets installed and we start our mongodb server up we can start up Geddy to test our application. <code>$ geddy</code></p>
+            <p>We are almost done. Now you have to start the geddy</p>
+            <pre class="prettyprint">$ geddy</pre>
 
             <p>Open your browser to <a href="http://localhost:4000/todos">localhost:4000/todos</a> and you'll get a list of the todos which should be empty. Go ahead and look around, you can create show edit and delete todo items. We're going to make a few changes though.</p>
 
@@ -284,9 +280,7 @@ var Todo = function () {
 Todo = geddy.model.register('Todo', Todo);</pre>
           <p>Here we are making it so the title property is required and have a minumum of 5 characters. We also made it so the status acts like a boolean attribute but uses custom names instead of true/false. Now we'll need to edit the 'edit' and 'add' views to reflect the status changes.</p>
           <!--TODO: We could use the helper 'contentTag('select', '', {class:'span6', name:'status', options: ['open', 'done']})' if we merge it instead -->
-          <!-- TODO: Consider using partials for edit/add forms when using geddy scaffold-->
-          <!-- TODO: Consider changing the views used by scaffold, they could look better (specially show and index)-->
-            <pre class="prettyprint">
+          <pre class="prettyprint">
 ...
 &lt;div class="control-group"&gt;
   &lt;label for="status" class="control-label"&gt;status&lt;/label&gt;
@@ -298,6 +292,7 @@ Todo = geddy.model.register('Todo', Todo);</pre>
   &lt;/div&gt;
 &lt;/div&gt;
 ...</pre>
+
             <p>Now that we've made the needed changes, restart Geddy to update our model changes, now we've got a good todo application running and didn't really have to do anything. Scaffolding is very good when you don't need to do much. To learn more about models and applications keep reading and follow the <a href="#resources">resource</a> application tutorial to get a better understanding of views and controller which we didn't really cover in the Scaffold Tutorial.</p>
 
             <h2 id="resources">Resource application tutorial</h2>
@@ -353,7 +348,6 @@ Todo = geddy.model.register('Todo', Todo);</pre>
             <p>First we'll create the _form partial template, this will hold all the form data for edit and add actions
               .</p>
             <pre class="prettyprint">
-              <!-- TODO: Consider using the view helper for the select tage if we merge that change-->
 &lt;%
   var isUpdate = params.action == 'edit'
     , formTitle = isUpdate ? 'Update this To Do Item' : 'Create a new To Do Item'
