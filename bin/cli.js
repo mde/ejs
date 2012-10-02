@@ -191,9 +191,7 @@ if (cmds.length) {
     cmd += ' --quiet';
   }
 
-  console.log(cmd);
   cmd = cmd.split(' ');
-  console.log(cmd);
   var jake = require('jake');
   jake.run.apply(jake, cmd);
 }
