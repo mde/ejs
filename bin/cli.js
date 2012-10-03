@@ -32,7 +32,7 @@ usage = [
   , 'Options:'
   , '  --environment, -e   Environment to use'
   , '  --port, -p          Port to connect to'
-  , '  --workers, -w       Number of worker processes to start(Default: 2)'
+  , '  --workers, -w       Number of worker processes to start (default: 1)'
   , '  --debug, -d         Sets the log level to output debug messages to'
   , '                        the console'
   , '  --jade, -j          When generating views this will create Jade'
