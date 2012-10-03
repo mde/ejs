@@ -27,9 +27,17 @@ build:
 
 install:
 	@mkdir -p $(DESTDIR)$(PREFIX)/bin && \
-	  mkdir -p $(DESTDIR)$(PREFIX)/lib/node_modules/geddy && \
-    mkdir -p ./node_modules && \
-    npm install jake utilities model barista && \
+		mkdir -p $(DESTDIR)$(PREFIX)/lib/node_modules/geddy && \
+		mkdir -p ./node_modules && \
+		npm install jake utilities model barista && \
+		cp -R ./* $(DESTDIR)$(PREFIX)/lib/node_modules/geddy/ && \
+		ln -snf ../lib/node_modules/geddy/bin/cli.js $(DESTDIR)$(PREFIX)/bin/geddy && \
+		chmod 755 $(DESTDIR)$(PREFIX)/lib/node_modules/geddy/bin/cli.js && \
+		echo 'Geddy installed.'
+
+quickinstall:
+	@mkdir -p $(DESTDIR)$(PREFIX)/bin && \
+		mkdir -p $(DESTDIR)$(PREFIX)/lib/node_modules/geddy && \
 		cp -R ./* $(DESTDIR)$(PREFIX)/lib/node_modules/geddy/ && \
 		ln -snf ../lib/node_modules/geddy/bin/cli.js $(DESTDIR)$(PREFIX)/bin/geddy && \
 		chmod 755 $(DESTDIR)$(PREFIX)/lib/node_modules/geddy/bin/cli.js && \
