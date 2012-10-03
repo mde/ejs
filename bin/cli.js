@@ -142,7 +142,7 @@ if (cmds.length) {
 
   // Get the model properties
   if (cmds.slice(2).length > 0) {
-    modelCmd = ',' + cmds.slice(2).join(' ');
+    modelCmd = ',' + cmds.slice(2).join('%');
   } else modelCmd = '';
 
   // Add Jake argument based on commands
