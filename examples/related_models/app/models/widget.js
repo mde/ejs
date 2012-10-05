@@ -6,7 +6,7 @@ var Widget = function () {
 
   this.hasOne('Thing');
 
-  this.adapter = 'Mongo';
+  this.adapter = 'mongo';
 
 };
 Widget = geddy.model.register('Widget', Widget);

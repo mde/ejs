@@ -6,7 +6,7 @@ var Box = function () {
 
   this.hasMany('Things');
 
-  this.adapter = 'Mongo';
+  this.adapter = 'mongo';
 
 };
 Box = geddy.model.register('Box', Box);
