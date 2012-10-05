@@ -10,7 +10,7 @@
   "version": "0.5.0",
   "author": "Matthew Eernisse <mde@fleegix.org> (http://fleegix.org)",
   "dependencies": {
-    "jake": "0.4.x",
+    "jake": "0.5.x",
     "utilities": "0.0.x",
     "model": "0.0.x",
     "barista": "0.0.x"

@@ -20,6 +20,7 @@ var cwd = process.cwd()
   , modelCmd
   , filepath
   , die
+  , jake
   , start;
 
 // Usage dialog
@@ -122,7 +123,7 @@ if (cmds.length) {
   // Get templates Jake file
   filepath = path.normalize(path.join(__dirname, '..', 'templates', 'Jakefile'));
 
-  cmd = '-t -f ' + filepath + ' ';
+  cmd = '';
 
   // Some commands take only one arg
   if (!(cmds[0] == 'secret' ||
@@ -187,13 +188,14 @@ if (cmds.length) {
       die(cmds[0] + ' is not a Geddy command.');
   }
 
-  if (!opts.debug) {
-    cmd += ' --quiet';
-  }
-
-  cmd = cmd.split(' ');
-  var jake = require('jake');
-  jake.run.apply(jake, cmd);
+  jake = require('jake');
+  jake.program.init({
+    quiet: !opts.debug
+  , trace: true
+  });
+  jake.loader.loadFile(filepath);
+  jake.program.setTaskNames([cmd]);
+  jake.program.run();
 }
 // Just `geddy` -- start the server
 else {
