@@ -128,7 +128,9 @@ if (cmds.length) {
   // Some commands take only one arg
   if (!(cmds[0] == 'secret' ||
       cmds[0] == 'db:init' ||
-      cmds[0] == 'console') && !cmds[1]) {
+      cmds[0].indexOf('test') === 0 ||
+      cmds[0] == 'console')
+      && !cmds[1]) {
     throw new Error(cmds[0] + ' command requires another argument.');
   }
 
@@ -155,6 +157,12 @@ if (cmds.length) {
     case 'db:init':
       // Create DBs
       cmd += 'db:init';
+      break;
+    case 'test':
+      cmd = 'test';
+      if (cmds[1]) {
+        cmd += '[' + cmds[1] + ']'
+      }
       break;
     case 'db:createTable':
       // Create DBs
@@ -189,12 +197,22 @@ if (cmds.length) {
   }
 
   jake = require('jake');
-  jake.program.init({
-    quiet: !opts.debug
-  , trace: true
-  });
   jake.loader.loadFile(filepath);
-  jake.program.setTaskNames([cmd]);
+  if (cmd.indexOf('test') === 0) {
+    jake.loader.loadFile(path.join(process.cwd(), 'Jakefile'));
+    // Load up the Geddy env before running
+    jake.program.setTaskNames(['env:init', cmd]);
+    jake.program.init({
+      trace: true
+    });
+  }
+  else {
+    jake.program.init({
+      quiet: !opts.debug
+    , trace: true
+    });
+    jake.program.setTaskNames([cmd]);
+  }
   jake.program.run();
 }
 // Just `geddy` -- start the server

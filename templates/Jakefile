@@ -181,7 +181,7 @@ namespace('gen', function () {
     templ.process({names: names, bare: bare, properties: options.properties});
 
     // Write file
-    fileDir = path.join('app', dirname);
+    fileDir = dirname;
     if (!utils.file.existsSync(fileDir)) {
       fs.mkdirSync(fileDir);
     }
@@ -265,6 +265,11 @@ namespace('gen', function () {
 
   // Creates a new Geddy app scaffold
   task('app', function (name, engine) {
+    var mkdirs
+      , cps
+      , text
+      , tpl;
+
     if (!name) {
       throw new Error('No app name specified.');
     }
@@ -272,28 +277,29 @@ namespace('gen', function () {
       engine = 'ejs';
     }
 
-    var mkdirs = [
-            ''
-          , 'config'
-          , 'app/models'
-          , 'app/controllers'
-          , 'app/helpers'
-          , 'lib'
-          , 'log'
-          , 'node_modules'
-        ]
-      , cps = [
-            ['views/' + engine, 'app/views']
-          , ['public', '']
-          , ['router.js', 'config']
-          , ['init.js', 'config']
-          , ['environment.js', 'config']
-          , ['development.js', 'config']
-          , ['production.js', 'config']
-          , ['main.js', 'app/controllers']
-          , ['application.js', 'app/controllers']
-          , ['favicon.ico', 'public']
-        ];
+    mkdirs = [
+      ''
+    , 'config'
+    , 'app/models'
+    , 'app/controllers'
+    , 'app/helpers'
+    , 'lib'
+    , 'log'
+    , 'node_modules'
+    , 'test'
+    ];
+    cps = [
+      ['views/' + engine, 'app/views']
+    , ['public', '']
+    , ['router.js', 'config']
+    , ['init.js', 'config']
+    , ['environment.js', 'config']
+    , ['development.js', 'config']
+    , ['production.js', 'config']
+    , ['main.js', 'app/controllers']
+    , ['application.js', 'app/controllers']
+    , ['favicon.ico', 'public']
+    ];
 
     mkdirs.forEach(function (dir) {
       jake.mkdirP(path.join(name, dir));
@@ -301,6 +307,11 @@ namespace('gen', function () {
     cps.forEach(function (cp) {
       jake.cpR(path.join(__dirname, 'base', cp[0]), path.join(name, cp[1]), {silent: true});
     });
+
+    text = fs.readFileSync(path.join(__dirname, 'base', 'Jakefile.ejs'), 'utf8').toString()
+    templ = new adapter({data: {ext: '.ejs'}, text: text, templato: templato});
+    templ.process({appName: name});
+    fs.writeFileSync(path.join(name, 'Jakefile'), templ.markup, 'utf8');
 
     console.log('Created app ' + name + '.');
   });
@@ -344,6 +355,8 @@ namespace('gen', function () {
     }
 
     modelTask.on('complete', function () {
+      jake.Task['gen:test'].invoke(name,
+          {properties: modelProperties});
       jake.Task['gen:controllerScaffold'].invoke(name,
           {properties: modelProperties});
       jake.Task['gen:route'].invoke(name);
@@ -365,7 +378,7 @@ namespace('gen', function () {
     }
     modelPath += '/model';
 
-    _writeTemplate(name, modelPath, 'models', {
+    _writeTemplate(name, modelPath, path.join('app', 'models'), {
         inflection: 'singular'
       , properties: _formatModelProperties(properties)
     });
@@ -385,8 +398,17 @@ namespace('gen', function () {
       throw new Error('No controller name specified.');
     }
 
-    _writeTemplate(name, 'resource/controller', 'controllers',
+    _writeTemplate(name, 'resource/controller', path.join('app', 'controllers'),
         {inflection: 'plural', bare: false});
+  });
+
+  task('test', function (name) {
+    if (!name) {
+      throw new Error('No test name specified.');
+    }
+
+    _writeTemplate(name, 'resource/test', 'test',
+        {inflection: 'singular'});
   });
 
   task('controllerScaffold', function (name, options) {
@@ -395,7 +417,7 @@ namespace('gen', function () {
     }
     options = options || {};
 
-    _writeTemplate(name, 'scaffold/controller', 'controllers', {
+    _writeTemplate(name, 'scaffold/controller', path.join('app', 'controllers'), {
         inflection: 'plural'
       , bare: false
       , properties: _formatModelProperties(options.properties)
@@ -410,7 +432,8 @@ namespace('gen', function () {
       engine = 'ejs';
     }
 
-    _writeTemplate(name, 'resource/controller', 'controllers', {inflection: 'plural', bare: true});
+    _writeTemplate(name, 'resource/controller', path.join('app', 'controllers'),
+        {inflection: 'plural', bare: true});
     jake.Task['gen:route'].invoke(name, {bare: true});
     jake.Task['gen:views'].invoke(name, {bare: true, engine: engine});
   });
