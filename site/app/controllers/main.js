@@ -24,12 +24,49 @@ var Main = function () {
     });
   };
 
+  this.documentation = function (req, resp, params) {
+    this.respond(params, {
+      format: 'html'
+    , template: 'app/views/main/documentation'
+    });
+  };
+
+  this.tutorial = function (req, resp, params) {
+    this.respond(params, {
+      format: 'html'
+    , template: 'app/views/main/tutorial'
+    });
+  };
+
+  this.blog = function (req, resp, params) {
+    this.respond(params, {
+      format: 'html'
+    , template: 'app/views/main/blog'
+    });
+  };
+
+  this.article = function (req, resp, params) {
+    this.respond(params, {
+      format: 'html'
+    , template: 'app/views/main/blog_post'
+    });
+  };
+
   this.community = function (req, resp, params) {
     this.respond(params, {
       format: 'html'
     , template: 'app/views/main/community'
     });
   };
+
+  this.faq = function (req, resp, params) {
+    this.respond(params, {
+      format: 'html'
+    , template: 'app/views/main/faq'
+    });
+  };
+
+
 };
 
 exports.Main = Main;
