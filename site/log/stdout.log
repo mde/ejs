@@ -1,4 +1,4 @@
-[Sat, 06 Oct 2012 07:08:13 GMT] INFO Server starting with config: {
+[Sat, 06 Oct 2012 22:55:06 GMT] INFO Server starting with config: {
   "environment": "development",
   "workers": 1,
   "port": 4000,
@@ -29,22 +29,7 @@
   "hostname": null,
   "detailedErrors": true
 }
-[Sat, 06 Oct 2012 07:08:13 GMT] INFO Creating 1 worker process.
-[Sat, 06 Oct 2012 07:08:14 GMT] INFO Server worker running in development on port 4000 with a PID of: 73634
-[Sat, 06 Oct 2012 07:08:14 GMT] DEBUG LOGGING STARTED ============================================
-[Sat, 06 Oct 2012 07:08:14 GMT] DEBUG ============================================================
-[Sat, 06 Oct 2012 08:27:56 GMT] INFO Code changed, killing 73634, cycling ...
-[Sat, 06 Oct 2012 08:27:56 GMT] INFO Creating 1 worker process.
-[Sat, 06 Oct 2012 08:27:56 GMT] INFO Server worker running in development on port 4000 with a PID of: 74818
-[Sat, 06 Oct 2012 08:27:56 GMT] DEBUG LOGGING STARTED ============================================
-[Sat, 06 Oct 2012 08:27:56 GMT] DEBUG ============================================================
-[Sat, 06 Oct 2012 08:29:16 GMT] INFO Code changed, killing 74818, cycling ...
-[Sat, 06 Oct 2012 08:29:16 GMT] INFO Creating 1 worker process.
-[Sat, 06 Oct 2012 08:29:16 GMT] INFO Server worker running in development on port 4000 with a PID of: 74834
-[Sat, 06 Oct 2012 08:29:16 GMT] DEBUG LOGGING STARTED ============================================
-[Sat, 06 Oct 2012 08:29:16 GMT] DEBUG ============================================================
-[Sat, 06 Oct 2012 08:29:56 GMT] INFO Code changed, killing 74834, cycling ...
-[Sat, 06 Oct 2012 08:29:56 GMT] INFO Creating 1 worker process.
-[Sat, 06 Oct 2012 08:29:56 GMT] INFO Server worker running in development on port 4000 with a PID of: 74892
-[Sat, 06 Oct 2012 08:29:56 GMT] DEBUG LOGGING STARTED ============================================
-[Sat, 06 Oct 2012 08:29:56 GMT] DEBUG ============================================================
+[Sat, 06 Oct 2012 22:55:06 GMT] INFO Creating 1 worker process.
+[Sat, 06 Oct 2012 22:55:06 GMT] INFO Server worker running in development on port 4000 with a PID of: 79130
+[Sat, 06 Oct 2012 22:55:06 GMT] DEBUG LOGGING STARTED ============================================
+[Sat, 06 Oct 2012 22:55:06 GMT] DEBUG ============================================================
