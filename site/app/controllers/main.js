@@ -34,10 +34,19 @@ var Main = function () {
 
   this.documentation = function (req, resp, params) {
     var self = this
-    , opts = {
-      url: 'https://api.github.com/repos/mde/geddy/commits'
-    , dataType: 'json'
+    , docs = []
+    , count = 0
+
+    // once we've got a list of commits, get the tree
+    // for the latest commit
+    , gotCommits = function (err, commits) {
+      var commit = commits[0] && commits[0].commit
+        , url = commit.tree && commit.tree.url;
+      return getTree(url, gotTree);
     }
+
+    // once we've got the first tree, get 'docs' tree
+    // once we've got the 'docs' tree, call gotTree
     , getTree = function (url, callback) {
         var tree;
         opts.url = url;
@@ -54,19 +63,47 @@ var Main = function () {
           return callback(err, trees.tree);
         });
     }
-    , gotCommits = function (err, commits) {
-      var commit = commits[0] && commits[0].commit
-        , url = commit.tree && commit.tree.url;
-      return getTree(url, gotTree);
+    , getBlob = function (paths, i, callback) {
+      var options = {
+        url: paths[i].url
+      , dataType: 'json'
+      }
+      geddy.request(options, function (err, resp) {
+        var content = new Buffer(resp.content, 'base64').toString('utf8')
+          , name = paths[i].path.replace('.md','');
+        docs[name[0]] = {
+          name: name.split().splice(0,2)
+        , content: content
+        };
+        return respond(paths.length);
+      });
     }
+
+    // once we've got the 'docs' tree,
+    // parse it and call getBlob for each file
     , gotTree = function (err, tree) {
       for (var i in tree) {
         console.log(tree[i].path, ':', tree[i].url);
+        getBlob(tree, i, respond);
       }
-      self.respond(params, {
-        format: 'html'
-      , template: 'app/views/main/documentation'
-      });
+    }
+
+    // once we've got everything done, respond with data
+    , respond = function (total) {
+      count++;
+      if (count == total) {
+        console.log(docs);
+        self.respond(params, {
+          format: 'html'
+        , template: 'app/views/main/documentation'
+        });
+      }
+    }
+
+    // inital call to get the commits
+    , opts = {
+        url: 'https://api.github.com/repos/mde/geddy/commits'
+      , dataType: 'json'
     }
     geddy.request(opts, gotCommits);
   };
