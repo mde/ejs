@@ -1,6 +1,8 @@
 ## Geddy web framework for Node.js
 - - -
 
+[![build status](https://secure.travis-ci.org/mde/geddy.png)](http://travis-ci.org/mde/geddy)
+
 ### Goals
 
   * Easy to use
@@ -301,7 +303,7 @@ User.prototype.someOtherMethod = function () {
   // Do some other stuff
 };
 
-User = geddy.model.registerModel('User', User);
+User = geddy.model.register('User', User);
 ```
 
 Alternatively, you can use the `defineProperties` method to lay out your model:

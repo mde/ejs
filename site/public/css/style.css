@@ -1,0 +1,267 @@
+body {
+  padding-top: 40px;
+  padding-bottom: 40px;
+  color: #666;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: lighter;
+}
+
+a {
+  color: #666;
+}
+
+input::-webkit-input-placeholder {
+  color: #ccc;
+}
+
+input:-moz-placeholder {
+  color: #ccc;
+}
+
+input:-ms-input-placeholder {
+  color: #ccc;
+}
+
+.header {
+  margin-bottom: 40px;
+}
+
+.header h1 {
+  text-align: center;
+  height: 300px;
+  line-height: 300px;
+  font-size: 96px;
+  font-weight: lighter;
+  background: #3399cc;
+  color: #fff;
+  margin-top: 0;
+  margin-bottom: 20px;
+}
+
+.menu .icon {
+  background: #e8e8e8;
+  color: #666;
+  height: 140px;
+  margin-bottom: 20px;
+}
+
+.menu .icon:hover {
+  text-decoration: none;
+  background: #666;
+  color: #e8e8e8;
+}
+
+.menu .icon span {
+  position: relative;
+  bottom: -115px;
+  left: 10px;
+  font-size: 15px;
+}
+
+.title {
+  margin-bottom: 60px;
+}
+
+.footer {
+  border-top: 1px solid #eee;
+  padding-top: 60px;
+  margin-top: 60px;
+  margin-left: 0;
+ }
+
+.mail-list .email, .mail-list .submit {
+  height: 60px;
+  margin: 0;
+  padding: 0;
+  border-radius: 0;
+}
+
+.mail-list .submit {
+  background: #63A500;
+  color: #fff;
+  font-size: 30px;
+  width: 100%;
+  border: 0;
+  height: 62px;
+}
+
+.footer .mail-list input.email {
+  box-shadow: none;
+  padding-left: 20px;
+  width: 600px;
+  font-size: 30px;
+  line-height: 60px;
+  color: #666;
+}
+
+.footer .list {
+  color: #ccc;
+}
+
+.footer .copyright {
+  margin-left: 20px;
+}
+
+.footer .list ul {
+  list-style: none;
+  float: right;
+  margin: 0 0 0 20px;
+  padding: 0;
+}
+
+.footer .list ul li {
+  display: inline-block;
+  margin-left: 10px;
+}
+
+
+/* Community Page */
+
+.box {
+  margin: 0;
+  padding: 0;
+  width: 480px;
+}
+
+.avatar, .info {
+  margin-bottom: 20px;
+}
+
+.avatar {
+  height: 140px;
+  background: #e8e8e8;
+}
+
+.info {
+  height: 300px;
+  background: #3399cc;
+}
+
+/* Large desktop */
+@media (min-width: 1200px) {
+  .header h1 {
+    height: 370px;
+    line-height: 370px;
+    margin-bottom: 30px;
+  }
+
+  .menu .icon {
+    height: 170px;
+    margin-bottom: 30px;
+  }
+
+  .menu .icon span {
+    bottom: -140px;
+  }
+
+  .box {
+    width: 600px;
+  }
+
+  .avatar, .info {
+    margin-bottom: 30px;
+  }
+
+  .avatar {
+    height: 170px;
+  }
+
+  .info {
+    height: 370px;
+  }
+
+  .footer {
+    margin-right: 0px;
+  }
+
+  .footer .mail-list input.email {
+    width: 750px;
+  }
+}
+
+/* Portrait tablet to landscape and desktop */
+@media (max-width: 979px) {
+  body {
+    padding: 40px 0;
+  }
+
+  .header h1 {
+    height: 228px;
+    line-height: 228px;
+  }
+
+  .menu .icon {
+    height: 104px;
+  }
+
+  .menu .icon span {
+    display: none;
+  }
+
+  .box {
+    width: 372px;
+  }
+
+  .avatar {
+    height: 104px;
+  }
+
+  .info {
+    height: 228px;
+  }
+
+  .footer .mail-list input.email {
+    width: 456px;
+  }
+
+}
+
+/* Landscape phone to portrait tablet */
+@media (max-width: 767px) {
+  .menu {
+    width: 392px;
+    float: right;
+  }
+
+  .menu .row {
+    margin-left: 20px;
+  }
+
+  .menu .icon {
+    float: left;
+    width: 104px;
+    margin-right: 20px;
+  }
+
+  .avatar {
+    display: none;
+  }
+
+  .footer {
+    margin-right: 0;
+  }
+
+  .footer .mail-list input.email {
+    width: 100%;
+    padding: 0;
+    border-left: none;
+    border-right: none;
+  }
+
+}
+
+/* Landscape phones and down */
+@media (max-width:480px) {
+
+  .footer .list ul {
+    float: none;
+  }
+
+  .footer .list ul li {
+    margin: 0 10px 0 0;
+  }
+
+}
+

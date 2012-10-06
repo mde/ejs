@@ -3,8 +3,8 @@
   <@- linkTo('Create a new <%= names.constructor.singular %>', add<%= names.constructor.singular %>Path, {class: 'btn pull-right'}); @>
 </div>
 
-<@ if(<%= names.property.plural %>) { @>
-<@ for(var i in <%= names.property.plural %>) { @>
+<@ if (<%= names.property.plural %>) { @>
+<@ for (var i = 0, ii = <%= names.property.plural %>.length; i < ii; i++) { @>
 <div class="row list-item">
   <div class="span8">
     <h3><@- linkTo(<%= names.property.plural %>[i].<%= properties['default'].name %>, <%= names.property.singular %>Path(<%= names.property.plural %>[i].id)); @></h3>

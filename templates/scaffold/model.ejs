@@ -3,18 +3,21 @@ var <%= names.constructor.singular %> = function () {
   this.defineProperties({
 <% for(var i in properties) { -%>
 <% if(i === 'default') { -%>
-      <%= properties[i].name %>: {type: '<%= properties[i].type %>', required: true}
-<% } else { -%>
-<% if(i === 'id') { -%>
-    , <%= properties[i].name %>: {type: '<%= properties[i].type %>', required: true}
-<% } else { -%>
-    , <%= properties[i].name %>: {type: '<%= properties[i].type %>'}
+<% if(properties[i].name !== 'id') { -%>
+    <%= properties[i].name %>: {type: '<%= properties[i].type %>', required: true},
 <% } -%>
+<% } else { -%>
+<% if(i !== 'id') -%>
+    <%= properties[i].name %>: {type: '<%= properties[i].type %>'},
 <% } -%>
 <% } -%>
   });
 
-  this.adapter = "Mongo";
+<% for(var i in properties) { -%>
+<% if(properties[i].name === 'id' && properties[i].type === 'int') { -%>
+  this.autoIncrementId = true;
+<% } -%>
+<% } -%>
 
   /*
   this.property('login', 'string', {required: true});

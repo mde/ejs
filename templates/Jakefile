@@ -8,15 +8,172 @@ var fs = require('fs')
   , adapter = require('../lib/template/adapters').Adapter
   , templato = new (require('../deps/templato'));
 
+namespace('env', function () {
+  task('init', function (environment) {
+
+    jake.addListener('complete', function (e) {
+      jake.Task['env:cleanup'].invoke();
+    });
+
+    geddy.config = require('../lib/config').readConfig({
+      environment: environment || 'development'
+    });
+    geddy.model = require('model');
+
+    require('../lib/init').init(geddy, function () {
+      complete();
+    });
+
+  }, {async: true});
+
+  task('cleanup', function () {
+    // Disconnect all the adapters
+    adapters = geddy.model.loadedAdapters
+    , adapter;
+    for (var p in adapters) {
+      adapter = adapters[p];
+      if (typeof adapter.disconnect == 'function') {
+        adapter.disconnect();
+      }
+    }
+  });
+
+});
+
+namespace('console', function () {
+
+  task('start', ['env:init'], {async: true}, function (environment) {
+    var env = environment || 'development'
+      , t = jake.Task['env:init'];
+    t.addListener('complete', function () {
+      var readline = require('readline')
+        , rl = readline.createInterface({
+            input: process.stdin
+          , output: process.stdout
+          });
+      rl.setPrompt('>>> ');
+      rl.prompt();
+      rl.addListener('line', function (line) {
+        try {
+          console.log(global.eval(line));
+        }
+        catch (e) {
+          console.log(e.stack);
+        }
+        rl.prompt();
+      });
+      rl.addListener('close', function () {
+        console.log('Exiting ...');
+        return complete();
+      });
+    });
+
+    global.capture = function (err, data) {
+      return global.results = {
+        err: err
+      , data: data
+      };
+    }
+
+    global.echo = function (err, data) {
+      capture(err, data);
+      if (err) {
+        console.log('Error: ', err);
+      }
+      if (data) {
+        if (data.length) {
+          for (var i in data) {
+            if (data[i] && data[i].toData) {
+              console.log(data[i].toData());
+            } else {
+              console.log(data[i]);
+            }
+          }
+        } else {
+          if (data && data.toData) {
+            console.log(data.toData());
+          } else {
+            console.log(data);
+          }
+        }
+      } else {
+        console.log('No data');
+      }
+    }
+
+    t.invoke(env);
+  });
+});
+
+namespace('db', function () {
+
+  task('createTable', ['env:init'], function (name) {
+    var modelName
+      , createTable
+      , adapters
+      , adapter;
+
+    if (typeof name == 'string') {
+      if (name.indexOf(',') > -1) {
+        modelNames = name.split(',');
+      }
+      else {
+        modelNames = [name];
+      }
+    }
+    else {
+      modelNames = name;
+    }
+
+    createTable = function () {
+      if ((m = modelNames.shift())) {
+
+        // Make sure this is a correct model-name
+        m = utils.string.getInflections(m).constructor.singular;
+        if (!geddy.model[m]) {
+          throw new Error(m + ' is not a known model.');
+        }
+
+        adapter = geddy.model.adapters[m];
+        if (adapter) {
+          console.log('Creating table for ' + m);
+          adapter.createTable(m, function (err, data) {
+            if (err) { throw err }
+            createTable();
+          });
+        }
+        else {
+          createTable();
+        }
+      }
+      else {
+        complete();
+      }
+    };
+    createTable();
+
+  }, {async: true});
+
+  task('retrofit', ['env:init'], function () {
+    var modelNames = Object.keys(geddy.model.descriptionRegistry)
+      , createTask = jake.Task['db:createTable'];
+      createTask.once('complete', function () {
+        complete();
+      });
+      createTask.invoke(modelNames);
+  }, {async: true});
+
+});
+
 namespace('gen', function () {
 
-  var _writeTemplate = function (name, filename, dirname, options) {
-    options = options || {};
-
-    var names = utils.string.inflection(name)
+  var _writeTemplate = function (name, filename, dirname, opts) {
+    var options = opts || {}
+      , names = utils.string.getInflections(name)
       , text = fs.readFileSync(path.join(__dirname, filename + '.ejs'), 'utf8').toString()
       , bare = options.bare || false // Default to full controller
       , templ
+      , fileDir
       , filePath;
 
     // Render with the right model name
@@ -24,17 +181,24 @@ namespace('gen', function () {
     templ.process({names: names, bare: bare, properties: options.properties});
 
     // Write file
-    filePath = path.join('app', dirname, names.filename[options.inflection] + '.js');
+    fileDir = dirname;
+    if (!utils.file.existsSync(fileDir)) {
+      fs.mkdirSync(fileDir);
+    }
+
+    filePath = path.join(fileDir, names.filename[options.inflection] + '.js');
     fs.writeFileSync(filePath, templ.markup, 'utf8');
 
     console.log('[Added] ' + filePath);
   };
 
-  var _formatModelProperties = function(properties) {
-    var obj = {'default': {name: 'id', type: 'string'}};
-    if(!properties) return obj;
+  var _formatModelProperties = function (properties) {
+    var obj = {'default': {name: 'id', type: 'int'}};
+    if (!properties) {
+      return obj;
+    }
 
-    var itemsArr = properties.split(' ')
+    var itemsArr = properties.split('%')
       , name
       , type
       , args
@@ -42,7 +206,7 @@ namespace('gen', function () {
       , value;
 
     i = -1;
-    while(++i < itemsArr.length) {
+    while (++i < itemsArr.length) {
       value = itemsArr[i];
       name = value.replace(/:.*/g, '');
       type = value.replace(/[a-zA-Z]*:?/, '');
@@ -51,29 +215,48 @@ namespace('gen', function () {
       // Take off any args on the type
       type = type.replace(/:.*/g, '');
 
-      // Defaults and alias's
-      if(!type) type = 'string';
-      if(type === 'integer') type = 'int';
-      if(type === 'bool') type = 'boolean';
-      if(args === 'def') args = 'default';
-      if(type === 'default' || type === 'def') {
-        // If the type is `default` assume they want `string`
-        // type and want this property to be default
+      // Defaults and aliases
+      if (!type) {
         type = 'string';
+      }
+
+      switch (type) {
+        case 'text':
+          type = 'string';
+          break;
+        case 'integer':
+          type = 'int';
+          break;
+        case 'bool':
+          type = 'boolean';
+          break;
+        case 'default':
+        case 'def':
+          type = 'string';
+          args = 'default';
+          break;
+      }
+
+      if (args === 'def') {
         args = 'default';
       }
 
-      // Set it as default if given the `default` argument
-      if(args === 'default') {
+      // Set property as default if given the `default` argument
+      if (args === 'default') {
         obj['default'] = {name: name, type: type};
         // Add the original ID property
-        obj['id'] = obj['id'] || {name: 'id', type: 'string'};
-      } else {
+        obj['id'] = obj['id'] || {name: 'id', type: 'int'};
+      }
+      else {
         // If ID property is given and it matches the default
         // then rewrite the default with the new ID property
-        if(name === 'id' && obj['default'].name === 'id') {
+        if (name === 'id' && obj['default'].name === 'id') {
           obj['default'] = {name: name, type: type};
-        } else obj[name] = {name: name, type: type};
+        }
+        else {
+          // Add the property normally
+          obj[name] = {name: name, type: type};
+        }
       }
     }
 
@@ -81,182 +264,187 @@ namespace('gen', function () {
   };
 
   // Creates a new Geddy app scaffold
-  task('app', [], function(name, engine) {
-    if(!name) throw new Error('No app name specified.');
-    if(!engine) engine = 'ejs';
+  task('app', function (name, engine) {
+    var mkdirs
+      , cps
+      , text
+      , tpl;
 
-    var mkdirs = [
-            ''
-          , 'config'
-          , 'app/models'
-          , 'app/controllers'
-          , 'lib'
-          , 'log'
-          , 'node_modules'
-        ]
-      , cps = [
-            ['views/' + engine, 'app/views']
-          , ['public', '']
-          , ['router.js', 'config']
-          , ['init.js', 'config']
-          , ['environment.js', 'config']
-          , ['development.js', 'config']
-          , ['production.js', 'config']
-          , ['main.js', 'app/controllers']
-          , ['application.js', 'app/controllers']
-          , ['favicon.ico', 'public']
-        ];
+    if (!name) {
+      throw new Error('No app name specified.');
+    }
+    if (!engine) {
+      engine = 'ejs';
+    }
 
-    mkdirs.forEach(function(dir) {
+    mkdirs = [
+      ''
+    , 'config'
+    , 'app/models'
+    , 'app/controllers'
+    , 'app/helpers'
+    , 'lib'
+    , 'log'
+    , 'node_modules'
+    , 'test'
+    ];
+    cps = [
+      ['views/' + engine, 'app/views']
+    , ['public', '']
+    , ['router.js', 'config']
+    , ['init.js', 'config']
+    , ['environment.js', 'config']
+    , ['development.js', 'config']
+    , ['production.js', 'config']
+    , ['main.js', 'app/controllers']
+    , ['application.js', 'app/controllers']
+    , ['favicon.ico', 'public']
+    ];
+
+    mkdirs.forEach(function (dir) {
       jake.mkdirP(path.join(name, dir));
     });
-    cps.forEach(function(cp) {
-      jake.cpR(path.join(__dirname, 'base', cp[0]), path.join(name, cp[1]));
+    cps.forEach(function (cp) {
+      jake.cpR(path.join(__dirname, 'base', cp[0]), path.join(name, cp[1]), {silent: true});
     });
+
+    text = fs.readFileSync(path.join(__dirname, 'base', 'Jakefile.ejs'), 'utf8').toString()
+    templ = new adapter({data: {ext: '.ejs'}, text: text, templato: templato});
+    templ.process({appName: name});
+    fs.writeFileSync(path.join(name, 'Jakefile'), templ.markup, 'utf8');
 
     console.log('Created app ' + name + '.');
   });
 
   // Creates a resource with a model, controller and a resource route
-  task('resource', function(name, modelProperties) {
-    if(!name) throw new Error('No resource name specified.');
-    var names = utils.string.inflection(name);
+  task('resource', function (name, modelProperties) {
+    var names
+      , modelTask = jake.Task['gen:model'];
 
-    jake.Task['gen:model'].invoke(name, modelProperties);
-    jake.Task['gen:controller'].invoke(name);
-    jake.Task['gen:route'].invoke(name);
+    if (!name) {
+      throw new Error('No resource name specified.');
+    }
 
-    // Create views folder but not actions
-    jake.mkdirP(path.join('app', 'views', names.filename.plural));
+    modelTask.on('complete', function () {
+      jake.Task['gen:controller'].invoke(name);
+      jake.Task['gen:route'].invoke(name);
+      names = utils.string.getInflections(name);
+      // Create views folder but not actions
+      jake.mkdirP(path.join('app', 'views', names.filename.plural));
+      console.log('[Added] ' + names.filename.plural + ' view directory');
+      complete();
+    });
+    modelTask.invoke(name, modelProperties);
 
-    console.log('[Added] ' + names.filename.plural + ' view directory');
-  });
+  }, {async: true});
+
 
   // Creates a full scaffold with views, a model, controller and a resource route
-  task('scaffold', function(name, engine, modelProperties) {
-    if(!modelProperties && engine) {
+  task('scaffold', function (name, engine, modelProperties) {
+    var modelTask = jake.Task['gen:model'];
+
+    if (!modelProperties && engine) {
       modelProperties = engine;
       engine = '';
     }
-    if(!name) throw new Error('No scaffold name specified.');
-    if(!engine) engine = 'ejs';
-
-    var names = utils.string.inflection(name)
-      , jsEnvironment = path.normalize('config/environment.js')
-      , coffeeEnvironment = path.normalize('config/environment.coffee')
-      , environmentPath
-      , environmentArr
-      , text
-      , splitText
-      , dbContent = '';
-
-    // Check if the environment file exists
-    utils.fileUtils.searchParentPath(jsEnvironment, function(err) {
-      if(err) {
-        var jsErr = err;
-        // If jsEnvironment wasn't found, try finding coffee variant
-        utils.fileUtils.searchParentPath(coffeeEnvironment, function(err) {
-          if(err) {
-            throw jsErr;
-          } else {
-            environmentPath = coffeeEnvironment;
-          }
-        });
-      } else {
-        environmentPath = jsEnvironment;
-      }
-    });
-
-    jake.Task['gen:modelScaffold'].invoke(name, modelProperties);
-    jake.Task['gen:controllerScaffold'].invoke(name, {properties: modelProperties});
-    jake.Task['gen:route'].invoke(name);
-    jake.Task['gen:viewsScaffold'].invoke(name, {engine: engine, properties: modelProperties});
-
-    // Add the following line to `config/environment.js/.coffee`
-    if(environmentPath) {
-      text = fs.readFileSync(environmentPath, 'utf8').toString();
-
-      // Create text to add to environment
-      if(environmentPath.match('.coffee')) {
-        dbContent = [
-            '  db:'
-          , '    mongo:'
-          , '      db: \'' + names.property.plural + '\''
-        ].join('\n');
-        splitText = 'config = ';
-      } else if(environmentPath.match('.js')) {
-        dbContent = [
-            '  db: {'
-          , '    mongo: {'
-          , '      db: \'' + names.property.plural + '\''
-          , '    }'
-          , '  }'
-        ].join('\n');
-        splitText = 'var config = {';
-      }
-
-      // Don't add the db config over and over
-      if(text.indexOf('db:') == -1) {
-        environmentArr = text.split(splitText);
-        environmentArr[0] += splitText + '\n' + dbContent + '\n';
-
-        text = environmentArr.join('');
-        fs.writeFileSync(environmentPath, text, 'utf8');
-
-        console.log('[Added] Database configuration to ' + environmentPath);
-      } else console.log('Database configuration already set in ' + environmentPath);
+    if (!name) {
+      throw new Error('No scaffold name specified.');
     }
-  });
+    if (!engine) {
+      engine = 'ejs';
+    }
 
-  task('model', [], function(name, properties) {
-    if(!name) throw new Error('No model name specified.');
+    modelTask.on('complete', function () {
+      jake.Task['gen:test'].invoke(name,
+          {properties: modelProperties});
+      jake.Task['gen:controllerScaffold'].invoke(name,
+          {properties: modelProperties});
+      jake.Task['gen:route'].invoke(name);
+      jake.Task['gen:viewsScaffold'].invoke(name,
+          {engine: engine, properties: modelProperties});
+      complete();
+    });
+    modelTask.invoke(name, modelProperties, 'scaffold');
 
-    _writeTemplate(name, 'resource/model', 'models', {
+  }, {async: true});
+
+  task('model', function (name, properties, modelPath) {
+    var createTableTask;
+    if (!name) {
+      throw new Error('No model name specified.');
+    }
+    if (!modelPath) {
+      modelPath = 'resource';
+    }
+    modelPath += '/model';
+
+    _writeTemplate(name, modelPath, path.join('app', 'models'), {
         inflection: 'singular'
       , properties: _formatModelProperties(properties)
     });
-  });
 
-  task('modelScaffold', [], function(name, properties) {
-    if(!name) throw new Error('No model name specified.');
-
-    _writeTemplate(name, 'scaffold/model', 'models', {
-        inflection: 'singular'
-      , properties: _formatModelProperties(properties)
+    // Try to create a table -- should be a no-op if an
+    // appropriate DB adapter can't be found
+    createTableTask = jake.Task['db:createTable'];
+    createTableTask.on('complete', function () {
+      complete();
     });
+    createTableTask.invoke(name);
+
+  }, {async: true});
+
+  task('controller', function (name) {
+    if (!name) {
+      throw new Error('No controller name specified.');
+    }
+
+    _writeTemplate(name, 'resource/controller', path.join('app', 'controllers'),
+        {inflection: 'plural', bare: false});
   });
 
-  task('controller', [], function(name) {
-    if(!name) throw new Error('No controller name specified.');
+  task('test', function (name) {
+    if (!name) {
+      throw new Error('No test name specified.');
+    }
 
-    _writeTemplate(name, 'resource/controller', 'controllers', {inflection: 'plural', bare: false});
+    _writeTemplate(name, 'resource/test', 'test',
+        {inflection: 'singular'});
   });
 
-  task('controllerScaffold', [], function(name, options) {
-    if(!name) throw new Error('No controller name specified.');
+  task('controllerScaffold', function (name, options) {
+    if (!name) {
+      throw new Error('No controller name specified.');
+    }
     options = options || {};
 
-    _writeTemplate(name, 'scaffold/controller', 'controllers', {
+    _writeTemplate(name, 'scaffold/controller', path.join('app', 'controllers'), {
         inflection: 'plural'
       , bare: false
       , properties: _formatModelProperties(options.properties)
     });
   });
 
-  task('bareController', [], function(name, engine) {
-    if(!name) throw new Error('No controller name specified.');
-    if(!engine) engine = 'ejs';
+  task('bareController', function (name, engine) {
+    if (!name) {
+      throw new Error('No controller name specified.');
+    }
+    if (!engine) {
+      engine = 'ejs';
+    }
 
-    _writeTemplate(name, 'resource/controller', 'controllers', {inflection: 'plural', bare: true});
+    _writeTemplate(name, 'resource/controller', path.join('app', 'controllers'),
+        {inflection: 'plural', bare: true});
     jake.Task['gen:route'].invoke(name, {bare: true});
     jake.Task['gen:views'].invoke(name, {bare: true, engine: engine});
   });
 
-  task('route', [], function(name, options) {
-    if(!name) throw new Error('No route name specified.');
+  task('route', function (name, options) {
+    if (!name) {
+      throw new Error('No route name specified.');
+    }
     options = options || {};
 
-    var names = utils.string.inflection(name)
+    var names = utils.string.getInflections(name)
       , routeType = options.bare ? 'Bare' : 'Resource'
       , jsRouter = path.normalize('config/router.js')
       , coffeeRouter = path.normalize('config/router.coffee')
@@ -267,12 +455,12 @@ namespace('gen', function () {
       , newRoute;
 
     // Check if the router file exists
-    utils.fileUtils.searchParentPath(jsRouter, function(err) {
-      if(err) {
+    utils.file.searchParentPath(jsRouter, function (err) {
+      if (err) {
         var jsErr = err;
         // If jsEnvironment wasn't found, try finding coffee variant
-        utils.fileUtils.searchParentPath(coffeeRouter, function(err) {
-          if(err) {
+        utils.file.searchParentPath(coffeeRouter, function (err) {
+          if (err) {
             throw jsErr;
           } else {
             routerPath = coffeeRouter;
@@ -283,19 +471,19 @@ namespace('gen', function () {
       }
     });
 
-    if(routerPath) {
+    if (routerPath) {
       text = fs.readFileSync(routerPath, 'utf8');
 
-      if(routerPath.match('.coffee')) {
-        if(options.bare) {
+      if (routerPath.match('.coffee')) {
+        if (options.bare) {
           newRoute = 'router.match(\'/' +  names.filename.plural +
             '\').to controller: \'' + names.constructor.plural +
             '\', action: \'index\'';
         } else {
           newRoute = 'router.resource \'' +  names.filename.plural + '\'';
         }
-      } else if(routerPath.match('.js')) {
-        if(options.bare) {
+      } else if (routerPath.match('.js')) {
+        if (options.bare) {
           newRoute = 'router.match(\'/' +  names.filename.plural +
             '\').to({controller: \'' + names.constructor.plural +
             '\', action: \'index\'});';
@@ -305,7 +493,7 @@ namespace('gen', function () {
       }
 
       // Don't add the same route over and over
-      if(text.indexOf(newRoute) == -1) {
+      if (text.indexOf(newRoute) == -1) {
         // Add the new resource route just above the export
         routerArr = text.split('exports.router');
         routerArr[0] += newRoute + '\n';
@@ -326,15 +514,17 @@ namespace('gen', function () {
     }
   });
 
-  task('views', [], function(name, options) {
-    if(!name) throw new Error('No view name specified.');
+  task('views', function (name, options) {
+    if (!name) {
+      throw new Error('No view name specified.');
+    }
 
     options = options || {};
 
     // Option defaults
     options.engine = options.engine || 'ejs';
 
-    var names = utils.string.inflection(name)
+    var names = utils.string.getInflections(name)
       , engine = options.engine
       , appViewDir = path.join('app', 'views', names.filename.plural)
       , templateViewDir = path.join(__dirname, 'views', engine)
@@ -345,15 +535,25 @@ namespace('gen', function () {
       , addActionView;
 
     // Set extension based on engine option
-    if(engine === 'ejs') ext += '.ejs';
-    if(engine === 'jade') ext += '.jade';
-    if(engine === 'handlebars') ext += '.hbs';
-    if(engine === 'mustache') ext += '.ms';
+    switch (engine) {
+      case 'ejs':
+        ext += '.ejs';
+        break;
+      case 'jade':
+        ext += '.jade';
+        break;
+      case 'handlebars':
+        ext += '.hbs';
+        break;
+      case 'mustache':
+        ext += '.ms';
+        break;
+    }
 
     // Set application layout path
     appLayoutPath = path.join('app', 'views', 'layouts', 'application');
     // Copy template view to application path
-    addActionView = function(action) {
+    addActionView = function (action) {
       jake.cpR(path.join(templateViewDir, action + ext), appViewDir);
     };
 
@@ -362,7 +562,7 @@ namespace('gen', function () {
     addActionView('index');
 
     // Add views for the other CRUD actions when doing a full-on resource
-    if(!options.bare) {
+    if (!options.bare) {
       ['add', 'edit', 'show'].forEach(function (action) {
         addActionView(action);
       });
@@ -370,8 +570,8 @@ namespace('gen', function () {
 
     // Create default layout if one doesn't exist
     // Hack: There should be a better way to detect if a application layout exists
-    if(!utils.compat.existsSync(appLayoutPath + '.html.ejs') && !utils.compat.existsSync(appLayoutPath + '.html.jade') &&
-       !utils.compat.existsSync(appLayoutPath + '.html.hbs') && !utils.compat.existsSync(appLayoutPath + '.html.ms')) {
+    if (!utils.file.existsSync(appLayoutPath + '.html.ejs') && !utils.file.existsSync(appLayoutPath + '.html.jade') &&
+       !utils.file.existsSync(appLayoutPath + '.html.hbs') && !utils.file.existsSync(appLayoutPath + '.html.ms')) {
       // Copy template layout file to apps application layout file
       jake.cpR(path.join(templateViewDir, 'layout' + ext), appLayoutPath + ext);
     }
@@ -379,8 +579,8 @@ namespace('gen', function () {
     console.log('[Added] View templates');
   });
 
-  task('viewsScaffold', function(name, options) {
-    if(!name) {
+  task('viewsScaffold', function (name, options) {
+    if (!name) {
       throw new Error('No view name specified.');
     }
 
@@ -389,7 +589,7 @@ namespace('gen', function () {
     // Option defaults
     options.engine = options.engine || 'ejs';
 
-    var names = utils.string.inflection(name)
+    var names = utils.string.getInflections(name)
       , engine = options.engine
       , appViewDir = path.join('app', 'views', names.filename.plural)
       , templateViewDir = path.join(__dirname, 'scaffold', 'views', engine)
@@ -402,16 +602,26 @@ namespace('gen', function () {
       , templ;
 
     // Set extension based on engine option
-    if(engine === 'ejs') ext += '.ejs';
-    if(engine === 'jade') ext += '.jade';
-    if(engine === 'handlebars') ext += '.hbs';
-    if(engine === 'mustache') ext += '.ms';
+    switch (engine) {
+      case 'ejs':
+        ext += '.ejs';
+        break;
+      case 'jade':
+        ext += '.jade';
+        break;
+      case 'handlebars':
+        ext += '.hbs';
+        break;
+      case 'mustache':
+        ext += '.ms';
+        break;
+    }
 
     // Set application layout path
     appLayoutPath = path.join('app', 'views', 'layouts', 'application');
 
     // Function to compile the template
-    addActionView = function(action) {
+    addActionView = function (action) {
       text = fs.readFileSync(path.join(templateViewDir, action + ext + '.ejs')).toString();
 
       // Compile template text
@@ -427,14 +637,14 @@ namespace('gen', function () {
     jake.mkdirP('app/views/layouts');
 
     // Add views for the other CRUD actions when doing a full-on resource
-    ['index', 'add', 'show', 'edit'].forEach(function(action) {
+    ['index', 'add', 'show', 'edit'].forEach(function (action) {
       addActionView(action);
     });
 
     // Create default layout if one doesn't exist
     // Hack: There should be a better way to detect if a application layout exists
-    if(!utils.compat.existsSync(appLayoutPath + '.html.ejs') && !utils.compat.existsSync(appLayoutPath + '.html.jade') &&
-       !utils.compat.existsSync(appLayoutPath + '.html.hbs') && !utils.compat.existsSync(appLayoutPath + '.html.ms')) {
+    if (!utils.file.existsSync(appLayoutPath + '.html.ejs') && !utils.file.existsSync(appLayoutPath + '.html.jade') &&
+       !utils.file.existsSync(appLayoutPath + '.html.hbs') && !utils.file.existsSync(appLayoutPath + '.html.ms')) {
       // Copy template layout file to apps application layout file
       jake.cpR(path.join(templateViewDir, 'layout' + ext), appLayoutPath + ext);
     }
@@ -443,7 +653,7 @@ namespace('gen', function () {
   });
 
   // Generate a new application secret in environment.js
-  task('secret', [], function() {
+  task('secret', function () {
     var jsEnvironment = path.normalize('config/environment.js')
       , coffeeEnvironment = path.normalize('config/environment.coffee')
       , secret = utils.string.uuid(128)
@@ -453,12 +663,12 @@ namespace('gen', function () {
       , splitText;
 
     // Check if the environment file exists
-    utils.fileUtils.searchParentPath(jsEnvironment, function(err) {
-      if(err) {
+    utils.file.searchParentPath(jsEnvironment, function (err) {
+      if (err) {
         var jsErr = err;
         // If jsEnvironment wasn't found, try finding coffee variant
-        utils.fileUtils.searchParentPath(coffeeEnvironment, function(err) {
-          if(err) {
+        utils.file.searchParentPath(coffeeEnvironment, function (err) {
+          if (err) {
             throw jsErr;
           } else {
             environmentPath = coffeeEnvironment;
@@ -469,14 +679,16 @@ namespace('gen', function () {
       }
     });
 
-    if(environmentPath) {
+    if (environmentPath) {
       text = fs.readFileSync(environmentPath, 'utf8').toString();
 
       // Remove any old secret
       text = text.replace(/\nconfig.secret.+\n/, '');
 
       splitText = 'module.exports = config';
-      if(environmentPath.match('.js')) splitText += ';';
+      if (environmentPath.match('.js')) {
+        splitText += ';';
+      }
 
       environmentArr = text.split(splitText);
       environmentArr[0] += "config.secret = '" + secret + "'";
@@ -486,7 +698,10 @@ namespace('gen', function () {
       fs.writeFileSync(environmentPath, text, 'utf8');
 
       console.log('[Added] Application secret to \'' + environmentPath + '\'');
-    } else console.log('There is no environment config to add the secret too');
+    }
+    else {
+      console.log('There is no environment config to add the app-secret to.');
+    }
   });
 
 });

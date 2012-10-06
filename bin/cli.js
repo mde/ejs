@@ -4,8 +4,8 @@
 var geddy = require('../lib/geddy')
   , exec = require('child_process').exec
   , path = require('path')
-  , parseopts = require('../lib/parseopts')
-  , utils = require('../lib/utils/index');
+  , utils = require('utilities')
+  , parseopts = require('../lib/parseopts');
 
 // Variables
 var cwd = process.cwd()
@@ -20,6 +20,7 @@ var cwd = process.cwd()
   , modelCmd
   , filepath
   , die
+  , jake
   , start;
 
 // Usage dialog
@@ -32,7 +33,7 @@ usage = [
   , 'Options:'
   , '  --environment, -e   Environment to use'
   , '  --port, -p          Port to connect to'
-  , '  --workers, -w       Number of worker processes to start(Default: 2)'
+  , '  --workers, -w       Number of worker processes to start (default: 1)'
   , '  --debug, -d         Sets the log level to output debug messages to'
   , '                        the console'
   , '  --jade, -j          When generating views this will create Jade'
@@ -99,69 +100,93 @@ opts = parser.opts;
 opts.handle = opts.handlebars || opts.handle;
 
 // Exit the process with a message
-die = function(str) {
+die = function (str) {
   console.log(str);
   process.exit();
 };
 
 // Start Geddy with options
-start = function() {
+start = function () {
   geddy.config(opts);
   geddy.start();
 };
 
-if(opts.help) die(usage);
-if(opts.version) die(geddy.version);
+if (opts.help) {
+  die(usage);
+}
+if (opts.version) {
+  die(geddy.version);
+}
 
 // `geddy app foo` or `geddy resource bar` etc. -- run generators
-if(cmds.length) {
+if (cmds.length) {
   // Get templates Jake file
   filepath = path.normalize(path.join(__dirname, '..', 'templates', 'Jakefile'));
 
-  // Wrap quotes in case path has spaces
-  if(process.platform === 'win32') filepath = '"' + filepath + '"';
-  cmd = 'jake -t -f ' + filepath + ' ';
+  cmd = '';
 
-  // If command isn't secret and has no other argument
-  if (cmds[0] !== 'secret' && !cmds[1]) {
+  // Some commands take only one arg
+  if (!(cmds[0] == 'secret' ||
+      cmds[0] == 'db:init' ||
+      cmds[0].indexOf('test') === 0 ||
+      cmds[0] == 'console')
+      && !cmds[1]) {
     throw new Error(cmds[0] + ' command requires another argument.');
   }
 
   // Add engines to command
-  if(opts.jade) {
+  if (opts.jade) {
     engineCmd = ',' + 'jade';
-  } else if(opts.handle) {
+  } else if (opts.handle) {
     engineCmd = ',' + 'handlebars';
-  } else if(opts.mustache) {
+  } else if (opts.mustache) {
     engineCmd = ',' + 'mustache';
   } else engineCmd = '';
 
   // Get the model properties
-  if(cmds.slice(2).length > 0) {
-    modelCmd = ',' + cmds.slice(2).join(' ');
+  if (cmds.slice(2).length > 0) {
+    modelCmd = ',' + cmds.slice(2).join('%');
   } else modelCmd = '';
 
   // Add Jake argument based on commands
-  switch(cmds[0]) {
+  switch (cmds[0]) {
+    case 'console':
+      // Create DBs
+      cmd += 'console:start[' + (cmds[1] || 'development') + ']';
+      break;
+    case 'db:init':
+      // Create DBs
+      cmd += 'db:init';
+      break;
+    case 'test':
+      cmd = 'test';
+      if (cmds[1]) {
+        cmd += '[' + cmds[1] + ']'
+      }
+      break;
+    case 'db:createTable':
+      // Create DBs
+      cmd += 'db:createTable[' + cmds[1] + ']';
+      break;
     case 'app':
       // Generating application
-      cmd += '"gen:app[' + cmds[1] + engineCmd + ']"';
+      cmd += 'gen:app[' + cmds[1] + engineCmd + ']';
       break;
     case 'resource':
       // Generating resource
-      cmd += '"gen:resource[' + cmds[1] + modelCmd + ']"';
+      cmd += 'gen:resource[' + cmds[1] + modelCmd + ']';
       break;
     case 'scaffold':
       // Generating application
-      cmd += '"gen:scaffold[' + cmds[1] + engineCmd + modelCmd + ']"';
+      cmd += 'gen:scaffold[' + cmds[1] + engineCmd + modelCmd + ']';
       break;
     case 'controller':
       // Generating controller
-      cmd += '"gen:bareController[' + cmds[1] + engineCmd + ']"';
+      cmd += 'gen:bareController[' + cmds[1] + engineCmd + ']';
       break;
     case 'model':
       // Generating model
-      cmd += '"gen:model[' + cmds[1] + modelCmd + ']"';
+      cmd += 'gen:model[' + cmds[1] + modelCmd + ']';
       break;
     case 'secret':
       // Generating new app secret
@@ -171,21 +196,33 @@ if(cmds.length) {
       die(cmds[0] + ' is not a Geddy command.');
   }
 
-  cmd += ' --quiet';
-  exec(cmd, function(err, stdout, stderr) {
-    if(err) throw err;
-
-    if(stderr) console.log(utils.string.trim(stderr));
-    if(stdout) console.log(utils.string.trim(stdout));
-  });
+  jake = require('jake');
+  jake.loader.loadFile(filepath);
+  if (cmd.indexOf('test') === 0) {
+    jake.loader.loadFile(path.join(process.cwd(), 'Jakefile'));
+    // Load up the Geddy env before running
+    jake.program.setTaskNames(['env:init', cmd]);
+    jake.program.init({
+      trace: true
+    });
+  }
+  else {
+    jake.program.init({
+      quiet: !opts.debug
+    , trace: true
+    });
+    jake.program.setTaskNames([cmd]);
+  }
+  jake.program.run();
 }
 // Just `geddy` -- start the server
 else {
   // Search for 'config' directory in parent directories
-  utils.fileUtils.searchParentPath('config', function(err, filePath) {
-    if(err) {
+  utils.file.searchParentPath('config', function (err, filePath) {
+    if (err) {
       die(usage);
-    } else {
+    }
+    else {
       start();
     }
   });

@@ -1,5 +1,5 @@
 .hero-unit
-  form#<%= names.property.singular %>-form.form-horizontal(action="/<%= names.url.plural %>", method="POST")
+  form#<%= names.property.singular %>-form.form-horizontal(action="/<%= names.filename.plural %>", method="POST")
     fieldset
       legend Create a new <%= names.constructor.singular %>
       if params.errors
@@ -11,16 +11,18 @@
 <% for(var i in properties) { -%>
 <% if(properties[i].name !== 'id') { -%>
       .control-group
-        label(for="<%= properties[i].name %>") <%= properties[i].name %>
+        label(for="<%= properties[i].name %>", class="control-label") <%= properties[i].name %>
         .controls
 <% if(properties[i].type === 'string') { -%>
 <% if(properties[i].name === 'password') { -%>
-          != contentTag('input', '', {type:'password', class:'span6', placeholder:'enter <%= properties[i].name %>', name:'<%= properties[i].name %>'})
+          != contentTag('input', '', {type:'password', class:'span6', name:'<%= properties[i].name %>'})
 <% } else { -%>
-          != contentTag('input', '', {type:'text', class:'span6', placeholder:'enter <%= properties[i].name %>', name:'<%= properties[i].name %>'})
+          != contentTag('input', '', {type:'text', class:'span6', name:'<%= properties[i].name %>'})
 <% } -%>
+<% } else if(properties[i].type === 'text') { -%>
+          != contentTag('textarea', '', {class: 'span6', name: '<%= properties[i].name %>', rows: 10})
 <% } else if(properties[i].type === 'number' || properties[i].type === 'int') { -%>
-          != contentTag('input', '', {type:'number', class:'span2', placeholder:'enter <%= properties[i].name %>', name:'<%= properties[i].name %>'})
+          != contentTag('input', '', {type:'number', class:'span2', name:'<%= properties[i].name %>'})
 <% } else if(properties[i].type === 'boolean') { -%>
           select.span1(name="<%= properties[i].name %>")
             option(selected) false

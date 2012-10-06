@@ -4,7 +4,7 @@ var <%= names.constructor.plural %> = function () {
   this.index = function (req, resp, params) {
     var self = this;
 
-    geddy.model.adapter.<%= names.constructor.singular %>.all(function(err, <%= names.property.plural %>) {
+    geddy.model.<%= names.constructor.singular %>.all(function(err, <%= names.property.plural %>) {
       self.respond({params: params, <%= names.property.plural %>: <%= names.property.plural %>});
     });
   };
@@ -14,23 +14,29 @@ var <%= names.constructor.plural %> = function () {
   };
 
   this.create = function (req, resp, params) {
+<% for(var i in properties) { -%>
+<% if(properties[i].name === 'id' && properties[i].type === 'string') { -%>
     params.id = params.id || geddy.string.uuid(10);
 
+<% } -%>
+<% } -%>
     var self = this
       , <%= names.property.singular %> = geddy.model.<%= names.constructor.singular %>.create(params);
 
     <%= names.property.singular %>.save(function(err, data) {
-      if(err) {
+      if (err) {
         params.errors = err;
         self.transfer('add');
-      } else self.redirect({controller: self.name});
+      } else {
+        self.redirect({controller: self.name});
+      }
     });
   };
 
   this.show = function (req, resp, params) {
     var self = this;
 
-    geddy.model.adapter.<%= names.constructor.singular %>.load(params.id, function(err, <%= names.property.singular %>) {
+    geddy.model.<%= names.constructor.singular %>.load(params.id, function(err, <%= names.property.singular %>) {
       self.respond({params: params, <%= names.property.singular %>: <%= names.property.singular %>.toObj()});
     });
   };
@@ -38,7 +44,7 @@ var <%= names.constructor.plural %> = function () {
   this.edit = function (req, resp, params) {
     var self = this;
 
-    geddy.model.adapter.<%= names.constructor.singular %>.load(params.id, function(err, <%= names.property.singular %>) {
+    geddy.model.<%= names.constructor.singular %>.load(params.id, function(err, <%= names.property.singular %>) {
       self.respond({params: params, <%= names.property.singular %>: <%= names.property.singular %>});
     });
   };
@@ -46,28 +52,30 @@ var <%= names.constructor.plural %> = function () {
   this.update = function (req, resp, params) {
     var self = this;
 
-    geddy.model.adapter.<%= names.constructor.singular %>.load(params.id, function(err, <%= names.property.singular %>) {
-<% for(var i in properties) { -%>
-      <%= names.property.singular %>.<%= properties[i].name %> = params.<%= properties[i].name %>;
-<% } -%>
+    geddy.model.<%= names.constructor.singular %>.load(params.id, function(err, <%= names.property.singular %>) {
+      <%= names.property.singular %>.updateAttributes(params);
 
       <%= names.property.singular %>.save(function(err, data) {
-        if(err) {
+        if (err) {
           params.errors = err;
           self.transfer('edit');
-        } else self.redirect({controller: self.name});
+        } else {
+          self.redirect({controller: self.name});
+        }
       });
     });
   };
 
-  this.remove = function (req, resp, params) {
+  this.destroy = function (req, resp, params) {
     var self = this;
 
-    geddy.model.adapter.<%= names.constructor.singular %>.remove(params.id, function(err) {
-      if(err) {
+    geddy.model.<%= names.constructor.singular %>.remove(params.id, function(err) {
+      if (err) {
         params.errors = err;
         self.transfer('edit');
-      } else self.redirect({controller: self.name});
+      } else {
+        self.redirect({controller: self.name});
+      }
     });
   };
 <% } %>
