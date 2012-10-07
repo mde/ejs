@@ -1,3 +1,7 @@
+### 0.5.2
+
+### 0.5.1
+
 ### 0.5.0
 + removed models from geddy core
 + removed utilities from geddy core

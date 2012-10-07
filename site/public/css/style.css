@@ -417,3 +417,8 @@ input:-ms-input-placeholder {
 
 }
 
+@media print {
+  .footer{
+    display: none;
+  }
+}

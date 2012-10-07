@@ -4,9 +4,10 @@
       h2 Changelog
   .row.content
     .span4.toc
-      ul
-        each section in sections
-          li
-            a(href="#"+section)=section
+      - if (sections.length > 1)
+        ul
+          each section in sections
+            li
+              a(href="#"+section)=section
     .span8
       !=content
