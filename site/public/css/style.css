@@ -402,6 +402,10 @@ input:-ms-input-placeholder {
     height: 228px;
   }
 
+  .info p {
+    font-size: 15px;
+  }
+
   .footer .mail-list input.email {
     width: 456px;
   }
