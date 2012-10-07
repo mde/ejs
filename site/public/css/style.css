@@ -424,6 +424,14 @@ input:-ms-input-placeholder {
     margin-right: 20px;
   }
 
+  #documentation .span6 {
+    width: 100%;
+  }
+
+  #documentation div.toc {
+    width: 100%;
+  }
+
   .box {
     width: 100%;
   }
