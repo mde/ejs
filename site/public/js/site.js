@@ -32,7 +32,8 @@ app.docs = new (function() {
     var self = this;
     $(window).scroll(function(e) {
       var newTop = $(this).scrollTop();
-      if (newTop > 462) {
+      // only scroll on screens larger than an iphone
+      if (newTop > 462 && $(this).width() > 979) {
         self.$toc.offset({top: newTop + 20});
       } else {
         self.$toc.css({'top': 0, 'position': 'static'});
@@ -58,7 +59,9 @@ app.docs = new (function() {
 // wait for document to load
 // then init this page
 $(document).ready(function () {
-  if (app.state.page == 'documentation' || app.state.page == 'tutorial') {
+  if (app.state.page == 'documentation' ||
+      app.state.page == 'tutorial' ||
+      app.state.page == 'changelog') {
     app.docs.init();
   }
 });
