@@ -7,7 +7,7 @@ body {
 }
 
 h2 {
-  font-size: 42px;
+  font-size: 34px;
 }
 
 h3 {
@@ -380,6 +380,14 @@ input:-ms-input-placeholder {
 
   .title h2 {
     font-size: 34px;
+  }
+
+  #documentation .span6 {
+    width: 476px;
+  }
+
+  #documentation div.toc {
+    width: 228px;
   }
 
   .box {
