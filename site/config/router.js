@@ -20,10 +20,10 @@
 var router = new geddy.RegExpRouter();
 
 router.get('/').to('Main.index');
-router.get('/community').to('Main.community');
-router.get('/documentation').to('Main.documentation');
-router.get('/tutorial').to('Main.tutorial');
-router.get('/faq').to('Main.faq');
-router.get('/changelog').to('Main.changelog');
+router.get('/community(.:format)').to('Main.community');
+router.get('/documentation(.:format)').to('Main.documentation');
+router.get('/tutorial(.:format)').to('Main.tutorial');
+router.get('/faq(.:format)').to('Main.faq');
+router.get('/changelog(.:format)').to('Main.changelog');
 
 exports.router = router;
