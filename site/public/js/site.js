@@ -33,7 +33,7 @@ app.docs = new (function() {
     $(window).scroll(function(e) {
       var newTop = $(this).scrollTop();
       // only scroll on screens larger than an iphone
-      if (newTop > 462 && $(this).width() > 979) {
+      if (newTop > 462 && $(this).width() > 767) {
         self.$toc.offset({top: newTop + 20});
       } else {
         self.$toc.css({'top': 0, 'position': 'static'});

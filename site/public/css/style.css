@@ -257,6 +257,14 @@ input:-ms-input-placeholder {
   margin-top: 20px;
 }
 
+#documentation p {
+  max-width: 500px;
+}
+
+#documentation pre {
+  max-widthL 500px;
+}
+
 /* END Documentation Page */
 
 /* FAQ Page */
@@ -347,7 +355,8 @@ input:-ms-input-placeholder {
   }
 
   .menu .icon span {
-    display: none;
+    font-size: 12px;
+    bottom: -78px;
   }
 
   .title h2 {
@@ -395,6 +404,20 @@ input:-ms-input-placeholder {
 
   .toc ul {
     margin-left: 0;
+  }
+
+  .info h3 {
+    font-size: 30px;
+    padding-top: 12px;
+  }
+
+  .info p {
+    font-size: 15px;
+  }
+
+  .info a {
+    bottom: 10px;
+    right: 10px;
   }
 
   .avatar {
