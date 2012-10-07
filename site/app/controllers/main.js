@@ -101,8 +101,7 @@ var Main = function () {
     , respond = function (total) {
       count++;
       if (count == total) {
-        console.log(docs);
-        self.respond(params, {
+        self.respond({docs: docs}, {
           format: 'html'
         , template: 'app/views/main/documentation'
         });
