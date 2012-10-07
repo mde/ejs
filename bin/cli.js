@@ -21,6 +21,9 @@ var cwd = process.cwd()
   , filepath
   , die
   , jake
+  , jakeArgs
+  , jakeProgram
+  , jakeLoader
   , start;
 
 // Usage dialog
@@ -126,9 +129,9 @@ if (cmds.length) {
   cmd = '';
 
   // Some commands take only one arg
-  if (!(cmds[0] == 'secret' ||
+  if (!(cmds[0] == 'jake' ||
+      cmds[0] == 'secret' ||
       cmds[0] == 'db:init' ||
-      cmds[0].indexOf('test') === 0 ||
       cmds[0] == 'console')
       && !cmds[1]) {
     throw new Error(cmds[0] + ' command requires another argument.');
@@ -150,6 +153,10 @@ if (cmds.length) {
 
   // Add Jake argument based on commands
   switch (cmds[0]) {
+    case 'jake':
+      cmd = 'jake';
+      jakeArgs = cmds.slice(1);
+      break;
     case 'console':
       // Create DBs
       cmd += 'console:start[' + (cmds[1] || 'development') + ']';
@@ -157,12 +164,6 @@ if (cmds.length) {
     case 'db:init':
       // Create DBs
       cmd += 'db:init';
-      break;
-    case 'test':
-      cmd = 'test';
-      if (cmds[1]) {
-        cmd += '[' + cmds[1] + ']'
-      }
       break;
     case 'db:createTable':
       // Create DBs
@@ -197,23 +198,26 @@ if (cmds.length) {
   }
 
   jake = require('jake');
-  jake.loader.loadFile(filepath);
-  if (cmd.indexOf('test') === 0) {
-    jake.loader.loadFile(path.join(process.cwd(), 'Jakefile'));
-    // Load up the Geddy env before running
-    jake.program.setTaskNames(['env:init', cmd]);
-    jake.program.init({
-      trace: true
-    });
+  jakeProgram = jake.program;
+  jakeLoader = jake.loader;
+  // Load Geddy's bundled Jakefile
+  jakeLoader.loadFile(filepath);
+  if (cmd == 'jake') {
+    jakeProgram.parseArgs(jakeArgs);
+    // Load Jakefile and jakelibdir files for app
+    jakeLoader.loadFile(jakeProgram.opts.jakefile);
+    jakeLoader.loadDirectory(jakeProgram.opts.jakelibdir);
+    // Prepend env:init to load Geddy env
+    jakeProgram.taskNames.unshift('env:init');
   }
   else {
-    jake.program.init({
+    jakeProgram.init({
       quiet: !opts.debug
     , trace: true
     });
-    jake.program.setTaskNames([cmd]);
+    jakeProgram.setTaskNames([cmd]);
   }
-  jake.program.run();
+  jakeProgram.run();
 }
 // Just `geddy` -- start the server
 else {
