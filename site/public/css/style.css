@@ -20,13 +20,18 @@ h4 {
   line-height: 40px;
 }
 
+h5 {
+  font-size: 12px;
+  color: #999;
+}
+
 h1, h2, h3, h4, h5, h6 {
   font-weight: lighter;
 }
 
 p {
   font-size: 12px;
-  line-height: 150%;
+  line-height: 200%;
 }
 
 pre, code {
@@ -35,6 +40,12 @@ pre, code {
   padding: 20px;
   border: none;
   border-radius: 0px;
+}
+
+code {
+  padding: 2px 5px;
+  margin: 0;
+  color: #666;
 }
 
 a {
