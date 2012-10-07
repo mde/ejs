@@ -257,10 +257,18 @@ input:-ms-input-placeholder {
 
 /* FAQ Page */
 
+#faq h2 {
+  margin-bottom: -40px;
+}
+
 #faq h3 {
   line-height: 30px;
-  margin-top: 20px;
+  margin-top: 60px;
   margin-bottom: 20px;
+}
+
+#faq p {
+  font-size: 15px;
 }
 
 /* END FAQ Page */
