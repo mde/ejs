@@ -16,6 +16,15 @@
  *
 */
 
+var md = require('marked');
+md.setOptions({
+  gfm: true
+, pedantic: false
+, highlight: function (code, lang) {
+    return code;
+  }
+});
+
 var Main = function () {
 
   this.error = function (req, resp, params) {
@@ -71,9 +80,9 @@ var Main = function () {
       geddy.request(options, function (err, resp) {
         var content = new Buffer(resp.content, 'base64').toString('utf8')
           , name = paths[i].path.replace('.md','');
-        docs[name[0]] = {
-          name: name.split().splice(0,2)
-        , content: content
+        docs[parseInt(name[0]) - 1] = {
+          name: name.split('-')[1]
+        , content: md(content)
         };
         return respond(paths.length);
       });
