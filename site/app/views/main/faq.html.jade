@@ -4,17 +4,35 @@
       h2 Frequently asked questions
   .row.content
     .span8
-      h3 Which templating engines does Geddy support?
-      p In relation to buildings, architecture has to do with the planning, designing and constructing form, space and ambience that reflect functional, technical, social, environmental, and aesthetic considerations. It requires the creative manipulation and coordination of material, technology, light and shadow. Architecture also encompasses the pragmatic aspects of realizing buildings and structures, including scheduling, cost estimating and construction administration. As documentation produced by architects, typically drawings, plans and technical specifications, architecture defines the structure and/or behavior of a building or any other kind of system that is to be or has been constructed.
-      ul
-        li EJS
-        li Jade
-        li Handlebars
-        li Mustache
-      h3 Which databases does Geddy's model layer have adapters for?
-      p In relation to buildings, architecture has to do with the planning, designing and constructing form, space and ambience that reflect functional, technical, social, environmental, and aesthetic considerations. It requires the creative manipulation and coordination of material, technology, light and shadow. Architecture also encompasses the pragmatic aspects of realizing buildings and structures, including scheduling, cost estimating and construction administration. As documentation produced by architects, typically drawings, plans and technical specifications, architecture defines the structure and/or behavior of a building or any other kind of system that is to be or has been constructed.
-      h4#Router-match.subsection .match
-      p In relation to buildings, architecture has to do with the planning, designing and constructing form, space and ambience that reflect functional, technical, social, environmental, and aesthetic considerations. It requires the creative manipulation and coordination of material, technology, light and shadow. Architecture also encompasses the pragmatic aspects of realizing buildings and structures, including scheduling, cost estimating and construction administration. As documentation produced by architects, typically drawings, plans and technical specifications, architecture defines the structure and/or behavior of a building or any other kind of system that is to be or has been constructed.
-      pre
-        code
-          | router.match( '/products', 'GET' ).to( 'products.index' )
+
+      :markdown
+
+        ### Which templating engines does Geddy support?
+        + EJS
+        + Jade
+        + Handlebars
+        + Mustache
+
+        ### Which databases does Geddy's model layer have adapters for?
+        + MongoDB
+        + Postgres
+        + Riak
+        + in-memory
+
+        ### Which database adapter does Geddy's model layer default to?
+        Geddy defaults to using the in-memory adapter for newly generated apps, but it's easy to change if you'd like.
+
+        ### Do I have to use the same database adapter for all of my models?
+        Nope! Geddy was built with data versatility in mind. Each of your models can define it's own adapter, or it can fall back to your globally set adapter.
+
+        ### How does Geddy scale across multiple processes?
+        Geddy uses Node's built in cluster module to create worker processes. This is configurable on an environment to environment basis.
+
+        ### Does Geddy support resourceful routes?
+        Yep! Just use the router's built in '[resource](/documentation#router.resource)' method and it will build out a full restful API for your resource.
+
+        ### Can Geddy generate an app structure for me?
+        Yes it can, just use the '[geddy app](/documentation#CLIapp)' command.
+
+        ### Can it scaffold resources for me too?
+        Yep - the '[geddy scaffold](/documentation#CLIscaffold)' command is the one you're looking for.

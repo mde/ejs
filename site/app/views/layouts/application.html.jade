@@ -14,6 +14,7 @@ html(lang="en")
 
     != scriptLink('/js/jquery.min.js', {type:'text/javascript'})
     != scriptLink('/js/bootstrap.min.js', {type:'text/javascript'})
+    != scriptLink('/js/site.js', {type: 'text/javascript'});
 
     != styleLink('/css/bootstrap.min.css', {rel:'stylesheet'})
     != styleLink('/css/bootstrap.responsive.min.css', {rel:'stylesheet'})
@@ -31,21 +32,21 @@ html(lang="en")
         h1.span6.title geddy
         .span6.menu
           .row
-            a.span2.icon(href='/')
+            a.span2.icon.home(href='/')
               span home
-            a.span2.icon(href='/documentation')
+            a.span2.icon.docs(href='/documentation')
               span documentation
-            a.span2.icon(href='/tutorial')
+            a.span2.icon.tutorial(href='/tutorial')
               span tutorial
-            a.span2.icon(href='/blog')
-              span blog
-            a.span2.icon(href='/community')
+            a.span2.icon.changelog(href='/changelog')
+              span changelog
+            a.span2.icon.community(href='/community')
               span community
-            a.span2.icon(href='/faq')
+            a.span2.icon.faq(href='/faq')
               span faq
       != yield()
       .row.footer
-        form.row.mail-list
+        form(action="http://groups.google.com/group/geddyjs/boxsubscribe", target="blank").row.mail-list
           .span8
             input.email(name="email", placeholder="join the mailing list", type="email")
           .span4

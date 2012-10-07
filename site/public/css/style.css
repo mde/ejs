@@ -7,7 +7,7 @@ body {
 }
 
 h2 {
-  font-size: 42px;
+  font-size: 34px;
 }
 
 h3 {
@@ -20,21 +20,33 @@ h4 {
   line-height: 40px;
 }
 
+h5 {
+  font-size: 12px;
+  color: #999;
+}
+
 h1, h2, h3, h4, h5, h6 {
   font-weight: lighter;
 }
 
 p {
   font-size: 12px;
-  line-height: 150%;
+  line-height: 200%;
 }
 
 pre, code {
-  background: #e8e8e8;
+  background: #f5f5f5;
   margin: 40px 0;
   padding: 20px;
   border: none;
   border-radius: 0px;
+}
+
+code {
+  padding: 2px 5px;
+  margin: 0;
+  color: #666;
+  background: #f5f5f5;
 }
 
 a {
@@ -78,11 +90,26 @@ input:-ms-input-placeholder {
   color: #333;
   height: 140px;
   margin-bottom: 20px;
+  background-position: center;
+  background-repeat: no-repeat;
 }
+
+.menu .home            { background-image: url('/img/home-dark-72.png'); }
+.menu .home:hover      { background-image: url('/img/home-light-72.png'); }
+.menu .docs            { background-image: url('/img/docs-dark-72.png'); }
+.menu .docs:hover      { background-image: url('/img/docs-light-72.png'); }
+.menu .tutorial        { background-image: url('/img/tuts-dark-72.png'); }
+.menu .tutorial:hover  { background-image: url('/img/tuts-light-72.png'); }
+.menu .changelog       { background-image: url('/img/changelog-dark-72.png'); }
+.menu .changelog:hover { background-image: url('/img/changelog-light-72.png'); }
+.menu .community       { background-image: url('/img/community-dark-72.png'); }
+.menu .community:hover { background-image: url('/img/community-light-72.png'); }
+.menu .faq             { background-image: url('/img/faq-dark-72.png'); }
+.menu .faq:hover       { background-image: url('/img/faq-light-72.png'); }
 
 .menu .icon:hover {
   text-decoration: none;
-  background: #666;
+  background-color: #666;
   color: #e8e8e8;
 }
 
@@ -170,6 +197,36 @@ input:-ms-input-placeholder {
 .info {
   height: 300px;
   background: #3399cc;
+  position: relative;
+}
+
+.info h3 {
+  color: white;
+  margin: 10px 15px;
+  font-size: 42px;
+  line-height: 120%;
+  font-weight: lighter;
+}
+
+.info p {
+  font-size: 20px;
+  margin: 0 15px;
+  color: white;
+  line-height: 130%;
+}
+
+.info a {
+  display: block;
+  font-size: 20px;
+  text-align: right;
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+}
+
+.info a:hover {
+  color: white;
+  text-decoration: none;
 }
 
 /* END Community Page */
@@ -183,6 +240,7 @@ input:-ms-input-placeholder {
 .toc {
   margin-top: -60px;
   float: right;
+  right: 0;
 }
 
 .toc ul {
@@ -199,12 +257,21 @@ input:-ms-input-placeholder {
   margin-bottom: 20px;
 }
 
+.toc ul li a:hover {
+  text-decoration: none;
+}
+
 .toc ul li a.selected {
   color: #14509e;
 }
 
 .toc ul li ul {
   margin: 15px 0 15px 0;
+  display: none;
+}
+
+.toc ul li ul.selected {
+  display: block;
 }
 
 .toc ul li ul li {
@@ -213,31 +280,40 @@ input:-ms-input-placeholder {
   margin-bottom: 12px;
 }
 
+#documentation h3 {
+  margin-top: 20px;
+}
+
 /* END Documentation Page */
-
-/* Blog Page */
-
-#blog p {
-  margin-bottom: 22px;
-  font-size: 15px;
-}
-
-#blog .content {
-  margin-bottom: 60px;
-  margin-top: -30px;
-}
-
-/* END Blog Page */
 
 /* FAQ Page */
 
+#faq h2 {
+  margin-bottom: -40px;
+}
+
 #faq h3 {
   line-height: 30px;
-  margin-top: 20px;
+  margin-top: 60px;
   margin-bottom: 20px;
 }
 
+#faq p {
+  font-size: 15px;
+}
+
 /* END FAQ Page */
+
+/* Changelog Page */
+
+#changelog code {
+  display: inline;
+  padding: 0;
+  margin: 0;
+  color: #333;
+}
+
+/* END Changelog Page */
 
 /* Large desktop */
 @media (min-width: 1200px) {
@@ -298,11 +374,20 @@ input:-ms-input-placeholder {
   }
 
   .menu .icon span {
-    display: none;
+    font-size: 12px;
+    bottom: -78px;
   }
 
   .title h2 {
     font-size: 34px;
+  }
+
+  #documentation .span6 {
+    width: 476px;
+  }
+
+  #documentation div.toc {
+    width: 228px;
   }
 
   .box {
@@ -317,6 +402,10 @@ input:-ms-input-placeholder {
     height: 228px;
   }
 
+  .info p {
+    font-size: 15px;
+  }
+
   .footer .mail-list input.email {
     width: 456px;
   }
@@ -325,6 +414,9 @@ input:-ms-input-placeholder {
 
 /* Landscape phone to portrait tablet */
 @media (max-width: 767px) {
+  body {
+   padding-top: 15px;
+  }
 
   .container {
     width: 90%;
@@ -334,6 +426,14 @@ input:-ms-input-placeholder {
     float: left;
     width: 104px;
     margin-right: 20px;
+  }
+
+  #documentation .span6 {
+    width: 100%;
+  }
+
+  #documentation div.toc {
+    width: 100%;
   }
 
   .box {
@@ -346,6 +446,20 @@ input:-ms-input-placeholder {
 
   .toc ul {
     margin-left: 0;
+  }
+
+  .info h3 {
+    font-size: 30px;
+    padding-top: 12px;
+  }
+
+  .info p {
+    font-size: 15px;
+  }
+
+  .info a {
+    bottom: 10px;
+    right: 10px;
   }
 
   .avatar {
@@ -380,3 +494,8 @@ input:-ms-input-placeholder {
 
 }
 
+@media print {
+  .footer{
+    display: none;
+  }
+}

@@ -79,10 +79,18 @@ var Main = function () {
       }
       geddy.request(options, function (err, resp) {
         var content = new Buffer(resp.content, 'base64').toString('utf8')
-          , name = paths[i].path.replace('.md','');
+          , name = paths[i].path.replace('.md','')
+          , subs = []
+          , lines = content.split('\n');
+        for (var l in lines) {
+          if (lines[l].indexOf('#### ') == 0) {
+            subs.push(geddy.string.trim(lines[l].replace('#### ', '')));
+          }
+        }
         docs[parseInt(name[0]) - 1] = {
           name: name.split('-')[1]
         , content: md(content)
+        , subs: subs
         };
         return respond(paths.length);
       });
@@ -92,7 +100,6 @@ var Main = function () {
     // parse it and call getBlob for each file
     , gotTree = function (err, tree) {
       for (var i in tree) {
-        console.log(tree[i].path, ':', tree[i].url);
         getBlob(tree, i, respond);
       }
     }
@@ -117,31 +124,76 @@ var Main = function () {
   };
 
   this.tutorial = function (req, resp, params) {
-    this.respond(params, {
-      format: 'html'
-    , template: 'app/views/main/tutorial'
-    });
+    var self = this;
+
+    // respond to the request
+    var respond = function (sections, content) {
+      self.respond({sections: sections, content: content}, {
+        format: 'html'
+      , template: 'app/views/main/tutorial'
+      });
+    }
+
+    // find the sections
+    var gotTutorial = function (err, tutorial) {
+      var content = md(tutorial);
+      var lines = tutorial.split('\n');
+      var sections = [];
+      for (var i in lines) {
+        if (lines[i].indexOf('### ') == 0) {
+          sections.push(geddy.string.trim(lines[i].replace("###", '')));
+        }
+      }
+      respond(sections, content);
+    }
+
+    // get the tutorial markdown file
+    geddy.request({url: 'https://raw.github.com/mde/geddy/master/tutorial.md'}, gotTutorial);
   };
 
-  this.blog = function (req, resp, params) {
-    this.respond(params, {
-      format: 'html'
-    , template: 'app/views/main/blog'
-    });
-  };
+  this.changelog = function (req, resp, params) {
+    var self = this;
 
-  this.article = function (req, resp, params) {
-    this.respond(params, {
-      format: 'html'
-    , template: 'app/views/main/blog_post'
-    });
+    // respond to the request
+    var respond = function (sections, content) {
+      self.respond({sections: sections, content: content}, {
+        format: 'html'
+      , template: 'app/views/main/changelog'
+      });
+    }
+
+    // find the sections
+    var gotTutorial = function (err, tutorial) {
+      var content = md(tutorial);
+      var lines = tutorial.split('\n');
+      var sections = [];
+      for (var i in lines) {
+        if (lines[i].indexOf('### ') == 0) {
+          sections.push(geddy.string.trim(lines[i].replace("###", '')));
+        }
+      }
+      respond(sections, content);
+    }
+
+    // get the tutorial markdown file
+    geddy.request({url: 'https://raw.github.com/mde/geddy/master/changelog.md'}, gotTutorial);
   };
 
   this.community = function (req, resp, params) {
-    this.respond(params, {
-      format: 'html'
-    , template: 'app/views/main/community'
-    });
+    var self = this;
+    var gotStars = function (err, stars) {
+      self.respond({stars: stars}, {
+        format: 'html'
+      , template: 'app/views/main/community'
+      });
+    };
+
+    // get stargazers
+    var opts = {
+      url: 'https://api.github.com/repos/mde/geddy/stargazers?page='+(Math.floor(Math.random()*10)+1)
+    , dataType: 'json'
+    };
+    geddy.request(opts, gotStars);
   };
 
   this.faq = function (req, resp, params) {

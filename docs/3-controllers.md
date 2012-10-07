@@ -1,1 +1,31 @@
-In relation to buildings, architecture has to do with the planning, designing and constructing form, space and ambience that reflect functional, technical, social, environmental, and aesthetic considerations. It requires the creative manipulation and coordination of material, technology, light and shadow. Architecture also encompasses the pragmatic aspects of realizing buildings and structures, including scheduling, cost estimating and construction administration. As documentation produced by architects, typically drawings, plans and technical specifications, architecture defines the structure and/or behavior of a building or any other kind of system that is to be or has been constructed.
+Controllers define the different actions that your users can interact with. Every controller has these methods:
+#### .request
+docs coming soon
+#### .respnose
+docs coming soon
+#### .params
+docs coming soon
+#### .cookies
+docs coming soon
+#### .name
+docs coming soon
+#### .respondsWith
+docs coming soon
+#### .content
+docs coming soon
+#### .before
+docs coming soon
+#### .after
+docs coming soon
+#### .protectFromForgery
+docs coming soon
+#### .redirect
+docs coming soon
+#### .error
+docs coming soon
+#### .transfer
+docs coming soon
+#### .respond
+docs coming soon
+#### .renderTemplate
+docs coming soon
