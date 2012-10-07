@@ -1,15 +1,48 @@
 body {
   padding-top: 40px;
   padding-bottom: 40px;
-  color: #666;
+  color: #333;
+  font-weight: lighter;
+  font-family: 'Segoe UI Light','Segoe UI','Helvetica Nueu',Helvetica,Arial,sans-serif
+}
+
+h2 {
+  font-size: 42px;
+}
+
+h3 {
+  font-size: 20px;
+  line-height: 60px
+}
+
+h4 {
+  font-size: 15px;
+  line-height: 40px;
 }
 
 h1, h2, h3, h4, h5, h6 {
   font-weight: lighter;
 }
 
+p {
+  font-size: 12px;
+  line-height: 150%;
+}
+
+pre, code {
+  background: #e8e8e8;
+  margin: 40px 0;
+  padding: 20px;
+  border: none;
+  border-radius: 0px;
+}
+
 a {
-  color: #666;
+  color: #333;
+}
+
+ul, ol {
+  margin-left: 16px;
 }
 
 input::-webkit-input-placeholder {
@@ -32,7 +65,7 @@ input:-ms-input-placeholder {
   text-align: center;
   height: 300px;
   line-height: 300px;
-  font-size: 96px;
+  font-size: 128px;
   font-weight: lighter;
   background: #3399cc;
   color: #fff;
@@ -42,7 +75,7 @@ input:-ms-input-placeholder {
 
 .menu .icon {
   background: #e8e8e8;
-  color: #666;
+  color: #333;
   height: 140px;
   margin-bottom: 20px;
 }
@@ -93,7 +126,7 @@ input:-ms-input-placeholder {
   width: 600px;
   font-size: 30px;
   line-height: 60px;
-  color: #666;
+  color: #ccc;
 }
 
 .footer .list {
@@ -138,6 +171,73 @@ input:-ms-input-placeholder {
   height: 300px;
   background: #3399cc;
 }
+
+/* END Community Page */
+
+/* Documentation Page */
+
+.content {
+  margin-top: -40px;
+}
+
+.toc {
+  margin-top: -60px;
+  float: right;
+}
+
+.toc ul {
+  margin-left: 10px;
+}
+
+.toc ul li {
+  list-style: none;
+}
+
+.toc ul > li {
+  font-weight: bold;
+  font-size: 15px;
+  margin-bottom: 20px;
+}
+
+.toc ul li a.selected {
+  color: #14509e;
+}
+
+.toc ul li ul {
+  margin: 15px 0 15px 0;
+}
+
+.toc ul li ul li {
+  font-weight: lighter;
+  font-size: 12px;
+  margin-bottom: 12px;
+}
+
+/* END Documentation Page */
+
+/* Blog Page */
+
+#blog p {
+  margin-bottom: 22px;
+  font-size: 15px;
+}
+
+#blog .content {
+  margin-bottom: 60px;
+  margin-top: -30px;
+}
+
+/* END Blog Page */
+
+/* FAQ Page */
+
+#faq h3 {
+  line-height: 30px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+/* END FAQ Page */
 
 /* Large desktop */
 @media (min-width: 1200px) {
@@ -190,6 +290,7 @@ input:-ms-input-placeholder {
   .header h1 {
     height: 228px;
     line-height: 228px;
+    font-size: 96px;
   }
 
   .menu .icon {
@@ -198,6 +299,10 @@ input:-ms-input-placeholder {
 
   .menu .icon span {
     display: none;
+  }
+
+  .title h2 {
+    font-size: 34px;
   }
 
   .box {
@@ -220,19 +325,27 @@ input:-ms-input-placeholder {
 
 /* Landscape phone to portrait tablet */
 @media (max-width: 767px) {
-  .menu {
-    width: 392px;
-    float: right;
-  }
 
-  .menu .row {
-    margin-left: 20px;
+  .container {
+    width: 90%;
   }
 
   .menu .icon {
     float: left;
     width: 104px;
     margin-right: 20px;
+  }
+
+  .box {
+    width: 100%;
+  }
+
+  .toc {
+    margin-top: 0;
+  }
+
+  .toc ul {
+    margin-left: 0;
   }
 
   .avatar {
@@ -246,8 +359,10 @@ input:-ms-input-placeholder {
   .footer .mail-list input.email {
     width: 100%;
     padding: 0;
-    border-left: none;
-    border-right: none;
+    margin-bottom: 20px;
+    border: none;
+    background: #f5f5f5;
+    color: #333;
   }
 
 }

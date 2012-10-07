@@ -24,8 +24,8 @@ router.get('/community').to('Main.community');
 router.get('/documentation').to('Main.documentation');
 router.get('/tutorial').to('Main.tutorial');
 router.get('/faq').to('Main.faq');
-router.get('/blog').to('Blog.index');
-router.get('/blog/:year/:month/:day/:slug').to('Blog.show');
+router.get('/blog').to('Main.blog');
+router.get('/blog/:year/:month/:day/:slug').to('Main.article');
 
 // Basic routes
 // router.match('/moving/pictures/:id', 'GET').to('Moving.pictures');

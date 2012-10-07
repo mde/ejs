@@ -1,0 +1,13 @@
+.row.title
+  .span12
+    h2 Framework documentation
+.row.content
+  .span4.toc
+    ul
+      each doc in docs
+        li
+          a(href="#"+doc.name)=doc.name
+  .span8
+    each doc in docs
+      h3(id=doc.name)=geddy.string.capitalize(doc.name)
+      !=doc.content
