@@ -92,7 +92,6 @@ var Main = function () {
         , content: md(content)
         , subs: subs
         };
-        console.log(subs);
         return respond(paths.length);
       });
     }
@@ -101,7 +100,6 @@ var Main = function () {
     // parse it and call getBlob for each file
     , gotTree = function (err, tree) {
       for (var i in tree) {
-        console.log(tree[i].path, ':', tree[i].url);
         getBlob(tree, i, respond);
       }
     }
@@ -195,7 +193,6 @@ var Main = function () {
       url: 'https://api.github.com/repos/mde/geddy/stargazers?page='+(Math.floor(Math.random()*10)+1)
     , dataType: 'json'
     };
-    console.log(opts);
     geddy.request(opts, gotStars);
   };
 
