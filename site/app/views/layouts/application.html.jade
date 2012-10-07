@@ -1,0 +1,68 @@
+!!! html
+
+html(lang="en")
+  head
+    meta(charset="utf-8")
+    meta(name="description", content="")
+    meta(name="author", content="")
+    meta(name="viewport", content="width=device-width")
+    title Geddy | A simple, structured Web framework for Node.
+
+    // The HTML5 shim, for IE6-8 support of HTML elements
+    //if lt IE 9
+      script(src="http://html5shim.googlecode.com/svn/trunk/html5.js")
+
+    != scriptLink('/js/jquery.min.js', {type:'text/javascript'})
+    != scriptLink('/js/bootstrap.min.js', {type:'text/javascript'})
+    != scriptLink('/js/site.js', {type: 'text/javascript'});
+
+    != styleLink('/css/bootstrap.min.css', {rel:'stylesheet'})
+    != styleLink('/css/bootstrap.responsive.min.css', {rel:'stylesheet'})
+    != styleLink('/css/style.css', {rel:'stylesheet'})
+
+    // The fav and touch icons
+    link(rel="shortcut icon", href="/images/favicon.ico")
+    link(rel="apple-touch-icon", href="images/apple-touch-icon.png")
+    link(rel="apple-touch-icon", sizes="72x72", href="images/apple-touch-icon-72x72.png")
+    link(rel="apple-touch-icon", sizes="114x114", href="images/apple-touch-icon-114x114.png")
+
+  body
+    .container
+      .row.header
+        h1.span6.title geddy
+        .span6.menu
+          .row
+            a.span2.icon.home(href='/')
+              span home
+            a.span2.icon.docs(href='/documentation')
+              span documentation
+            a.span2.icon.tutorial(href='/tutorial')
+              span tutorial
+            a.span2.icon.changelog(href='/changelog')
+              span changelog
+            a.span2.icon.community(href='/community')
+              span community
+            a.span2.icon.faq(href='/faq')
+              span faq
+      != yield()
+      .row.footer
+        form(action="http://groups.google.com/group/geddyjs/boxsubscribe", target="blank").row.mail-list
+          .span8
+            input.email(name="email", placeholder="join the mailing list", type="email")
+          .span4
+            input.submit(type="submit", value="join")
+        .list.row
+          span.copyright &copy; copyright 2112
+          ul.links
+            li.link
+              a(href="/home") home
+            li.link
+              a(href="/documentation") documentation
+            li.link
+              a(href="/tutorial") tutorial
+            li.link
+              a(href="/blog") blog
+            li.link
+              a(href="/community") community
+            li.link
+              a(href="/faq") faq

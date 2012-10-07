@@ -7,7 +7,7 @@ var Thing = function () {
 
   this.belongsTo('Box');
 
-  this.adapter = 'Mongo';
+  this.adapter = 'mongo';
 
 };
 Thing = geddy.model.register('Thing', Thing);
