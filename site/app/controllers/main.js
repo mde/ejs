@@ -83,8 +83,8 @@ var Main = function () {
           , subs = []
           , lines = content.split('\n');
         for (var l in lines) {
-          if (lines[l].indexOf('####') == 0) {
-            subs.push(geddy.string.trim(lines[l].replace('####', '')));
+          if (lines[l].indexOf('#### ') == 0) {
+            subs.push(geddy.string.trim(lines[l].replace('#### ', '')));
           }
         }
         docs[parseInt(name[0]) - 1] = {
@@ -126,10 +126,26 @@ var Main = function () {
   };
 
   this.tutorial = function (req, resp, params) {
-    this.respond(params, {
-      format: 'html'
-    , template: 'app/views/main/tutorial'
-    });
+    var self = this;
+    var respond = function (sections, content) {
+      self.respond({sections: sections, content: content}, {
+        format: 'html'
+      , template: 'app/views/main/tutorial'
+      });
+    }
+    var gotTutorial = function (err, tutorial) {
+      var content = md(tutorial);
+      var lines = tutorial.split('\n');
+      var sections = [];
+      for (var i in lines) {
+        if (lines[i].indexOf('### ') == 0) {
+          sections.push(geddy.string.trim(lines[i].replace("###")));
+        }
+      }
+      console.log(sections, content);
+      respond(sections, content);
+    }
+    geddy.request({url: 'https://raw.github.com/mde/geddy/master/tutorial.md'}, gotTutorial);
   };
 
   this.blog = function (req, resp, params) {
