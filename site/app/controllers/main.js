@@ -127,24 +127,29 @@ var Main = function () {
 
   this.tutorial = function (req, resp, params) {
     var self = this;
+
+    // respond to the request
     var respond = function (sections, content) {
       self.respond({sections: sections, content: content}, {
         format: 'html'
       , template: 'app/views/main/tutorial'
       });
     }
+
+    // find the sections
     var gotTutorial = function (err, tutorial) {
       var content = md(tutorial);
       var lines = tutorial.split('\n');
       var sections = [];
       for (var i in lines) {
         if (lines[i].indexOf('### ') == 0) {
-          sections.push(geddy.string.trim(lines[i].replace("###")));
+          sections.push(geddy.string.trim(lines[i].replace("###", '')));
         }
       }
-      console.log(sections, content);
       respond(sections, content);
     }
+
+    // get the tutorial markdown file
     geddy.request({url: 'https://raw.github.com/mde/geddy/master/tutorial.md'}, gotTutorial);
   };
 
