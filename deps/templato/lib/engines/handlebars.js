@@ -1,8 +1,11 @@
-var TemplatoHandlebars = (function() {
+var path = require('path')
+  , TemplatoHandlebars;
+
+TemplatoHandlebars = (function() {
 
   function TemplatoHandlebars() {
     try {
-      this.engine = this.engine || require('handlebars');
+      this.engine = this.engine || require(path.join(process.cwd(), 'node_modules', 'handlebars'));
     } catch(err) {
       throw "To use Handlebars you will need to install it: [sudo] npm install [-g] handlebars";
     }
