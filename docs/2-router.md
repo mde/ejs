@@ -1,3 +1,4 @@
+Geddy uses [Barista] as it's router. Its API is very similar to rails routes. Both general purpose resource based routes and individually defined routes are possible.
 #### .match
 docs coming soon
 #### .to

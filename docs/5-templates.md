@@ -1,3 +1,4 @@
+Geddy's view layer provides a versitile set of templating languages and helpers to get you started quickly.
 #### engines
 docs coming soon
 #### yield

@@ -253,6 +253,10 @@ input:-ms-input-placeholder {
   margin-bottom: 12px;
 }
 
+#documentation h3 {
+  margin-top: 20px;
+}
+
 /* END Documentation Page */
 
 /* FAQ Page */

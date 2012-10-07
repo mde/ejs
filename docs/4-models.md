@@ -1,3 +1,4 @@
+Geddy uses the [Model](http://github.com/mde/model) for it's model layer. It's an abstract ORM that is compatible with many different types of databases, from Postgres to in memory, and MongoDB ro Riak.
 #### definition
 docs coming soon
 #### .defineProperties

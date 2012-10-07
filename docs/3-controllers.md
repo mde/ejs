@@ -1,3 +1,4 @@
+Controllers define the different actions that your users can interact with. Every controller has these methods:
 #### .request
 docs coming soon
 #### .respnose

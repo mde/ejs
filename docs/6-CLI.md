@@ -1,3 +1,4 @@
+Geddy has a robust CLI tool to help you generate apps, run your tests, or play with your app in a console.
 #### app
 docs coming soon
 #### resource
