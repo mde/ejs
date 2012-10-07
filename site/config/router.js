@@ -24,25 +24,6 @@ router.get('/community').to('Main.community');
 router.get('/documentation').to('Main.documentation');
 router.get('/tutorial').to('Main.tutorial');
 router.get('/faq').to('Main.faq');
-router.get('/blog').to('Main.blog');
-router.get('/blog/:year/:month/:day/:slug').to('Main.article');
-
-// Basic routes
-// router.match('/moving/pictures/:id', 'GET').to('Moving.pictures');
-//
-// router.match('/farewells/:farewelltype/kings/:kingid', 'GET').to('Farewells.kings');
-//
-// Can also match specific HTTP methods only
-// router.get('/xandadu').to('Xanadu.specialHandler');
-// router.del('/xandadu/:id').to('Xanadu.killItWithFire');
-//
-// Resource-based routes
-// router.resource('hemispheres');
-//
-// Nested Resource-based routes
-// router.resource('hemispheres', function(){
-//   this.resource('countries');
-//   this.get('/print(.:format)').to('Hemispheres.print');
-// });
+router.get('/changelog').to('Main.changelog');
 
 exports.router = router;

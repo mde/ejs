@@ -255,20 +255,6 @@ input:-ms-input-placeholder {
 
 /* END Documentation Page */
 
-/* Blog Page */
-
-#blog p {
-  margin-bottom: 22px;
-  font-size: 15px;
-}
-
-#blog .content {
-  margin-bottom: 60px;
-  margin-top: -30px;
-}
-
-/* END Blog Page */
-
 /* FAQ Page */
 
 #faq h3 {

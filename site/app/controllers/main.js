@@ -153,18 +153,34 @@ var Main = function () {
     geddy.request({url: 'https://raw.github.com/mde/geddy/master/tutorial.md'}, gotTutorial);
   };
 
-  this.blog = function (req, resp, params) {
-    this.respond(params, {
-      format: 'html'
-    , template: 'app/views/main/blog'
-    });
-  };
+  this.changelog = function (req, resp, params) {
+    var self = this;
 
-  this.article = function (req, resp, params) {
-    this.respond(params, {
-      format: 'html'
-    , template: 'app/views/main/blog_post'
-    });
+    // respond to the request
+    var respond = function (sections, content) {
+      // uses the same template as tutorial
+      // a little messy, I know.
+      self.respond({sections: sections, content: content}, {
+        format: 'html'
+      , template: 'app/views/main/tutorial'
+      });
+    }
+
+    // find the sections
+    var gotTutorial = function (err, tutorial) {
+      var content = md(tutorial);
+      var lines = tutorial.split('\n');
+      var sections = [];
+      for (var i in lines) {
+        if (lines[i].indexOf('### ') == 0) {
+          sections.push(geddy.string.trim(lines[i].replace("###", '')));
+        }
+      }
+      respond(sections, content);
+    }
+
+    // get the tutorial markdown file
+    geddy.request({url: 'https://raw.github.com/mde/geddy/master/changelog.md'}, gotTutorial);
   };
 
   this.community = function (req, resp, params) {
