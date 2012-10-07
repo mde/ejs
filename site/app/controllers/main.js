@@ -79,11 +79,20 @@ var Main = function () {
       }
       geddy.request(options, function (err, resp) {
         var content = new Buffer(resp.content, 'base64').toString('utf8')
-          , name = paths[i].path.replace('.md','');
+          , name = paths[i].path.replace('.md','')
+          , subs = []
+          , lines = content.split('\n');
+        for (var l in lines) {
+          if (lines[l].indexOf('####') == 0) {
+            subs.push(geddy.string.trim(lines[l].replace('####', '')));
+          }
+        }
         docs[parseInt(name[0]) - 1] = {
           name: name.split('-')[1]
         , content: md(content)
+        , subs: subs
         };
+        console.log(subs);
         return respond(paths.length);
       });
     }
@@ -138,10 +147,21 @@ var Main = function () {
   };
 
   this.community = function (req, resp, params) {
-    this.respond(params, {
-      format: 'html'
-    , template: 'app/views/main/community'
-    });
+    var self = this;
+    var gotStars = function (err, stars) {
+      self.respond({stars: stars}, {
+        format: 'html'
+      , template: 'app/views/main/community'
+      });
+    };
+
+    // get stargazers
+    var opts = {
+      url: 'https://api.github.com/repos/mde/geddy/stargazers?page='+(Math.floor(Math.random()*10)+1)
+    , dataType: 'json'
+    };
+    console.log(opts);
+    geddy.request(opts, gotStars);
   };
 
   this.faq = function (req, resp, params) {

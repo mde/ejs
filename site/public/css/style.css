@@ -170,6 +170,36 @@ input:-ms-input-placeholder {
 .info {
   height: 300px;
   background: #3399cc;
+  position: relative;
+}
+
+.info h3 {
+  color: white;
+  margin: 10px 15px;
+  font-size: 42px;
+  line-height: 120%;
+  font-weight: lighter;
+}
+
+.info p {
+  font-size: 20px;
+  margin: 0 15px;
+  color: white;
+  line-height: 130%;
+}
+
+.info a {
+  display: block;
+  font-size: 20px;
+  text-align: right;
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+}
+
+.info a:hover {
+  color: white;
+  text-decoration: none;
 }
 
 /* END Community Page */
@@ -183,6 +213,7 @@ input:-ms-input-placeholder {
 .toc {
   margin-top: -60px;
   float: right;
+  right: 0;
 }
 
 .toc ul {
@@ -199,12 +230,21 @@ input:-ms-input-placeholder {
   margin-bottom: 20px;
 }
 
+.toc ul li a:hover {
+  text-decoration: none;
+}
+
 .toc ul li a.selected {
   color: #14509e;
 }
 
 .toc ul li ul {
   margin: 15px 0 15px 0;
+  display: none;
+}
+
+.toc ul li ul.selected {
+  display: block;
 }
 
 .toc ul li ul li {
