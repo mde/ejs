@@ -3,7 +3,7 @@
     .span12
       h2 Framework documentation
   .row.content
-    .span4.toc
+    .span6.toc
       ul
         each doc in docs
           li
@@ -13,7 +13,7 @@
                 each sub in doc.subs
                   li
                     a(href="#"+doc.name+sub)=sub
-    .span8
+    .span6
       each doc in docs
         h3(id=doc.name)=geddy.string.capitalize(doc.name)
         !=doc.content

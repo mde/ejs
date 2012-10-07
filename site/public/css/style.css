@@ -257,14 +257,6 @@ input:-ms-input-placeholder {
   margin-top: 20px;
 }
 
-#documentation p {
-  max-width: 500px;
-}
-
-#documentation pre {
-  max-widthL 500px;
-}
-
 /* END Documentation Page */
 
 /* FAQ Page */
