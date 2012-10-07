@@ -158,11 +158,9 @@ var Main = function () {
 
     // respond to the request
     var respond = function (sections, content) {
-      // uses the same template as tutorial
-      // a little messy, I know.
       self.respond({sections: sections, content: content}, {
         format: 'html'
-      , template: 'app/views/main/tutorial'
+      , template: 'app/views/main/changelog'
       });
     }
 

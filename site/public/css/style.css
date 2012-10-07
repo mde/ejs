@@ -265,6 +265,17 @@ input:-ms-input-placeholder {
 
 /* END FAQ Page */
 
+/* Changelog Page */
+
+#changelog code {
+  display: inline;
+  padding: 0;
+  margin: 0;
+  color: #333;
+}
+
+/* END Changelog Page */
+
 /* Large desktop */
 @media (min-width: 1200px) {
   .header h1 {
