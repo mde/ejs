@@ -139,7 +139,7 @@ it's a string).
 
 Note: an ID property will *always* be created.
 
-### Scaffolding
+### With scaffolding
 
 This will be a short tutorial as scaffolding will do almost everything
 for us, I won't go into detail on what it does as it will be covered in
@@ -246,7 +246,7 @@ you need something simple to get you started. To learn more about
 controllers and views keep reading and follow the [resources
 tutorial](#resources).
 
-### Creating an app without scaffolding
+### Without scaffolding
 
 Let's start by using the `geddy` executable to generate a basic
 app-structure.
