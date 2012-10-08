@@ -246,7 +246,7 @@ you need something simple to get you started. To learn more about
 controllers and views keep reading and follow the [resources
 tutorial](#resources).
 
-### No-Scaffolding
+### Creating an app without scaffolding
 
 Let's start by using the `geddy` executable to generate a basic
 app-structure.
