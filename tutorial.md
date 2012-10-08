@@ -109,17 +109,17 @@ include model property arguments. This is a list seperated by spaces
 that include the property, its type and an optional default setting.
 Below are some examples of how they are used in the commands.
 
-~~~~ {.prettyprint}
+```
 $ geddy scaffold user name:string
-~~~~
+```
 
 The example above will create our normal scaffolding and include a
 `name` property of type `string`. If no type is given it will default to
 `string`.
 
-~~~~ {.prettyprint}
+```
 $ geddy scaffold user name:default
-~~~~
+```
 
 This example creates scaffolding but includes `name` as the default
 property that will be used when displaying the content in the views. In
@@ -129,9 +129,9 @@ could've used a different type of course. The `default` setting also
 includes an alias called `def`. If no default property is given Geddy
 will use `id` as the display property.
 
-~~~~ {.prettyprint}
+```
 $ geddy scaffold user name:default id:int
-~~~~
+```
 
 This time we used `name` type `string` as the default property. We also
 overwrote the included `id` property with a different type (by default
@@ -139,21 +139,20 @@ it's a string).
 
 Note: an ID property will *always* be created.
 
-Scaffolding application tutorial
---------------------------------
+### Scaffolding application tutorial
 
 This will be a short tutorial as scaffolding will do almost everything
 for us, I won't go into detail on what it does as it will be covered in
 exstensive detail in the [resources tutorial](#resources). The source
-for this tutorial will be
+for this tutorial can be found 
 [here](https://github.com/mde/geddy/tree/master/examples/todo_app).
 
 First we'll create our application, this will create a base so we can
 start on.
 
-~~~~ {.prettyprint}
+````
 $ geddy app todo_app
-~~~~
+```
 
 Let's spend some time reviewing what geddy did. The previous command
 created a lot. During the tutorial we will edit and review some of this
@@ -186,10 +185,10 @@ with the base application.
 
 Now from your app's root simply start geddy
 
-~~~~ {.prettyprint}
+```
 $ cd todo_app 
 $ geddy
-~~~~
+```
 
 Then open your browser to [localhost:4000](http://localhost:4000/), and
 you'll find the hello world page.
@@ -198,15 +197,15 @@ So now we want to create a scaffold to manage our todo items. We will
 create a title and status property so that we have some attributes to
 use.
 
-~~~~ {.prettyprint}
+```
 $ geddy scaffold todo title:default status
-~~~~
+```
 
 We are almost done. Now you have to restart geddy
 
-~~~~ {.prettyprint}
+```
 $ geddy
-~~~~
+```
 
 Open your browser to [localhost:4000/todos](http://localhost:4000/todos)
 and you'll get a list of the todos which should be empty. Go ahead and
@@ -217,7 +216,7 @@ The first thing we'll do is to add some validation to our Todo model. So
 open 'app/models/todo.js' in your editor and add the following lines
 anywhere inside the constructor function
 
-~~~~ {.prettyprint}
+```
 var Todo = function () {
 ...
   // Add this inside the constructor function
@@ -230,7 +229,7 @@ var Todo = function () {
 ...
 };
 Todo = geddy.model.register('Todo', Todo);
-~~~~
+```
 
 Here we are making it so the title property is required and have a
 minumum of 5 characters. We also made it so the status acts like a
@@ -247,23 +246,22 @@ you need something simple to get you started. To learn more about
 controllers and views keep reading and follow the [resources
 tutorial](#resources).
 
-Resource application tutorial
------------------------------
+### Resource application tutorial
 
 Let's start by using the `geddy` executable to generate a basic
 app-structure.
 
-~~~~ {.prettyprint}
+```
 $ geddy app todo_app
-~~~~
+```
 
 Now let's try out our new application by running geddy from your
 application's root
 
-~~~~ {.prettyprint}
+```
 $ cd todo_app 
 $ geddy
-~~~~
+```
 
 Your app should be running on port 4000. Visit
 [http://localhost:4000](http://localhost:4000) in your browser to see
@@ -282,9 +280,9 @@ Now, let's get started building our To Do list manager. First, we'll
 need to generate the `todo` resource. We do this using the `geddy`
 executable as well:
 
-~~~~ {.prettyprint}
+```
 $ geddy resource todo title:string status
-~~~~
+```
 
 What did that do?
 
@@ -318,7 +316,7 @@ explanatory but I'll go through some things.
 First we'll create the `_form.html.ejs` partial template, this will hold
 all the form data for edit and add actions .
 
-~~~~ {.prettyprint}
+```
 <%
   var isUpdate = params.action == 'edit'
     , formTitle = isUpdate ? 'Update this To Do Item' : 'Create a new To Do Item'
@@ -365,7 +363,7 @@ all the form data for edit and add actions .
     </div>
   </fieldset>
 </form>
-~~~~
+```
 
 Here we created a couple variables so we can tell if it's for a edit or
 add action, then if we have any errors we dislay them. Also we are using
@@ -377,27 +375,27 @@ Now that we've created a base for our add and edit actions, we'll do
 them now. They're simple they just use the \_form partial. Add the
 following code to `add.html.ejs`
 
-~~~~ {.prettyprint}
+```
 <div class="hero-unit">
   <%= partial('_form', {params: params}); %>
 </div>
-~~~~
+```
 
 The edit view is slightly different because we will need to pass the
 todo object to the partial. Modify `app/views/todos/edit.html.ejs` with
 the following code:
 
-~~~~ {.prettyprint}
+```
 <div class="hero-unit">
   <%= partial('_form', {params: params, todo: todo}); %>
 </div>
-~~~~
+```
 
 Now that we have views that will create todo items let's add a simple
 `show.html.ejs` just so we can test everything end to end. In the
 following code I just loop through the params.
 
-~~~~ {.prettyprint}
+```
 <div class="hero-unit">
   <%- linkTo('Edit this todo', editTodoPath(params.id), {class: 'btn pull-right'}); %>
   <h3>Params</h3>
@@ -407,11 +405,11 @@ following code I just loop through the params.
   <% } %>
   </ul>
 </div>
-~~~~
+```
 
 Finally we need to create the index action to link everything together.
 
-~~~~ {.prettyprint}
+```
 <div class="hero-unit">
   <h2>To Do List</h2>
   <%- linkTo('Create a new To Do', addTodoPath, {class: 'btn pull-right'}) %>
@@ -426,7 +424,7 @@ Finally we need to create the index action to link everything together.
   </div>
   <% } %>
 <% } %>
-~~~~
+```
 
 For the index action we just have a link to add new items, and a list of
 all the items, with a link to each of their edit paths. If you notice
@@ -454,7 +452,7 @@ commented out.
 So, minus the commented out code, you should have a file that looks like
 this:
 
-~~~~ {.prettyprint}
+```
 var Todo = function () {
 
   this.defineProperties({
@@ -465,7 +463,7 @@ var Todo = function () {
 };
 
 Todo = geddy.model.register('Todo', Todo);
-~~~~
+```
 
 The `defineProperties` method takes any number of properties to be added
 to the model. The keys in the object will be added as properties on the
@@ -477,7 +475,7 @@ it so they are all \`required\`. To learn more, check out the
 There's also a more detailed validation API. While we're here, let's add
 some validation as well. The final code should look like this:
 
-~~~~ {.prettyprint}
+```
 var Todo = function () {
 
   this.defineProperties({
@@ -494,7 +492,7 @@ var Todo = function () {
 };
 
 Todo = geddy.model.register('Todo', Todo);
-~~~~
+```
 
 For the `title` property, we made sure that the property is always
 present and we made sure that the `title` property is a minimum of 5
@@ -514,9 +512,9 @@ By default it will store objects in memory using the `memory` model
 adapter. You can change the default memoryAdapter in
 `config/development.js`.
 
-~~~~ {.prettyprint}
-defaultAdapter = 'memory'
-~~~~
+```
+defaultAdapter: 'memory'
+```
 
 Now we've got a place to store our `todo`'s. This is in your
 application's memory, so it will disappear when you restart the server.
@@ -524,13 +522,12 @@ application's memory, so it will disappear when you restart the server.
 #### Optional: use mongo for persistence
 
 Install a [mongodb](http://www.mongodb.org/downloads) server if you
-haven't already and ` $ [sudo] npm install -g mongodb-wrapper` to
+haven't already and ` $ [sudo] npm install [-g] mongodb-wrapper` to
 install the required mongodb-wrapper and set `defaultAdapter = 'mongo'`
 in config/development.js instead of the memory adapter. You will also
 have to specify the db configuration
 `db: { mongo: { dbname: 'model_test' }`. For more information see the
-[Model Adapter Wiki
-Page](https://github.com/mde/geddy/wiki/Model-Adapters)
+[Model API reference](/documentation#models)
 
 ### The Todo Controller
 
@@ -547,7 +544,7 @@ To save a todo we need to edit the `create` action in
 `app/controllers/todos.js`. It's not doing much at the momment so lets
 modify it a little bit.
 
-~~~~ {.prettyprint}
+```
 this.create = function (req, resp, params) {
   var self = this
     , todo = geddy.model.Todo.create({title:params.title, status:'open'});
@@ -561,7 +558,7 @@ this.create = function (req, resp, params) {
     }
   });
 };
-~~~~
+```
 
 First, we create a new instance of the `Todo` model with
 `geddy.model.Todo.create`, passing in the title that our form will post
@@ -584,7 +581,7 @@ somewhere. Lets change the `index` action in the `todos` controller.
 Open up `/app/controllers/todos.js` again and replace the current
 implementaton with the following code.
 
-~~~~ {.prettyprint}
+```
 this.index = function (req, resp, params) {
   var self = this;
 
@@ -592,7 +589,7 @@ this.index = function (req, resp, params) {
     self.respond({params: params, todos: todos});
   });
 };
-~~~~
+```
 
 This part is a bit simpler and it follows a similar pattern. Instead of
 calling create in `geddy.model.Todo` this time we simply call `all` and
@@ -607,7 +604,7 @@ can view the list of items.
 Now that we have our index action working as expected, we should work on
 the `show` controller action to display todo details.
 
-~~~~ {.prettyprint}
+```
 this.show = function (req, resp, params) {
   var self = this;
 
@@ -615,7 +612,7 @@ this.show = function (req, resp, params) {
     self.respond({params: params, todo: todo});
   });
 };
-~~~~
+```
 
 Now we have a working show action in the controller to load items.
 
@@ -625,7 +622,7 @@ Alright, now that we can view our todos let's edit the `update` and
 `edit` actions in the `todos` controller. They should look something
 like this:
 
-~~~~ {.prettyprint}
+```
 this.edit = function (req, resp, params) {
   var self = this;
 
@@ -650,7 +647,7 @@ this.update = function (req, resp, params) {
     });
   });
 };
-~~~~
+```
 
 ### Deleting a todo
 
