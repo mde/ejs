@@ -13,7 +13,7 @@ version](https://github.com/mde/geddy/tree/master/examples/todo_app).
 -   How views in Geddy work
 -   How to use controllers to tie everything together
 
-### Installing Geddy
+### Installation
 
 If you haven't already, install [Node](http://nodejs.org#download) on
 your machine.
@@ -139,7 +139,7 @@ it's a string).
 
 Note: an ID property will *always* be created.
 
-### Scaffolding application tutorial
+### Scaffolding
 
 This will be a short tutorial as scaffolding will do almost everything
 for us, I won't go into detail on what it does as it will be covered in
@@ -246,7 +246,7 @@ you need something simple to get you started. To learn more about
 controllers and views keep reading and follow the [resources
 tutorial](#resources).
 
-### Resource application tutorial
+### Resource
 
 Let's start by using the `geddy` executable to generate a basic
 app-structure.
@@ -274,7 +274,7 @@ your app.
     [http://localhost:4000](http://localhost:4000)
 -   OR resize your browser to at most 480px wide
 
-### Generate a resource
+### Generate
 
 Now, let's get started building our To Do list manager. First, we'll
 need to generate the `todo` resource. We do this using the `geddy`
@@ -299,7 +299,7 @@ What did that do?
     -   `/todos/:id` (PUT)
     -   `/todos/:id` (DELETE)
 
-### Creating the Todo views
+### Views
 
 To start creating our views, create a few files in `app/views/todos`,
 those being:
