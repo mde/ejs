@@ -10,16 +10,30 @@ docs coming soon
 docs coming soon
 -->
 
+<!--
 #### .params
 docs coming soon
+-->
+
+<!--
 #### .cookies
 docs coming soon
+-->
+
+<!--
 #### .name
 docs coming soon
+-->
+
+<!--
 #### .respondsWith
 docs coming soon
+-->
+
+<!--
 #### .content
 docs coming soon
+-->
 
 #### .before
 `before(filter, [options])`
@@ -73,8 +87,10 @@ this.after(someFunction, {only: [‘add’, ‘update’, ‘remove’]}
 // will only run someFunction if this is the add, update, or remove action
 ```
 
+<!--
 #### .protectFromForgery
 docs coming soon
+-->
 
 #### .redirect
 `redirect(to)`
@@ -118,9 +134,17 @@ this.error({statusCode: 501})
 // sends a 501
 ```
 
+<!--
 #### .transfer
 docs coming soon
+-->
+
+<!--
 #### .respond
 docs coming soon
+-->
+
+<!--
 #### .renderTemplate
 docs coming soon
+-->
