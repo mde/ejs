@@ -246,7 +246,7 @@ you need something simple to get you started. To learn more about
 controllers and views keep reading and follow the [resources
 tutorial](#resources).
 
-### Resource
+### No-Scaffolding
 
 Let's start by using the `geddy` executable to generate a basic
 app-structure.
@@ -274,7 +274,7 @@ your app.
     [http://localhost:4000](http://localhost:4000)
 -   OR resize your browser to at most 480px wide
 
-### Generate
+### Resource
 
 Now, let's get started building our To Do list manager. First, we'll
 need to generate the `todo` resource. We do this using the `geddy`
