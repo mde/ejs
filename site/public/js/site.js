@@ -44,7 +44,7 @@ app.docs = new (function() {
   // make internal anchor links work for sub menu items
   this.giveSubIDs = function() {
     var section;
-    $('.content .span8').children('h3, h4').each(function (i, el) {
+    $('.content .span6').children('h3, h4').each(function (i, el) {
       var $el = $(el);
       if (el.nodeName == "H3") {
         section = $el.attr('id');

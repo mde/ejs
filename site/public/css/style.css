@@ -495,7 +495,7 @@ input:-ms-input-placeholder {
 }
 
 @media print {
-  .footer{
+  .footer, .toc, .menu {
     display: none;
   }
 }
