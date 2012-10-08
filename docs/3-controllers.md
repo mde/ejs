@@ -3,37 +3,49 @@ Controllers define the different actions that your users can interact with.
 * * *
 
 #### .request
-docs coming soon
+`this.request`
+
+The raw `http.ServerRequest` object for this request/response cycle.
 
 * * *
 
 #### .respnose
-docs coming soon
+`this.response`
+
+The raw `http.ServerResponse` object for this request/response cycle.
 
 * * *
 
 #### .params
-docs coming soon
+`this.params`
+
+The parsed params for the request. `params` is also passed as an argument to the action, it was added as an instance field for convenience.
 
 * * *
 
 #### .cookies
-docs coming soon
+`this.cookies`
+
+Cookies collection from the request
 
 * * *
 
 #### .name
-docs coming soon
+```
+this.name
+```
+
+The name of the controller constructor function, in CamelCase with uppercase initial letter.
 
 * * *
 
 #### .respondsWith
-docs coming soon
+Content-type the controller can respond with.
 
-* * *
-
-#### .content
-docs coming soon
+##### example
+```
+this.respondsWith = [‘txt’,’json’,’html’];
+```
 
 * * *
 
@@ -145,16 +157,50 @@ this.error({statusCode: 501})
 * * *
 
 #### .transfer
-docs coming soon
+```
+transfer(action)
+```
+
+Transfer a request from its original action to a new one. The entire request cycle is repeated, including before-filters.
+
+##### action
+- `action [string]`: name of the new action designated to handle the request.
+- `action [object]`: The new action designated to handle the request.
 
 * * *
 
 #### .respond
-docs coming soon
+```
+respond(data, options)
+```
 
-* * *
+Performs content-negotiation, and renders a response.
 
-#### .renderTemplate
-docs coming soon
+##### data
+- `data [object]`: an object with properties to send to the view
+
+##### options
+- `layout [string]`: the path to the layout file to use
+- `layout [false]`: a flag to not use a layout file
+- `format [string]`: the format to render
+- `template [string]`: The path (without file extensions) to the template to use to render this response
+
+##### examples
+```
+this.respond(params);
+// send the params object to the view, then send the response
+
+
+this.respond({posts: posts});
+// send the passed in object to the view, then send the response
+
+
+this.respond(params, {template: ‘path/to/template’});
+// send params to path/to/template, render it, then send the response
+
+
+this.respond(params, {format: ‘json’});
+// send the params object as the response in json format
+```
 
 * * *
