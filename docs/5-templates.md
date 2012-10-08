@@ -1,17 +1,22 @@
 Geddy's view layer provides a versitile set of templating languages and helpers to get you started quickly.
 #### engines
 The view layer supports these four templating engines:
+
 + EJS
 + Jade
 + Mustache
 + Handlebars
+
 To use them, just give your template the correct file extension.
+
 #### yield
 Yield is a function that's only available on layout templates. Yield, yields the template content and is put in place where the yield function is called.
+
 #### partial
 `partial(partialURL<String>, data<Object>)`
 
 Partial takes a partialURL which is the location to a partial template and a data object which is the data to render the partial with(params, etc), then it renders the partial and puts the contents in place where the partial function was called.
+
 #### truncate
 `truncate(string<String>, options<Integer/Object>)`
 
@@ -53,6 +58,7 @@ truncate('Once upon a time in a world', { length: 15, seperator: ' ' })
 truncate('<p>Once upon a time</p>', { length: 20 })
 // => '<p>Once upon a ti...'
 ```
+
 #### truncateHTML
 `truncateHTML(string<String>, options<Integer/Object>)`
 
@@ -79,6 +85,7 @@ truncateHTML('<p>Once upon a time <small>in a world</small></p>', { length: 10 }
 truncateHTML('<p>Once upon a time <small>in a world</small></p>', { length: 10, once: true })
 // => '<p>Once up...<small>in a world</small></p>'
 ```
+
 #### imageLink
 `imageLink(source<String>, link<String/Object>, imageOptions<Object>, linkOptions<Object>)`
 
@@ -101,6 +108,7 @@ imageLink('images/google.png', 'http://google.com', { alt: '' }
 imageLink('images/google.png', 'http://google.com', { alt: '', size: '40x50' })
 // => '<a href="http://google.com"><img alt="" height="50" src="images/google.png" width="40" /></a>'
 ```
+
 #### imageTag
 `imageTag(source<String>, htmlOptions<Object>)`
 
@@ -126,6 +134,7 @@ imageTag('images/google.png', { alt: '', size: '40x50' })
 imageTag('images/google.png', { alt: '', size: 'a string' })
 // => '<img alt="" src="images/google.png" />'
 ```
+
 #### styleLink
 `styleLink(source<String>, htmlOptions<Object>)`
 
@@ -140,6 +149,7 @@ styleLink('/css/styles.css')
 styleLink('/css/styles.css', { type: 'text/javascript' })
 // => '<link href="/css/style.css" rel="stylesheet" />'
 ```
+
 #### scriptLink
 `scriptLink(source<String>, htmlOptions<Object>)`
 
@@ -154,6 +164,7 @@ scriptLink('/js/script.js')
 scriptLink('/js/script.js', { type: 'text/javascript' })
 // => '<script src="/js/script.js" type="text/javascript"></script>'
 ```
+
 #### linkTo
 `linkTo(content<String>, options<String/Object>, htmlOptions<Object>)`
 
@@ -168,6 +179,7 @@ linkTo('some content', 'http://google.com')
 linkTo('some content', 'http://google.com', { data: {goTo: 'http://google.com'} })
 // => '<a data-go-to="http://google.com" href="http://google.com">some content</a>'
 ```
+
 #### urlFor
 `urlFor(options<String/Object>)`
 
