@@ -31,15 +31,15 @@ Cookies collection from the request
 * * *
 
 #### .name
-```
-this.name
-```
+`this.name`
 
 The name of the controller constructor function, in CamelCase with uppercase initial letter.
 
 * * *
 
 #### .respondsWith
+`this.respondsWith`
+
 Content-type the controller can respond with.
 
 ##### example
