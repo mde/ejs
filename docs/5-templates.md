@@ -1,10 +1,10 @@
 Geddy's view layer provides a versitile set of templating languages and helpers to get you started quickly.
 #### engines
 The view layer supports these four templating engines:
-- EJS
-- Jade
-- Mustache
-- Handlebars
++ EJS
++ Jade
++ Mustache
++ Handlebars
 To use them, just give your template the correct file extension.
 #### yield
 Yield is a function that's only available on layout templates. Yield, yields the template content and is put in place where the yield function is called.
