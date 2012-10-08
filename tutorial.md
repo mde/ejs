@@ -272,7 +272,7 @@ your app.
 -   point your mobile phone's browser to your computer on port 4000
 -   OR open up your favorite phone simulator and go to
     [http://localhost:4000](http://localhost:4000)
--   OR resize your browser to at least 480px wide
+-   OR resize your browser to at most 480px wide
 
 ### Generate a resource
 
@@ -431,7 +431,7 @@ all the items, with a link to each of their edit paths. If you notice
 we're using special helpers here, that create links to the path
 specified.
 
-### The Todo model
+### Model
 
 We're ready to start in on modeling our data. Geddy provides us with
 some pretty cool tools to do this:
@@ -504,7 +504,7 @@ property is always set to either `open` or `done`.
 For more information about Geddy's Models, you can check out the [Model
 wiki page](https://github.com/mde/geddy/wiki/Models).
 
-### The Todo model-adapter
+#### Model-adapter
 
 Now that we've set up our `todo` model, we need to define a way to store
 it. To keep our models persistance agnostic, Geddy uses model-adapters.
@@ -529,7 +529,7 @@ have to specify the db configuration
 `db: { mongo: { dbname: 'model_test' }`. For more information see the
 [Model API reference](/documentation#models)
 
-### The Todo Controller
+### Controller
 
 Controllers sit between the views and models. They are also the entry
 point of our code. When a user gets a page a function in a controller,
@@ -649,7 +649,7 @@ this.update = function (req, resp, params) {
 };
 ```
 
-### Deleting a todo
+#### Deleting a todo
 
 The delete is really simple specially now that you're familiar with the
 pattern. This time you will have to call remove passing the id of the
@@ -657,18 +657,18 @@ todo you want to delete. We will leave the details as an excercise.
 Remember that you can always compare your solution to the [final
 version](https://github.com/mde/geddy/tree/master/examples/todo_app).
 
+### API
+
+Check these urls out in your browser:
+
+-   GET: `localhost:4000/todos.json`
+-   GET: `localhost:4000/todos/:id.json`
+-   POST: `localhost:4000/todos`
+-   PUT: `localhost:4000/todos/:id`
+
 ### Conclusion
 
 At this point you should have a working To Do List app!
-
-### JSON and JSONP api?
-
-Check it out:
-
--   GET: `/todos.json`
--   GET: `/todos/:id.json`
--   POST: `/todos`
--   PUT: `/todos/:id`
 
 If you want to explore a little more, here are some other things you
 could do:
