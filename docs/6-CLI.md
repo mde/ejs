@@ -12,16 +12,6 @@ Geddy has a robust CLI tool to help you generate apps, run your tests, or play w
 - `—version, -v`: Output the version of Geddy installed
 - `—help, -h`: Output the list of commands and options
 
-####Commands:
-
-- `app <name>`: Create a new Geddy application
-- `resource <name> [model attributes]`: Create a new Geddy resource. Resources include a model, controller and a route
-- `scaffold <name> [model attributes]`: Creates a new Geddy scaffolding. Scaffolding includes everything Resources have as well as views
-- `secret`: Generate a new application secret in `config/environment`
-- `controller <name>`: Generate a new controller including an index view and a route
-- `model <name> [model attributes]`: Generate a new model
-- `console`: opens a console in the context of geddy
-
 #### geddy
 `geddy` takes no arguments, it will run the geddy app in the current directory.
 
