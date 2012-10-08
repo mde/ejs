@@ -3,12 +3,12 @@ Controllers define the different actions that your users can interact with. Ever
 <!--
 #### .request
 docs coming soon
-—>
+-->
 
 <!--
 #### .respnose
 docs coming soon
-—>
+-->
 
 #### .params
 docs coming soon
