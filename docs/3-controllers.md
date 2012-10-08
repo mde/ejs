@@ -26,7 +26,7 @@ Adds an action to be performed before a response is rendered.
 - `except [array]` List of actions where the before-filter should not be performed.
 - `only [array]` List of actions where the before-filter should only be performed.
 
-#### examples
+##### examples
 ```
 this.before(someFunction);
 // runs someFunction before the response is rendered
@@ -52,7 +52,7 @@ Adds an action to be performed after a response is rendered.
 - `except [array]` List of actions where the after-filter should not be performed.
 - `only [array]` List of actions where the after-filter should only be performed.
 
-#### examples
+##### examples
 ```
 this.after(someFunction);
 // runs someFunction after the response is rendered
