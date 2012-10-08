@@ -22,6 +22,15 @@ Geddy has a robust CLI tool to help you generate apps, run your tests, or play w
 - `model <name> [model attributes]`: Generate a new model
 - `console`: opens a console in the context of geddy
 
+#### geddy
+`geddy` takes no arguments, it will run the geddy app in the current directory.
+
+```
+$ cd path/to/app
+$ geddy
+// will run the app in path/to/app
+```
+
 #### app
 `app` takes a single argument being the name you'd like, then it will generate a base application. If no name is given the command will fail. If you include the `—jade`, `—handle`, or `—mustache` option you can substitute the templating language to your liking
 
