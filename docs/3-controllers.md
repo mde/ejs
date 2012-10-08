@@ -19,6 +19,8 @@ docs coming soon
 #### .after
 `after(filter, [options])`
 
+Adds an action to the afterFilters list of actions to be performed after a response is rendered.
+
 ##### filter
 - `filter [function]` Action to add to the afterFilter list.
 
@@ -26,7 +28,19 @@ docs coming soon
 - `except [array]` List of actions where the before-filter should not be performed.
 - `only [array]` List of actions where the before-filter should only be performed.
 
-Adds an action to the afterFilters list of actions to be performed after a response is rendered.
+#### examples
+```
+this.after(someFunction);
+// runs someFunction after the response is rendered
+
+
+this.after(someFunction, {except: [‘index’, ‘home’]});
+// won’t run someFunction if this is the index or home action
+
+
+this.after(someFunction, {only: [‘add’, ‘update’, ‘remove’]}
+// will only run someFunction if this is the add, update, or remove action
+```
 
 
 
