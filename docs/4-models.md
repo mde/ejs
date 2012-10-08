@@ -1,4 +1,4 @@
-Geddy uses the [Model](http://github.com/mde/model) for it's model layer. It's an abstract ORM that is compatible with many different types of databases, from Postgres to in memory, and MongoDB ro Riak.
+Geddy uses the [Model](http://github.com/mde/model) module for it's model layer. It's an abstract ORM that is compatible with many different types of databases, from Postgres to in memory, and MongoDB ro Riak.
 
 * * *
 
@@ -88,7 +88,7 @@ Sets up a validation to make sure that the property is formatted correctly.
 - `property [string]`: the name of the property to validate
 
 ##### regex
-- `regex [string]`: a regular expression that the property value must pass
+- `regex [regex]`: a regular expression that the property value must pass
 
 ##### options
 - `message [string]`: a message to give the use if the validation fails
@@ -172,7 +172,7 @@ this.validatesWithFunction('password', function (val) {
 Sets up a has one relationship between this model and another.
 
 ##### model
-- `property [string]`: the name of the model that this model has one of.
+- `model [string]`: the name of the model that this model has one of.
 
 ##### example
 ```
@@ -189,7 +189,7 @@ this.hasOne('Profile');
 Sets up a has many relationship between this model and another.
 
 ##### model
-- `property [string]`: the pluralized name of the model that this model has many of.
+- `model [string]`: the pluralized name of the model that this model has many of.
 
 ##### example
 ```
