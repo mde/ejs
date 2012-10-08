@@ -226,8 +226,7 @@ else {
     if (err) {
       die(usage);
     }
-    else {
-      start();
-    }
+
+    start();
   });
 }
