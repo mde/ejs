@@ -32,9 +32,6 @@ app.docs = new (function() {
         self.$toc.find('.selected').removeClass('selected');
         $subList.addClass('selected');
         $section.addClass('selected');
-
-        console.log(self.$toc.height(), $(window).height());
-
         if (self.$toc.height() > $(window).height()) {
           var time = setTimeout(function() {
             self.noScroll = true;
