@@ -106,7 +106,9 @@ this.after(someFunction, {only: [‘add’, ‘update’, ‘remove’]}
 * * *
 
 #### .protectFromForgery
-docs coming soon
+`protectFromForgery()`
+
+Prevents cross site requests from completing.
 
 * * *
 
