@@ -150,7 +150,7 @@ for this tutorial can be found
 First we'll create our application, this will create a base so we can
 start on.
 
-````
+```
 $ geddy app todo_app
 ```
 
