@@ -3,13 +3,7 @@ class Todos
 
   index: (req, resp, params) ->
     self = this
-    geddy.model.adapter.Todo.all
-      status:
-        'in': ['open', 'done']
-    , sort:
-        status: -1
-        title: 1
-    , (err, todos) ->
+    geddy.model.Todo.all (err, todos) ->
         self.respond params: params, todos: todos
 
   add: (req, resp, params) ->
@@ -19,7 +13,6 @@ class Todos
     self = this
     todo = geddy.model.Todo.create
       title: params.title
-      id: geddy.string.uuid(10)
       status: 'open'
 
     todo.save (err, data) ->
@@ -31,19 +24,18 @@ class Todos
 
   show: (req, resp, params) ->
     self = this
-    geddy.model.adapter.Todo.load params.id, (err, todo) ->
+    geddy.model.Todo.load params.id, (err, todo) ->
       self.respond params: params, todo: todo
 
   edit: (req, resp, params) ->
     self = this
-    geddy.model.adapter.Todo.load params.id, (err, todo) ->
+    geddy.model.Todo.load params.id, (err, todo) ->
       self.respond params: params, todo: todo
 
   update: (req, resp, params) ->
     self = this
-    geddy.model.adapter.Todo.load params.id, (err, todo) ->
-      todo.status = params.status
-      todo.title = params.title
+    geddy.model.Todo.load params.id, (err, todo) ->
+      todo.updateAttributes params
 
       todo.save (err, data) ->
         if err
@@ -54,7 +46,7 @@ class Todos
 
   remove: (req, resp, params) ->
     self = this
-    geddy.model.adapter.Todo.remove params.id, (err) ->
+    geddy.model.Todo.remove params.id, (err) ->
       if err
           params.errors = err
           self.transfer 'edit'

@@ -462,14 +462,16 @@ namespace('gen', function () {
       , routerArr
       , text
       , splitText
-      , newRoute;
+      , newRoute
+      , beginPath;
 
     // Check if the router file exists
+    beginPath = path.join(process.cwd(), 'config');
     utils.file.searchParentPath(jsRouter, function (err) {
       if (err) {
         var jsErr = err;
         // If jsEnvironment wasn't found, try finding coffee variant
-        utils.file.searchParentPath(coffeeRouter, function (err) {
+        utils.file.searchParentPath(coffeeRouter, beginPath, function (err) {
           if (err) {
             throw jsErr;
           } else {
@@ -670,14 +672,16 @@ namespace('gen', function () {
       , environmentPath
       , environmentArr
       , text
-      , splitText;
+      , splitText
+      , beginPath;
 
     // Check if the environment file exists
+    beginPath = path.join(process.cwd(), 'config');
     utils.file.searchParentPath(jsEnvironment, function (err) {
       if (err) {
         var jsErr = err;
         // If jsEnvironment wasn't found, try finding coffee variant
-        utils.file.searchParentPath(coffeeEnvironment, function (err) {
+        utils.file.searchParentPath(coffeeEnvironment, beginPath, function (err) {
           if (err) {
             throw jsErr;
           } else {
