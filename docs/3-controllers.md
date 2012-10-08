@@ -1,39 +1,41 @@
-Controllers define the different actions that your users can interact with. Every controller has these methods:
+Controllers define the different actions that your users can interact with.
 
-<!--
+* * *
+
 #### .request
 docs coming soon
--->
 
-<!--
+* * *
+
 #### .respnose
 docs coming soon
--->
 
-<!--
+* * *
+
 #### .params
 docs coming soon
--->
 
-<!--
+* * *
+
 #### .cookies
 docs coming soon
--->
 
-<!--
+* * *
+
 #### .name
 docs coming soon
--->
 
-<!--
+* * *
+
 #### .respondsWith
 docs coming soon
--->
 
-<!--
+* * *
+
 #### .content
 docs coming soon
--->
+
+* * *
 
 #### .before
 `before(filter, [options])`
@@ -91,10 +93,10 @@ this.after(someFunction, {only: [‘add’, ‘update’, ‘remove’]}
 
 * * *
 
-<!--
 #### .protectFromForgery
 docs coming soon
--->
+
+* * *
 
 #### .redirect
 `redirect(to)`
@@ -142,17 +144,17 @@ this.error({statusCode: 501})
 
 * * *
 
-<!--
 #### .transfer
 docs coming soon
--->
 
-<!--
+* * *
+
 #### .respond
 docs coming soon
--->
 
-<!--
+* * *
+
 #### .renderTemplate
 docs coming soon
--->
+
+* * *
