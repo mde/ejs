@@ -15,8 +15,21 @@ docs coming soon
 docs coming soon
 #### .before
 docs coming soon
+
 #### .after
-docs coming soon
+`after(filter, [options])`
+
+##### filter
+- `filter [function]` Action to add to the afterFilter list.
+
+##### options
+- `except [array]` List of actions where the before-filter should not be performed.
+- `only [array]` List of actions where the before-filter should only be performed.
+
+Adds an action to the afterFilters list of actions to be performed after a response is rendered.
+
+
+
 #### .protectFromForgery
 docs coming soon
 #### .redirect
