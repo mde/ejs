@@ -5,6 +5,8 @@ Geddy uses [Barista](http://github.com/kieran/barista) as it's router. Its API i
 #### .match
 `router.match( path [, method] )`
 
+defines the url to match to a controller action.
+
 ##### path
 - `path [string]`: the url to match to an action
 
@@ -36,7 +38,7 @@ router.match( '/products/:id(.:format)', 'GET' ).to( 'products.show' )
 #### .to
 `router.match( path ).to( action )`
 
-defines the action`to map the path to.
+defines the action to map the path to.
 
 ##### action
 - `action [string]`: a controller name plus an action name as a string
