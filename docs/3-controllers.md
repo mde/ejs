@@ -61,6 +61,8 @@ this.before(someFunction, {only: [‘add’, ‘update’, ‘remove’]}
 // will only run someFunction if this is the add, update, or remove action
 ```
 
+* * *
+
 #### .after
 `after(filter, [options])`
 
@@ -86,6 +88,8 @@ this.after(someFunction, {except: [‘index’, ‘home’]});
 this.after(someFunction, {only: [‘add’, ‘update’, ‘remove’]}
 // will only run someFunction if this is the add, update, or remove action
 ```
+
+* * *
 
 <!--
 #### .protectFromForgery
@@ -115,6 +119,8 @@ this.redirect({controller: ‘users’, action: ‘show’, id: 1});
 // will redirect the browser to /users/1
 ```
 
+* * *
+
 #### .error
 `error(err)`
 
@@ -133,6 +139,8 @@ this.error()
 this.error({statusCode: 501})
 // sends a 501
 ```
+
+* * *
 
 <!--
 #### .transfer
