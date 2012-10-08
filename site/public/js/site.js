@@ -21,9 +21,27 @@ app.docs = new (function() {
     var self = this;
     this.$toc.find('ul > li').click(function(e) {
       var $el = $(this);
-      self.$toc.find('.selected').removeClass('selected');
-      $el.find('ul').addClass('selected');
-      $el.find('a:first').addClass('selected');
+      var $section = $el.find('a:first');
+      var $subList = $el.find('ul');
+      if ($section.hasClass('selected') && !$el.siblings('ul').legnth) {
+        $section.removeClass('selected');
+        $subList.removeClass('selected');
+        self.noScroll = false;
+      }
+      else {
+        self.$toc.find('.selected').removeClass('selected');
+        $subList.addClass('selected');
+        $section.addClass('selected');
+
+        console.log(self.$toc.height(), $(window).height());
+
+        if (self.$toc.height() > $(window).height()) {
+          var time = setTimeout(function() {
+            self.noScroll = true;
+            clearTimeout(time);
+          }, 10);
+        }
+     }
     });
   };
 
@@ -31,6 +49,11 @@ app.docs = new (function() {
   this.registerScroll = function() {
     var self = this;
     $(window).scroll(function(e) {
+
+      if (self.noScroll) {
+        return;
+      }
+
       var newTop = $(this).scrollTop();
       // only scroll on screens larger than an iphone
       if (newTop > 462 && $(this).width() > 767) {
