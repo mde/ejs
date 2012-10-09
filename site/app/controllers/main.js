@@ -78,7 +78,7 @@ var Main = function () {
       , dataType: 'json'
       }
       geddy.request(options, function (err, resp) {
-        var content = new Buffer(resp.content, 'base64').toString('utf8')
+        var content = (resp.content) ? new Buffer(resp.content, 'base64').toString('utf8') : ''
           , name = paths[i].path.replace('.md','')
           , subs = []
           , lines = content.split('\n');
