@@ -13,9 +13,9 @@ Geddy is built on the same MVC principles that many popular frameworks are based
 │   ├── models
 │   └── views
 │       ├── layouts
-│       │   └── application.html.jade
+│       │   └── application.html.ejs
 │       └── main
-│           └── index.html.jade
+│           └── index.html.ejs
 ├── config
     ├── development.js
     ├── environment.js
