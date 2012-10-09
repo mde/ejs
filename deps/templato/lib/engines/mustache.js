@@ -1,10 +1,12 @@
 require('../../color');
+var path = require('path')
+  , TemplatoMustache;
 
-var TemplatoMustache = (function() {
+TemplatoMustache = (function() {
 
   function TemplatoMustache() {
     try {
-      this.engine = this.engine || require('handlebars');
+      this.engine = this.engine || require(path.join(process.cwd(), 'node_modules', 'mustache'));
     } catch(err) {
       throw [
           "To use Handlebars you will need to install it: [sudo] npm install [-g] handlebars"
