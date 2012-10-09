@@ -12,6 +12,12 @@ var <%= names.constructor.singular %> = function () {
 <% } -%>
   });
 
+<% for(var i in properties) { -%>
+<% if(properties[i].name === 'id' && properties[i].type === 'int') { -%>
+  this.autoIncrementId = true;
+<% } -%>
+<% } -%>
+
   /*
   this.property('login', 'string', {required: true});
   this.property('password', 'string', {required: true});
