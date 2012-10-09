@@ -7,21 +7,21 @@ body {
 }
 
 h2 {
-  font-size: 34px;
+  font-size: 36px;
 }
 
 h3 {
-  font-size: 20px;
+  font-size: 24px;
   line-height: 60px
 }
 
 h4 {
-  font-size: 15px;
+  font-size: 18px;
   line-height: 40px;
 }
 
 h5 {
-  font-size: 12px;
+  font-size: 14px;
   color: #999;
   margin-top: 20px;
 }
@@ -31,19 +31,19 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 p {
-  font-size: 12px;
+  font-size: 14px;
   line-height: 200%;
 }
 
 li {
-  font-size: 12px;
+  font-size: 14px;
 }
 
 pre, code {
   background: #f5f5f5;
   margin: 40px 0;
   padding: 20px;
-  font-size: 10px;
+  font-size: 12px;
   border: none;
   border-radius: 0px;
 }
@@ -89,6 +89,14 @@ input:-ms-input-placeholder {
   color: #fff;
   margin-top: 0;
   margin-bottom: 20px;
+}
+
+.header h1 a {
+  color: white;
+}
+
+.header h1 a:hover {
+  text-decoration: none;
 }
 
 .menu .icon {
