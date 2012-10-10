@@ -55,11 +55,12 @@ this.respondsWith = [‘txt’,’json’,’html’];
 Adds an action to be performed before a response is rendered.
 
 ##### filter
-- `filter [function]` Action to add to the afterFilter list.
+- `filter [function]` Action to add to the beforeFilter list. If the action is asynchronous, takes a single callback parameter to call when the action is finished.
 
 ##### options
 - `except [array]` List of actions where the before-filter should not be performed.
 - `only [array]` List of actions where the before-filter should only be performed.
+- `async` [boolean] When set to true, the before-filter is asynchronous, and requires a callback
 
 ##### examples
 ```
@@ -83,11 +84,12 @@ this.before(someFunction, {only: [‘add’, ‘update’, ‘remove’]}
 Adds an action to be performed after a response is rendered.
 
 ##### filter
-- `filter [function]` Action to be performed
+- `filter [function]` Action to add to the afterFilter list. If the action is asynchronous, takes a single callback parameter to call when the action is finished.
 
 ##### options
 - `except [array]` List of actions where the after-filter should not be performed.
 - `only [array]` List of actions where the after-filter should only be performed.
+- `async` [boolean] When set to true, the before-filter is asynchronous, and requires a callback
 
 ##### examples
 ```
@@ -108,7 +110,7 @@ this.after(someFunction, {only: [‘add’, ‘update’, ‘remove’]}
 #### .protectFromForgery
 `protectFromForgery()`
 
-Prevents cross site requests from completing.
+Prevents cross-site requests by requiring a same-origin token for destructive HTTP methods (PUT, POST, DELETE)
 
 * * *
 

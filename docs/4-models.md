@@ -1,8 +1,8 @@
-Geddy uses the [Model](http://github.com/mde/model) module for it's model layer. It's an abstract ORM that is compatible with many different types of databases, from Postgres to in memory, and MongoDB ro Riak.
+Geddy uses the [Model](http://github.com/mde/model) module for its model layer. Model is an abstract ORM that is compatible with many different types of databases, including Postgres, in-memory, MongoDB and Riak.
 
 * * *
 
-#### definition
+#### summary
 Model uses a pretty simple syntax for defining a model. (It should look familiar to anyone who has used an ORM like ActiveRecord, DataMapper, Django's models, or SQLAlchemy.)
 
 * * *
@@ -392,7 +392,7 @@ docs coming soon
 
 Both the base model 'constructors,' and model instances are EventEmitters. The
 emit events during the create/update/remove lifecycle of model instances. In all
-cases, the plain-named event is fired after the event in question, the
+cases, the plain-named event is fired after the event in question, and the
 'before'-prefixed event, of course happens before.
 
 The 'constructor' for a model emits the following events:

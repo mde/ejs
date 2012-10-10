@@ -1,4 +1,4 @@
-Geddy uses [Barista](http://github.com/kieran/barista) as it's router. Its API is very similar to rails routes. Both general purpose resource based routes and individually defined routes are possible.
+Geddy uses [Barista](http://github.com/kieran/barista) as its router. Its API is very similar to rails routes. Both general-purpose resource-based routes and individually defined routes are possible.
 
 * * *
 
