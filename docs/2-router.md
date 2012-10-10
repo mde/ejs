@@ -15,7 +15,7 @@ defines the url to match to a controller action.
 
 ##### examples
 ```
-router.match(‘/‘).to(‘Main.index’);
+router.match('/').to('Main.index');
 // will route any request to ‘/‘ to the Main controller’s index action
 
 
