@@ -75,9 +75,9 @@ $ geddy console
 ```
 
 #### jake
-`jake` takes a task name, it will run a jake command in your apps context from your jakefile
+`jake` takes a task name, it will run a jake command in your apps context from your app's Jakefile
 
 ```
 $ geddy jake test
-// will run the test task in your jake file after loading up your app environment
+// will run the test task in your app's Jakefile after loading up your app environment
 ```
