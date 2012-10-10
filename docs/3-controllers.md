@@ -9,7 +9,7 @@ The raw `http.ServerRequest` object for this request/response cycle.
 
 * * *
 
-#### .respnose
+#### .response
 `this.response`
 
 The raw `http.ServerResponse` object for this request/response cycle.
