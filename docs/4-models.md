@@ -8,7 +8,7 @@ Model uses a pretty simple syntax for defining a model. (It should look familiar
 * * *
 
 #### .defineProperties
-`defineProperties( properties )`
+`defineProperties(properties)`
 
 defines the properties for your model.
 
@@ -30,7 +30,7 @@ var User = function () {
 * * *
 
 #### .property
-`property( name, type, options )`
+`property(name, type, options)`
 
 defines a single property
 
@@ -64,7 +64,7 @@ this.property(‘premium’, ’boolean);
 * * *
 
 #### .validatesPresent
-`validatesPresent( property )`
+`validatesPresent(property)`
 
 Sets up a validation to make sure that the property is present.
 
@@ -80,7 +80,7 @@ this.validatesPresent('login');
 * * *
 
 #### .validatesFormat
-`validatesFormat( property, regex, options )`
+`validatesFormat(property, regex, options)`
 
 Sets up a validation to make sure that the property is formatted correctly.
 
@@ -102,7 +102,7 @@ this.validatesFormat('login', /[a-z]+/, {message: ‘cannot contain numbers’})
 * * *
 
 #### .validatesLength
-`validatesLength( property, options )`
+`validatesLength(property, options)`
 
 Sets up a validation to make sure that the property meets certain lenght requirements.
 
@@ -126,7 +126,7 @@ this.validatesLength(‘login', {min: ‘20’});
 * * *
 
 #### .validatesConfirmed
-`validatesConfirmed( property, param )`
+`validatesConfirmed(property, param)`
 
 Sets up a validation to make sure that the property has been confirmed.
 
@@ -145,7 +145,7 @@ this.validatesConfirmed('password', 'confirmPassword');
 * * *
 
 #### .validatesWithFunction
-`validatesWithFunction( property, fn )`
+`validatesWithFunction(property, fn)`
 
 Sets up a validation to make sure that the property has been confirmed.
 
@@ -167,7 +167,7 @@ this.validatesWithFunction('password', function (val) {
 * * *
 
 #### .hasOne
-`hasOne( model )`
+`hasOne(model)`
 
 Sets up a has one relationship between this model and another.
 
@@ -184,7 +184,7 @@ this.hasOne('Profile');
 * * *
 
 #### .hasMany
-`hasMany( model )`
+`hasMany(model)`
 
 Sets up a has many relationship between this model and another.
 
@@ -253,7 +253,7 @@ user.isValid()
 * * *
 
 #### .save
-`save( fn )`
+`save(fn)`
 
 Saves the instance to the database.
 
@@ -271,7 +271,7 @@ user.save(function (err, data) {
 * * *
 
 #### .updateProperties
-`updateProperties( properties )`
+`updateProperties(properties)`
 
 Updates the properties of a model and asserts that they are valid; This method will not call save on the instance.
 
@@ -295,7 +295,7 @@ docs coming soon
 * * *
 
 #### .create
-`create( params )`
+`create(params)`
 
 Creates a new model instance and returns it.
 
@@ -316,7 +316,7 @@ var user = User.create(params);
 * * *
 
 #### .first
-`first( query, options, fn )`
+`first(query, options, fn)`
 
 Use the `first` method to find a single item. You can pass it an id, or a set of query parameters in the form of an object-literal. In the case of a query, it will return the first item that matches, according to whatever sort you've specified.
 
@@ -341,7 +341,7 @@ User.first({login: 'alerxst'}, function (err, user) {
 * * *
 
 #### .all
-`all( query, options, fn )`
+`all(query, options, fn)`
 
 Use the `all` method to find lots of items. Pass it a set of query parameters in the form of an object-literal, where each key is a field to compare, and the value is either a simple value for comparison (equal to), or another object-literal where the key is the comparison-operator, and the value is the value to use for the comparison.
 
@@ -366,7 +366,7 @@ User.all({location: ‘san francisco’}, {sort: {createdAt: ‘desc’}}, funct
 * * *
 
 #### .remove
-`remove( id, fn )`
+`remove(id, fn)`
 
 Remove an instance from the database by id.
 

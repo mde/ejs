@@ -3,7 +3,7 @@ Geddy uses [Barista](http://github.com/kieran/barista) as it's router. Its API i
 * * *
 
 #### .match
-`router.match( path [, method] )`
+`router.match(path [, method])`
 
 defines the url to match to a controller action.
 
@@ -19,24 +19,24 @@ router.match(‘/‘).to(‘Main.index’);
 // will route any request to ‘/‘ to the Main controller’s index action
 
 
-router.match( '/products/:id', 'GET' ).to( 'products.show' )
-// will route ‘/products/5’ to Products.show() 
+router.match('/products/:id', 'GET').to( 'products.show')
+// will route ‘/products/5’ to Products.show()
 // and set the id paramer to be 5
 
 
-router.match( '/profiles/:username', 'GET' ).to( 'users.show' )
-// will route ‘/products/dan’ to Users.show() 
+router.match('/profiles/:username', 'GET').to( 'users.show')
+// will route ‘/products/dan’ to Users.show()
 // and set the username paramer to be dan
 
 
-router.match( '/products/:id(.:format)', 'GET' ).to( 'products.show' )
+router.match('/products/:id(.:format)', 'GET').to( 'products.show')
 // things enclosed in parentheses are optional
 ```
 
 * * *
 
 #### .to
-`router.match( path ).to( action )`
+`router.match(path).to( action)`
 
 defines the action to map the path to.
 
@@ -57,35 +57,35 @@ router.match(‘/‘).to({controller: ‘Main’, action: ‘index’});
 * * *
 
 #### .get
-`router.get( path )`
+`router.get(path)`
 
-Equivalent to `router.match( path, 'GET' )`
+Equivalent to `router.match(path, 'GET')`
 
 * * *
 
 #### .post
-`router.post( path )`
+`router.post(path)`
 
-Equivalent to `router.match( path, ‘POST’ )`
+Equivalent to `router.match(path, ‘POST’)`
 
 * * *
 
 #### .put
-`router.put( path )`
+`router.put(path)`
 
-Equivalent to `router.match( path, ‘PUT’ )`
+Equivalent to `router.match(path, ‘PUT’)`
 
 * * *
 
 #### .del
-`router.del( path )`
+`router.del(path)`
 
-Equivalent to `router.match( path, ‘DELETE’ )`
+Equivalent to `router.match(path, ‘DELETE’)`
 
 * * *
 
 #### .resource
-`router.resource( controller )`
+`router.resource(controller)`
 
 generates standard resource routes for a controller name
 
@@ -94,17 +94,17 @@ generates standard resource routes for a controller name
 
 ##### examples
 ```
-router.resource( 'products' )
+router.resource('products')
 
 // is equivalent to:
 
-router.get( '/products(.:format)' ).to( 'products.index' )
-router.get( '/products/add(.:format)' ).to( 'products.add' )
-router.get( '/products/:id(.:format)' ).to('products.show' )
-router.get('/products/:id/edit(.:format)' ).to( 'products.edit' )
-router.post('/products(.:format)' ).to( 'products.create' )
-router.put('/products/:id(.:format)' ).to( 'products.update' )
-router.del('/products/:id(.:format)' ).to( 'products.destroy' )
+router.get('/products(.:format)').to( 'products.index')
+router.get('/products/add(.:format)').to( 'products.add')
+router.get('/products/:id(.:format)').to('products.show')
+router.get('/products/:id/edit(.:format)').to('products.edit')
+router.post('/products(.:format)').to('products.create')
+router.put('/products/:id(.:format)').to('products.update')
+router.del('/products/:id(.:format)').to('products.destroy')
 ```
 
 * * *
