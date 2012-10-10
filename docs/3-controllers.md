@@ -44,7 +44,7 @@ Content-type the controller can respond with.
 
 ##### example
 ```
-this.respondsWith = [‘txt’,’json’,’html’];
+this.respondsWith = ['txt','json','html'];
 ```
 
 * * *
@@ -68,11 +68,11 @@ this.before(someFunction);
 // runs someFunction before the response is rendered
 
 
-this.before(someFunction, {except: [‘index’, ‘home’]});
-// won’t run someFunction if this is the index or home action
+this.before(someFunction, {except: ['index', 'home']});
+// won't run someFunction if this is the index or home action
 
 
-this.before(someFunction, {only: [‘add’, ‘update’, ‘remove’]}
+this.before(someFunction, {only: ['add', 'update', 'remove']}
 // will only run someFunction if this is the add, update, or remove action
 ```
 
@@ -97,11 +97,11 @@ this.after(someFunction);
 // runs someFunction after the response is rendered
 
 
-this.after(someFunction, {except: [‘index’, ‘home’]});
-// won’t run someFunction if this is the index or home action
+this.after(someFunction, {except: ['index', 'home']});
+// won't run someFunction if this is the index or home action
 
 
-this.after(someFunction, {only: [‘add’, ‘update’, ‘remove’]}
+this.after(someFunction, {only: ['add', 'update', 'remove']}
 // will only run someFunction if this is the add, update, or remove action
 ```
 
@@ -129,11 +129,11 @@ Sends a 302 redirect to the client, based on either a simple string-URL, or a co
 
 ##### examples
 ```
-this.redirect(‘/users/1’);
+this.redirect('/users/1');
 // will redirect the browser to /users/1
 
 
-this.redirect({controller: ‘users’, action: ‘show’, id: 1});
+this.redirect({controller: 'users', action: 'show', id: 1});
 // will redirect the browser to /users/1
 ```
 
@@ -199,11 +199,11 @@ this.respond({posts: posts});
 // send the passed in object to the view, then send the response
 
 
-this.respond(params, {template: ‘path/to/template’});
+this.respond(params, {template: 'path/to/template'});
 // send params to path/to/template, render it, then send the response
 
 
-this.respond(params, {format: ‘json’});
+this.respond(params, {format: 'json'});
 // send the params object as the response in json format
 ```
 

@@ -39,16 +39,16 @@ defines a single property
 
 ##### type
 - `type [string]`: the type of the property
-	- `’string’`
-	- `’text’`
-	- `’number’`
-	- `’int’`
-	- `’boolean’`
-	- `’object’`
-	- `’array’`
-	- `’datetime’`
-	- `’date’`
-	- `’time’`
+	- `'string'`
+	- `'text'`
+	- `'number'`
+	- `'int'`
+	- `'boolean'`
+	- `'object'`
+	- `'array'`
+	- `'datetime'`
+	- `'date'`
+	- `'time'`
 
 ##### options
 - `required [boolean]`: sets the property to be required
@@ -57,8 +57,8 @@ defines a single property
 ```
 this.property('login', 'string', {required: true});
 this.property('password', 'string', {required: true});
-this.property(‘joined’, ‘datetime);
-this.property(‘premium’, ’boolean);
+this.property('joined', 'datetime);
+this.property('premium', 'boolean);
 ```
 
 * * *
@@ -95,7 +95,7 @@ Sets up a validation to make sure that the property is formatted correctly.
 
 ##### example
 ```
-this.validatesFormat('login', /[a-z]+/, {message: ‘cannot contain numbers’});
+this.validatesFormat('login', /[a-z]+/, {message: 'cannot contain numbers'});
 // makes sure that the login property does not contain numbers
 ```
 
@@ -115,11 +115,11 @@ Sets up a validation to make sure that the property meets certain lenght require
 
 ##### example
 ```
-this.validatesLength(‘login', {min: ‘3’});
+this.validatesLength('login', {min: '3'});
 // makes sure that the login property is at least 3 characters long
 
 
-this.validatesLength(‘login', {min: ‘20’});
+this.validatesLength('login', {min: '20'});
 // makes sure that the login property is not longer than 20 characters
 ```
 
@@ -193,7 +193,7 @@ Sets up a has many relationship between this model and another.
 
 ##### example
 ```
-this.hasMany(‘Friends’);
+this.hasMany('Friends');
 // sets up a has many relationship
 // user -> has many -> friends
 ```
@@ -207,17 +207,17 @@ Defines the database adapter for this model
 
 ##### examples
 ```
-this.adapter = ‘mongo’;
-// makes this model use mongo for it’s database
+this.adapter = 'mongo';
+// makes this model use mongo for it's database
 
 
-this.adapter = ‘riak’
+this.adapter = 'riak'
 
 
-this.adapter = ‘postgres’
+this.adapter = 'postgres'
 
 
-this.adapter = ‘memory’
+this.adapter = 'memory'
 ```
 
 * * *
@@ -276,7 +276,7 @@ user.save(function (err, data) {
 Updates the properties of a model and asserts that they are valid; This method will not call save on the instance.
 
 ##### properties
-- `properties [object]`: an object who’s keys are property names and its values are the values to change the property to.
+- `properties [object]`: an object who's keys are property names and its values are the values to change the property to.
 
 ##### example
 ```
@@ -321,14 +321,14 @@ var user = User.create(params);
 Use the `first` method to find a single item. You can pass it an id, or a set of query parameters in the form of an object-literal. In the case of a query, it will return the first item that matches, according to whatever sort you've specified.
 
 ##### query [string]
-- `query [string]`: if the query is a string, it will be assumed that it’s an id
+- `query [string]`: if the query is a string, it will be assumed that it's an id
 
 ##### query [object]
 - `query [object]`: if the query is an object, it will be interpreted as a Query object
 
 ##### example
 ```
-User.first(‘sdfs-asd-1’, function (err, user) {
+User.first('sdfs-asd-1', function (err, user) {
   // do stuff with user
 });
 
@@ -353,12 +353,12 @@ Use the `all` method to find lots of items. Pass it a set of query parameters in
 
 ##### example
 ```
-User.all({location: ‘san francisco’}, function (err, users) {
+User.all({location: 'san francisco'}, function (err, users) {
   // do stuff with users
 });
 
 
-User.all({location: ‘san francisco’}, {sort: {createdAt: ‘desc’}}, function (err, users) {
+User.all({location: 'san francisco'}, {sort: {createdAt: 'desc'}}, function (err, users) {
   // do stuff with users
 });
 ```
@@ -375,8 +375,8 @@ Remove an instance from the database by id.
 
 ##### examples
 ```
-User.remove(‘abc-123’, function (err, data) {
-  // do something now that it’s removed.
+User.remove('abc-123', function (err, data) {
+  // do something now that it's removed.
 });
 ```
 

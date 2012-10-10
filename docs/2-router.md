@@ -16,16 +16,16 @@ defines the url to match to a controller action.
 ##### examples
 ```
 router.match('/').to('Main.index');
-// will route any request to ‘/‘ to the Main controller’s index action
+// will route any request to '/' to the Main controller's index action
 
 
 router.match('/products/:id', 'GET').to('products.show')
-// will route ‘/products/5’ to Products.show()
+// will route '/products/5' to Products.show()
 // and set the id paramer to be 5
 
 
 router.match('/profiles/:username', 'GET').to('users.show')
-// will route ‘/products/dan’ to Users.show()
+// will route '/products/dan' to Users.show()
 // and set the username paramer to be dan
 
 
@@ -46,12 +46,12 @@ defines the action to map the path to.
 
 ##### examples
 ```
-router.match(‘/‘).to(‘Main.index’);
-// will route any request to ‘/‘ to the Main controller’s index action
+router.match('/').to('Main.index');
+// will route any request to '/' to the Main controller's index action
 
 
-router.match(‘/‘).to({controller: ‘Main’, action: ‘index’});
-// will route any request to ‘/‘ to the Main controller’s index action
+router.match('/').to({controller: 'Main', action: 'index'});
+// will route any request to '/' to the Main controller's index action
 ```
 
 * * *
@@ -66,21 +66,21 @@ Equivalent to `router.match(path, 'GET')`
 #### .post
 `router.post(path)`
 
-Equivalent to `router.match(path, ‘POST’)`
+Equivalent to `router.match(path, 'POST')`
 
 * * *
 
 #### .put
 `router.put(path)`
 
-Equivalent to `router.match(path, ‘PUT’)`
+Equivalent to `router.match(path, 'PUT')`
 
 * * *
 
 #### .del
 `router.del(path)`
 
-Equivalent to `router.match(path, ‘DELETE’)`
+Equivalent to `router.match(path, 'DELETE')`
 
 * * *
 
