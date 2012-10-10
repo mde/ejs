@@ -10,7 +10,20 @@ The view layer supports these four templating engines:
 + Mustache
 + Handlebars
 
-To use them, just give your template the correct file extension.
+To use them, just give your template the correct file extension. If you'd like to use a different templating engine when generating an app or scaffolds, use the corresponding command line option:
+
+```
+$ geddy app --mustach my_app
+$ geddy scaffold --mustache user
+
+
+$ geddy app --jade my_app
+$ geddy scaffold --jade user
+
+
+$ geddy app --handle my_app
+$ geddy scaffold --handle user
+```
 
 * * *
 
