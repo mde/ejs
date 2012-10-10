@@ -61,7 +61,7 @@ Geddy automatically logs requests to an access log, and you can log anything you
 
 ##### examples
 ```
-geddy.log.debug('someting to debu')
+geddy.log.debug('someting to debug')
 // prints `something to debug` to the console
 
 
