@@ -384,7 +384,59 @@ User.remove(‘abc-123’, function (err, data) {
 
 #### queries
 
-docs coming soon
+Model uses a simple API for finding and sorting items. Again, it should look
+familiar to anyone who has used a similar ORM for looking up records. The only
+wrinkle with Model is that the API is (as you might expect for a NodeJS library)
+asynchronous.
+
+##### comparison operators
+- `eql`: equal to
+- `ne`: not equal to
+- `gt`: greater than
+- `lt`: less than
+- `gte`: greater than or equal
+- `lte`: less than or equal
+- `like`: like
+
+A simple string-value for a query parameter is the same as 'eql'. `{foo: 'bar'}`
+is the same as `{foo: {eql: 'bar'}}`.
+
+##### combining queries
+Model supports combining queries with OR and negating queries with NOT.
+
+To perform an 'or' query, use an object-literal with a key of 'or', and an array
+of query-objects to represent each set of alternative conditions.
+
+To negate a query with 'not', simply use a query-object where 'not' is the key,
+and the value is the set of conditions to negate.
+
+
+##### examples
+```javascript
+{foo: 'BAR', bar: {ne: null}}
+// Where "foo" is 'BAR' and "bar" is not null
+
+{foo: {'like': 'B'}}
+// Where "foo" begins with 'B'
+
+{foo: {lt: 2112}, bar: 'BAZ'}
+// Where foo is less than 2112, and bar is 'BAZ'
+
+{or: [{foo: 'BAR'}, {bar: 'BAZ'}]}
+// Where "foo" is 'BAR' OR "bar" is 'BAZ'
+
+{or: [{foo {ne: 'BAR'}}, {bar: null}, {baz: {lt: 2112}}]}
+// Where "foo" is not 'BAR' OR "bar" is null OR "baz" is less than 2112
+
+{not: {foo: 'BAR', bar: 'BAZ'}}
+// Where NOT ("foo" is 'BAR' and "bar" is 'BAZ')
+
+{not: {foo: 'BAZ', bar: {lt: 1001}}}
+// Where NOT ("foo" is 'BAZ' and "bar" is less than 1001)
+
+{or: [{foo: {'like': 'b'}}, {foo: 'foo'}], not: {foo: 'baz'}}
+// Where ("foo" is like 'b' OR "foo" is 'foo') and NOT "foo" is 'baz'
+```
 
 * * *
 
