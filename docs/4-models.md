@@ -1,14 +1,14 @@
-Geddy uses the [Model](http://github.com/mde/model) module for it's model layer. It's an abstract ORM that is compatible with many different types of databases, from Postgres to in memory, and MongoDB ro Riak.
+Geddy uses the [Model](http://github.com/mde/model) module for its model layer. Model is an abstract ORM that is compatible with many different types of databases, including Postgres, in-memory, MongoDB and Riak.
 
 * * *
 
-#### definition
+#### summary
 Model uses a pretty simple syntax for defining a model. (It should look familiar to anyone who has used an ORM like ActiveRecord, DataMapper, Django's models, or SQLAlchemy.)
 
 * * *
 
 #### .defineProperties
-`defineProperties( properties )`
+`defineProperties(properties)`
 
 defines the properties for your model.
 
@@ -30,7 +30,7 @@ var User = function () {
 * * *
 
 #### .property
-`property( name, type, options )`
+`property(name, type, options)`
 
 defines a single property
 
@@ -39,16 +39,16 @@ defines a single property
 
 ##### type
 - `type [string]`: the type of the property
-	- `’string’`
-	- `’text’`
-	- `’number’`
-	- `’int’`
-	- `’boolean’`
-	- `’object’`
-	- `’array’`
-	- `’datetime’`
-	- `’date’`
-	- `’time’`
+	- `'string'`
+	- `'text'`
+	- `'number'`
+	- `'int'`
+	- `'boolean'`
+	- `'object'`
+	- `'array'`
+	- `'datetime'`
+	- `'date'`
+	- `'time'`
 
 ##### options
 - `required [boolean]`: sets the property to be required
@@ -57,14 +57,14 @@ defines a single property
 ```
 this.property('login', 'string', {required: true});
 this.property('password', 'string', {required: true});
-this.property(‘joined’, ‘datetime);
-this.property(‘premium’, ’boolean);
+this.property('joined', 'datetime);
+this.property('premium', 'boolean);
 ```
 
 * * *
 
 #### .validatesPresent
-`validatesPresent( property )`
+`validatesPresent(property)`
 
 Sets up a validation to make sure that the property is present.
 
@@ -80,7 +80,7 @@ this.validatesPresent('login');
 * * *
 
 #### .validatesFormat
-`validatesFormat( property, regex, options )`
+`validatesFormat(property, regex, options)`
 
 Sets up a validation to make sure that the property is formatted correctly.
 
@@ -95,14 +95,14 @@ Sets up a validation to make sure that the property is formatted correctly.
 
 ##### example
 ```
-this.validatesFormat('login', /[a-z]+/, {message: ‘cannot contain numbers’});
+this.validatesFormat('login', /[a-z]+/, {message: 'cannot contain numbers'});
 // makes sure that the login property does not contain numbers
 ```
 
 * * *
 
 #### .validatesLength
-`validatesLength( property, options )`
+`validatesLength(property, options)`
 
 Sets up a validation to make sure that the property meets certain lenght requirements.
 
@@ -115,18 +115,18 @@ Sets up a validation to make sure that the property meets certain lenght require
 
 ##### example
 ```
-this.validatesLength(‘login', {min: ‘3’});
+this.validatesLength('login', {min: '3'});
 // makes sure that the login property is at least 3 characters long
 
 
-this.validatesLength(‘login', {min: ‘20’});
+this.validatesLength('login', {min: '20'});
 // makes sure that the login property is not longer than 20 characters
 ```
 
 * * *
 
 #### .validatesConfirmed
-`validatesConfirmed( property, param )`
+`validatesConfirmed(property, param)`
 
 Sets up a validation to make sure that the property has been confirmed.
 
@@ -145,7 +145,7 @@ this.validatesConfirmed('password', 'confirmPassword');
 * * *
 
 #### .validatesWithFunction
-`validatesWithFunction( property, fn )`
+`validatesWithFunction(property, fn)`
 
 Sets up a validation to make sure that the property has been confirmed.
 
@@ -167,7 +167,7 @@ this.validatesWithFunction('password', function (val) {
 * * *
 
 #### .hasOne
-`hasOne( model )`
+`hasOne(model)`
 
 Sets up a has one relationship between this model and another.
 
@@ -184,7 +184,7 @@ this.hasOne('Profile');
 * * *
 
 #### .hasMany
-`hasMany( model )`
+`hasMany(model)`
 
 Sets up a has many relationship between this model and another.
 
@@ -193,7 +193,7 @@ Sets up a has many relationship between this model and another.
 
 ##### example
 ```
-this.hasMany(‘Friends’);
+this.hasMany('Friends');
 // sets up a has many relationship
 // user -> has many -> friends
 ```
@@ -207,17 +207,17 @@ Defines the database adapter for this model
 
 ##### examples
 ```
-this.adapter = ‘mongo’;
-// makes this model use mongo for it’s database
+this.adapter = 'mongo';
+// makes this model use mongo for it's database
 
 
-this.adapter = ‘riak’
+this.adapter = 'riak'
 
 
-this.adapter = ‘postgres’
+this.adapter = 'postgres'
 
 
-this.adapter = ‘memory’
+this.adapter = 'memory'
 ```
 
 * * *
@@ -253,7 +253,7 @@ user.isValid()
 * * *
 
 #### .save
-`save( fn )`
+`save(fn)`
 
 Saves the instance to the database.
 
@@ -271,12 +271,12 @@ user.save(function (err, data) {
 * * *
 
 #### .updateProperties
-`updateProperties( properties )`
+`updateProperties(properties)`
 
 Updates the properties of a model and asserts that they are valid; This method will not call save on the instance.
 
 ##### properties
-- `properties [object]`: an object who’s keys are property names and its values are the values to change the property to.
+- `properties [object]`: an object who's keys are property names and its values are the values to change the property to.
 
 ##### example
 ```
@@ -295,7 +295,7 @@ docs coming soon
 * * *
 
 #### .create
-`create( params )`
+`create(params)`
 
 Creates a new model instance and returns it.
 
@@ -316,19 +316,19 @@ var user = User.create(params);
 * * *
 
 #### .first
-`first( query, options, fn )`
+`first(query, options, fn)`
 
 Use the `first` method to find a single item. You can pass it an id, or a set of query parameters in the form of an object-literal. In the case of a query, it will return the first item that matches, according to whatever sort you've specified.
 
 ##### query [string]
-- `query [string]`: if the query is a string, it will be assumed that it’s an id
+- `query [string]`: if the query is a string, it will be assumed that it's an id
 
 ##### query [object]
 - `query [object]`: if the query is an object, it will be interpreted as a Query object
 
 ##### example
 ```
-User.first(‘sdfs-asd-1’, function (err, user) {
+User.first('sdfs-asd-1', function (err, user) {
   // do stuff with user
 });
 
@@ -341,7 +341,7 @@ User.first({login: 'alerxst'}, function (err, user) {
 * * *
 
 #### .all
-`all( query, options, fn )`
+`all(query, options, fn)`
 
 Use the `all` method to find lots of items. Pass it a set of query parameters in the form of an object-literal, where each key is a field to compare, and the value is either a simple value for comparison (equal to), or another object-literal where the key is the comparison-operator, and the value is the value to use for the comparison.
 
@@ -353,12 +353,12 @@ Use the `all` method to find lots of items. Pass it a set of query parameters in
 
 ##### example
 ```
-User.all({location: ‘san francisco’}, function (err, users) {
+User.all({location: 'san francisco'}, function (err, users) {
   // do stuff with users
 });
 
 
-User.all({location: ‘san francisco’}, {sort: {createdAt: ‘desc’}}, function (err, users) {
+User.all({location: 'san francisco'}, {sort: {createdAt: 'desc'}}, function (err, users) {
   // do stuff with users
 });
 ```
@@ -366,7 +366,7 @@ User.all({location: ‘san francisco’}, {sort: {createdAt: ‘desc’}}, funct
 * * *
 
 #### .remove
-`remove( id, fn )`
+`remove(id, fn)`
 
 Remove an instance from the database by id.
 
@@ -375,8 +375,8 @@ Remove an instance from the database by id.
 
 ##### examples
 ```
-User.remove(‘abc-123’, function (err, data) {
-  // do something now that it’s removed.
+User.remove('abc-123', function (err, data) {
+  // do something now that it's removed.
 });
 ```
 
@@ -444,7 +444,7 @@ and the value is the set of conditions to negate.
 
 Both the base model 'constructors,' and model instances are EventEmitters. The
 emit events during the create/update/remove lifecycle of model instances. In all
-cases, the plain-named event is fired after the event in question, the
+cases, the plain-named event is fired after the event in question, and the
 'before'-prefixed event, of course happens before.
 
 The 'constructor' for a model emits the following events:

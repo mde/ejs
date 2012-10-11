@@ -1,4 +1,4 @@
-Geddy is built on the same MVC principles that many popular frameworks are based on. Every Geddy app has it's models, controllers, and views as well as config files and routes.
+Geddy is built on the same MVC principles that many popular frameworks are based on. Every Geddy app has its models, controllers, and views as well as config files and routes.
 
 * * *
 
@@ -33,7 +33,7 @@ Geddy is built on the same MVC principles that many popular frameworks are based
 #### config
 `geddy.config`
 
-Geddy has built in configuration management. Global config options should go in your ‘config/environments.js` file. Likewise, your production and development config options should go in their respective files
+Geddy has built in configuration management. Global config options should go in your 'config/environments.js` file. Likewise, your production and development config options should go in their respective files
 
 If you want to start up your app in a specific environment, use the `-e` option:
 
@@ -61,12 +61,12 @@ Geddy automatically logs requests to an access log, and you can log anything you
 
 ##### examples
 ```
-geddy.log.debug(‘someting to debug`)
+geddy.log.debug('someting to debug')
 // prints `something to debug` to the console
 
 
-geddy.log.error(‘something went wrong’)
-// prints ‘something went wrong’ to stderr and the console
+geddy.log.error('something went wrong')
+// prints 'something went wrong' to stderr and the console
 ```
 
 * * *

@@ -1,4 +1,4 @@
-Geddy's view layer provides a versitile set of templating languages and helpers to get you started quickly.
+Geddy's view layer provides a versatile set of templating languages and helpers to get you started quickly.
 
 * * *
 
@@ -10,12 +10,25 @@ The view layer supports these four templating engines:
 + Mustache
 + Handlebars
 
-To use them, just give your template the correct file extension.
+To use them, just give your template the correct file extension. If you'd like to use a different templating engine when generating an app or scaffolds, use the corresponding command line option:
+
+```
+$ geddy app --mustach my_app
+$ geddy scaffold --mustache user
+
+
+$ geddy app --jade my_app
+$ geddy scaffold --jade user
+
+
+$ geddy app --handle my_app
+$ geddy scaffold --handle user
+```
 
 * * *
 
 #### yield
-Yield is a function that's only available on layout templates. Yield, yields the template content and is put in place where the yield function is called.
+Yield is a function that's only available on layout templates. It yields the template content, which is inserted in th place where the yield function is called.
 
 * * *
 
@@ -46,25 +59,25 @@ Truncates a given `string` after a specified `length` if `string` is longer than
 
 #####Examples:
 ```
-truncate('Once upon a time in a world', { length: 10 })
+runcate('Once upon a time in a world', {length: 10})
 // => 'Once up...'
 
 
-truncate('Once upon a time in a world', { length: 20, omission: '...(continued)' })
+truncate('Once upon a time in a world', {length: 20, omission: '...(continued)'})
 // => 'Once u...(continued)'
 
 
-truncate('Once upon a time in a world', { length: 15, seperator: /\s/ })
+truncate('Once upon a time in a world', {length: 15, seperator: /\s/})
 // => 'Once upon a...'
 // Normal Output: => 'Once upon a ...'
 
 
-truncate('Once upon a time in a world', { length: 15, seperator: ' ' })
+truncate('Once upon a time in a world', {length: 15, seperator: ' '})
 // => 'Once upon a...'
 // Normal Output: => 'Once upon a ...'
 
 
-truncate('<p>Once upon a time</p>', { length: 20 })
+truncate('<p>Once upon a time</p>', {length: 20})
 // => '<p>Once upon a ti...'
 ```
 
@@ -85,15 +98,15 @@ Truncates a given `string` after a specified `length` if `string` is longer than
 
 #####Examples:
 ```
-truncateHTML('<p>Once upon a time in a world</p>', { length: 10 })
+truncateHTML('<p>Once upon a time in a world</p>', {length: 10})
 // => '<p>Once up...</p>'
 
 
-truncateHTML('<p>Once upon a time <small>in a world</small></p>', { length: 10 })
+truncateHTML('<p>Once upon a time <small>in a world</small></p>', {length: 10})
 // => '<p>Once up...<small>in a wo...</small></p>'
 
 
-truncateHTML('<p>Once upon a time <small>in a world</small></p>', { length: 10, once: true })
+truncateHTML('<p>Once upon a time <small>in a world</small></p>', {length: 10, once: true})
 // => '<p>Once up...<small>in a world</small></p>'
 ```
 
@@ -102,7 +115,7 @@ truncateHTML('<p>Once upon a time <small>in a world</small></p>', { length: 10, 
 #### imageLink
 `imageLink(source<String>, link<String/Object>, imageOptions<Object>, linkOptions<Object>)`
 
-Returns an anchor element to a given `link` with the given `linkOptions`, with the content being a image element to the given `source` and includes it's `imageOptions`
+Returns an anchor element to a given `link` with the given `linkOptions`, with the content being a image element to the given `source` and includes its `imageOptions`
 
 #####Notes:
 - `linkto` is used on the backend so any `linkOption` will be used for `linkTo`
@@ -114,11 +127,11 @@ imageLink('images/google.png', 'http://google.com')
 // => '<a href="http://google.com"><img alt="images/google.png" src="images/google.png" /></a>'
 
 
-imageLink('images/google.png', 'http://google.com', { alt: '' }
+imageLink('images/google.png', 'http://google.com', {alt: ''}
 // => '<a href="http://google.com"><img alt="" src="images/google.png" /></a>'
 
 
-imageLink('images/google.png', 'http://google.com', { alt: '', size: '40x50' })
+imageLink('images/google.png', 'http://google.com', {alt: '', size: '40x50'})
 // => '<a href="http://google.com"><img alt="" height="50" src="images/google.png" width="40" /></a>'
 ```
 
@@ -138,15 +151,15 @@ imageTag('images/google.png')
 // => '<img alt="images/google.png" src="images/google.png" />'
 
 
-imageTag('images/google.png', { alt: '' })
+imageTag('images/google.png', {alt: ''})
 // => '<img alt="" src="images/google.png" />'
 
 
-imageTag('images/google.png', { alt: '', size: '40x50' })
+imageTag('images/google.png', {alt: '', size: '40x50'})
 // => '<img alt="" height="50" src="images/google.png" width="40" />'
 
 
-imageTag('images/google.png', { alt: '', size: 'a string' })
+imageTag('images/google.png', {alt: '', size: 'a string'})
 // => '<img alt="" src="images/google.png" />'
 ```
 
@@ -163,7 +176,7 @@ styleLink('/css/styles.css')
 // => '<link href="/css/style.css" />'
 
 
-styleLink('/css/styles.css', { type: 'text/javascript' })
+styleLink('/css/styles.css', {type: 'text/javascript'})
 // => '<link href="/css/style.css" rel="stylesheet" />'
 ```
 
@@ -180,7 +193,7 @@ scriptLink('/js/script.js')
 // => '<script src="/js/script.js"></script>'
 
 
-scriptLink('/js/script.js', { type: 'text/javascript' })
+scriptLink('/js/script.js', {type: 'text/javascript'})
 // => '<script src="/js/script.js" type="text/javascript"></script>'
 ```
 
@@ -197,7 +210,7 @@ linkTo('some content', 'http://google.com')
 // => '<a href="http://google.com">some content</a>'
 
 
-linkTo('some content', 'http://google.com', { data: {goTo: 'http://google.com'} })
+linkTo('some content', 'http://google.com', {data: {goTo: 'http://google.com'}})
 // => '<a data-go-to="http://google.com" href="http://google.com">some content</a>'
 ```
 
@@ -237,35 +250,35 @@ urlFor('http://google.com')
 // => 'http://google.com'
 
 
-urlFor({ controller: 'tasks', action: 'new', host: 'somehost.com' })
+urlFor({controller: 'tasks', action: 'new', host: 'somehost.com'})
 // => 'http://somehost.com/tasks/new'
 
 
-urlFor({ controller: 'tasks', action: 'new', relPath: true })
+urlFor({controller: 'tasks', action: 'new', relPath: true})
 // => '/tasks/new'
 
 
-urlFor({ controller: 'tasks', action: 'new', relPath: true, trailingSlash: true })
+urlFor({controller: 'tasks', action: 'new', relPath: true, trailingSlash: true})
 // => '/tasks/new/'
 
 
-urlFor({ host: 'somehost.com', protocol: 'https', username: 'username', password: 'password' })
+urlFor({host: 'somehost.com', protocol: 'https', username: 'username', password: 'password'})
 // => 'https://username:password@somehost.com'
 
 
-urlFor({ controller: 'tasks', action: 'new', host: 'somehost.com', protocol: 'https' })
+urlFor({controller: 'tasks', action: 'new', host: 'somehost.com', protocol: 'https'})
 // => 'https://somehost.com/tasks/new'
 
 
-urlFor({ controller: 'tasks', action: 'edit', id: 'IwTEf55ivH', host: 'somehost.com' })
+urlFor({controller: 'tasks', action: 'edit', id: 'IwTEf55ivH', host: 'somehost.com'})
 //  => 'http://somehost.com/tasks/IwTEf55ivH/edit'
 
 
-urlFor({ controller: 'tasks', action: 'new', host: 'somehost.com', anchor: 'submit' })
+urlFor({controller: 'tasks', action: 'new', host: 'somehost.com', anchor: 'submit'})
 // => 'http://somehost.com/tasks/new#submit'
 
 
-urlFor({ controller: 'tasks', action: 'new', host: 'somehost.com', authToken: 'some_token' })
+urlFor({controller: 'tasks', action: 'new', host: 'somehost.com', authToken: 'some_token'})
 // => 'http://somehost.com/tasks/new?authToken=some_token'
 ```
 
@@ -277,7 +290,7 @@ urlFor({ controller: 'tasks', action: 'new', host: 'somehost.com', authToken: 's
 Returns an HTML element from a given `tag` and includes the `content` and all `htmlOptions`
 
 #####Custom HTML options:
-- `data`[Array] The data attribute takes an Array containing data attributes you want, when parsed they each get parsed as a full data attribute(e,g: `data: { goTo: 'google.com' }` will be `data-go-to="google.com"`).
+- `data`[Array] The data attribute takes an Array containing data attributes you want, when parsed they each get parsed as a full data attribute(e,g: `data: {goTo: 'google.com'}` will be `data-go-to="google.com"`).
 
 #####Examples:
 ```
@@ -289,11 +302,11 @@ contentTag('input', 'sample value')
 // => '<input value="sample value" />'
 
 
-contentTag('input', 'sample value', { value: 'override sample value' })
+contentTag('input', 'sample value', {value: 'override sample value'})
 // => '<input autofocus="autofocus" type="text" value="sample value" />'
 
 
-contentTag('input', 'sample value', { type: 'text', autofocus: true })
+contentTag('input', 'sample value', {type: 'text', autofocus: true})
 // => '<input autofocus="autofocus" type="text" value="sample value" />'
 
 
@@ -301,15 +314,15 @@ contentTag('a', 'http://google.com')
 // => '<a href="http://google.com">http://google.com</a>'
 
 
-contentTag('a', 'hey there', { href: 'http://google.com' })
+contentTag('a', 'hey there', {href: 'http://google.com'})
 // => '<a href="http://google.com">hey there</a>'
 
 
-contentTag('a', 'hey there', { href: 'http://google.com', data: { goTo: 'http://google.com' } })
+contentTag('a', 'hey there', {href: 'http://google.com', data: { goTo: 'http://google.com'} })
 // => '<a data-go-to="http://google.com" href="http://google.com">hey there</a>'
 
 
-contentTag('a', 'hey there', { href: 'http://google.com', data_go_to: 'http://google.com' })
+contentTag('a', 'hey there', {href: 'http://google.com', data_go_to: 'http://google.com'})
 // => '<a data-go-to="http://google.com" href="http://google.com">hey there</a>'
 ```
 
