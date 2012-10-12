@@ -290,7 +290,18 @@ user.updateProperties({
 
 #### static
 
-docs coming soon
+Static methods can be added by creating a method on the model definition object.
+
+```
+var User = function () {
+  this.property('login', 'string', {required: true});
+  this.property('password', 'string', {required: true});
+};
+
+User.findByLogin = function (login, callback) {
+  User.all({login: login}, callback);
+}
+```
 
 * * *
 
