@@ -96,6 +96,16 @@ tests = {
     assert.equal(string, '<a data-go-to="http://google.com" href="http://google.com">http://google.com</a>');
   }
 
+, 'test select tag for contentTag': function () {
+    var string = helpers.contentTag('select', ['geddy', 'alex', 'neil']);
+    assert.equal(string, '<select><option value="geddy">geddy</option><option value="alex">alex</option><option value="neil">neil</option></select>');
+  }
+
+, 'test select tag with a string for contentTag': function () {
+    var string = helpers.contentTag('select', 'some incorrect content');
+    assert.equal(string, '<select>some incorrect content</select>');
+  }
+
 , 'test single tags in truncateHTML': function () {
     var string = helpers.truncateHTML('<p>Once upon a time in a world</p>', { length: 10 });
     assert.equal(string, '<p>Once up...</p>');
