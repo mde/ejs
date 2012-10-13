@@ -369,10 +369,6 @@ In the geddy project directory, run `jake test`. The tests simply
 use NodeJS's `assert` library, which throws an error on failure.
 If there are no errors, the tests all ran successfully.
 
-## API Docs
-
-API docs [can be found here](http://mde.github.com/geddy/doc/).
-
 - - -
 Geddy Web-app development framework copyright 2112
 mde@fleegix.org.
