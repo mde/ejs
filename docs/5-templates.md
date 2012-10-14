@@ -324,6 +324,9 @@ contentTag('a', 'hey there', {href: 'http://google.com', data: { goTo: 'http://g
 
 contentTag('a', 'hey there', {href: 'http://google.com', data_go_to: 'http://google.com'})
 // => '<a data-go-to="http://google.com" href="http://google.com">hey there</a>'
+
+contentTag('select', ['geddy', 'alex', 'neil'])
+// => '<select><option value="geddy">geddy</option><option value="alex">alex</option><option value="neil">neil</option></select>'
 ```
 
 * * *
