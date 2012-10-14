@@ -286,6 +286,69 @@ user.updateProperties({
 // updates the login property and validates it
 ```
 
+#### .add
+`.add{target_model_name}( instance )`
+
+If a model has a hasMany relationship established with another model, you can use this method to add instaces of one model to it’s “parent” model.
+
+##### target_model_name
+- The name of the model you’d like to add
+
+##### instance
+- `instace [modelInstance]`: The instance to add
+
+##### example
+```
+var user = geddy.model.User.create(userParams);
+var post = geddy.model.Post.create(postParams);
+user.addPost(post);
+```
+
+#### .set
+`.set{target_model_name}( instance )`
+
+If a model has a hasOne relationship established with another model, you can use this method to add an instace of one model to it’s “parent” model.
+
+##### target_model_name
+- The name of the model you’d like to set
+
+##### instance
+- `instace [modelInstance]`: The instance to set
+
+##### example
+```
+var user = geddy.model.User.create(userParams);
+var account = geddy.model.Account.create(accountParams);
+user.setAccount(account);
+```
+
+#### .get
+`.get{target_model_name}( fn )`
+
+If a model has a hasOne relationship established with another model, you can use this method to add an instace of one model to it’s “parent” model.
+
+##### target_model_name
+- `hasMany`: the plural name of the model you’d like to get a collection of
+- `hasOne`: the singular name of the model you like to get an instance of
+
+##### fn
+- `fn [function]`: The function to call once the models are retrieved.
+
+##### example
+```
+var user = geddy.model.User.create(params);
+
+// hasOne
+user.getAccount(function (err, account) {
+  // do stuff with the user’s account
+});
+
+// hasMany
+user.getPosts(function (err, posts) {
+  // do stuff with the user’s posts
+});
+```
+
 * * *
 
 #### static
