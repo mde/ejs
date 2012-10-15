@@ -240,10 +240,18 @@ namespace('gen', function () {
           break;
       }
 
-      // Manage properties that deal with changing the default property
+      // Manage properties that deal with changing default properties
       if (args === 'default') {
-        // Reset old default to it's own property
-        obj[obj['default'].name] = obj[obj['default'].name] || obj['default'];
+        // Reset old default property to it's own property, only if it's not
+        // already the default
+        if (name !== obj['default'].name) {
+          // If the new default item already exists then delete it
+          if (obj[name]) {
+            delete obj[name];
+          }
+
+          obj[obj['default'].name] = obj[obj['default'].name] || obj['default'];
+        }
 
         // Add new default property
         obj['default'] = {name: name, type: type};
