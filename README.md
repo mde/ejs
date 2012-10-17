@@ -1,7 +1,20 @@
-## Geddy web framework for Node.js
-- - -
+# Geddy
+####A simple, structured web framework for Node
+
+```
+$ npm install -g geddy
+$ geddy app my_app
+$ cd my_app
+$ geddy
+// app now running on localhost:4000
+```
+
 
 [![build status](https://secure.travis-ci.org/mde/geddy.png)](http://travis-ci.org/mde/geddy)
+
+### Documentation
+
+Docs are located on the GeddyJS website: http://geddyjs.org/documentation
 
 ### Goals
 
@@ -16,6 +29,7 @@ but still let you get under the hood and tinker if you want.
 
   * Powerful, flexible router
   * Easy resource-based routing
+  * Database adapters for Postgres, MongoDB, Riak, and in-memory
   * App, resource and scaffold generators
   * Content-negotiation
   * Session support (in-memory, cookie)
@@ -32,6 +46,15 @@ Apache License, Version 2
 
 Geddy requires version 0.6.x of Node.js or higher, and the
 [Jake](https://github.com/mde/jake) JavaScript build-tool.
+
+### Installing with [NPM](http://npmjs.org/)
+
+```
+[sudo] npm -g install geddy
+```
+
+Note: Geddy (specifically, the generators) is a system-level
+tool, and wants to be installed globally.
 
 ### Installing from Github
 
@@ -56,15 +79,6 @@ make && make install PREFIX=~/geddy
 If you do install Geddy somewhere special, you'll need to add the
 "bin" directory in the install target to your PATH to get access
 to the `geddy` executable.
-
-### Installing with [NPM](http://npmjs.org/)
-
-```
-[sudo] npm -g install geddy
-```
-
-Note: Geddy (specifically, the generators) is a system-level
-tool, and wants to be installed globally.
 
 ### Creating a Geddy application
 
@@ -355,10 +369,6 @@ util.puts(user.errors.password);
 In the geddy project directory, run `jake test`. The tests simply
 use NodeJS's `assert` library, which throws an error on failure.
 If there are no errors, the tests all ran successfully.
-
-## API Docs
-
-API docs [can be found here](http://mde.github.com/geddy/doc/).
 
 - - -
 Geddy Web-app development framework copyright 2112

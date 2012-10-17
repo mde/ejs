@@ -219,6 +219,9 @@ namespace('gen', function () {
       if (!type) {
         type = 'string';
       }
+      if (args === 'def') {
+        args = 'default';
+      }
 
       switch (type) {
         case 'text':
@@ -237,26 +240,41 @@ namespace('gen', function () {
           break;
       }
 
-      if (args === 'def') {
-        args = 'default';
+      // Manage properties that deal with changing default properties
+      if (args === 'default') {
+        // Reset old default property to it's own property, only if it's not
+        // already the default
+        if (name !== obj['default'].name) {
+          // If the new default item already exists then delete it
+          if (obj[name]) {
+            delete obj[name];
+          }
+
+          obj[obj['default'].name] = obj[obj['default'].name] || obj['default'];
+        }
+
+        // Add new default property
+        obj['default'] = {name: name, type: type};
+        continue;
       }
 
-      // Set property as default if given the `default` argument
-      if (args === 'default') {
+      // If ID property is given and it matches the default
+      // then rewrite the default with the new ID property
+      if (name === 'id' && obj['default'].name === 'id') {
         obj['default'] = {name: name, type: type};
-        // Add the original ID property
-        obj['id'] = obj['id'] || {name: 'id', type: 'int'};
+        continue;
       }
-      else {
-        // If ID property is given and it matches the default
-        // then rewrite the default with the new ID property
-        if (name === 'id' && obj['default'].name === 'id') {
-          obj['default'] = {name: name, type: type};
-        }
-        else {
-          // Add the property normally
-          obj[name] = {name: name, type: type};
-        }
+
+      // If the name is name or title then set them to default, otherwise add
+      // the property normally
+      if (name === 'name' || name === 'title') {
+        // Reset old default to it's own property
+        obj[obj['default'].name] = obj[obj['default'].name] || obj['default'];
+
+        // Add new default property
+        obj['default'] = {name: name, type: type};
+      } else {
+        obj[name] = {name: name, type: type};
       }
     }
 
@@ -452,14 +470,16 @@ namespace('gen', function () {
       , routerArr
       , text
       , splitText
-      , newRoute;
+      , newRoute
+      , beginPath;
 
     // Check if the router file exists
+    beginPath = path.join(process.cwd(), 'config');
     utils.file.searchParentPath(jsRouter, function (err) {
       if (err) {
         var jsErr = err;
         // If jsEnvironment wasn't found, try finding coffee variant
-        utils.file.searchParentPath(coffeeRouter, function (err) {
+        utils.file.searchParentPath(coffeeRouter, beginPath, function (err) {
           if (err) {
             throw jsErr;
           } else {
@@ -660,14 +680,16 @@ namespace('gen', function () {
       , environmentPath
       , environmentArr
       , text
-      , splitText;
+      , splitText
+      , beginPath;
 
     // Check if the environment file exists
+    beginPath = path.join(process.cwd(), 'config');
     utils.file.searchParentPath(jsEnvironment, function (err) {
       if (err) {
         var jsErr = err;
         // If jsEnvironment wasn't found, try finding coffee variant
-        utils.file.searchParentPath(coffeeEnvironment, function (err) {
+        utils.file.searchParentPath(coffeeEnvironment, beginPath, function (err) {
           if (err) {
             throw jsErr;
           } else {

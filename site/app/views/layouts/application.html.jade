@@ -14,6 +14,7 @@ html(lang="en")
 
     != scriptLink('/js/jquery.min.js', {type:'text/javascript'})
     != scriptLink('/js/bootstrap.min.js', {type:'text/javascript'})
+    != scriptLink('/js/site.js', {type: 'text/javascript'});
 
     != styleLink('/css/bootstrap.min.css', {rel:'stylesheet'})
     != styleLink('/css/bootstrap.responsive.min.css', {rel:'stylesheet'})
@@ -28,40 +29,53 @@ html(lang="en")
   body
     .container
       .row.header
-        h1.span6.title geddy
+        h1.span6.title
+          a(href='/') geddy
         .span6.menu
           .row
-            a.span2.icon(href='/')
+            a.span2.icon.home(href='/')
               span home
-            a.span2.icon(href='/documentation')
+            a.span2.icon.docs(href='/documentation')
               span documentation
-            a.span2.icon(href='/tutorial')
+            a.span2.icon.tutorial(href='/tutorial')
               span tutorial
-            a.span2.icon(href='/blog')
-              span blog
-            a.span2.icon(href='/community')
+            a.span2.icon.changelog(href='/changelog')
+              span changelog
+            a.span2.icon.community(href='/community')
               span community
-            a.span2.icon(href='/faq')
+            a.span2.icon.faq(href='/faq')
               span faq
       != yield()
       .row.footer
-        form.row.mail-list
+        form(action="http://groups.google.com/group/geddyjs/boxsubscribe", target="blank").row.mail-list
           .span8
             input.email(name="email", placeholder="join the mailing list", type="email")
           .span4
             input.submit(type="submit", value="join")
         .list.row
-          span.copyright &copy; copyright 2112
+          span.copyright copyright 2112
           ul.links
             li.link
-              a(href="/home") home
+              a(href="/") home
             li.link
               a(href="/documentation") documentation
             li.link
               a(href="/tutorial") tutorial
             li.link
-              a(href="/blog") blog
+              a(href="/changelog") changelog
             li.link
               a(href="/community") community
             li.link
               a(href="/faq") faq
+
+    script(type="text/javascript")
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-5555148-4']);
+      _gaq.push(['_setDomainName', '.geddyjs.org']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();

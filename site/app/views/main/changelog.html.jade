@@ -1,0 +1,13 @@
+#changelog
+  .row.title
+    .span12
+      h2 Changelog
+  .row.content
+    .span4.toc
+      - if (sections.length > 1)
+        ul
+          each section in sections
+            li
+              a(href="#"+section)=section
+    .span8
+      !=content

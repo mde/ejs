@@ -20,29 +20,10 @@
 var router = new geddy.RegExpRouter();
 
 router.get('/').to('Main.index');
-router.get('/community').to('Main.community');
-router.get('/documentation').to('Main.documentation');
-router.get('/tutorial').to('Main.tutorial');
-router.get('/faq').to('Main.faq');
-router.get('/blog').to('Blog.index');
-router.get('/blog/:year/:month/:day/:slug').to('Blog.show');
-
-// Basic routes
-// router.match('/moving/pictures/:id', 'GET').to('Moving.pictures');
-//
-// router.match('/farewells/:farewelltype/kings/:kingid', 'GET').to('Farewells.kings');
-//
-// Can also match specific HTTP methods only
-// router.get('/xandadu').to('Xanadu.specialHandler');
-// router.del('/xandadu/:id').to('Xanadu.killItWithFire');
-//
-// Resource-based routes
-// router.resource('hemispheres');
-//
-// Nested Resource-based routes
-// router.resource('hemispheres', function(){
-//   this.resource('countries');
-//   this.get('/print(.:format)').to('Hemispheres.print');
-// });
+router.get('/community(.:format)').to('Main.community');
+router.get('/documentation(.:format)').to('Main.documentation');
+router.get('/tutorial(.:format)').to('Main.tutorial');
+router.get('/faq(.:format)').to('Main.faq');
+router.get('/changelog(.:format)').to('Main.changelog');
 
 exports.router = router;

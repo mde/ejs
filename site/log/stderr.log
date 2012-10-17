@@ -1,1 +1,0 @@
-[Thu, 04 Oct 2012 09:01:06 GMT] ERROR 127.0.0.1 - - [Thu Oct 04 2012 02:01:06 GMT-0700 (PDT)] "GET /documentation 1.1" 500 43 "http://localhost:4000/community" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_2) AppleWebKit/537.1 (KHTML, like Gecko) Chrome/21.0.1180.57 Safari/537.1" 

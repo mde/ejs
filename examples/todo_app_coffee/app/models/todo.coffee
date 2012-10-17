@@ -3,9 +3,6 @@ Todo = ->
     title:
       type: 'string'
       required: true
-    id:
-      type: 'string'
-      required: true
     status:
       type: 'string'
       required: true
@@ -15,7 +12,5 @@ Todo = ->
 
   @validatesWithFunction 'status', (status) ->
     status == 'open' || status == 'done'
-
-  @adapter = 'mongo'
 
 Todo = geddy.model.register 'Todo', Todo

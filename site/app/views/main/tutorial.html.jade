@@ -1,0 +1,11 @@
+.row.title
+  .span12
+    h2 Quick start tutorial
+.row.content
+  .span4.toc
+    ul
+      each section in sections
+        li
+          a(href="#"+section)=section
+  .span8
+    !=content

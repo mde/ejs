@@ -1,14 +1,13 @@
 var <%= names.constructor.singular %> = function () {
 
   this.defineProperties({
-<% for(var i in properties) { -%>
-<% if(i === 'default') { -%>
-<% if(properties[i].name !== 'id') { -%>
+<% for (var i in properties) { -%>
+<% if (properties[i].name !== 'id') { -%>
+<% if (i === 'default') { -%>
     <%= properties[i].name %>: {type: '<%= properties[i].type %>', required: true},
-<% } -%>
 <% } else { -%>
-<% if(i !== 'id') -%>
     <%= properties[i].name %>: {type: '<%= properties[i].type %>'},
+<% } -%>
 <% } -%>
 <% } -%>
   });
@@ -16,9 +15,9 @@ var <%= names.constructor.singular %> = function () {
 <% for(var i in properties) { -%>
 <% if(properties[i].name === 'id' && properties[i].type === 'int') { -%>
   this.autoIncrementId = true;
-<% } -%>
-<% } -%>
 
+<% } -%>
+<% } -%>
   /*
   this.property('login', 'string', {required: true});
   this.property('password', 'string', {required: true});
