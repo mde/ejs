@@ -28,6 +28,7 @@ md.setOptions({
 var Main = function () {
 
   this.error = function (req, resp, params) {
+    console.log(params.error);
     this.respond(params, {
       format: 'html'
     , template: 'app/views/main/error'
@@ -50,6 +51,7 @@ var Main = function () {
     // for the latest commit
     , gotCommits = function (err, commits) {
       if (err) {
+        params.error = err;
         return self.error(req, resp, params);
       }
       var commit = commits[0] && commits[0].commit
@@ -64,6 +66,7 @@ var Main = function () {
         opts.url = url;
         geddy.request(opts, function (err, trees) {
           if (err || !trees) {
+            params.error = err;
             return self.error(req, resp, params);
           }
           for (var i in trees.tree) {
@@ -83,6 +86,7 @@ var Main = function () {
       geddy.request(options, function (err, resp) {
 
         if (err) {
+          params.error = err;
           return self.error(req, resp, params)
         }
 
@@ -108,6 +112,7 @@ var Main = function () {
     // parse it and call getBlob for each file
     , gotTree = function (err, tree) {
       if (err) {
+        params.error = err;
         return self.error(req, resp, params);
       }
 
