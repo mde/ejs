@@ -91,7 +91,7 @@ var Main = function () {
         }
 
         var content = (resp.content) ? new Buffer(resp.content, 'base64').toString('utf8') : ''
-          , name = paths[i].path.replace('.md','')
+          , name = paths[i].path.replace('.md','').split('-')
           , subs = []
           , lines = content.split('\n');
         for (var l in lines) {
@@ -100,7 +100,7 @@ var Main = function () {
           }
         }
         docs[parseInt(name[0]) - 1] = {
-          name: name.split('-')[1]
+          name: name[1]
         , content: md(content)
         , subs: subs
         };
