@@ -13,7 +13,7 @@ The view layer supports these four templating engines:
 To use them, just give your template the correct file extension. If you'd like to use a different templating engine when generating an app or scaffolds, use the corresponding command line option:
 
 ```
-$ geddy app --mustach my_app
+$ geddy app --mustache my_app
 $ geddy scaffold --mustache user
 
 
