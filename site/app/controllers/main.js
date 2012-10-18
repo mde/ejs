@@ -28,7 +28,7 @@ md.setOptions({
 var Main = function () {
 
   this.error = function (req, resp, params) {
-    self.respond(params, {
+    this.respond(params, {
       format: 'html'
     , template: 'app/views/main/error'
     });
@@ -49,6 +49,9 @@ var Main = function () {
     // once we've got a list of commits, get the tree
     // for the latest commit
     , gotCommits = function (err, commits) {
+      if (err) {
+        return self.error(req, resp, params);
+      }
       var commit = commits[0] && commits[0].commit
         , url = commit.tree && commit.tree.url;
       return getTree(url, gotTree);
@@ -61,7 +64,7 @@ var Main = function () {
         opts.url = url;
         geddy.request(opts, function (err, trees) {
           if (err || !trees) {
-            return this.error(req, resp, params);
+            return self.error(req, resp, params);
           }
           for (var i in trees.tree) {
             tree = trees.tree[i];
@@ -78,6 +81,11 @@ var Main = function () {
       , dataType: 'json'
       }
       geddy.request(options, function (err, resp) {
+
+        if (err) {
+          return self.error(req, resp, params)
+        }
+
         var content = (resp.content) ? new Buffer(resp.content, 'base64').toString('utf8') : ''
           , name = paths[i].path.replace('.md','')
           , subs = []
@@ -99,6 +107,10 @@ var Main = function () {
     // once we've got the 'docs' tree,
     // parse it and call getBlob for each file
     , gotTree = function (err, tree) {
+      if (err) {
+        return self.error(req, resp, params);
+      }
+
       for (var i in tree) {
         getBlob(tree, i, respond);
       }
