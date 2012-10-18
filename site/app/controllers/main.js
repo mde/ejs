@@ -17,11 +17,12 @@
 */
 
 var md = require('marked');
+var hljs = require('highlight.js');
 md.setOptions({
   gfm: true
 , pedantic: false
 , highlight: function (code, lang) {
-    return code;
+    return hljs.highlightAuto(code).value;
   }
 });
 
