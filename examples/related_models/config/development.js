@@ -19,6 +19,11 @@
 var config = {
   detailedErrors: true
 , debug: true
+, db: {
+	mongo: { 
+		dbname: "test"
+	}
+}
 , hostname: null
 , port: 4000
 , sessions: {

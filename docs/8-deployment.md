@@ -1,3 +1,5 @@
+We use the following example as a reference. There will be some diferences with other environments. 
+
 #### Heroku
 
 ##### Pre-requisites
