@@ -4,7 +4,6 @@
 var geddy = require('../lib/geddy')
   , exec = require('child_process').exec
   , path = require('path')
-  , utils = require('utilities')
   , parseopts = require('../lib/parseopts');
 
 // Variables
@@ -223,7 +222,7 @@ if (cmds.length) {
 // Just `geddy` -- start the server
 else {
   // Search for 'config' directory in parent directories
-  utils.file.searchParentPath('config', function (err, filePath) {
+  geddy.file.searchParentPath('config', function (err, filePath) {
     if (err) {
       die(usage);
     }
