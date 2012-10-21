@@ -111,8 +111,7 @@ die = function (str) {
 
 // Start Geddy with options
 start = function () {
-  geddy.config(opts);
-  geddy.start();
+  geddy.startCluster(opts);
 };
 
 if (opts.help) {
