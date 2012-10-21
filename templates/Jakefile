@@ -208,7 +208,7 @@ namespace('gen', function () {
     i = -1;
     while (++i < itemsArr.length) {
       value = itemsArr[i];
-      name = value.replace(/:.*/g, '');
+      name = utils.string.camelize(value.replace(/:.*/g, ''));
       type = value.replace(/[a-zA-Z]*:?/, '');
       args = type.replace(/[a-zA-Z]*:?/, '');
 
