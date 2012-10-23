@@ -1,3 +1,5 @@
+We use the following example as a reference. There will be some diferences with other environments. 
+
 #### Heroku
 
 ##### Pre-requisites
@@ -37,11 +39,9 @@ Add a `Procfile` text file to your app's root folder
 //web: node node_modules/geddy/bin/cli.js
 var geddy = require('geddy');
 
-if (geddy.isMaster) {
-  geddy.config({ environment: 'production' }); 
-}   
-
-geddy.start();
+geddy.startCluster({
+  environment: 'production'
+});
 ```
 
 Now it's time to create a heroku app. 
