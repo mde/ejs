@@ -24,21 +24,15 @@ try {
   events.emit('error', err);
 }
 
-var Templato = require('../../../deps/templato')
-  , Adapter = require('../../../lib/template/adapters').Adapter
+var Adapter = require('../../../lib/template/adapters')
   , assert = require('assert')
   , tests
-  , render;
+  , render = function (str, data) {
+      data = data || {};
+      var adapter = new Adapter({engine: 'handlebars', template: str});
 
-render = function (string, data) {
-  var templato = new Templato
-    , templ;
-  data = data || {};
-  templ = new Adapter({ data: {ext: '.hbs'}, text: string, templato: templato });
-  templ.process(data);
-
-  return templ.markup;
-};
+      return adapter.render(data);
+    };
 
 tests = {
 

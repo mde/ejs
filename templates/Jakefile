@@ -5,12 +5,10 @@ require('../lib/geddy')
 var fs = require('fs')
   , path = require('path')
   , utils = require('../lib/utils')
-  , adapter = require('../lib/template/adapters').Adapter
-  , templato = new (require('../deps/templato'));
+  , Adapter = require('../lib/template/adapters');
 
 namespace('env', function () {
   task('init', function (environment) {
-
     jake.addListener('complete', function (e) {
       jake.Task['env:cleanup'].invoke();
     });
@@ -23,13 +21,13 @@ namespace('env', function () {
     require('../lib/init').init(geddy, function () {
       complete();
     });
-
   }, {async: true});
 
   task('cleanup', function () {
     // Disconnect all the adapters
-    adapters = geddy.model.loadedAdapters
-    , adapter;
+    var adapters = geddy.model.loadedAdapters
+      , adapter;
+
     for (var p in adapters) {
       adapter = adapters[p];
       if (typeof adapter.disconnect == 'function') {
@@ -41,18 +39,20 @@ namespace('env', function () {
 });
 
 namespace('console', function () {
-
   task('start', ['env:init'], {async: true}, function (environment) {
     var env = environment || 'development'
       , t = jake.Task['env:init'];
+
     t.addListener('complete', function () {
       var readline = require('readline')
         , rl = readline.createInterface({
             input: process.stdin
           , output: process.stdout
           });
+
       rl.setPrompt('>>> ');
       rl.prompt();
+
       rl.addListener('line', function (line) {
         try {
           console.log(global.eval(line));
@@ -62,6 +62,7 @@ namespace('console', function () {
         }
         rl.prompt();
       });
+
       rl.addListener('close', function () {
         console.log('Exiting ...');
         return complete();
@@ -106,7 +107,6 @@ namespace('console', function () {
 });
 
 namespace('db', function () {
-
   task('createTable', ['env:init'], function (name) {
     var modelName
       , createTable
@@ -151,7 +151,6 @@ namespace('db', function () {
       }
     };
     createTable();
-
   }, {async: true});
 
   task('retrofit', ['env:init'], function () {
@@ -172,13 +171,14 @@ namespace('gen', function () {
       , names = utils.string.getInflections(name)
       , text = fs.readFileSync(path.join(__dirname, filename + '.ejs'), 'utf8').toString()
       , bare = options.bare || false // Default to full controller
-      , templ
+      , adapter
+      , templContent
       , fileDir
       , filePath;
 
     // Render with the right model name
-    templ = new adapter({data: {ext: '.ejs'}, text: text, templato: templato});
-    templ.process({names: names, bare: bare, properties: options.properties});
+    adapter = new Adapter({engine: 'ejs', template: text});
+    templContent = adapter.render({names: names, bare: bare, properties: options.properties});
 
     // Write file
     fileDir = dirname;
@@ -187,7 +187,7 @@ namespace('gen', function () {
     }
 
     filePath = path.join(fileDir, names.filename[options.inflection] + '.js');
-    fs.writeFileSync(filePath, templ.markup, 'utf8');
+    fs.writeFileSync(filePath, templContent, 'utf8');
 
     console.log('[Added] ' + filePath);
   };
@@ -286,7 +286,7 @@ namespace('gen', function () {
     var mkdirs
       , cps
       , text
-      , tpl;
+      , adapter;
 
     if (!name) {
       throw new Error('No app name specified.');
@@ -326,10 +326,9 @@ namespace('gen', function () {
       jake.cpR(path.join(__dirname, 'base', cp[0]), path.join(name, cp[1]), {silent: true});
     });
 
-    text = fs.readFileSync(path.join(__dirname, 'base', 'Jakefile.ejs'), 'utf8').toString()
-    templ = new adapter({data: {ext: '.ejs'}, text: text, templato: templato});
-    templ.process({appName: name});
-    fs.writeFileSync(path.join(name, 'Jakefile'), templ.markup, 'utf8');
+    text = fs.readFileSync(path.join(__dirname, 'base', 'Jakefile.ejs'), 'utf8').toString();
+    adapter = new Adapter({engine: 'ejs', template: text});
+    fs.writeFileSync(path.join(name, 'Jakefile'), adapter.render({appName: name}), 'utf8');
 
     console.log('Created app ' + name + '.');
   });
@@ -619,7 +618,8 @@ namespace('gen', function () {
       , actions
       , addActionView
       , text
-      , templ;
+      , adapter
+      , templContent;
 
     // Set extension based on engine option
     switch (engine) {
@@ -645,12 +645,12 @@ namespace('gen', function () {
       text = fs.readFileSync(path.join(templateViewDir, action + ext + '.ejs')).toString();
 
       // Compile template text
-      templ = new adapter({data: {ext: '.ejs'}, text: text, templato: templato});
-      templ.process({names: names, properties: _formatModelProperties(options.properties)});
+      adapter = new Adapter({engine: 'ejs', template: text});
+      templContent = adapter.render({names: names, properties: _formatModelProperties(options.properties)});
 
       // Write file
       fs.writeFileSync(path.join(appViewDir, action + ext),
-        templ.markup.replace(/<@/g, '<%').replace(/@>/g, '%>'), 'utf8');
+        templContent.replace(/<@/g, '<%').replace(/@>/g, '%>'), 'utf8');
     };
 
     jake.mkdirP(appViewDir);

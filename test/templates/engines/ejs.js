@@ -16,17 +16,14 @@
  *
 */
 
-var Templato = require('../../../deps/templato')
-  , Template = require('../../../lib/template/adapters/ejs').Template
+var Adapter = require('../../../lib/template/adapters')
   , assert = require('assert')
   , tests
   , render = function (str, data) {
-      var templato = new Templato;
-
       data = data || {};
-      var templ = new Template({text: str, templato: templato});
-      templ.process(data);
-      return templ.markup;
+      var adapter = new Adapter({engine: 'ejs', template: str});
+
+      return adapter.render(data);
     };
 
 tests = {
