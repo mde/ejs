@@ -16,7 +16,7 @@
     <%- scriptLink('/js/jquery.min.js', {type:'text/javascript'}) %>
     <%- scriptLink('/js/bootstrap.min.js', {type:'text/javascript'}) %>
     <%- scriptLink('/js/core/core.js', {type: 'text/javascript'}) %>
-    <%- scriptLink('/js/core/models.js', {type: 'text/javascript'}) %>
+    <!-- <script src="/js/models/your_model.js" type="text/javascript"></script> -->
     <%- scriptLink('/js/config/init.js', {type: 'text/javascript'}) %>
 
     <%- styleLink('/css/bootstrap.min.css', {rel:'stylesheet'}) %>
@@ -41,7 +41,7 @@
             <ul class="nav">
               <li class="active"><%- linkTo('Home', '/') %></li>
               <li><%- linkTo('Tutorial', 'http://geddyjs.org/tutorial') %></li>
-              <%- linkTo('Docs', 'http://geddyjs.org/documentation') %></li>
+              <li><%- linkTo('Docs', 'http://geddyjs.org/documentation') %></li>
             </ul>
           </div><!--/.nav-collapse -->
         </div>

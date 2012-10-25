@@ -446,6 +446,7 @@ var model = {}
 
 utils.mixin(model, new (function () {
 
+  this.ModelBase = function () {};
   this.adapters = {};
   this.loadedAdapters = {};
   this.descriptionRegistry = {};
@@ -848,7 +849,7 @@ utils.mixin(model, new (function () {
       }
 
       // Data may by just a bag or params, or an actual instance
-      if (typeof data.emit == 'function') {
+      if (data instanceof model.ModelBase) {
         data.emit('beforeUpdate');
       }
 
@@ -943,9 +944,11 @@ utils.mixin(model, new (function () {
     // actual constructor
     utils.mixin(origProto, defined);
 
-    ModelCtor.prototype = origProto;
+    ModelCtor.prototype = new model.ModelBase();
     // Add eventing to instances
     utils.enhance(ModelCtor.prototype, new EventEmitter());
+    // Preserve any inherited shit from the definition proto
+    utils.enhance(ModelCtor.prototype, origProto);
 
     model[name] = ModelCtor;
 
@@ -12658,7 +12661,14 @@ geddy.io.listenForModelEvents = function (model) {
   for (var e in events) {
     geddy.socket.on(model.modelName + ':' + events[e], function (data) {
       (function (event) {
-        model.emit(event, data);
+        var instance;
+        if (typeof data != 'string') {
+          instance = model.create(data);
+        }
+        else {
+         instance = data;
+        }
+        model.emit(event, instance);
       })(events[e]);
     });
   };

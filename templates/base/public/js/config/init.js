@@ -21,8 +21,8 @@
  *    console.log(item);
  *  });
  *
- *  geddy.model.Item.on('remove', function (item) {
- *    console.log(item);
+ *  geddy.model.Item.on('remove', function (id) {
+ *    console.log(id);
  *  });
  *
  */

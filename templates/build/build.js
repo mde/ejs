@@ -21,7 +21,14 @@ geddy.io.listenForModelEvents = function (model) {
   for (var e in events) {
     geddy.socket.on(model.modelName + ':' + events[e], function (data) {
       (function (event) {
-        model.emit(event, data);
+        var instance;
+        if (typeof data != 'string') {
+          instance = model.create(data);
+        }
+        else {
+         instance = data;
+        }
+        model.emit(event, instance);
       })(events[e]);
     });
   };
