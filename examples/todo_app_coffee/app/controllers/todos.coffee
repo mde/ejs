@@ -24,17 +24,17 @@ class Todos
 
   show: (req, resp, params) ->
     self = this
-    geddy.model.Todo.load params.id, (err, todo) ->
+    geddy.model.Todo.first params.id, (err, todo) ->
       self.respond params: params, todo: todo
 
   edit: (req, resp, params) ->
     self = this
-    geddy.model.Todo.load params.id, (err, todo) ->
+    geddy.model.Todo.first params.id, (err, todo) ->
       self.respond params: params, todo: todo
 
   update: (req, resp, params) ->
     self = this
-    geddy.model.Todo.load params.id, (err, todo) ->
+    geddy.model.Todo.first params.id, (err, todo) ->
       todo.updateAttributes params
 
       todo.save (err, data) ->
