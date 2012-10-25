@@ -27,7 +27,7 @@ namespace('doc', function () {
 
 });
 
-desc('Generate the geddy core.js file');
+desc('Generate the geddy core files');
 task('buildjs', function(){
   var cmd = 'browserify templates/build/build.js' +
             ' -o templates/base/public/js/core/core.js -i ./logger'

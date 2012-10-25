@@ -1039,11 +1039,13 @@ utils.mixin(model, new (function () {
       // contains an Object literal keyed by field name, and the
       // error message for the first failed validation for that
       // property
+      // Use raw, invalid value on the instance
       if (validated.err) {
         errs = errs || {};
         errs[p] = validated.err;
+        item[p] = params[p];
       }
-      // Otherwise add this property to the return item
+      // Otherwise add the type-coerced, valid value to the return item
       else {
         item[p] = validated.val;
       }
@@ -12636,15 +12638,40 @@ var swfobject=function(){var D="undefined",r="object",S="Shockwave Flash",W="Sho
 require.define("/templates/build/build.js",function(require,module,exports,__dirname,__filename,process,global){window.geddy = {}
 
 // require model
-window.geddy.model = require('model');
+geddy.model = require('model');
 
 // mix utilities into geddy
 var utilities = require('utilities');
 utilities.mixin(geddy, utilities);
 
 // require socket.io-client
-window.geddy.io = require('socket.io-client');
-window.geddy.socket = window.geddy.io.connect('http://localhost');
+geddy.io = require('socket.io-client');
+geddy.socket = geddy.io.connect('http://localhost');
+
+geddy.io.listenForModelEvents = function (model) {
+  var events = [
+    'save'
+  , 'update'
+  , 'remove'
+  ];
+
+  for (var e in events) {
+    geddy.socket.on(model.modelName + ':' + events[e], function (data) {
+      (function (event) {
+        model.emit(event, data);
+      })(events[e]);
+    });
+  };
+}
+
+geddy.io.addListenersForModels = function (models) {
+  for (var i in models) {
+    (function (model) {
+      geddy.io.listenForModelEvents(model);
+    })(geddy.model[models[i]]);
+  }
+}
+
 
 });
 require("/templates/build/build.js");
