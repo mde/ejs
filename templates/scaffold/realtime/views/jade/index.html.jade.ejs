@@ -1,0 +1,13 @@
+.hero-unit
+  h2 All <%= names.constructor.plural %>
+  != linkTo('Create a new <%= names.constructor.singular %>', add<%= names.constructor.singular %>Path, {class: 'btn pull-right'})
+
+if <%= names.property.plural %>
+  each <%= names.property.singular %> in <%= names.property.plural %>
+    .row.list-item
+      .span8
+        h3!= linkTo(<%= names.property.singular %>.<%= properties['default'].name %>, <%= names.property.singular %>Path(<%= names.property.singular %>.id))
+      .span4
+        h3
+          i.icon-list-alt
+          = <%= names.property.singular %>.id

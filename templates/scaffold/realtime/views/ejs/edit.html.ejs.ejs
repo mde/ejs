@@ -1,0 +1,56 @@
+<div class="hero-unit">
+  <form id="<%= names.property.singular %>-form" class="form-horizontal" action="/<%= names.filename.plural %>/<@= params.id @>?_method=PUT" method="POST">
+    <fieldset>
+      <legend>Update this <%= names.constructor.singular %></legend>
+      <@ if(params.errors) { @>
+      <div class="control-group">
+        <ul>
+        <@ for(var err in params.errors) { @>
+          <li><@= params.errors[err]; @></li>
+        <%% } %>
+        </ul>
+      </div>
+      <%% } %>
+<% for(var i in properties) { -%>
+<% if(properties[i].name !== 'id') { -%>
+      <div class="control-group">
+        <label for="<%= properties[i].name %>" class="control-label"><%= properties[i].name %></label>
+        <div class="controls">
+<% if(properties[i].type === 'string') { -%>
+<% if(properties[i].name === 'password') { -%>
+          <@- contentTag('input', '', {type:'password', class:'span6', name:'<%= properties[i].name %>'}) @>
+<% } else { -%>
+          <@- contentTag('input', <%= names.property.singular %>.<%= properties[i].name %>, {type:'text', class:'span6', name:'<%= properties[i].name %>'}) @>
+<% } -%>
+<% } else if(properties[i].type === 'text') { -%>
+          <@- contentTag('textarea', '', {class: 'span6', name: '<%= properties[i].name %>', rows: 10}) @>
+<% } else if(properties[i].type === 'number' || properties[i].type === 'int') { -%>
+          <@- contentTag('input', <%= names.property.singular %>.<%= properties[i].name %>, {type:'number', class:'span2', name:'<%= properties[i].name %>'}) @>
+<% } else if(properties[i].type === 'boolean') { -%>
+          <select name="<%= properties[i].name %>", class="span1">
+            <@ if(<%= names.property.singular %>.<%= properties[i].name %>) { -@>
+            <option>false</option>
+            <option selected>true</option>
+            <@ } else { -@>
+            <option selected>false</option>
+            <option>true</option>
+            <@ } -@>
+          </select>
+<% } else if(properties[i].type === 'datetime') {  -%>
+          <@- contentTag('input', <%= names.property.singular %>.<%= properties[i].name %>, {type:'datetime', class:'span3', name:'<%= properties[i].name %>'}) @>
+<% } else if(properties[i].type === 'date') { -%>
+          <@- contentTag('input', <%= names.property.singular %>.<%= properties[i].name %>, {type:'date', class:'span2', name:'<%= properties[i].name %>'}) @>
+<% } else { -%>
+          <%= properties[i].type %>
+<% } -%>
+        </div>
+      </div>
+<% } -%>
+<% } -%>
+    <div class="form-actions">
+      <@- contentTag('input', 'Save', {type: 'submit', class: 'btn btn-primary'}) @>
+      <@- contentTag('button', 'Remove', {type: 'submit', formaction: '/<%= names.filename.plural %>/' + params.id + '?_method=DELETE', formmethod: 'POST', class: 'btn btn-danger'}) @>
+    </div>
+    </fieldset>
+  </form>
+</div>

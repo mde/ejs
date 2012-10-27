@@ -1,0 +1,18 @@
+<div class="hero-unit">
+  <h2><@= <%= names.property.singular %>.<%= properties['default'].name %> @></h2>
+  <@- linkTo('Edit this <%= names.property.singular %>', edit<%= names.constructor.singular %>Path(params.id), {class: 'btn pull-right'}); @>
+</div>
+
+<h2><%= names.constructor.singular %> Properties</h2>
+<@ for(var i in <%= names.property.singular %>) { -@>
+<@ if(i !== 'saved') { -@>
+<div class="row list-item">
+  <div class="span8">
+    <h3><@= i @></h3>
+  </div>
+  <div class="span4">
+    <h3><i class="icon-list-alt"></i><@= <%= names.property.singular %>[i] @></h3>
+  </div>
+</div>
+<%% } -%>
+<%% } -%>

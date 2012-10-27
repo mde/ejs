@@ -12649,7 +12649,7 @@ utilities.mixin(geddy, utilities);
 
 // require socket.io-client
 geddy.io = require('socket.io-client');
-geddy.socket = geddy.io.connect('http://localhost');
+geddy.socket = geddy.io.connect('http://localhost:4000');
 
 geddy.io.listenForModelEvents = function (model) {
   var events = [
@@ -12659,8 +12659,8 @@ geddy.io.listenForModelEvents = function (model) {
   ];
 
   for (var e in events) {
-    geddy.socket.on(model.modelName + ':' + events[e], function (data) {
-      (function (event) {
+    (function (event) {
+      geddy.socket.on(model.modelName + ':' + event, function (data) {
         var instance;
         if (typeof data != 'string') {
           instance = model.create(data);
@@ -12668,9 +12668,12 @@ geddy.io.listenForModelEvents = function (model) {
         else {
          instance = data;
         }
+        if (geddy.debug == true) {
+          console.log(event, instance);
+        }
         model.emit(event, instance);
-      })(events[e]);
-    });
+      });
+    })(events[e]);
   };
 }
 
@@ -12681,6 +12684,8 @@ geddy.io.addListenersForModels = function (models) {
     })(geddy.model[models[i]]);
   }
 }
+
+
 
 
 });
