@@ -4,7 +4,7 @@
 </div>
 
 <div id="<%= names.property.plural %>-list">
-<@ if (items) { @>
+<@ if (<%= names.property.plural %>) { @>
 <@ for (var i = 0, ii = <%= names.property.plural %>.length; i < ii; i++) { @>
   <div class="row list-item" id="item-<@= <%= names.property.plural %>[i].id; @>">
     <div class="span8">
@@ -21,10 +21,8 @@
 <script type="text/javascript">
 $(function(){
 
-  // listen for events on the Item model
   geddy.io.addListenersForModels(['<%= names.constructor.singular %>']);
 
-  // render the template if we need to
   var renderTemplate = function (<%= names.property.singular %>) {
     var template = [ ''
       , '<div class="row list-item" id="<%= names.property.singular %>-' + <%= names.property.singular %>.id + '">'
