@@ -7,7 +7,7 @@
     "REST",
     "MVC"
   ],
-  "version": "0.5.5",
+  "version": "0.5.6",
   "author": "Matthew Eernisse <mde@fleegix.org> (http://fleegix.org)",
   "dependencies": {
     "jake": "0.5.x",
