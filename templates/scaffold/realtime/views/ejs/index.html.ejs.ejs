@@ -6,7 +6,7 @@
 <div id="<%= names.property.plural %>-list">
 <@ if (<%= names.property.plural %>) { @>
 <@ for (var i = 0, ii = <%= names.property.plural %>.length; i < ii; i++) { @>
-  <div class="row list-item" id="item-<@= <%= names.property.plural %>[i].id; @>">
+  <div class="row list-item" id="<%= names.property.singular %>-<@= <%= names.property.plural %>[i].id; @>">
     <div class="span8">
       <h3><@- linkTo(<%= names.property.plural %>[i].<%= properties['default'].name %>, <%= names.property.singular %>Path(<%= names.property.plural %>[i].id)); @></h3>
     </div>

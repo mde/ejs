@@ -330,6 +330,11 @@ namespace('gen', function () {
       jake.cpR(path.join(__dirname, 'base', cp[0]), path.join(name, cp[1]), {silent: true});
     });
 
+    // one offs
+    if (realtime) {
+      jake.cpR(path.join(__dirname, '..', 'node_modules', 'socket.io' ), path.join(name, 'node_modules'), {silent: true});
+    }
+
     text = fs.readFileSync(path.join(__dirname, 'base', 'Jakefile.ejs'), 'utf8').toString();
     adapter = new Adapter({engine: 'ejs', template: text});
     fs.writeFileSync(path.join(name, 'Jakefile'), adapter.render({appName: name}), 'utf8');

@@ -1198,9 +1198,14 @@ model.ModelDefinitionBase = function (name) {
       assn[name] = true;
       reg[self.name].associations[assnKey] = assn;
       if (assnKey == 'belongsTo') {
-        def = model[name];
-        idDatatype = def.autoIncrementId ? 'int' : 'string';
-        self.property(utils.string.decapitalize(name) + 'Id', idDatatype);
+        // FIXME: Hack, let other models get defined first
+        // Should probably listen for an event that signals
+        // base models are set up
+        setTimeout(function () {
+          def = model[name];
+          idDatatype = def.autoIncrementId ? 'int' : 'string';
+          self.property(utils.string.decapitalize(name) + 'Id', idDatatype);
+        }, 0);
       }
     };
   });
