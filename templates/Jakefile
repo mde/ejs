@@ -193,10 +193,10 @@ namespace('gen', function () {
   };
 
   var _formatModelProperties = function (properties) {
-    var obj = {'default': {name: 'id', type: 'int'}};
     if (!properties) {
-      return obj;
+      return {};
     }
+    var obj = {'default': {name: 'id', type: 'int'}};
 
     var itemsArr = properties.split('%')
       , name
