@@ -9,7 +9,7 @@ utilities.mixin(geddy, utilities);
 
 // require socket.io-client
 geddy.io = require('socket.io-client');
-geddy.socket = geddy.io.connect('http://localhost:4000');
+geddy.socket = geddy.io.connect('/');
 
 geddy.io.listenForModelEvents = function (model) {
   var events = [
