@@ -6,7 +6,9 @@ var config = {
   */
 /* // For Passport auth via geddy-passport
 , passport: {
-    twitter: {
+    successRedirect: '/'
+  , failureRedirect: '/login'
+  , twitter: {
       consumerKey: 'XXXXX'
     , consumerSecret: 'XXXXX'
     }
