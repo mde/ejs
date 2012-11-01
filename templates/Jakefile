@@ -770,7 +770,8 @@ namespace('auth', function () {
     rl.addListener('close', function () {
       if (go) {
         console.log('Installing ' + packages + '...');
-        jake.exec('npm install ' + packages, function () {
+        jake.exec('npm uninstall ' + packages +
+            ' && npm install ' + packages, function () {
           var list = fs.readFileSync(path.join(fromBase, 'file_list.json'))
             , routerPath = getRouterPath()
             , newRoute;
