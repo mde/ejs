@@ -132,6 +132,7 @@ if (cmds.length) {
   if (!(cmds[0] == 'jake' ||
       cmds[0] == 'secret' ||
       cmds[0] == 'db:init' ||
+      cmds[0] == 'auth' ||
       cmds[0] == 'console')
       && !cmds[1]) {
     throw new Error(cmds[0] + ' command requires another argument.');
@@ -160,6 +161,10 @@ if (cmds.length) {
     case 'console':
       // Create DBs
       cmd += 'console:start[' + (cmds[1] || 'development') + ']';
+      break;
+    case 'auth':
+      // Create DBs
+      cmd += 'auth:init';
       break;
     case 'db:init':
       // Create DBs

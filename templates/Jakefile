@@ -746,6 +746,8 @@ namespace('auth', function () {
 
   task('init', {async: true}, function () {
     var go = false
+      , packages = 'geddy-passport passport passport-local ' +
+            'passport-facebook passport-twitter'
       , readline = require('readline')
       , rl = readline.createInterface({
           input: process.stdin
@@ -754,7 +756,7 @@ namespace('auth', function () {
       , toBase = process.cwd()
       , fromBase = path.join(toBase, 'node_modules', 'geddy-passport');
 
-    rl.setPrompt('This command should probably only be run in a fresh Geddy app.\n' +
+    rl.setPrompt('This command will create/overwrite files in your app.\n' +
         'Do you wish to continue? (yes|no)\n');
     rl.prompt();
 
@@ -767,8 +769,8 @@ namespace('auth', function () {
 
     rl.addListener('close', function () {
       if (go) {
-        console.log('Installing geddy-passport ...');
-        jake.exec('npm install geddy-passport', function () {
+        console.log('Installing ' + packages + '...');
+        jake.exec('npm install ' + packages, function () {
           var list = fs.readFileSync(path.join(fromBase, 'file_list.json'))
             , routerPath = getRouterPath()
             , newRoute;
@@ -778,10 +780,9 @@ namespace('auth', function () {
             var from = path.join(fromBase, item)
               , to = path.dirname(path.join(toBase, item));
             jake.mkdirP(to);
+            console.log('Creating file: ' + item);
             jake.cpR(from, to, {silent: true});
           });
-
-          jake.rmRf(path.join('node_modules', 'geddy-passport'));
 
           if (routerPath) {
             if (routerPath.match('.coffee')) {
@@ -794,10 +795,11 @@ namespace('auth', function () {
               "router.post('/auth/local').to('Auth.local');\n" +
               "router.get('/auth/twitter').to('Auth.twitter');\n" +
               "router.get('/auth/twitter/callback').to('Auth.twitterCallback');\n" +
-              "router.get('/auth/facebook').to('Auth.facebook');\n";
+              "router.get('/auth/facebook').to('Auth.facebook');\n" +
+              "router.resource('users');";
 
               if (addRoute(routerPath, newRoute)) {
-                console.log('Added autnehtication routes.');
+                console.log('Added autnehtication routes:\n' + newRoute);
               }
               else {
                 console.log('Authentication routes already defined in ' +
@@ -809,7 +811,12 @@ namespace('auth', function () {
             console.log('There is no router file to add routes too');
           }
 
-          complete();
+          console.log('Cleaning up...');
+          jake.exec('npm uninstall geddy-passport', function () {
+            console.log('Please set up your Passport options in config/environment.js');
+            complete();
+          });
+
         }, {printStdout: true});
       }
     });
