@@ -20,21 +20,9 @@ var config = {
   detailedErrors: false
 , hostname: null
 , port: 4000
-, sessions: {
-    store: 'cookie'
-  , key: 'sid'
-  , expiry: 14 * 24 * 60 * 60
-  }
-/*
-Define a defaultAdapter. You can use postgres, memory, mongo or riak.
-The 'db' section can include multiple DB configs. Geddy's models support
-using a different DB for each model. Some examples:
-*/
-
-/* // Using Mongo as the default, with only a Mongo DB
 , model: {
     defaultAdapter: 'mongo'
-	}
+  }
 , db: {
     mongo: {
       username: null
@@ -45,12 +33,11 @@ using a different DB for each model. Some examples:
     , port: 27017
     }
   }
- */
 
 /* // Using Postgres as the default, with only a Postgres DB
 , model: {
     defaultAdapter: 'postgres'
-	}
+  }
 , db: {
     postgres: {
       user: process.env.USER
@@ -65,7 +52,7 @@ using a different DB for each model. Some examples:
 /* // Using Postgres as the default, with both Postgres and Riak
 , model: {
     defaultAdapter: 'postgres'
-	}
+  }
 , db: {
     postgres: {
       user: process.env.USER

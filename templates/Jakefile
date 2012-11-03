@@ -329,7 +329,7 @@ namespace('gen', function () {
   };
 
   // Creates a new Geddy app scaffold
-  task('app', function (name, engine) {
+  task('app', function (name, engine, realtime) {
     var mkdirs
       , cps
       , text
@@ -338,9 +338,13 @@ namespace('gen', function () {
     if (!name) {
       throw new Error('No app name specified.');
     }
-    if (!engine) {
+    if (!engine || engine == 'default') {
       engine = 'ejs';
     }
+    if (realtime == 'default') {
+      realtime = false;
+    }
+
 
     mkdirs = [
       ''
@@ -354,11 +358,11 @@ namespace('gen', function () {
     , 'test'
     ];
     cps = [
-      ['views/' + engine, 'app/views']
+      (realtime) ? ['realtime/views/' + engine, 'app/views'] : ['views/' + engine, 'app/views']
     , ['public', '']
     , ['router.js', 'config']
     , ['init.js', 'config']
-    , ['environment.js', 'config']
+    , (realtime) ? ['realtime/environment.js', 'config'] : ['environment.js', 'config']
     , ['development.js', 'config']
     , ['production.js', 'config']
     , ['main.js', 'app/controllers']
@@ -372,6 +376,11 @@ namespace('gen', function () {
     cps.forEach(function (cp) {
       jake.cpR(path.join(__dirname, 'base', cp[0]), path.join(name, cp[1]), {silent: true});
     });
+
+    // one offs
+    if (realtime) {
+      jake.cpR(path.join(__dirname, '..', 'node_modules', 'socket.io' ), path.join(name, 'node_modules'), {silent: true});
+    }
 
     text = fs.readFileSync(path.join(__dirname, 'base', 'Jakefile.ejs'), 'utf8').toString();
     adapter = new Adapter({engine: 'ejs', template: text});
@@ -404,18 +413,21 @@ namespace('gen', function () {
 
 
   // Creates a full scaffold with views, a model, controller and a resource route
-  task('scaffold', function (name, engine, modelProperties) {
+  task('scaffold', function (name, realtime, engine, modelProperties) {
     var modelTask = jake.Task['gen:model'];
 
-    if (!modelProperties && engine) {
+    /*if (!modelProperties && engine) {
       modelProperties = engine;
       engine = '';
-    }
+    }*/
     if (!name) {
       throw new Error('No scaffold name specified.');
     }
-    if (!engine) {
+    if (!engine || engine == 'default') {
       engine = 'ejs';
+    }
+    if (!realtime || realtime == 'default') {
+      realtime = false;
     }
 
     modelTask.on('complete', function () {
@@ -425,7 +437,7 @@ namespace('gen', function () {
           {properties: modelProperties});
       jake.Task['gen:route'].invoke(name);
       jake.Task['gen:viewsScaffold'].invoke(name,
-          {engine: engine, properties: modelProperties});
+          {engine: engine, properties: modelProperties, realtime: realtime});
       complete();
     });
     modelTask.invoke(name, modelProperties, 'scaffold');
@@ -625,10 +637,11 @@ namespace('gen', function () {
     var names = utils.string.getInflections(name)
       , engine = options.engine
       , appViewDir = path.join('app', 'views', names.filename.plural)
-      , templateViewDir = path.join(__dirname, 'scaffold', 'views', engine)
+      , templateViewDir
       , cmds = []
       , ext = '.html'
       , appLayoutPath
+      , layoutViewPath
       , actions
       , addActionView
       , text
@@ -650,6 +663,11 @@ namespace('gen', function () {
         ext += '.ms';
         break;
     }
+
+    templateViewDir = options.realtime ?
+                      path.join(__dirname, 'scaffold', 'realtime', 'views', engine) :
+                      path.join(__dirname, 'scaffold', 'views', engine);
+
 
     // Set application layout path
     appLayoutPath = path.join('app', 'views', 'layouts', 'application');

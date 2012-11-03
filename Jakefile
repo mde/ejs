@@ -27,6 +27,18 @@ namespace('doc', function () {
 
 });
 
+desc('Generate the geddy core files');
+task('buildjs', function(){
+  var cmd = 'browserify templates/build/build.js' +
+            ' -o templates/base/public/js/core/core.js -i ./logger'
+  jake.exec([cmd], function () {
+    var msg = 'built templates/build/build.js to ' +
+              'templates/base/public/js/core/core.js'
+    console.log(msg);
+    complete();
+  })
+}, {async: true});
+
 desc('Generate docs for Geddy');
 task('doc', ['doc:generate']);
 

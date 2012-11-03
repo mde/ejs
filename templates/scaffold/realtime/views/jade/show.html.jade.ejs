@@ -1,0 +1,14 @@
+.hero-unit
+  h2= <%= names.property.singular %>.<%= properties['default'].name %>
+  != linkTo('Edit this <%= names.property.singular %>', edit<%= names.constructor.singular %>Path(params.id), {class: 'btn pull-right'})
+
+h2 <%= names.constructor.singular %> Properties
+each property, key in <%= names.property.singular %>
+  if key !== 'saved'
+    .row.list-item
+      .span8
+        h3= key
+      .span4
+        h3
+          i.icon-list-alt
+          = property

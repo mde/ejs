@@ -19,11 +19,11 @@
 var config = {
   detailedErrors: true
 , debug: true
-, hostname: 'localhost' 
+, hostname: 'localhost'
 , port: 4000
 , model: {
     defaultAdapter: 'memory'
-	}
+  }
 , sessions: {
     store: 'memory'
   , key: 'sid'

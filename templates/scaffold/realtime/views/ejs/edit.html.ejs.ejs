@@ -1,0 +1,23 @@
+<div class="hero-unit">
+  <form id="<%= names.property.singular %>-form" class="form-horizontal" action="/<%= names.filename.plural %>/<@= params.id @>?_method=PUT" method="POST">
+    <fieldset>
+      <legend>Update this <%= names.constructor.singular %></legend>
+      <@ if(params.errors) { @>
+      <div class="control-group">
+        <ul>
+        <@ for(var err in params.errors) { @>
+          <li><@= params.errors[err]; @></li>
+        <%% } %>
+        </ul>
+      </div>
+      <%% } %>
+
+      <@- partial('form', {<%= names.property.singular %>: <%= names.property.singular %>}) @>
+
+      <div class="form-actions">
+        <@- contentTag('input', 'Save', {type: 'submit', class: 'btn btn-primary'}) @>
+        <@- contentTag('button', 'Remove', {type: 'submit', formaction: '/<%= names.filename.plural %>/' + params.id + '?_method=DELETE', formmethod: 'POST', class: 'btn btn-danger'}) @>
+      </div>
+    </fieldset>
+  </form>
+</div>

@@ -17,6 +17,7 @@ var cwd = process.cwd()
   , usage
   , cmd
   , engineCmd
+  , rtCmd
   , modelCmd
   , filepath
   , die
@@ -39,6 +40,7 @@ usage = [
   , '  --workers, -w       Number of worker processes to start (default: 1)'
   , '  --debug, -d         Sets the log level to output debug messages to'
   , '                        the console'
+  , '  --realtime, -r      When generating or scaffolding, take realtime into account'
   , '  --jade, -j          When generating views this will create Jade'
   , '                        templates(Default: EJS)'
   , '  --handle, -H        When generating views this will create Handlebars'
@@ -92,6 +94,7 @@ optsMap = [
   , { full: 'handle', abbr: 'H', args: false }
   , { full: 'handlebars', abbr: 'H', args: false }
   , { full: 'mustache', abbr: 'm', args: false }
+  , { full: 'realtime', abbr: 'rt', args: false}
 ];
 
 // Parse optsMap and generate options and cmd commands
@@ -145,7 +148,14 @@ if (cmds.length) {
     engineCmd = ',' + 'handlebars';
   } else if (opts.mustache) {
     engineCmd = ',' + 'mustache';
-  } else engineCmd = '';
+  } else engineCmd = ',default';
+
+  if (opts.realtime) {
+    rtCmd = ',' + 'realtime';
+  }
+  else {
+    rtCmd = ',default';
+  }
 
   // Get the model properties
   if (cmds.slice(2).length > 0) {
@@ -176,7 +186,7 @@ if (cmds.length) {
       break;
     case 'app':
       // Generating application
-      cmd += 'gen:app[' + cmds[1] + engineCmd + ']';
+      cmd += 'gen:app[' + cmds[1] + engineCmd + rtCmd + ']';
       break;
     case 'resource':
       // Generating resource
@@ -184,7 +194,7 @@ if (cmds.length) {
       break;
     case 'scaffold':
       // Generating application
-      cmd += 'gen:scaffold[' + cmds[1] + engineCmd + modelCmd + ']';
+      cmd += 'gen:scaffold[' + cmds[1] + rtCmd + engineCmd + modelCmd + ']';
       break;
     case 'controller':
       // Generating controller
