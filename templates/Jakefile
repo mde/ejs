@@ -675,7 +675,7 @@ namespace('gen', function () {
     jake.mkdirP('app/views/layouts');
 
     // Add views for the other CRUD actions when doing a full-on resource
-    ['index', 'add', 'show', 'edit'].forEach(function (action) {
+    ['index', 'add', 'show', 'edit', 'form'].forEach(function (action) {
       addActionView(action);
     });
 
