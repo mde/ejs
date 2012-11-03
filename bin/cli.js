@@ -94,7 +94,7 @@ optsMap = [
   , { full: 'handle', abbr: 'H', args: false }
   , { full: 'handlebars', abbr: 'H', args: false }
   , { full: 'mustache', abbr: 'm', args: false }
-  , { full: 'realtime', abbr: 'r', args: false}
+  , { full: 'realtime', abbr: 'rt', args: false}
 ];
 
 // Parse optsMap and generate options and cmd commands
