@@ -800,7 +800,7 @@ namespace('auth', function () {
               "router.resource('users');";
 
               if (addRoute(routerPath, newRoute)) {
-                console.log('Added autnehtication routes:\n' + newRoute);
+                console.log('Added authentication routes:\n' + newRoute);
               }
               else {
                 console.log('Authentication routes already defined in ' +
