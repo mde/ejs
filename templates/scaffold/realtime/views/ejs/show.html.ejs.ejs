@@ -18,14 +18,25 @@
 <%% } -%>
 
 <script type="text/javascript">
+$(function(){
 
-geddy.io.addListenersForModels(['<%= names.constructor.singular %>']);
+  var pageId = window.location.pathname.split('/')[2];
 
-geddy.model.<%= names.constructor.singular %>.on('update', function (<%= names.property.singular %>){
-  var properties = <%= names.property.singular %>.toData();
-  for (var i in properties) {
-    $('.'+i).text(properties[i]);
-  }
+  geddy.io.addListenersForModels(['<%= names.constructor.singular %>']);
+
+  geddy.model.<%= names.constructor.singular %>.on('update', function (<%= names.property.singular %>){
+    if (<%= names.property.singular %>.id == pageId) {
+      var properties = <%= names.property.singular %>.toData();
+      for (var i in properties) {
+        $('.'+i).text(properties[i]);
+      }
+    }
+  });
+
+  geddy.model.<%= names.constructor.singular %>.on('remove', function (id){
+    if (id == pageId) {
+      window.location = '/<%= names.property.plural %>';
+    }
+  });
 });
-
 </script>
