@@ -4,8 +4,55 @@ require('../lib/geddy')
 // Dependencies
 var fs = require('fs')
   , path = require('path')
+  , fs = require('fs')
+  , path = require('path')
   , utils = require('../lib/utils')
-  , Adapter = require('../lib/template/adapters');
+  , Adapter = require('../lib/template/adapters')
+  , getRouterPath
+  , addRoute;
+
+getRouterPath = function () {
+  var beginPath
+    , jsRouter = path.normalize('config/router.js')
+    , coffeeRouter = path.normalize('config/router.coffee')
+    , routerPath;
+  // Check if the router file exists
+  beginPath = path.join(process.cwd(), 'config');
+  utils.file.searchParentPath(jsRouter, function (err) {
+    if (err) {
+      var jsErr = err;
+      // If jsEnvironment wasn't found, try finding coffee variant
+      utils.file.searchParentPath(coffeeRouter, beginPath, function (err) {
+        if (err) {
+          throw jsErr;
+        } else {
+          routerPath = coffeeRouter;
+        }
+      });
+    } else {
+      routerPath = jsRouter;
+    }
+  });
+  return routerPath;
+};
+
+addRoute = function (routerPath, newRoute) {
+  var text = fs.readFileSync(routerPath, 'utf8')
+    , routerArr;
+  // Don't add the same route over and over
+  if (text.indexOf(newRoute) == -1) {
+    // Add the new resource route just above the export
+    routerArr = text.split('exports.router');
+    routerArr[0] += newRoute + '\n';
+
+    text = routerArr.join('exports.router');
+    fs.writeFileSync(routerPath, text, 'utf8');
+    return true;
+  }
+  else {
+    return false;
+  }
+};
 
 namespace('env', function () {
   task('init', function (environment) {
@@ -474,37 +521,11 @@ namespace('gen', function () {
     options = options || {};
 
     var names = utils.string.getInflections(name)
+      , routerPath = getRouterPath()
       , routeType = options.bare ? 'Bare' : 'Resource'
-      , jsRouter = path.normalize('config/router.js')
-      , coffeeRouter = path.normalize('config/router.coffee')
-      , routerPath
-      , routerArr
-      , text
-      , splitText
-      , newRoute
-      , beginPath;
-
-    // Check if the router file exists
-    beginPath = path.join(process.cwd(), 'config');
-    utils.file.searchParentPath(jsRouter, function (err) {
-      if (err) {
-        var jsErr = err;
-        // If jsEnvironment wasn't found, try finding coffee variant
-        utils.file.searchParentPath(coffeeRouter, beginPath, function (err) {
-          if (err) {
-            throw jsErr;
-          } else {
-            routerPath = coffeeRouter;
-          }
-        });
-      } else {
-        routerPath = jsRouter;
-      }
-    });
+      , newRoute;
 
     if (routerPath) {
-      text = fs.readFileSync(routerPath, 'utf8');
-
       if (routerPath.match('.coffee')) {
         if (options.bare) {
           newRoute = 'router.match(\'/' +  names.filename.plural +
@@ -523,15 +544,7 @@ namespace('gen', function () {
         }
       }
 
-      // Don't add the same route over and over
-      if (text.indexOf(newRoute) == -1) {
-        // Add the new resource route just above the export
-        routerArr = text.split('exports.router');
-        routerArr[0] += newRoute + '\n';
-
-        text = routerArr.join('exports.router');
-        fs.writeFileSync(routerPath, text, 'utf8');
-
+      if (addRoute(routerPath, newRoute)) {
         console.log('[Added] ' + routeType + ' ' + names.filename.plural +
           ' route added to ' + routerPath);
       }
@@ -539,10 +552,11 @@ namespace('gen', function () {
         console.log(routeType + ' ' + names.filename.plural + ' route already defined in ' +
           routerPath);
       }
-
-    } else {
+    }
+    else {
       console.log('There is no router file to add routes too');
     }
+
   });
 
   task('views', function (name, options) {
@@ -742,6 +756,89 @@ namespace('gen', function () {
     else {
       console.log('There is no environment config to add the app-secret to.');
     }
+  });
+
+});
+
+namespace('auth', function () {
+
+  task('init', {async: true}, function () {
+    var go = false
+      , packages = 'geddy-passport passport passport-local ' +
+            'passport-facebook passport-twitter'
+      , readline = require('readline')
+      , rl = readline.createInterface({
+          input: process.stdin
+        , output: process.stdout
+        })
+      , toBase = process.cwd()
+      , fromBase = path.join(toBase, 'node_modules', 'geddy-passport');
+
+    rl.setPrompt('This command will create/overwrite files in your app.\n' +
+        'Do you wish to continue? (yes|no)\n');
+    rl.prompt();
+
+    rl.addListener('line', function (line) {
+      if (line == 'yes') {
+        go = true;
+      }
+      rl.close();
+    });
+
+    rl.addListener('close', function () {
+      if (go) {
+        console.log('Installing ' + packages + '...');
+        jake.exec('npm uninstall ' + packages +
+            ' && npm install ' + packages, function () {
+          var list = fs.readFileSync(path.join(fromBase, 'file_list.json'))
+            , routerPath = getRouterPath()
+            , newRoute;
+
+          list = JSON.parse(list.toString());
+          list.forEach(function (item) {
+            var from = path.join(fromBase, item)
+              , to = path.dirname(path.join(toBase, item));
+            jake.mkdirP(to);
+            console.log('Creating file: ' + item);
+            jake.cpR(from, to, {silent: true});
+          });
+
+          if (routerPath) {
+            if (routerPath.match('.coffee')) {
+              throw new Error(
+                  'Geddy passport integration does not support CoffeeScript.');
+            }
+            else {
+              newRoute = "router.get('/login').to('Main.login');\n" +
+              "router.get('/logout').to('Main.logout');\n" +
+              "router.post('/auth/local').to('Auth.local');\n" +
+              "router.get('/auth/twitter').to('Auth.twitter');\n" +
+              "router.get('/auth/twitter/callback').to('Auth.twitterCallback');\n" +
+              "router.get('/auth/facebook').to('Auth.facebook');\n" +
+              "router.resource('users');";
+
+              if (addRoute(routerPath, newRoute)) {
+                console.log('Added authentication routes:\n' + newRoute);
+              }
+              else {
+                console.log('Authentication routes already defined in ' +
+                  routerPath);
+              }
+            }
+          }
+          else {
+            console.log('There is no router file to add routes too');
+          }
+
+          console.log('Cleaning up...');
+          jake.exec('npm uninstall geddy-passport', function () {
+            console.log('Please set up your Passport options in config/environment.js');
+            complete();
+          });
+
+        }, {printStdout: true});
+      }
+    });
   });
 
 });

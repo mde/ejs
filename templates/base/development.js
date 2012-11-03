@@ -23,7 +23,7 @@ var config = {
 , port: 4000
 , model: {
     defaultAdapter: 'memory'
-	}
+  }
 , sessions: {
     store: 'memory'
   , key: 'sid'

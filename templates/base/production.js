@@ -20,21 +20,54 @@ var config = {
   detailedErrors: false
 , hostname: null
 , port: 4000
-/* TODO: Define a defaultAdapter. You can use postgresdb, memory, mongo or riak.
 , model: {
     defaultAdapter: 'mongo'
-	}
+  }
 , db: {
     mongo: {
-      dbname: 'local'
+      username: null
+    , dbname: 'production'
+    , prefix: null
+    , password: null
+    , host: 'localhost'
+    , port: 27017
     }
   }
- */
-, sessions: {
-    store: 'cookie'
-  , key: 'sid'
-  , expiry: 14 * 24 * 60 * 60
+
+/* // Using Postgres as the default, with only a Postgres DB
+, model: {
+    defaultAdapter: 'postgres'
   }
+, db: {
+    postgres: {
+      user: process.env.USER
+    , database: process.env.USER
+    , password: null
+    , host: null
+    , port: 5432
+    }
+  }
+*/
+
+/* // Using Postgres as the default, with both Postgres and Riak
+, model: {
+    defaultAdapter: 'postgres'
+  }
+, db: {
+    postgres: {
+      user: process.env.USER
+    , database: process.env.USER
+    , password: null
+    , host: null
+    , port: 5432
+    }
+  , riak: {
+      protocol: 'http'
+    , host: 'localhost'
+    , port: 8098
+  }
+  }
+*/
 };
 
 module.exports = config;
