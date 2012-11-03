@@ -815,6 +815,7 @@ namespace('auth', function () {
               "router.get('/auth/twitter').to('Auth.twitter');\n" +
               "router.get('/auth/twitter/callback').to('Auth.twitterCallback');\n" +
               "router.get('/auth/facebook').to('Auth.facebook');\n" +
+              "router.get('/auth/facebook/callback').to('Auth.facebookCallback');\n" +
               "router.resource('users');";
 
               if (addRoute(routerPath, newRoute)) {
