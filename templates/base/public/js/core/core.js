@@ -787,8 +787,8 @@ utils.mixin(model, new (function () {
             return callback(new Error('A bulk-save can only have new ' +
                 'items in it.'), null);
           }
-          // Bail out if any instance isn't valid
-          if (!item.isValid()) {
+          // Bail out if any instance isn't valid and no force flag
+          if (!(item.isValid() || opts.force)) {
             return callback(item.errors, null);
           }
         }
@@ -798,7 +798,7 @@ utils.mixin(model, new (function () {
 
         saved = data._saved;
         // Bail out if instance isn't valid
-        if (!data.isValid()) {
+        if (!(data.isValid() || opts.force)) {
           return callback(data.errors, null);
         }
         // Already existing instance, use update
@@ -850,6 +850,10 @@ utils.mixin(model, new (function () {
 
       // Data may by just a bag or params, or an actual instance
       if (data instanceof model.ModelBase) {
+        // Bail out if instance isn't valid
+        if (!(data.isValid() || opts.force)) {
+          return callback(data.errors, null);
+        }
         data.emit('beforeUpdate');
       }
 
@@ -1006,6 +1010,8 @@ utils.mixin(model, new (function () {
       , validated = null
       , errs = null
       , camelizedKey
+      , skip = opts.skip
+      , skipKeys = {}
       , val;
 
     item.emit('beforeValidate')
@@ -1036,7 +1042,17 @@ utils.mixin(model, new (function () {
       params.updatedAt = item.updatedAt;
     }
 
+    if (skip) {
+      for (var i in skip) {
+        skipKeys[skip[i]] = true;
+      }
+    }
+
     for (var p in properties) {
+      if (skipKeys[p]) {
+        continue;
+      }
+
       validated = this.validateProperty(properties[p], params);
       // If there are any failed validations, the errs param
       // contains an Object literal keyed by field name, and the
