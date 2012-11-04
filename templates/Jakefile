@@ -9,7 +9,8 @@ var fs = require('fs')
   , utils = require('../lib/utils')
   , Adapter = require('../lib/template/adapters')
   , getRouterPath
-  , addRoute;
+  , addRoute
+  , addSecretData;
 
 getRouterPath = function () {
   var beginPath
@@ -51,6 +52,26 @@ addRoute = function (routerPath, newRoute) {
   }
   else {
     return false;
+  }
+};
+
+addSecretData = function (obj) {
+  var dir = process.cwd()
+    , secretsFile = path.join(dir, 'config', 'secrets.json')
+
+  // Mix in the generated app-secret -- should never be checked into revision control
+  if (utils.file.existsSync(secretsFile)) {
+    try {
+      secrets = JSON.parse(fs.readFileSync(secretsFile));
+      utils.mixin(secrets, obj);
+      fs.writeFileSync(secretsFile, JSON.stringify(secrets));
+    }
+    catch (e) {
+      throw new Error('Could not parse secrets.json file');
+    }
+  }
+  else {
+    console.log('There is no secrets.json to add config-data to.');
   }
 };
 
@@ -365,9 +386,11 @@ namespace('gen', function () {
     , (realtime) ? ['realtime/environment.js', 'config'] : ['environment.js', 'config']
     , ['development.js', 'config']
     , ['production.js', 'config']
+    , ['secrets.json', 'config']
     , ['main.js', 'app/controllers']
     , ['application.js', 'app/controllers']
     , ['favicon.ico', 'public']
+    , ['gitignore.txt', '.gitignore']
     ];
 
     mkdirs.forEach(function (dir) {
@@ -706,56 +729,13 @@ namespace('gen', function () {
 
   // Generate a new application secret in environment.js
   task('secret', function () {
-    var jsEnvironment = path.normalize('config/environment.js')
-      , coffeeEnvironment = path.normalize('config/environment.coffee')
-      , secret = utils.string.uuid(128)
-      , environmentPath
-      , environmentArr
-      , text
-      , splitText
-      , beginPath;
-
-    // Check if the environment file exists
-    beginPath = path.join(process.cwd(), 'config');
-    utils.file.searchParentPath(jsEnvironment, function (err) {
-      if (err) {
-        var jsErr = err;
-        // If jsEnvironment wasn't found, try finding coffee variant
-        utils.file.searchParentPath(coffeeEnvironment, beginPath, function (err) {
-          if (err) {
-            throw jsErr;
-          } else {
-            environmentPath = coffeeEnvironment;
-          }
-        });
-      } else {
-        environmentPath = jsEnvironment;
-      }
+    var secret = utils.string.uuid(128);
+    addSecretData({
+      secret: secret
     });
-
-    if (environmentPath) {
-      text = fs.readFileSync(environmentPath, 'utf8').toString();
-
-      // Remove any old secret
-      text = text.replace(/\nconfig.secret.+\n/, '');
-
-      splitText = 'module.exports = config';
-      if (environmentPath.match('.js')) {
-        splitText += ';';
-      }
-
-      environmentArr = text.split(splitText);
-      environmentArr[0] += "config.secret = '" + secret + "'";
-      environmentArr[0] += environmentPath.match('.js') ? ';\n\n' : '\n\n';
-
-      text = environmentArr.join(splitText);
-      fs.writeFileSync(environmentPath, text, 'utf8');
-
-      console.log('[Added] Application secret to \'' + environmentPath + '\'');
-    }
-    else {
-      console.log('There is no environment config to add the app-secret to.');
-    }
+    console.log('Added app-secret to config/secrets.json.\n' +
+        'DO NOT add this file into your revision control.\n' +
+        'DO make a backup of it, keep it someplace safe.');
   });
 
 });
@@ -831,9 +811,15 @@ namespace('auth', function () {
             console.log('There is no router file to add routes too');
           }
 
+          console.log('Creating secrets.json file with stubbed-out Passport config.');
+          jake.cpR(path.join(fromBase, 'config', 'secrets.json.template'),
+              path.join(toBase, 'config', 'secrets.json'), {silent: true});
+
+          jake.Task['gen:secret'].invoke();
+
           console.log('Cleaning up...');
           jake.exec('npm uninstall geddy-passport', function () {
-            console.log('Please set up your Passport options in config/environment.js');
+            console.log('Please set up your Passport config in config/secrets.json');
             complete();
           });
 
