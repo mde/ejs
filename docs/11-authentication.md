@@ -71,7 +71,7 @@ user's session:
 
 #### Requiring authentication in your app
 
-User a before-filter, and redirect to the login page if there is no `userId` in
+Use a before-filter, and redirect to the login page if there is no `userId` in
 the user's session. If there is a `userId`, that means the user is
 authenticated. There is a built-in `reequireAuth` function in the Passport
 helper-library, which does just this.
