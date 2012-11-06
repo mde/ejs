@@ -5,9 +5,10 @@
     "Web",
     "framework",
     "REST",
-    "MVC"
+    "MVC",
+    "realtime"
   ],
-  "version": "0.5.7",
+  "version": "0.6.0",
   "author": "Matthew Eernisse <mde@fleegix.org> (http://fleegix.org)",
   "dependencies": {
     "jake": "0.5.x",
