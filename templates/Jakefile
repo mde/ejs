@@ -64,7 +64,7 @@ addSecretData = function (obj) {
     try {
       secrets = JSON.parse(fs.readFileSync(secretsFile));
       utils.mixin(secrets, obj);
-      fs.writeFileSync(secretsFile, JSON.stringify(secrets));
+      fs.writeFileSync(secretsFile, JSON.stringify(secrets, null, 2));
     }
     catch (e) {
       throw new Error('Could not parse secrets.json file');
@@ -736,8 +736,9 @@ namespace('auth', function () {
 
   task('init', {async: true}, function () {
     var go = false
-      , packages = 'geddy-passport passport passport-local ' +
-            'passport-facebook passport-twitter'
+      // FIXME: Pull these version numbers out of geddy-passport's package.json
+      , packages = 'geddy-passport@0.0.x passport@0.1.x passport-local@0.1.x ' +
+            'passport-facebook@0.1.x passport-twitter@0.1.x'
       , readline = require('readline')
       , rl = readline.createInterface({
           input: process.stdin
