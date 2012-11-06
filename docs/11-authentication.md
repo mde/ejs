@@ -69,4 +69,28 @@ user's session:
  * userId -- the id for the local User account
  * authType -- the method of authentication (e.g., 'local', 'twitter')
 
+#### Requiring authentication in your app
+
+User a before-filter, and redirect to the login page if there is no `userId` in
+the user's session. If there is a `userId`, that means the user is
+authenticated. There is a built-in `reequireAuth` function in the Passport
+helper-library, which does just this.
+
+The User controller for local accounts is protected like this:
+
+```javascript
+var passport = require('../helpers/passport')
+  , cryptPass = passport.cryptPass
+  , requireAuth = passport.requireAuth;
+
+var Users = function () {
+  this.before(requireAuth, {
+    except: ['add', 'create']
+  });
+
+// Rest of controller omitted
+```
+
+This allows new accounts to be created, because the 'add' and 'create' actions
+are exempted, but only authenticated users can view or update existing users.
 
