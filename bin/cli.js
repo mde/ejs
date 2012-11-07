@@ -58,7 +58,7 @@ usage = [
   , '  scaffold <name> [attrs]     Create a new scaffolding. Scaffolding includes'
   , '                                the views, a model, controller and route'
   , '  secret                      Generate a new application secret in'
-  , '                                `congig/environment`'
+  , '                                `config/secret`'
   , '  controller <name>           Generate a new controller including an index view'
   , '                                and and a route'
   , '  model <name> [attrs]        Generate a new model'
