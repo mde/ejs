@@ -14,6 +14,7 @@
 , "cpt": "application/mac-compactpro"
 , "csh": "application/x-csh"
 , "css": "text/css"
+, "csv": "text/csv"
 , "deb": "application/x-debian-package"
 , "dl": "video/dl"
 , "doc": "application/msword"
