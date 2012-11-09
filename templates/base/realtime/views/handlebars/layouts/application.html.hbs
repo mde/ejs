@@ -5,7 +5,6 @@
     <title>Geddy App | This app uses Geddy.js</title>
     <meta name="description" content="">
     <meta name="author" content="">
-
     <meta name="viewport" content="width=device-width" />
 
     <!-- The HTML5 shim, for IE6-8 support of HTML elements -->
@@ -15,6 +14,8 @@
 
     <script type="text/javascript" src="/js/jquery.min.js"></script>
     <script type="text/javascript" src="/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/js/core/core.js"></script>
+    <script type="text/javascript" src="/js/core/models.js"></script>
 
     <link rel="stylesheet" href="/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/style.css">
@@ -36,9 +37,9 @@
           <a class="brand" href="/">Geddy App</a>
           <div class="nav-collapse">
             <ul class="nav">
-              <li class="active"><a href="/">Home</a></li>
-              <li><a href="http://geddyjs.org/tutorial.html">Tutorial</a></li>
-              <!--<li><a href="http://geddyjs.org/docs.html">Docs</a></li>-->
+              <li class="active">{{{linkTo 'Home' '/'}}}</li>
+              <li>{{{linkTo 'Tutorial' 'http://geddyjs.org/tutorial'}}}</li>
+              <li>{{{linkTo 'Docs' 'http://geddyjs.org/documentation'}}}</li>
             </ul>
           </div><!--/.nav-collapse -->
         </div>

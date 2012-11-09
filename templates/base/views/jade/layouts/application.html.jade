@@ -1,12 +1,11 @@
 !!! html
-
 html(lang="en")
   head
     meta(charset="utf-8")
+    title Geddy App | This app uses Geddy.js
     meta(name="description", content="")
     meta(name="author", content="")
     meta(name="viewport", content="width=device-width")
-    title Geddy App | This app uses Geddy.js
 
     // The HTML5 shim, for IE6-8 support of HTML elements
     //if lt IE 9
@@ -14,6 +13,9 @@ html(lang="en")
 
     != scriptLink('/js/jquery.min.js', {type:'text/javascript'})
     != scriptLink('/js/bootstrap.min.js', {type:'text/javascript'})
+    != scriptLink('/js/core/core.js', {type: 'text/javascript'})
+    //- != scriptLink('/js/models/your_model.js', {type:'text/javascript'})
+    != scriptLink('/js/config/init.js', {type: 'text/javascript'})
 
     != styleLink('/css/bootstrap.min.css', {rel:'stylesheet'})
     != styleLink('/css/style.css', {rel:'stylesheet'})
@@ -38,9 +40,9 @@ html(lang="en")
               li.active
                 != linkTo('Home', '/')
               li
-                != linkTo('Tutorial', 'http://geddyjs.org/tutorial.html')
-              //li
-                != linkTo('Docs', 'http://geddyjs.org/docs.html')
+                != linkTo('Tutorial', 'http://geddyjs.org/tutorial')
+              li
+                != linkTo('Docs', 'http://geddyjs.org/documentation')
 
     .container
       != yield()
