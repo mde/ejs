@@ -659,6 +659,7 @@ namespace('gen', function () {
       , layoutViewPath
       , actions
       , addActionView
+      , viewPath
       , text
       , adapter
       , templContent;
@@ -689,7 +690,11 @@ namespace('gen', function () {
 
     // Function to compile the template
     addActionView = function (action) {
-      text = fs.readFileSync(path.join(templateViewDir, action + ext + '.ejs')).toString();
+      viewPath = path.join(templateViewDir, action + ext + '.ejs');
+      if (!utils.file.existsSync(viewPath)) {
+        return;
+      }
+      text = fs.readFileSync(viewPath).toString();
 
       // Compile template text
       adapter = new Adapter({engine: 'ejs', template: text});

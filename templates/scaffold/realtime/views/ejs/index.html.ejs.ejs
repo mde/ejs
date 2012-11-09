@@ -19,8 +19,7 @@
 </div>
 
 <script type="text/javascript">
-$(function(){
-
+$(function () {
   geddy.io.addListenersForModels(['<%= names.constructor.singular %>']);
 
   var renderTemplate = function (<%= names.property.singular %>) {
@@ -34,11 +33,11 @@ $(function(){
       , '  </div>'
       , '</div>'
     ].join('');
+
     return $(template);
   }
 
   var <%= names.constructor.plural %>Controller = function (opts) {
-
     this.options = opts || {};
 
     this.create = function (<%= names.property.singular %>) {
@@ -54,7 +53,6 @@ $(function(){
     };
 
   };
-
   geddy.<%= names.constructor.plural %> = new <%= names.constructor.plural %>Controller();
 
   geddy.model.<%= names.constructor.singular %>.on('save'   , geddy.<%= names.constructor.plural %>.create);
