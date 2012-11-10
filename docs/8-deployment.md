@@ -8,6 +8,9 @@ We use the following example as a reference. There will be some differences with
 3. Create a Nodejitsu account(Not required: we'll go over creating one from the CLI)
 4. Have an app ready to be deployed
 
+##### Notes
+* Nodejitsu reads the deployed .gitignore file, so if you have the config/secrets.json file in there(you should), then you'll encounter errors about needing to do `geddy secret` if you need the secrets for sessions, etc. To circumvent this, create a .npmignore file and include all the contents from the .gitignore _except_ the config/secrets.json line. Nodejitsu ignores the .gitignore file only if a .npmignore file is included as well.
+
 If you haven't already you'll need to sign up and log in to Nodejitsu which you can do from the jitsu executable.
 ```
 jitsu signup
