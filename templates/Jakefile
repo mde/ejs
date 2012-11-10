@@ -258,7 +258,7 @@ namespace('gen', function () {
       return obj;
     }
     obj['default'].name = 'id';
-    obj['default'].type = 'int';
+    obj['default'].type = 'string';
 
     var itemsArr = properties.split('%')
       , name
