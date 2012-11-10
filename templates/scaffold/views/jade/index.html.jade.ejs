@@ -7,7 +7,7 @@ div#<%= names.property.plural %>-list
     each <%= names.property.singular %> in <%= names.property.plural %>
       .row.list-item(id="<%= names.property.singular %>-" + <%= names.property.singular %>.id)
         .span8
-          h3!= linkTo(<%= names.property.singular %>.<%= properties['default'].name %>, <%= names.property.singular %>Path(<%= names.property.singular %>.id))
+          h3!= linkTo(<%= names.property.singular %>.<%= properties['default'].name || "id" %>, <%= names.property.singular %>Path(<%= names.property.singular %>.id))
         .span4
           h3
             i.icon-list-alt

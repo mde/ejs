@@ -8,7 +8,7 @@
 <@ for (var i = 0, ii = <%= names.property.plural %>.length; i < ii; i++) { @>
   <div class="row list-item" id="<%= names.property.singular %>-<@= <%= names.property.plural %>[i].id; @>">
     <div class="span8">
-      <h3><@- linkTo(<%= names.property.plural %>[i].<%= properties['default'].name %>, <%= names.property.singular %>Path(<%= names.property.plural %>[i].id)); @></h3>
+      <h3><@- linkTo(<%= names.property.plural %>[i].<%= properties['default'].name || "id" %>, <%= names.property.singular %>Path(<%= names.property.plural %>[i].id)); @></h3>
     </div>
     <div class="span4">
       <h3><i class="icon-list-alt"></i><@= <%= names.property.plural %>[i].id; @></h3>
