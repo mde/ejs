@@ -150,12 +150,17 @@ Respond to a request with an appropriate HTTP error-code. If a status-code is se
 
 ##### examples
 ```
-this.error()
+this.error();
 // sends a 500
 
+var err = new Error('Whoopsy daisy');
+this.error(err);
+// sends a 500 with a specific message
 
-this.error({statusCode: 501})
-// sends a 501
+var err = new Error();
+err.statusCode = 420;
+this.error(err);
+// sends a 420
 ```
 
 * * *
