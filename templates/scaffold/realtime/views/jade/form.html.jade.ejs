@@ -1,5 +1,5 @@
 <% for(var i in properties) { -%>
-<% if(properties[i].name !== 'id') { -%>
+<% if(properties[i].name && properties[i].name !== 'id') { -%>
 .control-group
   label(for="<%= properties[i].name %>", class="control-label") <%= properties[i].name %>
   .controls

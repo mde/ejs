@@ -2,7 +2,7 @@ var <%= names.constructor.singular %> = function () {
 
   this.defineProperties({
 <% for (var i in properties) { -%>
-<% if (properties[i].name !== 'id') { -%>
+<% if (properties[i].name && properties[i].name !== 'id') { -%>
 <% if (i === 'default') { -%>
     <%= properties[i].name %>: {type: '<%= properties[i].type %>', required: true},
 <% } else { -%>
