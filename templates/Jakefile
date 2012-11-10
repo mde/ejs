@@ -734,6 +734,28 @@ namespace('gen', function () {
 
 namespace('auth', function () {
 
+  task('update', {async: true}, function () {
+      // FIXME: Pull these version numbers out of geddy-passport's package.json
+    var cwd = process.cwd()
+      , packages = 'geddy-passport@0.0.x'
+      , updatePath = path.join('geddy-passport', 'app',
+            'helpers', 'passport');
+
+    console.log('Updating helper from ' + packages + '...');
+    jake.exec('npm uninstall ' + packages +
+        ' && npm install ' + packages, function () {
+      var from = path.join(cwd, 'node_modules', updatePath)
+        , to = path.join(cwd, 'app', 'helpers');
+      jake.rmRf(path.join(to, 'passport'), {silent: true});
+      jake.cpR(from, to, {silent: true});
+      console.log('Updated helper from ' + packages);
+      console.log('Cleaning up...');
+      jake.exec('npm uninstall geddy-passport', function () {
+        complete();
+      });
+    }, {printStdout: true});
+  });
+
   task('init', {async: true}, function () {
     var go = false
       // FIXME: Pull these version numbers out of geddy-passport's package.json
