@@ -146,7 +146,7 @@ Respond to a request with an appropriate HTTP error-code. If a status-code is se
 
 ##### err
 - `statusCode [number]` the code to send to the client
-- `msg [string]` the message to send to the client
+- `message [string]` the message to send to the client
 
 ##### examples
 ```
