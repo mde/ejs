@@ -23,6 +23,11 @@ var <%= names.constructor.plural %> = function () {
     var self = this
       , <%= names.property.singular %> = geddy.model.<%= names.constructor.singular %>.create(params);
 
+    if (!<%= names.property.singular %>.isValid()) {
+      params.errors = <%= names.property.singular %>.errors;
+      self.transfer('add');
+    }
+
     <%= names.property.singular %>.save(function(err, data) {
       if (err) {
         params.errors = err;
@@ -54,6 +59,10 @@ var <%= names.constructor.plural %> = function () {
 
     geddy.model.<%= names.constructor.singular %>.first(params.id, function(err, <%= names.property.singular %>) {
       <%= names.property.singular %>.updateAttributes(params);
+      if (!<%= names.property.singular %>.isValid()) {
+        params.errors = <%= names.property.singular %>.errors;
+        self.transfer('edit');
+      }
 
       <%= names.property.singular %>.save(function(err, data) {
         if (err) {
