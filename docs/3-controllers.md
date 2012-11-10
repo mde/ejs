@@ -144,9 +144,9 @@ this.redirect({controller: 'users', action: 'show', id: 1});
 
 Respond to a request with an appropriate HTTP error-code. If a status-code is set on the error object, uses that as the error's status-code. Otherwise, responds with a 500 for the status-code.
 
-##### err
-- `statusCode [number]` the code to send to the client
-- `message [string]` the message to send to the client
+##### err [error]
+- `statusCode [number]` optional HTTP status code to send to the client, defaults to 500
+- `message [string]` the error message text to send to the client
 
 ##### examples
 ```
