@@ -253,10 +253,12 @@ namespace('gen', function () {
   };
 
   var _formatModelProperties = function (properties) {
+    var obj = {default: {name: '', type: ''}};
     if (!properties) {
-      return {};
+      return obj;
     }
-    var obj = {'default': {name: 'id', type: 'int'}};
+    obj['default'].name = 'id';
+    obj['default'].type = 'string';
 
     var itemsArr = properties.split('%')
       , name
@@ -659,6 +661,7 @@ namespace('gen', function () {
       , layoutViewPath
       , actions
       , addActionView
+      , viewPath
       , text
       , adapter
       , templContent;
@@ -689,7 +692,11 @@ namespace('gen', function () {
 
     // Function to compile the template
     addActionView = function (action) {
-      text = fs.readFileSync(path.join(templateViewDir, action + ext + '.ejs')).toString();
+      viewPath = path.join(templateViewDir, action + ext + '.ejs');
+      if (!utils.file.existsSync(viewPath)) {
+        return;
+      }
+      text = fs.readFileSync(viewPath).toString();
 
       // Compile template text
       adapter = new Adapter({engine: 'ejs', template: text});
