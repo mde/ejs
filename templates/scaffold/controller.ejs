@@ -56,7 +56,13 @@ var <%= names.constructor.plural %> = function () {
     var self = this;
 
     geddy.model.<%= names.constructor.singular %>.first(params.id, function(err, <%= names.property.singular %>) {
-      self.respond({params: params, <%= names.property.singular %>: <%= names.property.singular %>});
+      if (!<%= names.property.singular %>) {
+        var err = new Error();
+        err.statusCode = 400;
+        self.error(err);
+      } else {
+        self.respond({params: params, <%= names.property.singular %>: <%= names.property.singular %>});
+      }
     });
   };
 
