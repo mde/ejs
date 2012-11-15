@@ -169,7 +169,7 @@ this.validatesWithFunction('password', function (val) {
 #### .hasOne
 `hasOne(model)`
 
-Sets up a has one relationship between this model and another.
+Sets up a has-one relationship between this model and another.
 
 ##### model
 - `model [string]`: the name of the model that this model has one of.
@@ -178,7 +178,7 @@ Sets up a has one relationship between this model and another.
 ```
 this.hasOne('Profile');
 // sets up a has one relationship
-// user -> has one -> profile
+// (something) -> has one -> profile
 ```
 
 * * *
@@ -186,7 +186,7 @@ this.hasOne('Profile');
 #### .hasMany
 `hasMany(model)`
 
-Sets up a has many relationship between this model and another.
+Sets up a has-many relationship between this model and another.
 
 ##### model
 - `model [string]`: the pluralized name of the model that this model has many of.
@@ -195,7 +195,26 @@ Sets up a has many relationship between this model and another.
 ```
 this.hasMany('Friends');
 // sets up a has many relationship
-// user -> has many -> friends
+// (something) -> has many -> friends
+```
+
+* * *
+
+#### .belongsTo
+`belongsTo(model)`
+
+Sets up a belongs-to relationship between this model and another. A belongs-to
+is often used as the inverse of a has-many or has-one. Note however that this
+is not required -- associations are unidirectional.
+
+##### model
+- `model [string]`: the singular name of the model that this model belongs to.
+
+##### example
+```
+this.belongsTo('User');
+// sets up a belongs-to relationship
+// (something) -> belongs to -> a user
 ```
 
 * * *
