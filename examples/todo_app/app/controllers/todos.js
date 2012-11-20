@@ -47,7 +47,7 @@ var Todos = function () {
   this.update = function (req, resp, params) {
     var self = this;
     geddy.model.Todo.first(params.id, function (err, todo) {
-      todo.updateAttributes(params);
+      todo.updateProperties(params);
 
       todo.save(function (err, data) {
         if (err) {
