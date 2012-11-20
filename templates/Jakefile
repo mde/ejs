@@ -767,7 +767,7 @@ namespace('auth', function () {
     var go = false
       // FIXME: Pull these version numbers out of geddy-passport's package.json
       , packages = 'geddy-passport@0.0.x passport@0.1.x passport-local@0.1.x ' +
-            'passport-facebook@0.1.x passport-twitter@0.1.x'
+            'passport-facebook@0.1.x passport-twitter@0.1.x passport-yammer@0.1.x'
       , readline = require('readline')
       , rl = readline.createInterface({
           input: process.stdin
@@ -818,6 +818,8 @@ namespace('auth', function () {
               "router.get('/auth/twitter/callback').to('Auth.twitterCallback');\n" +
               "router.get('/auth/facebook').to('Auth.facebook');\n" +
               "router.get('/auth/facebook/callback').to('Auth.facebookCallback');\n" +
+              "router.get('/auth/yammer').to('Auth.yammer');\n" +
+              "router.get('/auth/yammer/callback').to('Auth.yammerCallback');\n" +
               "router.resource('users');";
 
               if (addRoute(routerPath, newRoute)) {
