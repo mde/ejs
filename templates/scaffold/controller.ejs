@@ -53,7 +53,7 @@ var <%= names.constructor.plural %> = function () {
     var self = this;
 
     geddy.model.<%= names.constructor.singular %>.first(params.id, function(err, <%= names.property.singular %>) {
-      <%= names.property.singular %>.updateAttributes(params);
+      <%= names.property.singular %>.updateProperties(params);
 
       <%= names.property.singular %>.save(function(err, data) {
         if (err) {
