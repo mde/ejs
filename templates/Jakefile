@@ -2,7 +2,8 @@
 require('../lib/geddy')
 
 // Dependencies
-var fs = require('fs')
+var cwd = process.cwd()
+  , fs = require('fs')
   , path = require('path')
   , fs = require('fs')
   , path = require('path')
@@ -10,7 +11,7 @@ var fs = require('fs')
   , Adapter = require('../lib/template/adapters')
   , getRouterPath
   , addRoute
-  , addSecretData;
+  , mixinJSONData;
 
 getRouterPath = function () {
   var beginPath
@@ -18,7 +19,7 @@ getRouterPath = function () {
     , coffeeRouter = path.normalize('config/router.coffee')
     , routerPath;
   // Check if the router file exists
-  beginPath = path.join(process.cwd(), 'config');
+  beginPath = path.join(cwd, 'config');
   utils.file.searchParentPath(jsRouter, function (err) {
     if (err) {
       var jsErr = err;
@@ -55,23 +56,21 @@ addRoute = function (routerPath, newRoute) {
   }
 };
 
-addSecretData = function (obj) {
-  var dir = process.cwd()
-    , secretsFile = path.join(dir, 'config', 'secrets.json')
+mixinJSONData = function (file, obj) {
+  var data = obj || {};
 
-  // Mix in the generated app-secret -- should never be checked into revision control
-  if (utils.file.existsSync(secretsFile)) {
+  if (utils.file.existsSync(file)) {
     try {
-      secrets = JSON.parse(fs.readFileSync(secretsFile));
-      utils.mixin(secrets, obj);
-      fs.writeFileSync(secretsFile, JSON.stringify(secrets, null, 2));
+      var content = JSON.parse(fs.readFileSync(file, 'utf8'));
+      utils.object.merge(content, data);
+      fs.writeFileSync(file, JSON.stringify(content, null, 2));
     }
     catch (e) {
-      throw new Error('Could not parse secrets.json file');
+      throw new Error("Could not parse " + file);
     }
   }
   else {
-    console.log('There is no secrets.json to add config-data to.');
+    console.log("There is no file " + file + "to add data to.");
   }
 };
 
@@ -168,6 +167,7 @@ namespace('console', function () {
 
 namespace('db', function () {
   task('createTable', ['env:init'], function (name) {
+
     var modelName
       , createTable
       , adapters
@@ -345,7 +345,8 @@ namespace('gen', function () {
 
   // Creates a new Geddy app scaffold
   task('app', function (name, engine, realtime) {
-    var mkdirs
+    var basePath = path.join(__dirname, 'base')
+      , mkdirs
       , cps
       , text
       , adapter;
@@ -391,7 +392,7 @@ namespace('gen', function () {
       jake.mkdirP(path.join(name, dir));
     });
     cps.forEach(function (cp) {
-      jake.cpR(path.join(__dirname, 'base', cp[0]), path.join(name, cp[1]), {silent: true});
+      jake.cpR(path.join(basePath, cp[0]), path.join(name, cp[1]), {silent: true});
     });
 
     // one offs
@@ -399,9 +400,27 @@ namespace('gen', function () {
       jake.cpR(path.join(__dirname, '..', 'node_modules', 'socket.io' ), path.join(name, 'node_modules'), {silent: true});
     }
 
-    text = fs.readFileSync(path.join(__dirname, 'base', 'Jakefile.ejs'), 'utf8').toString();
+    // Compile Jakefile
+    text = fs.readFileSync(path.join(basePath, 'Jakefile.ejs'), 'utf8').toString();
     adapter = new Adapter({engine: 'ejs', template: text});
     fs.writeFileSync(path.join(name, 'Jakefile'), adapter.render({appName: name}), 'utf8');
+
+    // Compile package.json
+    text = fs.readFileSync(path.join(basePath, 'package.json.ejs'), 'utf8').toString();
+    adapter = new Adapter({engine: 'ejs', template: text});
+    fs.writeFileSync(path.join(name, 'package.json'), adapter.render({appName: name}), 'utf8');
+
+    // Add engine to package.json if it's not EJS
+    if (engine !== 'ejs') {
+      // Change to handlebars as we use it behind the scenes
+      if (engine === 'mustache') {
+        engine = 'handlebars';
+      }
+      var data = {dependencies: {}};
+      data.dependencies[engine] = "*";
+
+      mixinJSONData(path.join(name, 'package.json'), data);
+    }
 
     console.log('Created app ' + name + '.');
   });
@@ -638,6 +657,18 @@ namespace('gen', function () {
       jake.cpR(path.join(templateViewDir, 'layout' + ext), appLayoutPath + ext);
     }
 
+    // Add engine to package.json if it's not EJS
+    if (engine !== 'ejs') {
+      // Change to handlebars as we use it behind the scenes
+      if (engine === 'mustache') {
+        engine = 'handlebars';
+      }
+      var data = {dependencies: {}};
+      data.dependencies[engine] = "*";
+
+      mixinJSONData('package.json', data);
+    }
+
     console.log('[Added] View templates');
   });
 
@@ -682,6 +713,7 @@ namespace('gen', function () {
         break;
     }
 
+    // Get view path
     templateViewDir = options.realtime ?
                       path.join(__dirname, 'scaffold', 'realtime', 'views', engine) :
                       path.join(__dirname, 'scaffold', 'views', engine);
@@ -723,15 +755,27 @@ namespace('gen', function () {
       jake.cpR(path.join(templateViewDir, 'layout' + ext), appLayoutPath + ext);
     }
 
+    // Add engine to package.json if it's not EJS
+    if (engine !== 'ejs') {
+      // Change to handlebars as we use it behind the scenes
+      if (engine === 'mustache') {
+        engine = 'handlebars';
+      }
+      var data = {dependencies: {}};
+      data.dependencies[engine] = "*";
+
+      mixinJSONData('package.json', data);
+    }
+
     console.log('[Added] View templates');
   });
 
   // Generate a new application secret in environment.js
   task('secret', function () {
-    var secret = utils.string.uuid(128);
-    addSecretData({
-      secret: secret
-    });
+    var secretsFile = path.join(cwd, 'config', 'secrets.json')
+      , secret = utils.string.uuid(128);
+
+    mixinJSONData(secretsFile, {secret: secret});
     console.log('Added app-secret to config/secrets.json.\n' +
         'DO NOT add this file into your revision control.\n' +
         'DO make a backup of it, keep it someplace safe.');
@@ -743,10 +787,9 @@ namespace('auth', function () {
 
   task('update', {async: true}, function () {
       // FIXME: Pull these version numbers out of geddy-passport's package.json
-    var cwd = process.cwd()
-      , packages = 'geddy-passport@0.0.x'
+    var packages = 'geddy-passport@0.0.x'
       , updatePath = path.join('geddy-passport', 'app',
-            'helpers', 'passport');
+          'helpers', 'passport');
 
     console.log('Updating helper from ' + packages + '...');
     jake.exec('npm uninstall ' + packages +
@@ -760,6 +803,7 @@ namespace('auth', function () {
       jake.exec('npm uninstall geddy-passport', function () {
         complete();
       });
+
     }, {printStdout: true});
   });
 
@@ -773,15 +817,14 @@ namespace('auth', function () {
           input: process.stdin
         , output: process.stdout
         })
-      , toBase = process.cwd()
-      , fromBase = path.join(toBase, 'node_modules', 'geddy-passport');
+      , fromBase = path.join(cwd, 'node_modules', 'geddy-passport');
 
     rl.setPrompt('This command will create/overwrite files in your app.\n' +
         'Do you wish to continue? (yes|no)\n');
     rl.prompt();
 
     rl.addListener('line', function (line) {
-      if (line == 'yes') {
+      if (line === 'yes' || line === 'y') {
         go = true;
       }
       rl.close();
@@ -799,7 +842,7 @@ namespace('auth', function () {
           list = JSON.parse(list.toString());
           list.forEach(function (item) {
             var from = path.join(fromBase, item)
-              , to = path.dirname(path.join(toBase, item));
+              , to = path.dirname(path.join(cwd, item));
             jake.mkdirP(to);
             console.log('Creating file: ' + item);
             jake.cpR(from, to, {silent: true});
@@ -837,7 +880,7 @@ namespace('auth', function () {
 
           console.log('Creating secrets.json file with stubbed-out Passport config.');
           jake.cpR(path.join(fromBase, 'config', 'secrets.json.template'),
-              path.join(toBase, 'config', 'secrets.json'), {silent: true});
+              path.join(cwd, 'config', 'secrets.json'), {silent: true});
 
           jake.Task['gen:secret'].invoke();
 
