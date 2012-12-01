@@ -160,7 +160,7 @@ $ curl localhost:4000/snow_dogs
 
 ### Model properties
 
-Some Geddy generators (resource, scaffold and model) have a argument that takes a list of model
+Some Geddy generators (resource, scaffold, and model) have an argument that takes a list of model
 properties. Here's an example of a resource with some properties:
 
 ```
