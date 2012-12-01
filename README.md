@@ -33,9 +33,9 @@ but still let you get under the hood and tinker if you want.
   * App, resource and scaffold generators
   * Content-negotiation
   * Session support (in-memory, cookie)
-  * Multiple template engine support(EJS, Jade, Mustache, Handlebars)
+  * Multiple template engine support (EJS, Jade, Mustache, Handlebars)
   * Real Time API generation (socket.io integration)
-  * View helpers([Docs](https://github.com/mde/geddy/wiki/View-Helpers))
+  * View helpers ([Docs](https://github.com/mde/geddy/wiki/View-Helpers))
   * Fully non-blocking
 
 ### License
