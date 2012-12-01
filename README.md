@@ -117,7 +117,7 @@ $ curl localhost:4000/snow_dogs.json
 {"params":{"method":"GET","controller":"SnowDogs","action":"index","format":"json"}}
 ```
 
-Geddy generators handle plural inflections for model and controller names. ex: 'person' to 'people'
+Geddy generators handle plural inflections for model and controller names (e.g., "person" to "people").
 To read about the model properties argument jump to [Model properties](#model-properties)
 
 ### Generating scaffolding
@@ -158,7 +158,7 @@ $ curl localhost:4000/snow_dogs
 .....
 ```
 
-Geddy generators handle plural inflections for model and controller names. ex: 'person' to 'people'
+Geddy generators handle plural inflections for model and controller names (e.g., "person" to "people").
 To read about the model properties argument jump to [Model properties](#model-properties)
 
 ### Model properties
