@@ -127,7 +127,7 @@ Scaffolding creates full CRUD actions, includes views, and will default your con
 [Mongodb](http://www.mongodb.org/). Resource routes will be created for you.
 
 ````
-mde@localhost:~/work$ geddy resource snow_dog breed:string name:string color:string
+mde@localhost:~/work$ geddy scaffold snow_dog breed:string name:string color:string
 [Added] app/models/snow_dog.js
 [Added] app/controllers/snow_dogs.js
 [Added] Resource snow_dogs route added to config/router.js
