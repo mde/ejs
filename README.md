@@ -98,7 +98,7 @@ Go to http://localhost:4000/, and you should see the introduction page.
 ### Generating resources
 
 Use `geddy resource <name> [model properties]` to generate a resource in your application.
-Resources do not generate views, but creates a view directory. A resource route will be
+A resources does not generate a view, but creates a view directory. A resource route will be
 created for you.
 
 ````
