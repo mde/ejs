@@ -124,7 +124,7 @@ To read about the model properties argument jump to [Model properties](#model-pr
 
 Use `geddy scaffold <name> [model properties]` to generate scaffoling in your application.
 Scaffolding creates full CRUD actions includes views, and will default your configuration to use
-[Mongodb](http://www.mongodb.org/) Resource routes will be created for you.
+[Mongodb](http://www.mongodb.org/). Resource routes will be created for you.
 
 ````
 mde@localhost:~/work$ geddy resource snow_dog breed:string name:string color:string
