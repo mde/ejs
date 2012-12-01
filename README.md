@@ -209,7 +209,7 @@ GET */snow_dogs[.extension]
 (SnowDogs controller, index action)
 
 GET */snow_dogs/add[.extension]
-(SnowDogs controller, add action, for any new-resource template&mdash;"new" is not usable as a JavaScript action name)
+(SnowDogs controller, add action, for any new resource template; "new" is not usable as a JavaScript action name)
 
 POST */snow_dogs[.extension]
 (SnowDogs controller, create action)
@@ -266,7 +266,7 @@ exports.SnowDogs = SnowDogs;
 ## Content-negotiation
 
 Geddy can perform content-negotiation, and respond with with the
-correct format based on the requested filename-extension.
+correct format based on the requested filename extension.
 
 If you have a JSON-serializable JavaScript object you want to
 return in JSON format, pass your JavaScript object to the
