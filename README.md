@@ -282,7 +282,7 @@ this.show = function (params) {
 ```
 ## Models and validations
 
-Geddy has a simple way of defining models, with a full-featured
+Geddy has a simple way of defining models with a full-featured
 set of data validations. The syntax is similar to models in
 Ruby's ActiveRecord or DataMapper.
 
@@ -365,7 +365,7 @@ util.puts(user.errors.password);
 ## Running the tests
 
 In the geddy project directory, run `jake test`. The tests simply
-use NodeJS's `assert` library, which throws an error on failure.
+use NodeJS's `assert` module, which throws an error on failure.
 If there are no errors, the tests all ran successfully.
 
 - - -
