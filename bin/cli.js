@@ -66,7 +66,7 @@ usage = [
   , 'Examples:'
   , '  geddy                    Start Geddy on localhost:4000 in development mode'
   , '                             or if the directory isn\'t a Geddy app it\'ll'
-  , '                             this usage dialog'
+  , '                             display this usage dialog'
   , '  geddy -p 3000            Start Geddy on port 3000'
   , '  geddy -e production      Start Geddy in production mode'
   , '  geddy -j scaffold user   Generate a users scaffolding using Jade templates'
