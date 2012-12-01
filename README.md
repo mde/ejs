@@ -158,9 +158,6 @@ $ curl localhost:4000/snow_dogs
 .....
 ```
 
-Geddy generators handle plural inflections for model and controller names (e.g., "person" to "people").
-To read about the model properties argument jump to [Model properties](#model-properties)
-
 ### Model properties
 
 Some Geddy generators (resource, scaffold and model) have a argument that takes a list of model
