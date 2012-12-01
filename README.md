@@ -169,13 +169,13 @@ geddy resource user name admin:boolean lastLogin:datetime
 
 Each of these items include a name and an optional type. If there's no type given, it will default
 to string. The list of supported types are listed in the [model](https://github.com/mde/geddy/wiki/Models) documentation.
-If no id property is given then a default id property will be created with the type of string.
+If no id property is given, then a default id property will be created with the type of string.
 
 You can also use custom default properties:
 ```
 geddy resource user name:default admin:boolean
 ```
-The above example will use the property `name`(string) to display the items in the views instead of the default ID property, this way when generating scaffolds, it will look better out of the box.
+The above example will use the property `name`(string) to display the items in the views instead of the default ID property. This way when generating scaffolds, it will look better out of the box.
 
 ### Routes
 
