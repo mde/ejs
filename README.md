@@ -202,29 +202,30 @@ router.resource('hemispheres');
 ### Resources and controllers
 
 Geddy's resource-based routes create url/request-method mappings
-for easy CRUD operations like this:
+for easy CRUD operations:
 
-GET */snow_dogs[.extension]<br/>
+```
+GET */snow_dogs[.extension]
 (SnowDogs controller, index action)
 
-GET */snow_dogs/add[.extension]<br/>
-(SnowDogs controller, add action, for any new-resource template
--- "new" is not usable as a JavaScript action name)
+GET */snow_dogs/add[.extension]
+(SnowDogs controller, add action, for any new-resource template&mdash;"new" is not usable as a JavaScript action name)
 
-POST */snow_dogs[.extension]<br/>
+POST */snow_dogs[.extension]
 (SnowDogs controller, create action)
 
-GET */snow_dogs/:id[.extension]<br/>
+GET */snow_dogs/:id[.extension]
 (SnowDogs controller, show action)
 
-GET */snow_dogs/:id/edit[.extension]<br/>
+GET */snow_dogs/:id/edit[.extension]
 (SnowDogs controller, edit action)
 
-PUT */snow_dogs/:id[.extension]<br/>
+PUT */snow_dogs/:id[.extension]
 (SnowDogs controller, update action)
 
-DELETE */snow_dogs/:id[.extension]<br/>
+DELETE */snow_dogs/:id[.extension]
 (SnowDogs controller, remove action)
+```
 
 A simple controller that just responds with any
 form-post/query-string params looks like this:
