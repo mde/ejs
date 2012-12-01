@@ -167,7 +167,7 @@ properties. Here's an example of a resource with some properties:
 geddy resource user name admin:boolean lastLogin:datetime
 ```
 
-Each of these items include a name and an optional type, if there's no type given it'll default
+Each of these items include a name and an optional type. If there's no type given, it will default
 to string. The list of supported types are listed in the [model](https://github.com/mde/geddy/wiki/Models) documentation.
 If no id property is given then a default id property will be created with the type of string.
 
