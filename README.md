@@ -33,9 +33,9 @@ but still let you get under the hood and tinker if you want.
   * App, resource and scaffold generators
   * Content-negotiation
   * Session support (in-memory, cookie)
-  * Multiple template engine support(EJS, Jade, Mustache, Handlebars)
+  * Multiple template engine support (EJS, Jade, Mustache, Handlebars)
   * Real Time API generation (socket.io integration)
-  * View helpers([Docs](https://github.com/mde/geddy/wiki/View-Helpers))
+  * View helpers ([Docs](https://github.com/mde/geddy/wiki/View-Helpers))
   * Fully non-blocking
 
 ### License
@@ -98,7 +98,7 @@ Go to http://localhost:4000/, and you should see the introduction page.
 ### Generating resources
 
 Use `geddy resource <name> [model properties]` to generate a resource in your application.
-Resources do not generate views, but creates a view directory. A resource route will be
+A resources does not generate a view, but creates a view directory. A resource route will be
 created for you.
 
 ````
@@ -117,17 +117,17 @@ $ curl localhost:4000/snow_dogs.json
 {"params":{"method":"GET","controller":"SnowDogs","action":"index","format":"json"}}
 ```
 
-Geddy generators handle plural inflections for model and controller names. ex: 'person' to 'people'
-To read about the model properties argument jump to [Model properties](#model-properties)
+Geddy generators handle plural inflections for model and controller names (e.g., "person" to "people").
+To read about the model properties argument, see [Model properties](#model-properties).
 
 ### Generating scaffolding
 
 Use `geddy scaffold <name> [model properties]` to generate scaffoling in your application.
-Scaffolding creates full CRUD actions includes views, and will default your configuration to use
-[Mongodb](http://www.mongodb.org/) Resource routes will be created for you.
+Scaffolding creates full CRUD actions, includes views, and will default your configuration to use
+[Mongodb](http://www.mongodb.org/). Resource routes will be created for you.
 
 ````
-mde@localhost:~/work$ geddy resource snow_dog breed:string name:string color:string
+mde@localhost:~/work$ geddy scaffold snow_dog breed:string name:string color:string
 [Added] app/models/snow_dog.js
 [Added] app/controllers/snow_dogs.js
 [Added] Resource snow_dogs route added to config/router.js
@@ -158,27 +158,24 @@ $ curl localhost:4000/snow_dogs
 .....
 ```
 
-Geddy generators handle plural inflections for model and controller names. ex: 'person' to 'people'
-To read about the model properties argument jump to [Model properties](#model-properties)
-
 ### Model properties
 
-Some Geddy generators (resource, scaffold and model) have a argument that takes a list of model
+Some Geddy generators (resource, scaffold, and model) have an argument that takes a list of model
 properties. Here's an example of a resource with some properties:
 
 ```
 geddy resource user name admin:boolean lastLogin:datetime
 ```
 
-Each of these items include a name and an optional type, if there's no type given it'll default
+Each of these items include a name and an optional type. If there's no type given, it will default
 to string. The list of supported types are listed in the [model](https://github.com/mde/geddy/wiki/Models) documentation.
-If no id property is given then a default id property will be created with the type of string.
+If no id property is given, then a default id property will be created with the type of string.
 
 You can also use custom default properties:
 ```
 geddy resource user name:default admin:boolean
 ```
-The above example will use the property `name`(string) to display the items in the views instead of the default ID property, this way when generating scaffolds, it will look better out of the box.
+The above example will use the property `name`(string) to display the items in the views instead of the default ID property. This way when generating scaffolds, it will look better out of the box.
 
 ### Routes
 
@@ -205,29 +202,30 @@ router.resource('hemispheres');
 ### Resources and controllers
 
 Geddy's resource-based routes create url/request-method mappings
-for easy CRUD operations like this:
+for easy CRUD operations:
 
-GET */snow_dogs[.extension]<br/>
+```
+GET */snow_dogs[.extension]
 (SnowDogs controller, index action)
 
-GET */snow_dogs/add[.extension]<br/>
-(SnowDogs controller, add action, for any new-resource template
--- "new" is not usable as a JavaScript action name)
+GET */snow_dogs/add[.extension]
+(SnowDogs controller, add action, for any new resource template; "new" is not usable as a JavaScript action name)
 
-POST */snow_dogs[.extension]<br/>
+POST */snow_dogs[.extension]
 (SnowDogs controller, create action)
 
-GET */snow_dogs/:id[.extension]<br/>
+GET */snow_dogs/:id[.extension]
 (SnowDogs controller, show action)
 
-GET */snow_dogs/:id/edit[.extension]<br/>
+GET */snow_dogs/:id/edit[.extension]
 (SnowDogs controller, edit action)
 
-PUT */snow_dogs/:id[.extension]<br/>
+PUT */snow_dogs/:id[.extension]
 (SnowDogs controller, update action)
 
-DELETE */snow_dogs/:id[.extension]<br/>
+DELETE */snow_dogs/:id[.extension]
 (SnowDogs controller, remove action)
+```
 
 A simple controller that just responds with any
 form-post/query-string params looks like this:
@@ -268,7 +266,7 @@ exports.SnowDogs = SnowDogs;
 ## Content-negotiation
 
 Geddy can perform content-negotiation, and respond with with the
-correct format based on the requested filename-extension.
+correct format based on the requested filename extension.
 
 If you have a JSON-serializable JavaScript object you want to
 return in JSON format, pass your JavaScript object to the
@@ -284,7 +282,7 @@ this.show = function (params) {
 ```
 ## Models and validations
 
-Geddy has a simple way of defining models, with a full-featured
+Geddy has a simple way of defining models with a full-featured
 set of data validations. The syntax is similar to models in
 Ruby's ActiveRecord or DataMapper.
 
@@ -367,7 +365,7 @@ util.puts(user.errors.password);
 ## Running the tests
 
 In the geddy project directory, run `jake test`. The tests simply
-use NodeJS's `assert` library, which throws an error on failure.
+use NodeJS's `assert` module, which throws an error on failure.
 If there are no errors, the tests all ran successfully.
 
 - - -
