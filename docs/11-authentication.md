@@ -30,23 +30,28 @@ you need.
 
 #### Configuring Passport
 
-You'll need to add the settings for Passport in your app's environment.js file.
-That includes the redirect locations for after an auth failure or success, and
-the OAuth keys for your app. The setting will look something like this:
-
-```javascript
-  passport: {
-    successRedirect: '/'
-  , failureRedirect: '/login'
-  , twitter: {
-      consumerKey: 'XXXXXXX'
-    , consumerSecret: 'XXXXXXX'
-    }
-  , facebook: {
-      clientID: 'XXXXXXX'
-    , clientSecret: 'XXXXXXX'
+You'll need to add the settings for Passport in your config/secrets.json file.
+That includes the redirect locations for after an auth failure/success, and the
+OAuth keys for your app. The setting will look similar to this: 
+```json
+{
+  "passport": {
+    "successRedirect": "/",
+    "failureRedirect": "/login",
+    "twitter": {
+      "consumerKey": "XXXXXX",
+      "consumerSecret": "XXXXXX"
+    },
+    "facebook": {
+      "clientID": "XXXXXX",
+      "clientSecret": "XXXXXX"
+    },
+    "yammer": {
+      "clientID": "XXXXXX",
+      "clientSecret": "XXXXXX"
     }
   }
+}
 ```
 
 #### Local users
