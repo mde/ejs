@@ -34,11 +34,11 @@ html(lang="en")
           a.btn.btn-navbar(data-toggle="collapse", data-target=".nav-collapse")
             span.i-bar
               i.icon-chevron-down.icon-white
-          != linkTo('Geddy App', '/', { class: 'brand' })
+          != linkTo('Geddy App', mainsPath, { class: 'brand' })
           .nav-collapse
             ul.nav
               li.active
-                != linkTo('Home', '/')
+                != linkTo('Home', mainsPath)
               li
                 != linkTo('Tutorial', 'http://geddyjs.org/tutorial')
               li
