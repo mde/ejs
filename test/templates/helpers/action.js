@@ -31,19 +31,19 @@ var actionHelper = require('../../../lib/template/helpers/action')
 routeData = [
     {
         name: 'tasksPath'
-      , data: {controller: 'tasks', action: 'index'}
+      , data: {params: {controller: 'tasks', action: 'index'}, parts: ['/tasks', {path: '.:format'}]}
       , expected: {name: 'tasksPath', action: '/tasks'}
     }, {
         name: 'addTaskPath'
-      , data: {controller: 'tasks', action: 'add'}
+      , data: {params: {controller: 'tasks', action: 'add'}}
       , expected: {name: 'addTaskPath', action: '/tasks/add'}
     }, {
         name: 'taskPath'
-      , data: {controller: 'tasks', action: 'show'}
+      , data: {params: {controller: 'tasks', action: 'show'}, path: '/tasks/:id(.:format)'}
       , expected: {name: 'taskPath', action: '/tasks/1'}
     }, {
         name: 'editTaskPath'
-      , data: {controller: 'tasks', action: 'edit'}
+      , data: {params: {controller: 'tasks', action: 'edit'}, path: '/tasks/:id/edit(.:format)'}
       , expected: {name: 'editTaskPath', action: '/tasks/1/edit'}
     }
 ];
