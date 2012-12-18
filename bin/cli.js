@@ -62,6 +62,8 @@ usage = [
   , '  controller <name>           Generate a new controller including an index view'
   , '                                and and a route'
   , '  model <name> [attrs]        Generate a new model'
+  , '  routes [query]              Shows routes for a given resource route or all '
+  , '                                routes if empty'
   , ''
   , 'Examples:'
   , '  geddy                    Start Geddy on localhost:4000 in development mode'
@@ -76,6 +78,8 @@ usage = [
   , '  geddy scaffold user name:string:default'
   , '                           Generate a users scaffolding user name as the default'
   , '                             value to display data with'
+  , '  geddy routes user        Show all routes for the user resource'
+  , '  geddy routes user.index  Show the index route for the user resource'
   , ''
 ].join('\n');
 
@@ -137,7 +141,8 @@ if (cmds.length) {
       cmds[0] == 'db:init' ||
       cmds[0] == 'auth' ||
       cmds[0] == 'auth:update' ||
-      cmds[0] == 'console')
+      cmds[0] == 'console' ||
+      cmds[0] == 'routes')
       && !cmds[1]) {
     throw new Error(cmds[0] + ' command requires another argument.');
   }
@@ -212,6 +217,10 @@ if (cmds.length) {
     case 'secret':
       // Generating new app secret
       cmd += 'gen:secret';
+      break;
+    case 'routes':
+      // Show routes(Optionally empty)
+      cmd += 'routes:show[' + (cmds[1] || '') + ']';
       break;
     default:
       die(cmds[0] + ' is not a Geddy command.');

@@ -10,6 +10,7 @@ var cwd = process.cwd()
   , utils = require('../lib/utils')
   , Adapter = require('../lib/template/adapters')
   , getRouterPath
+  , getRoutes
   , addRoute
   , mixinJSONData;
 
@@ -36,6 +37,46 @@ getRouterPath = function () {
     }
   });
   return routerPath;
+};
+
+getRoutes = function (resource) {
+  if (!resource) {
+    return geddy.router.toString();
+  }
+
+  var rts = []
+    , _rt
+    , i;
+
+  // If a full route name was given add it to the list(e,g,. users.index)
+  if (resource.match(/.+\..+/)) {
+    var res = resource.split('.')
+      , cont = res[0]
+      , action = res[1];
+
+    for (i in geddy.router.routes) {
+      _rt = geddy.router.routes[i];
+
+        if (_rt.params.controller.match(cont) &&
+          _rt.params.action.match(action)) {
+        rts.push(_rt);
+      }
+    }
+  }
+  else {
+    for (i in geddy.router.routes) {
+      _rt = geddy.router.routes[i];
+
+      if (_rt.params.controller.match(resource) ||
+          _rt.params.action.match(resource)) {
+        rts.push(_rt);
+      }
+    }
+  }
+
+  return rts.map(function (rt) {
+    return rt.toString();
+  }).join('\n');
 };
 
 addRoute = function (routerPath, newRoute) {
@@ -159,10 +200,23 @@ namespace('console', function () {
           console.log('No data');
         }
       };
+
+      rl.context.routes = function (resource) {
+        console.log(getRoutes(resource));
+      };
     });
 
     t.invoke(env);
   });
+});
+
+namespace('routes', function () {
+
+  task('show', ['env:init'], {async: true}, function (resource) {
+    console.log('Showing route results for "' + resource + '"');
+    console.log(getRoutes(resource));
+  });
+
 });
 
 namespace('db', function () {
