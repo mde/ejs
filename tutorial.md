@@ -41,6 +41,7 @@ the help dialog.
 #### Options:
 
 -   `--environment`, `-e`: Environment to use
+-   `--bind`, `-b`: IP to bind the server to (default: localhost)
 -   `--port`, `-p`: Port to connect server to
 -   `--workers`, `-w`: Number of workers to use (default: 1)
 -   `--debug`, `-d`: Sets the log level to output debug messages to

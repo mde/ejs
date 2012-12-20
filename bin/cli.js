@@ -36,6 +36,7 @@ usage = [
   , ''
   , 'Options:'
   , '  --environment, -e   Environment to use'
+  , '  --bind, -b          IP to bind the server to (default: localhost)'
   , '  --port, -p          Port to connect to'
   , '  --workers, -w       Number of worker processes to start (default: 1)'
   , '  --debug, -d         Sets the log level to output debug messages to'
@@ -86,6 +87,7 @@ usage = [
 // Options available
 optsMap = [
     { full: 'origins', abbr: 'o' }
+  , { full: 'bind', abbr: 'b' }
   , { full: 'port', abbr: 'p' }
   , { full: 'workers', abbr: ['n', 'w'] }
   , { full: 'version', abbr: ['v', 'V'], args: false }
