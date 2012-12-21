@@ -1,3 +1,15 @@
+### 0.6
++ Models can now be used on the front end
++ Added the `-rt` option for app generation
++ Added realtime system to models
++ Added a connect compatibility mode to before and after filters
++ Added authentication system
++ Added named associations
++ Made deploying to PaaS's a little easier
++ New locals added to i18n
++ Removed Templato dependency
++ Fixed a ton more bugs (keep 'em coming!)
+
 ### 0.5
 + Brand new Web site with extensive docs
 + Removed models from geddy core, moved into Model project
