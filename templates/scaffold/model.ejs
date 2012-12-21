@@ -1,15 +1,23 @@
 var <%= names.constructor.singular %> = function () {
+<%
+var propertyOutput = [],
+    currentProperty;
 
+for (var i in properties) {
+  if (properties[i].name && properties[i].name !== "id") {
+    currentProperty = properties[i].name + ": {type: '" + properties[i].type + "'";
+
+    if (i === "default") {
+      currentProperty += ", required: true";
+    }
+
+    currentProperty += "}";
+    propertyOutput.push(currentProperty);
+  }
+}
+%>
   this.defineProperties({
-<% for (var i in properties) { -%>
-<% if (properties[i].name && properties[i].name !== 'id') { -%>
-<% if (i === 'default') { -%>
-    <%= properties[i].name %>: {type: '<%= properties[i].type %>', required: true},
-<% } else { -%>
-    <%= properties[i].name %>: {type: '<%= properties[i].type %>'},
-<% } -%>
-<% } -%>
-<% } -%>
+    <%- propertyOutput.join(",\n    "); %>
   });
 
 <% for(var i in properties) { -%>
