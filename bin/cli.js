@@ -86,21 +86,76 @@ usage = [
 
 // Options available
 optsMap = [
-    { full: 'origins', abbr: 'o' }
-  , { full: 'bind', abbr: 'b' }
-  , { full: 'port', abbr: 'p' }
-  , { full: 'workers', abbr: ['n', 'w'] }
-  , { full: 'version', abbr: ['v', 'V'], args: false }
-  , { full: 'help', abbr: 'h', args: false }
-  , { full: 'debug', abbr: 'd' }
-  , { full: 'loglevel', abbr: 'l' }
-  , { full: 'environment', abbr: 'e' }
-  , { full: 'spawned', abbr: ['s', 'q', 'Q'] }
-  , { full: 'jade', abbr: 'j', args: false }
-  , { full: 'handle', abbr: 'H', args: false }
-  , { full: 'handlebars', abbr: 'H', args: false }
-  , { full: 'mustache', abbr: 'm', args: false }
-  , { full: 'realtime', abbr: 'rt', args: false}
+  { full: 'origins'
+  , abbr: 'o'
+  , args: true
+  , canon: 'origins'
+  }
+, { full: ['hostname', 'bind']
+  , abbr: 'b'
+  , args: true
+  , canon: 'hostname'
+  }
+, { full: 'port'
+  , abbr: 'p'
+  , args: true
+  , canon: 'port'
+  }
+, { full: 'workers'
+  , abbr: ['n', 'w']
+  , args: true
+  , canon: 'workers'
+  }
+, { full: 'version'
+  , abbr: ['v', 'V']
+  , args: false
+  , canon: 'version'
+  }
+, { full: 'help'
+  , abbr: 'h'
+  , args: false
+  , canon: 'help'
+  }
+, { full: 'debug'
+  , abbr: 'd'
+  , args: true
+  , canon: 'debug'
+  }
+, { full: 'loglevel'
+  , abbr: 'l'
+  , args: true
+  , canon: 'loglevel'
+  }
+, { full: 'environment'
+  , abbr: 'e'
+  , args: true
+  , canon: 'environment'
+  }
+, { full: 'spawned'
+  , abbr: ['s', 'q', 'Q']
+  , args: true
+  , canon: 'spawned'
+  }
+, { full: 'jade'
+  , abbr: 'j'
+  , args: false
+  , canon: 'jade'
+  }
+, { full: ['handle', 'handlebars']
+  , abbr: 'H'
+  , args: false
+  , canon: 'handlebars'
+  }
+, { full: 'mustache'
+  , abbr: 'm'
+  , args: false
+  , canon: 'mustache'
+  }
+, { full: 'realtime'
+  , abbr: 'rt'
+  , args: false
+  , canon: 'realtime'
+  }
 ];
 
 // Parse optsMap and generate options and cmd commands

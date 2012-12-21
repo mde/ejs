@@ -1,75 +1,88 @@
 var assert = require('assert')
   , parseopts = require('../lib/parseopts')
   , Parser = parseopts.Parser
-  , tests;
+  , tests
+  , _opts;
 
-tests = new function () {
-  var _opts = [
-    {
-    full: 'howdy'
-    , abbr: 'h'
-    }
-  ];
+ _opts = [
+  { full: 'howdy'
+  , abbr: 'h'
+  , args: true
+  , canon: 'howdy'
+  }
+, { full: ['derp', 'zoom']
+  , abbr: 'd'
+  , args: false
+  , canon: 'derp'
+  }
+, { full: ['zong', 'asdf']
+  , abbr: ['n', 'b']
+  , args: false
+  , canon: 'zong'
+  }
+];
 
-  this.testConstrutor = function () {
+
+tests = {
+  'constructor': function () {
     var p = new Parser(_opts);
-    assert.equal(p.longOpts.howdy.full, 'howdy');
-    assert.equal(p.shortOpts.h.full, 'howdy');
-  };
+    assert.equal(p.longOpts.howdy.canon, 'howdy');
+    assert.equal(p.shortOpts.h.canon, 'howdy');
+  }
 
-  this.testParseShort = function () {
+, 'parse short': function () {
     var p = new Parser(_opts);
     p.parse(['-h', 'foo']);
     assert.equal(p.opts.howdy, 'foo');
-  };
+  }
 
-  this.testParseLong = function () {
+, 'parse long': function () {
     var p = new Parser(_opts);
     p.parse(['--howdy=bar']);
     assert.equal(p.opts.howdy, 'bar');
-  };
+  }
 
-  this.testParseShortWithCmds = function () {
+, 'parse short with cmds': function () {
     var p = new Parser(_opts);
     p.parse(['asdf', '-h', 'foo', 'qwer']);
     assert.equal(p.opts.howdy, 'foo');
     assert.equal(p.cmds[0], 'asdf');
     assert.equal(p.cmds[1], 'qwer');
-  };
+  }
 
-  this.testParseShortWithCmds = function () {
+, 'parse short with cmds': function () {
     var p = new Parser(_opts);
     p.parse(['asdf', '--howdy=bar', 'qwer']);
     assert.equal(p.opts.howdy, 'bar');
     assert.equal(p.cmds[0], 'asdf');
     assert.equal(p.cmds[1], 'qwer');
-  };
+  }
 
-  this.testParseShortNullValue = function () {
+, 'parse short null value': function () {
     var p = new Parser(_opts);
     p.parse(['-h']);
-    assert.equal(p.opts.howdy.full, null);
-  };
+    assert.equal(p.opts.howdy.canon, null);
+  }
 
-  this.testParseLongNullValue = function () {
+, 'parse long null value': function () {
     var p = new Parser(_opts);
     p.parse(['--howdy']);
-    assert.equal(p.opts.howdy.full, null);
-  };
+    assert.equal(p.opts.howdy.canon, null);
+  }
 
-  this.testParseShortNotPassed = function () {
+, 'parse short not passed': function () {
     var p = new Parser(_opts);
     p.parse(['foo']);
     assert.equal(p.opts.howdy, undefined);
-  };
+  }
 
-  this.testParseLongNotPassed = function () {
+, 'parse long not passed': function () {
     var p = new Parser(_opts);
     p.parse(['foo']);
     assert.equal(p.opts.howdy, undefined);
-  };
+  }
 
-  this.testParseShortDoesntExist = function () {
+, 'parse short doesn\'t exist': function () {
     var p = new Parser(_opts);
     try {
       p.parse(['-i', 'foo']);
@@ -77,10 +90,9 @@ tests = new function () {
     catch (e) {
       assert.ok(e.message.indexOf('Unknown option') > -1);
     }
-  };
+  }
 
-  this.testParseLongDoesntExist = function () {
-    var p = new Parser(_opts);
+, 'parse long doesn\'t exist': function () {
     var p = new Parser(_opts);
     try {
       p.parse(['--hello=bar']);
@@ -88,9 +100,19 @@ tests = new function () {
     catch (e) {
       assert.ok(e.message.indexOf('Unknown option') > -1);
     }
-  };
+  }
 
-}();
+, 'long alias': function () {
+    var p = new Parser(_opts);
+    assert.equal(p.longOpts.derp, p.longOpts.zoom);
+  }
+
+, 'short alias': function () {
+    var p = new Parser(_opts);
+    assert.equal(p.shortOpts.n, p.shortOpts.b);
+  }
+
+};
 
 module.exports = tests;
 
