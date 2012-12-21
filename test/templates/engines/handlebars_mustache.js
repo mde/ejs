@@ -80,6 +80,19 @@ tests = {
     var html = '<p>foo</p>',
       str = '<p>{{#items}}{{foo}}{{/items}}</p>';
     assert.equal(html, render(str, {items: [{foo: 'foo'}]}));
+  },
+
+  'test hash arguments' : function () {
+    var html = 'foobar.com/main/index'
+      , tpl = "{{url host='foobar.com' controller='main' action='index'}}"
+      , helper = function(options) {
+        console.log(options);
+        return options.host + '/' + options.controller + '/' + options.action
+      }
+
+    var adapter = new Adapter({engine: 'handlebars', template: tpl});
+    adapter.registerHelper('url', helper);
+    assert.equal(html, adapter.render());
   }
 
 };
