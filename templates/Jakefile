@@ -564,6 +564,7 @@ namespace('gen', function () {
       throw new Error('No controller name specified.');
     }
 
+
     _writeTemplate(name, 'resource/controller', path.join('app', 'controllers'),
         {inflection: 'plural', bare: false});
   });
@@ -594,7 +595,7 @@ namespace('gen', function () {
     if (!name) {
       throw new Error('No controller name specified.');
     }
-    if (!engine) {
+    if (!engine || engine == 'default') {
       engine = 'ejs';
     }
 
