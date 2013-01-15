@@ -232,15 +232,15 @@ if (cmds.length) {
       jakeArgs = cmds.slice(1);
       break;
     case 'console':
-      // Create DBs
+      // Start console
       cmd += 'console:start[' + (cmds[1] || 'development') + ']';
       break;
     case 'auth':
-      // Create DBs
-      cmd += 'auth:init';
+      // Create authentication
+      cmd += 'auth:init[' + engineCmd.substr(1) + ']';
       break;
     case 'auth:update':
-      // Create DBs
+      // Update authentication
       cmd += 'auth:update';
       break;
     case 'db:init':

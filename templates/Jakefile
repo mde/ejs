@@ -862,11 +862,15 @@ namespace('auth', function () {
     }, {printStdout: true});
   });
 
-  task('init', {async: true}, function () {
+  task('init', {async: true}, function (engine) {
     var readline = require('readline')
       , fromBase = path.join(cwd, 'node_modules', 'geddy-passport')
       , install = false
       , rl, installPackages, passportCopy;
+
+    if (!engine || engine == 'default') {
+      engine = 'ejs';
+    }
 
     // Create and start the prompt
     rl = readline.createInterface({
@@ -892,7 +896,7 @@ namespace('auth', function () {
 
       console.log('Installing', geddyPassport);
       jake.exec('npm uninstall ' + geddyPassport +
-        ' && npm install ' + geddyPassport, installPackages, {printStdout: true})
+        ' && npm install ' + geddyPassport, installPackages, {printStdout: true});
     });
 
     // Gets the package versions from geddy-passport's package.json
@@ -917,17 +921,28 @@ namespace('auth', function () {
         , routerPath = getRouterPath()
         , newRoute
         , from
-        , to;
+        , to
+        , i;
 
       // Copy files to the application
-      list.forEach(function (item) {
+      for (i = 0; i < list.length; i++) {
+        item = list[i];
         from = path.join(fromBase, item);
         to = path.dirname(path.join(cwd, item));
+
+        if (item.match('/app/views')) {
+          // If the view is not for the given engine, skip it
+          if (!item.match(engine)) {
+            continue;
+          }
+
+          to = to.replace(engine, "");
+        }
 
         jake.mkdirP(to);
         console.log('Creating file:', item);
         jake.cpR(from, to, {silent: true});
-      });
+      }
 
       // Add new routes to router
       if (routerPath) {
