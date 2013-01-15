@@ -64,6 +64,7 @@ usage = [
   , '  model <name> [attrs]        Generate a new model'
   , '  routes [query]              Shows routes for a given resource route or all '
   , '                                routes if empty'
+  , '  auth[:update]               Creates user authentication for you, using Passport.'
   , ''
   , 'Examples:'
   , '  geddy                    Start Geddy on localhost:4000 in development mode'

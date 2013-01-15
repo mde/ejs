@@ -9,6 +9,7 @@ var cwd = process.cwd()
   , path = require('path')
   , utils = require('../lib/utils')
   , Adapter = require('../lib/template/adapters')
+  , geddyPassport = 'geddy-passport@0.0.x'
   , getRouterPath
   , getRoutes
   , addRoute
@@ -841,113 +842,143 @@ namespace('gen', function () {
 namespace('auth', function () {
 
   task('update', {async: true}, function () {
-      // FIXME: Pull these version numbers out of geddy-passport's package.json
-    var packages = 'geddy-passport@0.0.x'
-      , updatePath = path.join('geddy-passport', 'app',
-          'helpers', 'passport');
+    var updatePath = path.join('geddy-passport', 'app', 'helpers', 'passport')
+      , from
+      , to;
 
-    console.log('Updating helper from ' + packages + '...');
-    jake.exec('npm uninstall ' + packages +
-        ' && npm install ' + packages, function () {
-      var from = path.join(cwd, 'node_modules', updatePath)
-        , to = path.join(cwd, 'app', 'helpers');
-      jake.rmRf(path.join(to, 'passport'), {silent: true});
+    console.log('Updating passport helpers from', geddyPassport);
+    jake.exec('npm uninstall ' + geddyPassport +
+      ' && npm install ' + geddyPassport, function () {
+      from = path.join(cwd, 'node_modules', updatePath);
+      to = path.join(cwd, 'app', 'helpers');
+
+      jake.rmRf(path.join(cwd, 'passport'), {silent: true});
       jake.cpR(from, to, {silent: true});
-      console.log('Updated helper from ' + packages);
-      console.log('Cleaning up...');
-      jake.exec('npm uninstall geddy-passport', function () {
+
+      console.log("\nCleaning up...");
+      jake.exec('npm uninstall ' + geddyPassport, function () {
         complete();
       });
-
     }, {printStdout: true});
   });
 
   task('init', {async: true}, function () {
-    var go = false
-      // FIXME: Pull these version numbers out of geddy-passport's package.json
-      , packages = 'geddy-passport@0.0.x passport@0.1.x passport-local@0.1.x ' +
-            'passport-facebook@0.1.x passport-twitter@0.1.x passport-yammer@0.1.x'
-      , readline = require('readline')
-      , rl = readline.createInterface({
-          input: process.stdin
-        , output: process.stdout
-        })
-      , fromBase = path.join(cwd, 'node_modules', 'geddy-passport');
+    var readline = require('readline')
+      , fromBase = path.join(cwd, 'node_modules', 'geddy-passport')
+      , install = false
+      , rl, installPackages, passportCopy;
 
-    rl.setPrompt('This command will create/overwrite files in your app.\n' +
-        'Do you wish to continue? (yes|no)\n');
+    // Create and start the prompt
+    rl = readline.createInterface({
+        input: process.stdin
+      , output: process.stdout
+    });
+    rl.setPrompt("WARNING: This command will create/overwrite files in your app.\n" +
+      "Do you wish to continue?(yes|no)\n\n");
     rl.prompt();
 
-    rl.addListener('line', function (line) {
+    rl.on('line', function (line) {
       if (line === 'yes' || line === 'y') {
-        go = true;
+        install = true;
       }
+
       rl.close();
     });
 
-    rl.addListener('close', function () {
-      if (go) {
-        console.log('Installing ' + packages + '...');
-        jake.exec('npm uninstall ' + packages +
-            ' && npm install ' + packages, function () {
-          var list = fs.readFileSync(path.join(fromBase, 'file_list.json'))
-            , routerPath = getRouterPath()
-            , newRoute;
-
-          list = JSON.parse(list.toString());
-          list.forEach(function (item) {
-            var from = path.join(fromBase, item)
-              , to = path.dirname(path.join(cwd, item));
-            jake.mkdirP(to);
-            console.log('Creating file: ' + item);
-            jake.cpR(from, to, {silent: true});
-          });
-
-          if (routerPath) {
-            if (routerPath.match('.coffee')) {
-              throw new Error(
-                  'Geddy passport integration does not support CoffeeScript.');
-            }
-            else {
-              newRoute = "router.get('/login').to('Main.login');\n" +
-              "router.get('/logout').to('Main.logout');\n" +
-              "router.post('/auth/local').to('Auth.local');\n" +
-              "router.get('/auth/twitter').to('Auth.twitter');\n" +
-              "router.get('/auth/twitter/callback').to('Auth.twitterCallback');\n" +
-              "router.get('/auth/facebook').to('Auth.facebook');\n" +
-              "router.get('/auth/facebook/callback').to('Auth.facebookCallback');\n" +
-              "router.get('/auth/yammer').to('Auth.yammer');\n" +
-              "router.get('/auth/yammer/callback').to('Auth.yammerCallback');\n" +
-              "router.resource('users');";
-
-              if (addRoute(routerPath, newRoute)) {
-                console.log('Added authentication routes:\n' + newRoute);
-              }
-              else {
-                console.log('Authentication routes already defined in ' +
-                  routerPath);
-              }
-            }
-          }
-          else {
-            console.log('There is no router file to add routes too');
-          }
-
-          console.log('Creating secrets.json file with stubbed-out Passport config.');
-          jake.cpR(path.join(fromBase, 'config', 'secrets.json.template'),
-              path.join(cwd, 'config', 'secrets.json'), {silent: true});
-
-          jake.Task['gen:secret'].invoke();
-
-          console.log('Cleaning up...');
-          jake.exec('npm uninstall geddy-passport', function () {
-            console.log('Please set up your Passport config in config/secrets.json');
-            complete();
-          });
-
-        }, {printStdout: true});
+    rl.on('close', function () {
+      if (!install) {
+        return;
       }
+
+      console.log('Installing', geddyPassport);
+      jake.exec('npm uninstall ' + geddyPassport +
+        ' && npm install ' + geddyPassport, installPackages, {printStdout: true})
     });
+
+    // Gets the package versions from geddy-passport's package.json
+    // and installs them, then calls passportCopy
+    installPackages = function () {
+      var deps = require(path.join(fromBase, 'package')).dependencies
+        , packages = ''
+        , k;
+
+      for (k in deps) {
+        packages += k + '@' + deps[k] + ' ';
+      }
+
+      console.log("\nInstalling", packages);
+      jake.exec('npm uninstall ' + packages +
+        ' && npm install ' + packages, passportCopy, {printStdout: true});
+    };
+
+    // Copy the contents of geddy-passport into the application
+    passportCopy = function () {
+      var list = require(path.join(fromBase, 'file_list'))
+        , routerPath = getRouterPath()
+        , newRoute
+        , from
+        , to;
+
+      // Copy files to the application
+      list.forEach(function (item) {
+        from = path.join(fromBase, item);
+        to = path.dirname(path.join(cwd, item));
+
+        jake.mkdirP(to);
+        console.log('Creating file:', item);
+        jake.cpR(from, to, {silent: true});
+      });
+
+      // Add new routes to router
+      if (routerPath) {
+        // CoffeeScript routes
+        if (routerPath.match('.coffee')) {
+          newRoute = "router.get('/login').to 'Main.login'\n" +
+            "router.get('/logout').to 'Main.logout'\n" +
+            "router.post('/auth/local').to 'Auth.local'\n" +
+            "router.get('/auth/twitter').to 'Auth.twitter'\n" +
+            "router.get('/auth/twitter/callback').to 'Auth.twitterCallback'\n" +
+            "router.get('/auth/facebook').to 'Auth.facebook'\n" +
+            "router.get('/auth/facebook/callback').to 'Auth.facebookCallback'\n" +
+            "router.get('/auth/yammer').to 'Auth.yammer'\n" +
+            "router.get('/auth/yammer/callback').to 'Auth.yammerCallback'\n" +
+            "router.resource 'users'";
+        } else {
+          newRoute = "router.get('/login').to('Main.login');\n" +
+            "router.get('/logout').to('Main.logout');\n" +
+            "router.post('/auth/local').to('Auth.local');\n" +
+            "router.get('/auth/twitter').to('Auth.twitter');\n" +
+            "router.get('/auth/twitter/callback').to('Auth.twitterCallback');\n" +
+            "router.get('/auth/facebook').to('Auth.facebook');\n" +
+            "router.get('/auth/facebook/callback').to('Auth.facebookCallback');\n" +
+            "router.get('/auth/yammer').to('Auth.yammer');\n" +
+            "router.get('/auth/yammer/callback').to('Auth.yammerCallback');\n" +
+            "router.resource('users');";
+        }
+
+        if (addRoute(routerPath, "\n" + newRoute)) {
+          console.log('\nAdded authentication routes:\n' + newRoute);
+        } else {
+          console.log('\nAuthentication routes already defined in', routerPath);
+        }
+      }
+      else {
+        console.log('\nThere is no router file to add routes too.');
+      }
+
+      // Create secrets and copy the secrets template
+      console.log("\nCreating secrets.json file with stubbed-out Passport config.");
+      jake.cpR(path.join(fromBase, 'config', 'secrets.json.template'),
+        path.join(cwd, 'config', 'secrets.json'), {silent: true});
+      jake.Task['gen:secret'].invoke();
+
+      // Remove geddy-passport as it isn't needed anymore
+      console.log('\nCleaning up...');
+      jake.exec('npm uninstall geddy-passport', function () {
+        console.log('Please set up your Passport config in config/secrets.json');
+        complete();
+      });
+    };
   });
 
 });
