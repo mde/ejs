@@ -677,6 +677,9 @@ namespace('gen', function () {
       case 'mustache':
         ext += '.ms';
         break;
+      case 'swig':
+        ext += '.swig';
+        break;
     }
 
     // Set application layout path
@@ -758,6 +761,9 @@ namespace('gen', function () {
         break;
       case 'mustache':
         ext += '.ms';
+        break;
+      case 'swig':
+        ext += '.swig';
         break;
     }
 
