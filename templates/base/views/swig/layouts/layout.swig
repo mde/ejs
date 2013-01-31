@@ -39,6 +39,8 @@
           <div class="nav-collapse">
             <ul class="nav">
               <li class="active"><a href="{{mainsPath}}">Home</a></li>
+              <li class="active"><a href="http://geddyjs.org/tutorial">Tutorial</a></li>
+              <li class="active"><a href="http://geddyjs.org/documentation">Docs</a></li>
             </ul>
           </div><!--/.nav-collapse -->
         </div>
