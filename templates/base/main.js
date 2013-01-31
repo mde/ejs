@@ -18,10 +18,21 @@
 
 var Main = function () {
   this.index = function (req, resp, params) {
+    // If using SWIG as your templating engine, you'll need to pass a couple extra options...
+    // Pass the 'layout' parameter to the view.  This is used in the SWIG view to define which layout file to use
+    this.respond({params: params, layout: process.cwd() + '/app/views/layouts/layout.swig'}, {
+      format: 'html'
+    , template: 'app/views/main/index'
+    , layout: false // Tells geddy to use it's 'empty' layout.  This allows us to define our layout files within each swig partial view
+    });
+
+    // Non-swig example
+    /*
     this.respond(params, {
       format: 'html'
     , template: 'app/views/main/index'
     });
+    */
   };
 };
 

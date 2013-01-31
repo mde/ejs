@@ -1,6 +1,9 @@
+{% extends layout %}
+{% block content %}
 <div class="hero-unit">
   <h3>Params</h3>
-  {{#params}}
+  {% for param in params %}
   <p>{{action}} action on {{controller}} controller.</p>
-  {{/params}}
+  {% endfor %}
 </div>
+{% endblock %}

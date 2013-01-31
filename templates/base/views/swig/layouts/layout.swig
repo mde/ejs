@@ -38,16 +38,16 @@
           <a class="brand" href="{{mainsPath}}">Geddy App</a>
           <div class="nav-collapse">
             <ul class="nav">
-              <li class="active">{{{linkTo 'Home' mainsPath}}}</li>
-              <li>{{{linkTo 'Tutorial' 'http://geddyjs.org/tutorial'}}}</li>
-              <li>{{{linkTo 'Docs' 'http://geddyjs.org/documentation'}}}</li>
+              <li class="active"><a href="{{mainsPath}}">Home</a></li>
+              <!-- <li>{{{linkTo 'Tutorial' 'http://geddyjs.org/tutorial'}}}</li>
+              <li>{{{linkTo 'Docs' 'http://geddyjs.org/documentation'}}}</li> -->
             </ul>
           </div><!--/.nav-collapse -->
         </div>
       </div>
     </div>
     <div class="container">
-      {{{yield}}}
+      {% block content %}{% endblock %}
     </div>
   </body>
 </html>

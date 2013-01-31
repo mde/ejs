@@ -6,7 +6,7 @@
   </head>
   <body>
     <div class="container">
-      {{{yield}}}
+      {% block content %}{% endblock %}
     </div>
   </body>
 </html>
