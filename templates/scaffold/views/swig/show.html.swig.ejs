@@ -1,0 +1,20 @@
+{% extends layout %}
+{% block content %}
+<div class="hero-unit">
+  <h2 class="<%= properties['default'].name || "id" %>">{{ <%= names.property.singular %>.<%= properties['default'].name || "id" %> }}</h2>
+  <a href="/<%= names.property.plural %>/{{params.id}}/edit" class="btn pull-right">Edit this <%= names.property.singular %></a>
+</div>
+
+<h2><%= names.constructor.singular %> Properties</h2>
+{% for prop in <%= names.property.singular %> %}
+<div class="row list-item">
+  <div class="span4">
+    <h3>{{loop.key}}</h3>
+  </div>
+  <div class="span8">
+    <h3><i class="icon-list-alt"></i><span class="">{{ prop }}</span></h3>
+  </div>
+</div>
+{% endfor %}
+
+{% endblock %}

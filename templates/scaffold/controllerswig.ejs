@@ -1,0 +1,105 @@
+var <%= names.constructor.plural %> = function () {
+  this.respondsWith = ['html', 'json', 'xml', 'js', 'txt'];
+
+  this.index = function (req, resp, params) {
+    var self = this;
+
+    geddy.model.<%= names.constructor.singular %>.all(function(err, <%= names.property.plural %>) {
+      self.respond({params: params, <%= names.property.plural %>: <%= names.property.plural %>, layout: process.cwd() + '/app/views/layouts/layout.swig'}, {layout: false});
+    });
+  };
+<% if(!bare) { %>
+  this.add = function (req, resp, params) {
+    this.respond({params: params, layout: process.cwd() + '/app/views/layouts/layout.swig'}, {layout: false});
+  };
+
+  this.create = function (req, resp, params) {
+<% for(var i in properties) { -%>
+<% if(properties[i].name === 'id' && properties[i].type === 'string') { -%>
+    params.id = params.id || geddy.string.uuid(10);
+
+<% } -%>
+<% } -%>
+    var self = this
+      , <%= names.property.singular %> = geddy.model.<%= names.constructor.singular %>.create(params);
+
+    if (!<%= names.property.singular %>.isValid()) {
+      params.errors = <%= names.property.singular %>.errors;
+      self.transfer('add');
+    }
+
+    <%= names.property.singular %>.save(function(err, data) {
+      if (err) {
+        params.errors = err;
+        self.transfer('add');
+      } else {
+        self.redirect({controller: self.name});
+      }
+    });
+  };
+
+  this.show = function (req, resp, params) {
+    var self = this;
+
+    geddy.model.<%= names.constructor.singular %>.first(params.id, function(err, <%= names.property.singular %>) {
+      if (!<%= names.property.singular %>) {
+        var err = new Error();
+        err.statusCode = 400;
+        self.error(err);
+      } else {
+        self.respond({params: params, <%= names.property.singular %>: <%= names.property.singular %>.toObj(), layout: process.cwd() + '/app/views/layouts/layout.swig'}, {layout: false});
+      }
+    });
+  };
+
+  this.edit = function (req, resp, params) {
+    var self = this;
+
+    geddy.model.<%= names.constructor.singular %>.first(params.id, function(err, <%= names.property.singular %>) {
+      if (!<%= names.property.singular %>) {
+        var err = new Error();
+        err.statusCode = 400;
+        self.error(err);
+      } else {
+        self.respond({params: params, <%= names.property.singular %>: <%= names.property.singular %>, layout: process.cwd() + '/app/views/layouts/layout.swig'}, {layout: false});
+      }
+    });
+  };
+
+  this.update = function (req, resp, params) {
+    var self = this;
+
+    geddy.model.<%= names.constructor.singular %>.first(params.id, function(err, <%= names.property.singular %>) {
+      <%= names.property.singular %>.updateAttributes(params);
+      if (!<%= names.property.singular %>.isValid()) {
+        params.errors = <%= names.property.singular %>.errors;
+        self.transfer('edit');
+      }
+
+      <%= names.property.singular %>.save(function(err, data) {
+        if (err) {
+          params.errors = err;
+          self.transfer('edit');
+        } else {
+          self.redirect({controller: self.name});
+        }
+      });
+    });
+  };
+
+  this.destroy = function (req, resp, params) {
+    var self = this;
+
+    geddy.model.<%= names.constructor.singular %>.remove(params.id, function(err) {
+      if (err) {
+        params.errors = err;
+        self.transfer('edit');
+      } else {
+        self.redirect({controller: self.name});
+      }
+    });
+  };
+<% } %>
+};
+
+exports.<%= names.constructor.plural %> = <%= names.constructor.plural %>;
