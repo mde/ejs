@@ -46,6 +46,8 @@ the help dialog.
 -   `--workers`, `-w`: Number of workers to use (default: 1)
 -   `--debug`, `-d`: Sets the log level to output debug messages to
     console
+-   `--swig`: When generating views, use Swig templates(Default:
+    EJS)
 -   `--jade`, `-j`: When generating views, use Jade templates(Default:
     EJS)
 -   `--handle`, `-H`: When generating views, use Handlebars
@@ -84,7 +86,7 @@ learn how to use those commands.
     other secret.
 -   `controller` takes a single argument being a name. It will create a
     new controller, a route and an index view. If you also include the
-    options `--jade`, `--handle` or `--mustache` you can substitute the
+    options `--swig`, `--jade`, `--handle` or `--mustache` you can substitute the
     template language to your liking.
 -   `model` takes one or more arguments, the first being a name and the
     others being a set of model properties. We won't go over model
@@ -99,7 +101,7 @@ learn how to use those commands.
     the others being a set of model properties. Scaffolding includes a
     controller, a model including the given model properties as well as
     a default model adapter a resource route and will create all views.
-    If you also include the options `--jade`, `--handle` or `--mustache`
+    If you also include the options `--swig`, `--jade`, `--handle` or `--mustache`
     you can substitute the template language to your liking.
 -   `console` doesn't take any arguments, it will start a geddy console.
 
