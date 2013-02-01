@@ -444,7 +444,11 @@ namespace('gen', function () {
       jake.mkdirP(path.join(name, dir));
     });
     cps.forEach(function (cp) {
-      jake.cpR(path.join(basePath, cp[0]), path.join(name, cp[1]), {silent: true});
+      if(cp[0] == 'main.js' && engine == 'swig'){
+        jake.cpR(path.join(basePath, 'main.swig.js'), path.join(name, cp[1], 'main.js'), {silent: true});
+      }else if(cp[0] != 'main.swig.js'){
+        jake.cpR(path.join(basePath, cp[0]), path.join(name, cp[1]), {silent: true});
+      }
     });
 
     // one offs
