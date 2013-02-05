@@ -228,8 +228,8 @@ namespace('db', function () {
       , adapter;
 
     if (typeof name == 'string') {
-      if (name.indexOf(',') > -1) {
-        modelNames = name.split(',');
+      if (name.indexOf('%') > -1) {
+        modelNames = name.split('%');
       }
       else {
         modelNames = [name];
