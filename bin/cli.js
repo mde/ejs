@@ -249,7 +249,7 @@ if (cmds.length) {
       break;
     case 'db:createTable':
       // Create DBs
-      cmd += 'db:createTable[' + cmds[1] + ']';
+      cmd += 'db:createTable[' + cmds[1].replace(/,/g, '%') + ']';
       break;
     case 'app':
       // Generating application
