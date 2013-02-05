@@ -5,8 +5,6 @@ require('../lib/geddy')
 var cwd = process.cwd()
   , fs = require('fs')
   , path = require('path')
-  , fs = require('fs')
-  , path = require('path')
   , utils = require('../lib/utils')
   , Adapter = require('../lib/template/adapters')
   , geddyPassport = 'geddy-passport@0.0.x'
@@ -416,7 +414,6 @@ namespace('gen', function () {
       realtime = false;
     }
 
-
     mkdirs = [
       ''
     , 'config'
@@ -502,15 +499,10 @@ namespace('gen', function () {
 
   }, {async: true});
 
-
   // Creates a full scaffold with views, a model, controller and a resource route
   task('scaffold', function (name, realtime, engine, modelProperties) {
     var modelTask = jake.Task['gen:model'];
 
-    /*if (!modelProperties && engine) {
-      modelProperties = engine;
-      engine = '';
-    }*/
     if (!name) {
       throw new Error('No scaffold name specified.');
     }
@@ -691,7 +683,7 @@ namespace('gen', function () {
     appLayoutPath = path.join('app', 'views', 'layouts', 'application');
     // Copy template view to application path
     addActionView = function (action) {
-      jake.cpR(path.join(templateViewDir, action + ext), appViewDir);
+      jake.cpR(path.join(templateViewDir, action + ext + '.ejs'), appViewDir, {silent: true});
     };
 
     jake.mkdirP(appViewDir);
@@ -710,7 +702,7 @@ namespace('gen', function () {
     if (!utils.file.existsSync(appLayoutPath + '.html.ejs') && !utils.file.existsSync(appLayoutPath + '.html.jade') &&
        !utils.file.existsSync(appLayoutPath + '.html.hbs') && !utils.file.existsSync(appLayoutPath + '.html.ms')) {
       // Copy template layout file to apps application layout file
-      jake.cpR(path.join(templateViewDir, 'layout' + ext), appLayoutPath + ext);
+      jake.cpR(path.join(templateViewDir, 'layout' + ext + '.ejs'), appLayoutPath + ext, {silent: true});
     }
 
     // Add engine to package.json if it's not EJS
@@ -808,7 +800,7 @@ namespace('gen', function () {
     if (!utils.file.existsSync(appLayoutPath + '.html.ejs') && !utils.file.existsSync(appLayoutPath + '.html.jade') &&
        !utils.file.existsSync(appLayoutPath + '.html.hbs') && !utils.file.existsSync(appLayoutPath + '.html.ms')) {
       // Copy template layout file to apps application layout file
-      jake.cpR(path.join(templateViewDir, 'layout' + ext), appLayoutPath + ext);
+      jake.cpR(path.join(templateViewDir, 'layout' + ext + '.ejs'), appLayoutPath + ext, {silent: true});
     }
 
     // Add engine to package.json if it's not EJS
@@ -906,6 +898,8 @@ namespace('auth', function () {
         , packages = ''
         , k;
 
+      mixinJSONData(path.join(cwd, 'package.json'), {dependencies: deps});
+
       for (k in deps) {
         packages += k + '@' + deps[k] + ' ';
       }
@@ -922,6 +916,7 @@ namespace('auth', function () {
         , newRoute
         , from
         , to
+        , p
         , i;
 
       // Copy files to the application
@@ -940,7 +935,17 @@ namespace('auth', function () {
         }
 
         jake.mkdirP(to);
-        console.log('Creating file:', item);
+        console.log('Creating file:', path.join(to, path.basename(item)));
+
+        // Delete any existing interferring templates
+        if (item.match('/app/views')) {
+          ['.jade', '.ejs', '.ms', '.mustache', '.hbs', '.handlebars'].forEach(function (ext) {
+            p = path.basename(item, path.extname(item)) + ext;
+
+            jake.rmRf(path.join(to, p), {silent: true});
+          });
+        }
+
         jake.cpR(from, to, {silent: true});
       }
 
