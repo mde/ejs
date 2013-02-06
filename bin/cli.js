@@ -146,6 +146,11 @@ optsMap = [
   , args: false
   , canon: 'handlebars'
   }
+, { full: ['handle', 'swig']
+  , abbr: 'S'
+  , args: false
+  , canon: 'swig'
+  }
 , { full: 'mustache'
   , abbr: 'm'
   , args: false
@@ -211,6 +216,8 @@ if (cmds.length) {
     engineCmd = ',' + 'handlebars';
   } else if (opts.mustache) {
     engineCmd = ',' + 'mustache';
+  } else if (opts.swig) {
+    engineCmd = ',' + 'swig';
   } else engineCmd = ',default';
 
   if (opts.realtime) {

@@ -444,7 +444,11 @@ namespace('gen', function () {
       jake.mkdirP(path.join(name, dir));
     });
     cps.forEach(function (cp) {
-      jake.cpR(path.join(basePath, cp[0]), path.join(name, cp[1]), {silent: true});
+      if(cp[0] == 'main.js' && engine == 'swig'){
+        jake.cpR(path.join(basePath, 'main.swig.js'), path.join(name, cp[1], 'main.js'), {silent: true});
+      }else if(cp[0] != 'main.swig.js'){
+        jake.cpR(path.join(basePath, cp[0]), path.join(name, cp[1]), {silent: true});
+      }
     });
 
     // one offs
@@ -517,7 +521,7 @@ namespace('gen', function () {
       jake.Task['gen:test'].invoke(name,
           {properties: modelProperties});
       jake.Task['gen:controllerScaffold'].invoke(name,
-          {properties: modelProperties});
+          {properties: modelProperties, engine: engine});
       jake.Task['gen:route'].invoke(name);
       jake.Task['gen:viewsScaffold'].invoke(name,
           {engine: engine, properties: modelProperties, realtime: realtime});
@@ -577,7 +581,9 @@ namespace('gen', function () {
     }
     options = options || {};
 
-    _writeTemplate(name, 'scaffold/controller', path.join('app', 'controllers'), {
+    var controllerScaffold = options.engine == 'swig' ? 'scaffold/controllerswig' : 'scaffold/controller';
+
+    _writeTemplate(name, controllerScaffold, path.join('app', 'controllers'), {
         inflection: 'plural'
       , bare: false
       , properties: _formatModelProperties(options.properties)
@@ -677,6 +683,9 @@ namespace('gen', function () {
       case 'mustache':
         ext += '.ms';
         break;
+      case 'swig':
+        ext += '.swig';
+        break;
     }
 
     // Set application layout path
@@ -758,6 +767,9 @@ namespace('gen', function () {
         break;
       case 'mustache':
         ext += '.ms';
+        break;
+      case 'swig':
+        ext += '.swig';
         break;
     }
 
