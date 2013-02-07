@@ -1,4 +1,4 @@
-{% extends layout %}
+{% extends process.cwd() + '/app/views/layouts/layout.swig' %}
 {% block content %}
 <div class="hero-unit">
   <h2>All <%= names.constructor.plural %></h2>
