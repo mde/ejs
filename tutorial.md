@@ -525,7 +525,7 @@ application's memory, so it will disappear when you restart the server.
 #### Optional: use mongo for persistence
 
 Install a [mongodb](http://www.mongodb.org/downloads) server if you
-haven't already and ` $ [sudo] npm install [-g] mongodb-wrapper` to
+haven't already and ` $ [sudo] npm install mongodb-wrapper` to
 install the required mongodb-wrapper and set `defaultAdapter = 'mongo'`
 in config/development.js instead of the memory adapter. You will also
 have to specify the db configuration
