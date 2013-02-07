@@ -867,9 +867,6 @@ namespace('auth', function () {
       , install = false
       , rl, installPackages, passportCopy;
 
-      console.log('engine:');
-      console.log(engine);
-
     if (!engine || engine == 'default') {
       engine = 'ejs';
     }
