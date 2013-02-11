@@ -40,7 +40,7 @@ usage = [
   , '  --workers, -w       Number of worker processes to start (default: 1)'
   , '  --debug, -d         Sets the log level to output debug messages to'
   , '                        the console'
-  , '  --realtime, -r      When generating or scaffolding, take realtime into account'
+  , '  --realtime, -rt      When generating or scaffolding, take realtime into account'
   , '  --jade, -j          When generating views this will create Jade'
   , '                        templates(Default: EJS)'
   , '  --handle, -H        When generating views this will create Handlebars'
