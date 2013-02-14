@@ -60,6 +60,9 @@ Now you can go to http://geddy-example.jit.su and see your application!
 3. Be familiar with GIT, the basic geddy commands, and heroku's deployment models
 4. Have an app ready to be deployed.
 
+##### Notes
+* Heroku is deployed via Git, which of course reads the .gitignore file which may include the config/secrets.json file(it should), if you need something that requires the secret such as sessions, etc. you'll encounter errors about doing `geddy secret` when you deploy. Currently there's no way to circumvent this other than removing it from your .gitignore file. More info here: https://github.com/mde/geddy/issues/309
+
 Add a `package.json` file to your app's root directory
 
 ```javascript
@@ -76,34 +79,32 @@ Add a `package.json` file to your app's root directory
 }
 ```
 
-Edit the `config/production.js` file to use the port given by heroku
+Edit the `config/production.js` file to use the port and hostname used by heroku
 ```javascript
 var config = {
   port: process.env.PORT,
-  hostname: '0.0.0.0'
+  hostname: "0.0.0.0"
   // Other properties removed for brevity
 };
 
 ```
 
-Add a `app.js` javascript file to your app's root directory
-
-```javascript
+Now we need to create a `app.js` file so that the Procfile can use it to boot the Geddy server, here's what it should look like
+```
 var geddy = require('geddy');
 
 geddy.startCluster({
   environment: 'production'
 });
 ```
+In the object we're giving to `geddy.startCluster` you can use any other arguments you'd for the configuration files, these will override the ones loaded for the environment. For more information about this file you can go [here](https://github.com/mde/geddy/wiki/Using-Geddy-without-the-CLI)
 
-Add a `Procfile` text file to your app's root directory
+
+Add a `Procfile` text file to your app's root directory, this is read by Heroku when booting the app
 
 ```
 web: node app.js
 ```
-
-remove the line for `config\secrets.json` in your `.gitignore` file - **note:** This is insecure, on public repo's as it exposes your cookie's secret hash.
-
 
 Now it's time to create a heroku app.
 
