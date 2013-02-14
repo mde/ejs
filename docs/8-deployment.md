@@ -79,22 +79,31 @@ Add a `package.json` file to your app's root directory
 Edit the `config/production.js` file to use the port given by heroku
 ```javascript
 var config = {
-  port: process.env.PORT
+  port: process.env.PORT,
+  hostname: '0.0.0.0'
   // Other properties removed for brevity
 };
 
 ```
 
-Add a `Procfile` text file to your app's root directory
+Add a `app.js` javascript file to your app's root directory
 
-```
-//web: node node_modules/geddy/bin/cli.js
+```javascript
 var geddy = require('geddy');
 
 geddy.startCluster({
   environment: 'production'
 });
 ```
+
+Add a `Procfile` text file to your app's root directory
+
+```
+web: node app.js
+```
+
+remove the line for `config\secrets.json` in your `.gitignore` file - **note:** This is insecure, on public repo's as it exposes your cookie's secret hash.
+
 
 Now it's time to create a heroku app.
 
