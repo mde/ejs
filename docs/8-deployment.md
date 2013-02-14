@@ -76,13 +76,6 @@ Add a `package.json` file to your app's root directory
 }
 ```
 
-Edit the `config/production.js` file and delete/comment the following lines(port, hostname)
-```javascript
-var config = {
-  //port: '3000',
-  // hostname: '0.0.0.0'
-};
-
 ```
 
 Add a `app.js` javascript file to your app's root directory, the configs set in this will override `production.js`
@@ -91,7 +84,7 @@ Add a `app.js` javascript file to your app's root directory, the configs set in 
 var geddy = require('geddy');
 
 geddy.startCluster({
-  hostname: process.env.IP || '127.0.0.1',
+  hostname: '0.0.0.0',
   port: process.env.PORT || '3000',
   // you can manually set this to production, or set an environment variable via heroku..
   environment: 'production'
