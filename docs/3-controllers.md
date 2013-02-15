@@ -89,7 +89,7 @@ Adds an action to be performed after a response is rendered.
 ##### options
 - `except [array]` List of actions where the after-filter should not be performed.
 - `only [array]` List of actions where the after-filter should only be performed.
-- `async` [boolean] When set to true, the before-filter is asynchronous, and requires a callback
+- `async` [boolean] When set to true, the after-filter is asynchronous, and requires a callback
 
 ##### examples
 ```

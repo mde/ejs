@@ -104,7 +104,7 @@ this.validatesFormat('login', /[a-z]+/, {message: 'cannot contain numbers'});
 #### .validatesLength
 `validatesLength(property, options)`
 
-Sets up a validation to make sure that the property meets certain lenght requirements.
+Sets up a validation to make sure that the property meets certain length requirements.
 
 ##### property
 - `property [string]`: the name of the property to validate
@@ -119,7 +119,7 @@ this.validatesLength('login', {min: '3'});
 // makes sure that the login property is at least 3 characters long
 
 
-this.validatesLength('login', {min: '20'});
+this.validatesLength('login', {max: '20'});
 // makes sure that the login property is not longer than 20 characters
 ```
 
