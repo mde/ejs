@@ -110,7 +110,7 @@ mixinJSONData = function (file, obj) {
     }
   }
   else {
-    console.log("There is no file " + file + "to add data to.");
+    console.log("There is no file " + file + " to add data to.");
   }
 };
 
