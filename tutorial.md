@@ -272,10 +272,11 @@ your app.
 
 #### Optional: check out your app on a mobile phone
 
--   point your mobile phone's browser to your computer on port 4000
--   OR open up your favorite phone simulator and go to
+-   Open up your favorite phone simulator and go to
     [http://localhost:4000](http://localhost:4000)
 -   OR resize your browser to at most 480px wide
+-   OR set your app to listen on an external IP address
+    and use your actual phone
 
 ### Resource
 
