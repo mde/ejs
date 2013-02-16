@@ -156,7 +156,7 @@ $ geddy app todo_app
 ```
 
 Let's spend some time reviewing what geddy did. The previous command
-created a lot. During the tutorial we will edit and review some of this
+created a lot. During the tutorial we will edit and review some of these
 files, but we'll briefly explain what they are now so you get familiar
 with the base application.
 
