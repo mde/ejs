@@ -339,9 +339,6 @@ namespace('gen', function () {
       }
 
       switch (type) {
-        case 'text':
-          type = 'string';
-          break;
         case 'integer':
           type = 'int';
           break;
