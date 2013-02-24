@@ -28,7 +28,7 @@ $ geddy scaffold --handle user
 * * *
 
 #### yield
-Yield is a function that's only available on layout templates. It yields the template content, which is inserted in th place where the yield function is called.
+Yield is a function that's only available on layout templates. It yields the template content, which is inserted in the place where the yield function is called.
 
 * * *
 
@@ -42,7 +42,7 @@ Partial takes a partialURL which is the location to a partial template and a dat
 #### truncate
 `truncate(string<String>, options<Integer/Object>)`
 
-Truncates a given `string` after a specified `length` if `string` is longer than `length`. The last character will be replace with an `omission` for a total length not exceeding `length`.
+Truncates a given `string` after a specified `length` if `string` is longer than `length`. The last character will be replaced with an `omission` for a total length not exceeding `length`.
 
 #####Options [Integer]:
 - If an `options` is an integer it will be assumed that is the desired `length`
