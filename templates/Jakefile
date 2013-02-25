@@ -7,7 +7,8 @@ var cwd = process.cwd()
   , path = require('path')
   , utils = require('../lib/utils')
   , Adapter = require('../lib/template/adapters')
-  , geddyPassport = 'geddy-passport@0.0.x'
+  //, geddyPassport = 'geddy-passport@0.0.x'
+  , geddyPassport = 'git://github.com/cpbtechnology/geddy-passport#feature-swig-support'
   , getRouterPath
   , getRoutes
   , addRoute
@@ -444,11 +445,7 @@ namespace('gen', function () {
       jake.mkdirP(path.join(name, dir));
     });
     cps.forEach(function (cp) {
-      if(cp[0] == 'main.js' && engine == 'swig'){
-        jake.cpR(path.join(basePath, 'main.swig.js'), path.join(name, cp[1], 'main.js'), {silent: true});
-      }else if(cp[0] != 'main.swig.js'){
-        jake.cpR(path.join(basePath, cp[0]), path.join(name, cp[1]), {silent: true});
-      }
+      jake.cpR(path.join(basePath, cp[0]), path.join(name, cp[1]), {silent: true});
     });
 
     // one offs
@@ -581,9 +578,7 @@ namespace('gen', function () {
     }
     options = options || {};
 
-    var controllerScaffold = options.engine == 'swig' ? 'scaffold/controllerswig' : 'scaffold/controller';
-
-    _writeTemplate(name, controllerScaffold, path.join('app', 'controllers'), {
+    _writeTemplate(name, 'scaffold/controller', path.join('app', 'controllers'), {
         inflection: 'plural'
       , bare: false
       , properties: _formatModelProperties(options.properties)

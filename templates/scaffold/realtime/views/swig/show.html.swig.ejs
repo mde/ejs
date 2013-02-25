@@ -17,4 +17,27 @@
 </div>
 {% endfor %}
 
+<script type="text/javascript">
+$(function () {
+  var pageId = window.location.pathname.split('/')[2];
+
+  geddy.io.addListenersForModels(['<%= names.constructor.singular %>']);
+
+  geddy.model.<%= names.constructor.singular %>.on('update', function (<%= names.property.singular %>) {
+    if (<%= names.property.singular %>.id == pageId) {
+      var properties = <%= names.property.singular %>.toData();
+      for (var i in properties) {
+        $('.'+i).text(properties[i]);
+      }
+    }
+  });
+
+  geddy.model.<%= names.constructor.singular %>.on('remove', function (id) {
+    if (id == pageId) {
+      window.location = '/<%= names.property.plural %>';
+    }
+  });
+});
+</script>
+
 {% endblock %}
