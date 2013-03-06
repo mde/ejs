@@ -266,7 +266,7 @@ namespace('db', function () {
     createTable();
   }, {async: true});
 
-  task('retrofit', ['env:init'], function () {
+  task('init', ['env:init'], function () {
     var modelNames = Object.keys(geddy.model.descriptionRegistry)
       , createTask = jake.Task['db:createTable'];
       createTask.once('complete', function () {
