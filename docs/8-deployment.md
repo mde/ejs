@@ -78,23 +78,19 @@ Add a `package.json` file to your app's root directory
   }
 }
 ```
-
-Edit the `config/production.js` file to use the port and hostname used by heroku
-```javascript
-var config = {
-  port: process.env.PORT,
-  hostname: "0.0.0.0"
-  // Other properties removed for brevity
-};
-
-```
-
 Now we need to create a `app.js` file so that the Procfile can use it to boot the Geddy server, here's what it should look like
 ```
 var geddy = require('geddy');
 
 geddy.startCluster({
+  hostname: '0.0.0.0',
+  port: process.env.PORT || '3000',
+  // you can manually set this to production, or set an environment variable via heroku..
   environment: 'production'
+  // just uncomment the below line, and delete the above line.
+  // you will need to set an environment variable in heroku by running
+  // heroku config:set NODE_ENV=production
+  //environment: process.env.NODE_ENV || 'development'
 });
 ```
 In the object we're giving to `geddy.startCluster` you can use any other arguments you'd for the configuration files, these will override the ones loaded for the environment. For more information about this file you can go [here](https://github.com/mde/geddy/wiki/Using-Geddy-without-the-CLI)
@@ -105,6 +101,15 @@ Add a `Procfile` text file to your app's root directory, this is read by Heroku 
 ```
 web: node app.js
 ```
+
+Add a `Procfile` text file to your app's root directory
+
+```
+web: node app.js
+```
+
+remove the line for `config\secrets.json` in your `.gitignore` file - **note:** This is insecure, on public repo's as it exposes your cookie's secret hash.
+
 
 Now it's time to create a heroku app.
 
