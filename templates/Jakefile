@@ -263,7 +263,10 @@ namespace('db', function () {
         complete();
       }
     };
-    createTable();
+    // Defer until associations are set up
+    setTimeout(function () {
+      createTable();
+    }, 0);
   }, {async: true});
 
   task('init', ['env:init'], function () {
