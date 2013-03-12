@@ -70,7 +70,7 @@ var <%= names.constructor.plural %> = function () {
     var self = this;
 
     geddy.model.<%= names.constructor.singular %>.first(params.id, function(err, <%= names.property.singular %>) {
-      <%= names.property.singular %>.updateAttributes(params);
+      <%= names.property.singular %>.updateProperties(params);
       if (!<%= names.property.singular %>.isValid()) {
         params.errors = <%= names.property.singular %>.errors;
         self.transfer('edit');
