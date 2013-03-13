@@ -344,6 +344,7 @@ selectTag(['open', 'close'], todo.status, { class:'span6', name:'status' })
 
 selectTag([{value: 1, text: "Text 1"}, {value: 2, text: "Text 2"}], 2)
 // => <select><option value="1">Text 1</option><option selected="selected" value="2">Text 2</option></select>
+```
 
 * * *
 
