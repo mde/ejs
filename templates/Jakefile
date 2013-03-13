@@ -264,10 +264,13 @@ namespace('db', function () {
         complete();
       }
     };
-    createTable();
+    // Defer until associations are set up
+    setTimeout(function () {
+      createTable();
+    }, 0);
   }, {async: true});
 
-  task('retrofit', ['env:init'], function () {
+  task('init', ['env:init'], function () {
     var modelNames = Object.keys(geddy.model.descriptionRegistry)
       , createTask = jake.Task['db:createTable'];
       createTask.once('complete', function () {
