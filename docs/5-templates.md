@@ -325,9 +325,25 @@ contentTag('a', 'hey there', {href: 'http://google.com', data: { goTo: 'http://g
 contentTag('a', 'hey there', {href: 'http://google.com', data_go_to: 'http://google.com'})
 // => '<a data-go-to="http://google.com" href="http://google.com">hey there</a>'
 
-contentTag('select', ['geddy', 'alex', 'neil'])
-// => '<select><option value="geddy">geddy</option><option value="alex">alex</option><option value="neil">neil</option></select>'
 ```
+
+#### selectTag
+`selectTagString(optionsArray<Array>, selectedOption, htmlOptions<Object>)
+
+Creates a HTML select tag using the given `optionsArray` to create HTML option elements. 
+
+`optionsArray` could be an array of strings, numbers or an object with value and text properties to be used for the value attribute and option element content respectively. 
+
+#####Examples:
+```
+selectTag(['geddy', 'alex', 'neil'])
+// => '<select><option value="geddy">geddy</option><option value="alex">alex</option><option value="neil">neil</option></select>'
+
+selectTag(['open', 'close'], todo.status, { class:'span6', name:'status' })
+// => '<select class="span6" name="status"><option selected="selected" value="open">open</option><option value="close">close</option></select>'
+
+selectTag([{value: 1, text: "Text 1"}, {value: 2, text: "Text 2"}], 2)
+// => <select><option value="1">Text 1</option><option selected="selected" value="2">Text 2</option></select>
 
 * * *
 
