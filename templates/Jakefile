@@ -7,8 +7,7 @@ var cwd = process.cwd()
   , path = require('path')
   , utils = require('../lib/utils')
   , Adapter = require('../lib/template/adapters')
-  //, geddyPassport = 'geddy-passport@0.0.x'
-  , geddyPassport = 'git://github.com/cpbtechnology/geddy-passport#feature-swig-support'
+  , geddyPassport = 'geddy-passport@0.0.x'
   , getRouterPath
   , getRoutes
   , addRoute

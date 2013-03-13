@@ -3,12 +3,13 @@ Geddy's view layer provides a versatile set of templating languages and helpers 
 * * *
 
 #### engines
-The view layer supports these four templating engines:
+The view layer supports these five templating engines:
 
 + EJS
 + Jade
 + Mustache
 + Handlebars
++ [Swig](http://paularmstrong.github.com/swig/)
 
 To use them, just give your template the correct file extension. If you'd like to use a different templating engine when generating an app or scaffolds, use the corresponding command line option:
 
@@ -23,6 +24,9 @@ $ geddy scaffold --jade user
 
 $ geddy app --handle my_app
 $ geddy scaffold --handle user
+
+$ geddy app --swig my_app
+$ geddy scaffold --swig user
 ```
 
 * * *
@@ -30,12 +34,21 @@ $ geddy scaffold --handle user
 #### yield
 Yield is a function that's only available on layout templates. It yields the template content, which is inserted in the place where the yield function is called.
 
+Not available with Swig templating.  Instead, use content blocks.
+
 * * *
 
 #### partial
 `partial(partialURL<String>, data<Object>)`
 
 Partial takes a partialURL which is the location to a partial template and a data object which is the data to render the partial with(params, etc), then it renders the partial and puts the contents in place where the partial function was called.
+
+Not available with Swig templating.  In swig you can include a partial view like:
+```
+{% set path = [process.cwd(), "/app/views/layouts/partial.swig"] %}
+{% set partialView = path|join('') %}
+{% include partialView %}
+```
 
 * * *
 
