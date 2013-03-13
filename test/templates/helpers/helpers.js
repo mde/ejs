@@ -24,6 +24,7 @@ var Helpers = require('../../../lib/template/helpers/index')
 // Assign Helpers actions as a helper
 for (var i in Helpers) {
   helpers[i] = Helpers[i].action;
+  console.log(helpers[i]);
 }
 
 // Register dummy data for use with empty path options in urlFor
@@ -110,6 +111,12 @@ tests = {
     var choices = [{value: 1, text: "Text 1"}, {value: 2, text: "Text 2"}]
       string = helpers.contentTag("select", choices);
     assert.equal(string, "<select><option value=\"1\">Text 1</option><option value=\"2\">Text 2</option></select>"); 
+  }
+
+, 'test select tag with selected option': function() { 
+    var choices = [{value: 1, text: "Text 1"}, {value: 2, text: "Text 2"}]
+      string = helpers.selectTag(choices, 2);
+    assert.equal(string, "<select><option value=\"1\">Text 1</option><option selected=\"selected\" value=\"2\">Text 2</option></select>"); 
   }
 
 , 'test single tags in truncateHTML': function () {
