@@ -57,8 +57,8 @@ defines a single property
 ```
 this.property('login', 'string', {required: true});
 this.property('password', 'string', {required: true});
-this.property('joined', 'datetime);
-this.property('premium', 'boolean);
+this.property('joined', 'datetime');
+this.property('premium', 'boolean');
 ```
 
 * * *
