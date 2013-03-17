@@ -295,6 +295,7 @@ if (cmds.length) {
     jakeLoader.loadDirectory(jakeProgram.opts.jakelibdir);
     // Prepend env:init to load Geddy env
     jakeProgram.taskNames.unshift('env:init');
+    jakeProgram.init();
   }
   else {
     jakeProgram.init({
