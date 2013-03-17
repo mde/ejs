@@ -115,6 +115,7 @@ Sets up a validation to make sure that the property meets certain length require
 ##### qualifier
 - `min [number]`: the minimum length of the property
 - `max [number]`: the maximum length of the property
+- [number]: the exact length of the property
 
 ##### options
 - `message [string]`: a message to give the user if the validation fails
@@ -127,6 +128,9 @@ this.validatesLength('login', {min: '3'});
 
 this.validatesLength('login', {max: '20'});
 // makes sure that the login property is not longer than 20 characters
+
+this.validatesLength('login',3)
+// makes sure that the login property is exactly 3 characters long
 ```
 
 * * *
