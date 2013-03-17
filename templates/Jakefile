@@ -855,8 +855,10 @@ namespace('auth', function () {
   });
 
   task('init', {async: true}, function (engine) {
-    var readline = require('readline')
-      , fromBase = path.join(cwd, 'node_modules', 'geddy-passport')
+    var env = process.env
+      , readline = require('readline')
+      , fromBase = env.srcDir ||
+            path.join(cwd, 'node_modules', 'geddy-passport')
       , install = false
       , rl, installPackages, passportCopy;
 
@@ -886,9 +888,15 @@ namespace('auth', function () {
         return;
       }
 
-      console.log('Installing', geddyPassport);
-      jake.exec('npm uninstall ' + geddyPassport +
-        ' && npm install ' + geddyPassport, installPackages, {printStdout: true});
+      if (env.srcDir) {
+        console.log('Installing from ' + fromBase);
+        installPackages();
+      }
+      else {
+        console.log('Installing', geddyPassport);
+        jake.exec('npm uninstall ' + geddyPassport +
+          ' && npm install ' + geddyPassport, installPackages, {printStdout: true});
+      }
     });
 
     // Gets the package versions from geddy-passport's package.json
@@ -917,7 +925,13 @@ namespace('auth', function () {
         , from
         , to
         , p
-        , i;
+        , i
+        , engineExt = {
+            ejs: '.ejs'
+          , jade: '.jade'
+          , handlebars: '.hbs'
+          , mustache: '.ms'
+          };
 
       // Copy files to the application
       for (i = 0; i < list.length; i++) {
@@ -926,16 +940,13 @@ namespace('auth', function () {
         to = path.dirname(path.join(cwd, item));
 
         if (item.match('/app/views')) {
-          // If the view is not for the given engine, skip it
-          if (!item.match(engine)) {
-            continue;
-          }
-
-          to = to.replace(engine, "");
+          from = from.replace('/app/views', '/app/views_' + engine);
+          from = from.replace(/\[\.ext\]$/, engineExt[engine]);
+          to = to.replace(/\[\.ext\]$/, engineExt[engine]);
         }
 
         jake.mkdirP(to);
-        console.log('Creating file:', path.join(to, path.basename(item)));
+        console.log('Creating file:', path.join(to, path.basename(from)));
 
         // Delete any existing interferring templates
         if (item.match('/app/views')) {
