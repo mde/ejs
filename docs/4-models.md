@@ -122,14 +122,14 @@ Sets up a validation to make sure that the property meets certain length require
 
 ##### example
 ```
-this.validatesLength('login', {min: '3'});
+this.validatesLength('login', {min: 3});
 // makes sure that the login property is at least 3 characters long
 
 
-this.validatesLength('login', {max: '20'});
+this.validatesLength('login', {max: 20});
 // makes sure that the login property is not longer than 20 characters
 
-this.validatesLength('login',3)
+this.validatesLength('login', 3)
 // makes sure that the login property is exactly 3 characters long
 ```
 
