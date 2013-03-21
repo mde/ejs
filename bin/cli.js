@@ -69,7 +69,7 @@ usage = [
   , 'Examples:'
   , '  geddy                    Start Geddy on localhost:4000 in development mode'
   , '                             or if the directory isn\'t a Geddy app it\'ll'
-  , '                             display this usage dialog'
+  , '                             display a prompt to use "geddy -h"'
   , '  geddy -p 3000            Start Geddy on port 3000'
   , '  geddy -e production      Start Geddy in production mode'
   , '  geddy -j scaffold user   Generate a users scaffolding using Jade templates'
@@ -130,6 +130,11 @@ optsMap = [
   , abbr: 'e'
   , args: true
   , canon: 'environment'
+  }
+, { full: 'geddy-root'
+  , abbr: 'g'
+  , args: true
+  , canon: 'geddyRoot'
   }
 , { full: 'spawned'
   , abbr: ['s', 'q', 'Q']
@@ -308,12 +313,5 @@ if (cmds.length) {
 }
 // Just `geddy` -- start the server
 else {
-  // Search for 'config' directory in parent directories
-  utils.file.searchParentPath('config', function (err, filePath) {
-    if (err) {
-      die(usage);
-    }
-
-    start();
-  });
+  start();
 }
