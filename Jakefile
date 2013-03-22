@@ -90,8 +90,3 @@ task('test', function () {
   t.invoke.apply(t, arguments);
 }, {async: true});
 
-testTask = new jake.TestTask('Geddy model-adapters', function () {
-  this.testName = 'testModelAdapters'
-  this.testFiles.include('lib/model/adapters/**/test.js');
-});
-
