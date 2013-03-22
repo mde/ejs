@@ -115,14 +115,17 @@ mixinJSONData = function (file, obj) {
 };
 
 namespace('env', function () {
-  task('init', function (environment) {
+  task('init', function () {
+    var cfg = {};
+    if (process.env.environment) {
+      cfg.environment = process.env.environment;
+    }
+
     jake.addListener('complete', function (e) {
       jake.Task['env:cleanup'].invoke();
     });
 
-    geddy.config = require('../lib/config').readConfig({
-      environment: environment || 'development'
-    });
+    geddy.config = require('../lib/config').readConfig(cfg);
     geddy.model = require('model');
 
     require('../lib/init').init(geddy, function () {
@@ -146,9 +149,8 @@ namespace('env', function () {
 });
 
 namespace('console', function () {
-  task('start', ['env:init'], {async: true}, function (environment) {
-    var env = environment || 'development'
-      , t = jake.Task['env:init'];
+  task('start', ['env:init'], {async: true}, function () {
+    var t = jake.Task['env:init'];
 
     t.addListener('complete', function () {
       var repl = require('repl')
@@ -205,7 +207,7 @@ namespace('console', function () {
       };
     });
 
-    t.invoke(env);
+    t.invoke();
   });
 });
 
