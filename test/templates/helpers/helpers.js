@@ -24,7 +24,6 @@ var Helpers = require('../../../lib/template/helpers/index')
 // Assign Helpers actions as a helper
 for (var i in Helpers) {
   helpers[i] = Helpers[i].action;
-  console.log(helpers[i]);
 }
 
 // Register dummy data for use with empty path options in urlFor
