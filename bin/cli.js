@@ -37,6 +37,8 @@ usage = [
   , '  --environment, -e   Environment to use'
   , '  --hostname, -b      Host name or IP to bind the server to (default: localhost)'
   , '  --port, -p          Port to bind the server to (default: 4000)'
+  , '  --geddy-root, -g    /path/to/approot The path to the root for the app you want'
+  , '                        to run (default is current working directory)'
   , '  --workers, -w       Number of worker processes to start (default: 1)'
   , '  --debug, -d         Sets the log level to output debug messages to'
   , '                        the console'
