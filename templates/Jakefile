@@ -127,6 +127,7 @@ namespace('env', function () {
 
     geddy.config = require('../lib/config').readConfig(cfg);
     geddy.model = require('model');
+    geddy.controller = require('../lib/controller');
 
     require('../lib/init').init(geddy, function () {
       complete();
