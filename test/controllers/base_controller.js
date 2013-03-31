@@ -106,6 +106,7 @@ tests = {
     c._handleAction('foo');
   }
 
+/*
 , 'action with sync after-filter': function (next) {
     var c = createController()
       , incr = 0;
@@ -118,6 +119,7 @@ tests = {
     });
     c._handleAction('foo');
   }
+*/
 
 };
 
