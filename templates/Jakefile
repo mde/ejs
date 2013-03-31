@@ -493,6 +493,8 @@ namespace('gen', function () {
     modelTask.on('complete', function () {
       jake.Task['gen:controller'].invoke(name);
       jake.Task['gen:route'].invoke(name);
+      jake.Task['gen:test'].invoke(name,
+          {properties: modelProperties});
       names = utils.string.getInflections(name);
       // Create views folder but not actions
       jake.mkdirP(path.join('app', 'views', names.filename.plural));
