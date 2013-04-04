@@ -202,7 +202,6 @@ if (cmds.length) {
   // Some commands take only one arg
   if (!(cmds[0] == 'jake' ||
       cmds[0] == 'secret' ||
-      cmds[0] == 'db:init' ||
       cmds[0] == 'auth' ||
       cmds[0] == 'auth:update' ||
       cmds[0] == 'console' ||
@@ -249,14 +248,6 @@ if (cmds.length) {
     case 'auth:update':
       // Update authentication
       cmd += 'auth:update';
-      break;
-    case 'db:init':
-      // Create DBs
-      cmd += 'db:init';
-      break;
-    case 'db:createTable':
-      // Create DBs
-      cmd += 'db:createTable[' + cmds[1].replace(/,/g, '%') + ']';
       break;
     case 'app':
       // Generating application
