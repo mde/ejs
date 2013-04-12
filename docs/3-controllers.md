@@ -193,6 +193,7 @@ Performs content-negotiation, and renders a response.
 - `layout [false]`: a flag to not use a layout file
 - `format [string]`: the format to render
 - `template [string]`: The path (without file extensions) to the template to use to render this response
+- `statusCode [number]`: The HTTP status-code to use with this response
 
 ##### examples
 ```
@@ -208,8 +209,11 @@ this.respond(params, {template: 'path/to/template'});
 // send params to path/to/template, render it, then send the response
 
 
-this.respond(params, {format: 'json'});
+this.respond(null, {statusCode: 201});
 // send the params object as the response in json format
+
+this.respond(params, {format: 'json'});
+// send a 201/created with no body
 ```
 
 * * *
