@@ -12,13 +12,6 @@ var sessionMock = {
   }
 }
 
-function createInstance(callback) {
-  var req = createRequest();
-  var controller = new BaseController();
-  controller.cookies = new CookieCollection(req);
-  var inst = new sessions.Session(controller, callback);
-}
-
 tests = {
   'flash messages': function () {
     var flashBag = new sessions.FlashBag(sessionMock);
