@@ -17,32 +17,32 @@ tests = {
     var flash = new Flash(sessionMock);
     assert.ok(flash instanceof Flash);
 
-    flash.add('foo error','error');
-    flash.add('foo bar error','error');
-    flash.add('foo info','info');
-    flash.add('foo success','success');
-    flash.add('foo custom','custom');
+    flash.addMessage('foo error','error');
+    flash.addMessage('foo bar error','error');
+    flash.addMessage('foo info','info');
+    flash.addMessage('foo success','success');
+    flash.addMessage('foo custom','custom');
 
-    assert.strictEqual(flash.has(), true);
+    assert.strictEqual(flash.hasMessages(), true);
 
-    var errors = flash.get('error');
+    var errors = flash.getMessages('error');
     assert.equal(errors.length, 2);
     assert.equal(errors[0], 'foo error');
     assert.equal(errors[1], 'foo bar error');
 
-    var infos = flash.get('info');
+    var infos = flash.getMessages('info');
     assert.equal(infos.length, 1);
     assert.equal(infos[0], 'foo info');
 
-    var successes = flash.get('success');
+    var successes = flash.getMessages('success');
     assert.equal(successes.length, 1);
     assert.equal(successes[0], 'foo success');
 
-    var customs = flash.get('custom');
+    var customs = flash.getMessages('custom');
     assert.equal(customs.length, 1);
     assert.equal(customs[0], 'foo custom');
 
-    assert.strictEqual(flash.has(), false);
+    assert.strictEqual(flash.hasMessages(), false);
   }
 };
 
