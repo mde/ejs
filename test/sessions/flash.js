@@ -1,5 +1,5 @@
 var assert = require('assert')
-  , sessions = require('../../lib/sessions')
+  , Flash = require('../../lib/sessions/flash').Flash
   , tests;
 
 var sessionMock = {
@@ -14,8 +14,8 @@ var sessionMock = {
 
 tests = {
   'flash messages': function () {
-    var flash = new sessions.Flash(sessionMock);
-    assert.ok(flash instanceof sessions.Flash);
+    var flash = new Flash(sessionMock);
+    assert.ok(flash instanceof Flash);
 
     flash.add('foo error','error');
     flash.add('foo bar error','error');
