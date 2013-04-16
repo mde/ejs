@@ -14,35 +14,35 @@ var sessionMock = {
 
 tests = {
   'flash messages': function () {
-    var flashBag = new sessions.FlashBag(sessionMock);
-    assert.ok(flashBag instanceof sessions.FlashBag);
+    var flash = new sessions.Flash(sessionMock);
+    assert.ok(flash instanceof sessions.Flash);
 
-    flashBag.add('foo error','error');
-    flashBag.add('foo bar error','error');
-    flashBag.add('foo info','info');
-    flashBag.add('foo success','success');
-    flashBag.add('foo custom','custom');
+    flash.add('foo error','error');
+    flash.add('foo bar error','error');
+    flash.add('foo info','info');
+    flash.add('foo success','success');
+    flash.add('foo custom','custom');
 
-    assert.strictEqual(flashBag.has(), true);
+    assert.strictEqual(flash.has(), true);
 
-    var errors = flashBag.get('error');
+    var errors = flash.get('error');
     assert.equal(errors.length, 2);
     assert.equal(errors[0], 'foo error');
     assert.equal(errors[1], 'foo bar error');
 
-    var infos = flashBag.get('info');
+    var infos = flash.get('info');
     assert.equal(infos.length, 1);
     assert.equal(infos[0], 'foo info');
 
-    var successes = flashBag.get('success');
+    var successes = flash.get('success');
     assert.equal(successes.length, 1);
     assert.equal(successes[0], 'foo success');
 
-    var customs = flashBag.get('custom');
+    var customs = flash.get('custom');
     assert.equal(customs.length, 1);
     assert.equal(customs[0], 'foo custom');
 
-    assert.strictEqual(flashBag.has(), false);
+    assert.strictEqual(flash.has(), false);
   }
 };
 
