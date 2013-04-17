@@ -220,12 +220,13 @@ this.respond(params, {format: 'json'});
 
 #### .flash
 
-Gets or sets the flash-messages for a session, by type. These flash-messages
-will be available to the *next* action for that session, and then removed.
+The flash is a special part of the session which is cleared with each request.
+This means that values stored there will only be available in the next request.
+This is useful for storing error messages, etc. It is accessed in much the same
+way as the session, like a hash.
 
-If the 'message' (value) parameter is included it sets the value for that type.
-If the 'message' paramter is not included, it retrieves the value for that type
-and returns it.
+It also includes a few convenience methods for getting/setting commonly used
+types of flash-messages.
 
 * * *
 
