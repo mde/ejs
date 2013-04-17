@@ -217,3 +217,158 @@ this.respond(params, {format: 'json'});
 ```
 
 * * *
+
+#### .flash
+
+Gets or sets the flash-messages for a session, by type. These flash-messages
+will be available to the *next* action for that session, and then removed.
+
+If the 'message' (value) parameter is included it sets the value for that type.
+If the 'message' paramter is not included, it retrieves the value for that type
+and returns it.
+
+* * *
+
+#### .flash.alert
+```
+flash.alert([message])
+```
+
+Gets or sets the *alert* flash-messages for a session. If the 'message' (value)
+parameter is included it sets the value. If the 'message' paramter is not
+included, it retrieves the value and returns it.
+
+##### message
+- `message [string|object]`: The contents of the flash-message
+
+##### examples
+```
+this.flash.alert('Check it out!');
+// Sets the 'alert' flash-message to 'Check it out!'
+
+this.flash.alert();
+// Returns 'This is fantastic!'
+```
+
+* * *
+
+#### .flash.error
+```
+flash.error([message])
+```
+
+Gets or sets the *error* flash-messages for a session. If the 'message' (value)
+parameter is included it sets the value. If the 'message' paramter is not
+included, it retrieves the value and returns it.
+
+##### message
+- `message [string|object]`: The contents of the flash-message
+
+##### examples
+```
+this.flash.error('Yikes! Something wrong wrong.');
+// Sets the 'error' flash-message to 'Yikes! Something wrong wrong.'
+
+this.flash.error();
+// Returns 'This is fantastic!'
+```
+
+* * *
+
+#### .flash.success
+```
+flash.success([message])
+```
+
+Gets or sets the *success* flash-messages for a session. If the 'message' (value)
+parameter is included it sets the value. If the 'message' paramter is not
+included, it retrieves the value and returns it.
+
+##### message
+- `message [string|object]`: The contents of the flash-message
+
+##### examples
+```
+this.flash.success('Whoa! It worked.');
+// Sets the 'success' flash-message to 'Whoa! It worked.'
+
+this.flash.success();
+// Returns 'This is fantastic!'
+```
+
+* * *
+
+#### .flash.info
+```
+flash.info([message])
+```
+
+Gets or sets the *info* flash-messages for a session. If the 'message' (value)
+parameter is included it sets the value. If the 'message' paramter is not
+included, it retrieves the value and returns it.
+
+##### message
+- `message [string|object]`: The contents of the flash-message
+
+##### examples
+```
+this.flash.info('FYI. Just sayin.');
+// Sets the 'info' flash-message to 'FYI. Just sayin.'
+
+this.flash.info();
+// Returns 'This is fantastic!'
+```
+
+* * *
+
+#### .flash.set
+```
+flash.set([type], message)
+```
+
+Sets the flash-messages for a session, for a custom type, or the entire
+flash-message object
+
+##### type
+- `message [string]`: The flash-message type. If not included, this call sets
+the entire flash-message object
+
+##### message
+- `message [string|object]`: The contents of the flash-message
+
+##### examples
+```
+this.flash.set('foo', 'Foo bar baz');
+// Sets the 'foo' flash-message to 'Foo bar baz'
+
+this.flash.set({bar: 'Baz bar qux});
+// Sets the entire flash-message object
+```
+
+* * *
+
+#### .flash.get
+```
+flash.get([type])
+```
+
+Retrieves the flash-messages for a session, for a custom type, or the entire
+flash-message object
+
+##### type
+- `message [string]`: The flash-message type. If not included, this call
+retrieves the entire flash-message object
+
+##### examples
+```
+this.flash.set('foo', 'Foo bar baz');
+this.flash.get('foo');
+// Returns 'Foo bar baz'
+
+this.flash.get();
+// Returns an object: {foo: 'Foo bar baz'}
+```
+
+* * *
+
+
