@@ -13,7 +13,7 @@
   "dependencies": {
     "jake": "0.5.x",
     "utilities": "0.0.x",
-    "model": "0.0.x",
+    "model": "0.1.x",
     "barista": "0.0.x",
     "socket.io": "0.9.x"
   },
