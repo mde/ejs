@@ -330,7 +330,7 @@ Sets the flash-messages for a session, for a custom type, or the entire
 flash-message object
 
 ##### type
-- `message [string]`: The flash-message type. If not included, this call sets
+- `type [string]`: The flash-message type. If not included, this call sets
 the entire flash-message object
 
 ##### message
@@ -356,7 +356,7 @@ Retrieves the flash-messages for a session, for a custom type, or the entire
 flash-message object
 
 ##### type
-- `message [string]`: The flash-message type. If not included, this call
+- `type [string]`: The flash-message type. If not included, this call
 retrieves the entire flash-message object
 
 ##### examples
@@ -367,6 +367,46 @@ this.flash.get('foo');
 
 this.flash.get();
 // Returns an object: {foo: 'Foo bar baz'}
+```
+
+* * *
+
+#### .flash.keep
+```
+flash.keep([type])
+```
+
+Normally flash-message are wiped out when they are used in the current request.
+`keep` makes them persist and be available to the next request.
+
+##### type
+- `type [string]`: The type of message to preserve until the next request.
+If the type param is not included, preserves the entire flash-message object
+
+##### examples
+```
+this.flash.keep('error');
+// Keep the error flash around after a redirect
+```
+
+* * *
+
+#### .flash.discard
+```
+flash.discard([type])
+```
+
+Mark a particular flash-message entry (or the entire object) to be discarded at
+the end of the current request.
+
+##### type
+- `type [string]`: The type of message to discard at the end of the current request.
+If the type param is not included, discards the entire flash-message object
+
+##### examples
+```
+this.flash.discard('error');
+// Discard the current error flash-message
 ```
 
 * * *
