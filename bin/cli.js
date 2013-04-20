@@ -18,6 +18,7 @@ var cwd = process.cwd()
   , engineCmd
   , rtCmd
   , modelCmd
+  , dirpath
   , filepath
   , die
   , jake
@@ -195,7 +196,8 @@ if (opts.version) {
 // `geddy app foo` or `geddy resource bar` etc. -- run generators
 if (cmds.length) {
   // Get Jake file and jakelibdir for generators
-  filepath = path.normalize(path.join(__dirname, '..', 'gen', 'Jakefile'));
+  dirpath = path.normalize(path.join(__dirname, '..', 'gen'));
+  filepath = path.normalize(path.join(dirpath, 'Jakefile'));
 
   cmd = '';
 
@@ -285,6 +287,7 @@ if (cmds.length) {
   jakeProgram = jake.program;
   jakeLoader = jake.loader;
   // Load Geddy's bundled Jakefile
+  jakeLoader.loadDirectory(path.join(dirpath, 'jakelib'));
   jakeLoader.loadFile(filepath);
   if (cmd == 'jake') {
     jakeProgram.parseArgs(jakeArgs);
