@@ -194,8 +194,8 @@ if (opts.version) {
 
 // `geddy app foo` or `geddy resource bar` etc. -- run generators
 if (cmds.length) {
-  // Get templates Jake file
-  filepath = path.normalize(path.join(__dirname, '..', 'templates', 'Jakefile'));
+  // Get Jake file and jakelibdir for generators
+  filepath = path.normalize(path.join(__dirname, '..', 'gen', 'Jakefile'));
 
   cmd = '';
 
