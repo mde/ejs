@@ -2,9 +2,9 @@
 
 // Dependencies
 var geddy = require('../lib/geddy')
-  , path = require('path')
   , utils = require('utilities')
-  , parseopts = require('../lib/parseopts');
+  , parseopts = require('../lib/parseopts')
+  , cmd = require('../lib/cmd');
 
 // Variables
 var cwd = process.cwd()
@@ -14,17 +14,6 @@ var cwd = process.cwd()
   , cmds
   , opts
   , usage
-  , cmd
-  , engineCmd
-  , rtCmd
-  , modelCmd
-  , dirpath
-  , filepath
-  , die
-  , jake
-  , jakeArgs
-  , jakeProgram
-  , jakeLoader
   , start;
 
 // Usage dialog
@@ -195,117 +184,7 @@ if (opts.version) {
 
 // `geddy app foo` or `geddy resource bar` etc. -- run generators
 if (cmds.length) {
-  // Get Jake file and jakelibdir for generators
-  dirpath = path.normalize(path.join(__dirname, '..', 'gen'));
-  filepath = path.normalize(path.join(dirpath, 'Jakefile'));
-
-  cmd = '';
-
-  // Some commands take only one arg
-  if (!(cmds[0] == 'jake' ||
-      cmds[0] == 'secret' ||
-      cmds[0] == 'auth' ||
-      cmds[0] == 'auth:update' ||
-      cmds[0] == 'console' ||
-      cmds[0] == 'routes')
-      && !cmds[1]) {
-    throw new Error(cmds[0] + ' command requires another argument.');
-  }
-
-  // Add engines to command
-  if (opts.jade) {
-    engineCmd = ',' + 'jade';
-  } else if (opts.handle) {
-    engineCmd = ',' + 'handlebars';
-  } else if (opts.mustache) {
-    engineCmd = ',' + 'mustache';
-  } else engineCmd = ',default';
-
-  if (opts.realtime) {
-    rtCmd = ',' + 'realtime';
-  }
-  else {
-    rtCmd = ',default';
-  }
-
-  // Get the model properties
-  if (cmds.slice(2).length > 0) {
-    modelCmd = ',' + cmds.slice(2).join('%');
-  } else modelCmd = '';
-
-  // Add Jake argument based on commands
-  switch (cmds[0]) {
-    case 'jake':
-      cmd = 'jake';
-      jakeArgs = cmds.slice(1);
-      break;
-    case 'console':
-      // Start console
-      cmd += 'console:start[' + (cmds[1] || 'development') + ']';
-      break;
-    case 'auth':
-      // Create authentication
-      cmd += 'auth:init[' + engineCmd.substr(1) + ']';
-      break;
-    case 'auth:update':
-      // Update authentication
-      cmd += 'auth:update';
-      break;
-    case 'app':
-      // Generating application
-      cmd += 'gen:app[' + cmds[1] + engineCmd + rtCmd + ']';
-      break;
-    case 'resource':
-      // Generating resource
-      cmd += 'gen:resource[' + cmds[1] + modelCmd + ']';
-      break;
-    case 'scaffold':
-      // Generating application
-      cmd += 'gen:scaffold[' + cmds[1] + rtCmd + engineCmd + modelCmd + ']';
-      break;
-    case 'controller':
-      // Generating controller
-      cmd += 'gen:bareController[' + cmds[1] + engineCmd + ']';
-      break;
-    case 'model':
-      // Generating model
-      cmd += 'gen:model[' + cmds[1] + modelCmd + ']';
-      break;
-    case 'secret':
-      // Generating new app secret
-      cmd += 'gen:secret';
-      break;
-    case 'routes':
-      // Show routes(Optionally empty)
-      cmd += 'routes:show[' + (cmds[1] || '') + ']';
-      break;
-    default:
-      die(cmds[0] + ' is not a Geddy command.');
-  }
-
-  jake = require('jake');
-  jakeProgram = jake.program;
-  jakeLoader = jake.loader;
-  // Load Geddy's bundled Jakefile
-  jakeLoader.loadDirectory(path.join(dirpath, 'jakelib'));
-  jakeLoader.loadFile(filepath);
-  if (cmd == 'jake') {
-    jakeProgram.parseArgs(jakeArgs);
-    // Load Jakefile and jakelibdir files for app
-    jakeLoader.loadFile(jakeProgram.opts.jakefile);
-    jakeLoader.loadDirectory(jakeProgram.opts.jakelibdir);
-    // Prepend env:init to load Geddy env
-    jakeProgram.taskNames.unshift('env:init');
-    jakeProgram.init();
-  }
-  else {
-    jakeProgram.init({
-      quiet: !opts.debug
-    , trace: true
-    });
-    jakeProgram.setTaskNames([cmd]);
-  }
-  jakeProgram.run();
+  cmd.run(cmds, opts);
 }
 // Just `geddy` -- start the server
 else {
