@@ -2,6 +2,8 @@
 
 // Dependencies
 var geddy = require('../lib/geddy')
+  , fs = require('fs')
+  , path = require('path')
   , utils = require('utilities')
   , parseopts = require('../lib/parseopts')
   , cmd = require('../lib/cmd');
@@ -15,66 +17,6 @@ var cwd = process.cwd()
   , opts
   , usage
   , start;
-
-// Usage dialog
-usage = [
-    'Geddy web framework for Node.js'
-  , ''
-  , 'Usage:'
-  , '  geddy [options/commands] [arguments]'
-  , ''
-  , 'Options:'
-  , '  --environment, -e   Environment to use'
-  , '  --hostname, -b      Host name or IP to bind the server to (default: localhost)'
-  , '  --port, -p          Port to bind the server to (default: 4000)'
-  , '  --geddy-root, -g    /path/to/approot The path to the root for the app you want'
-  , '                        to run (default is current working directory)'
-  , '  --workers, -w       Number of worker processes to start (default: 1)'
-  , '  --debug, -d         Sets the log level to output debug messages to'
-  , '                        the console'
-  , '  --realtime, -rt     When generating or scaffolding, take realtime into account'
-  , '  --jade, -j          When generating views this will create Jade'
-  , '                        templates(Default: EJS)'
-  , '  --handle, -H        When generating views this will create Handlebars'
-  , '                        templates(Default: EJS)'
-  , '  --mustache, -m      When generating views this will create Mustache'
-  , '                        templates(Default: EJS)'
-  , '  --help, -h          Output this usage dialog'
-  , '  --version, -v       Output the version of Geddy that\'s installed'
-  , ''
-  , 'Commands:'
-  , '  console                     Start up the Geddy REPL'
-  , '  app <name>                  Create a new Geddy application'
-  , '  resource <name> [attrs]     Create a new resource. A resource includes'
-  , '                                a model, controller and route'
-  , '  scaffold <name> [attrs]     Create a new scaffolding. Scaffolding includes'
-  , '                                the views, a model, controller and route'
-  , '  secret                      Generate a new application secret in'
-  , '                                `config/secret`'
-  , '  controller <name>           Generate a new controller including an index view'
-  , '                                and and a route'
-  , '  model <name> [attrs]        Generate a new model'
-  , '  routes [query]              Shows routes for a given resource route or all '
-  , '                                routes if empty'
-  , '  auth[:update]               Creates user authentication for you, using Passport.'
-  , ''
-  , 'Examples:'
-  , '  geddy                    Start Geddy on localhost:4000 in development mode'
-  , '                             or if the directory isn\'t a Geddy app it\'ll'
-  , '                             display a prompt to use "geddy -h"'
-  , '  geddy -p 3000            Start Geddy on port 3000'
-  , '  geddy -e production      Start Geddy in production mode'
-  , '  geddy -j scaffold user   Generate a users scaffolding using Jade templates'
-  , '  geddy resource user name admin:boolean'
-  , '                           Generate a users resource with the model properties'
-  , '                             name as a string and admin as a boolean'
-  , '  geddy scaffold user name:string:default'
-  , '                           Generate a users scaffolding user name as the default'
-  , '                             value to display data with'
-  , '  geddy routes user        Show all routes for the user resource'
-  , '  geddy routes user.index  Show the index route for the user resource'
-  , ''
-].join('\n');
 
 // Options available
 optsMap = [
@@ -176,6 +118,8 @@ start = function () {
 };
 
 if (opts.help) {
+  var usage = fs.readFileSync(path.join(__dirname, '..',
+      'usage.txt')).toString();
   die(usage);
 }
 if (opts.version) {
