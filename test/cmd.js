@@ -17,7 +17,7 @@ tests = {
 , 'Cmd parseArgs gen scaffold zooby foo bar --realtime': function () {
     var c = new Cmd(['scaffold', 'zooby', 'foo:int', 'bar:string'],
         {realtime: true});
-    assert.equal('gen:scaffold[zooby,realtime,default,foo:int%bar:string]',
+    assert.equal('gen:scaffold[zooby,foo:int%bar:string,default,realtime]',
         c.jakeTaskName);
   }
 
