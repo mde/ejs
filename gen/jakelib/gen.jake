@@ -568,6 +568,7 @@ namespace('gen', function () {
         'DO make a backup of it, keep it someplace safe.');
   });
 
+  // Delegate to stuff in jakelib/auth.jake
   task('auth', {async: true}, function () {
     var t = jake.Task['auth:init'];
     t.on('complete', function () {
@@ -576,6 +577,7 @@ namespace('gen', function () {
     t.invoke.apply(t, arguments);
   });
 
+  // Delegate to stuff in jakelib/auth.jake
   namespace('auth', function () {
     task('update', function () {
       var t = jake.Task['auth:update'];
@@ -584,6 +586,15 @@ namespace('gen', function () {
       });
       t.invoke.apply(t, arguments);
     });
+  });
+
+  // Delegate to stuff in jakelib/migration.jake
+  task('migration', {async: true}, function () {
+    var t = jake.Task['migration:create'];
+    t.on('complete', function () {
+      complete();
+    });
+    t.invoke.apply(t, arguments);
   });
 
 });
