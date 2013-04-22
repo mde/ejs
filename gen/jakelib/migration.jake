@@ -23,8 +23,5 @@ namespace('migration', function () {
     console.log('[ADDED] ' + fileName);
   });
 
-  task('run' function () {
-  });
-
 });
 
