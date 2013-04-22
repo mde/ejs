@@ -68,13 +68,12 @@
    --mustache, -m                 When generating views this will create Mustache
                                     templates(Default: EJS)
  Generator examples:
-   geddy resource user name admin:boolean
+   geddy gen app foo              Generate an app in a directory named 'foo'
+   geddy gen resource user name admin:boolean
                                   Generate a users resource with the model properties
                                     name as a string and admin as a boolean
-   geddy scaffold user name:string:default
+   geddy gen scaffold user name:string:default
                                   Generate a users scaffolding user name as the default
                                     value to display data with
-   geddy routes user              Show all routes for the user resource
-   geddy routes user.index        Show the index route for the user resource
 
 
