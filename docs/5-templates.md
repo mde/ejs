@@ -3,228 +3,32 @@ Geddy's view layer provides a versatile set of templating languages and helpers 
 * * *
 
 #### engines
-The view layer supports these five templating engines:
+The view layer supports these four templating engines:
 
-+ EJS
-+ Jade
-+ Mustache
-+ Handlebars
-+ [Swig](http://paularmstrong.github.com/swig/)
++ EJS(.ejs)
++ Jade(.jade)
++ Mustache(.mu, .ms, .mustache)
++ Handlebars(.hbs, .handlebars)
++ [Swig](http://paularmstrong.github.io/swig/)(.swig)
 
-To use them, just give your template the correct file extension. If you'd like to use a different templating engine when generating an app or scaffolds, use the corresponding command line option:
+To use a certain template engine just give the view a corresponding extension listed above.
+
+When using the Geddy CLI to generate parts of your application you can use different template languages by giving an argument to the command, here are some examples:
 
 ```
 $ geddy app --mustache my_app
-$ geddy scaffold --mustache user
+$ geddy scaffold -m user
 
 
 $ geddy app --jade my_app
-$ geddy scaffold --jade user
+$ geddy scaffold -j user
 
 
 $ geddy app --handle my_app
-$ geddy scaffold --handle user
+$ geddy scaffold -H user
 
 $ geddy app --swig my_app
 $ geddy scaffold --swig user
-```
-
-* * *
-
-#### yield
-Yield is a function that's only available on layout templates. It yields the template content, which is inserted in the place where the yield function is called.
-
-Not available with Swig templating.  Instead, use content blocks.
-
-* * *
-
-#### partial
-`partial(partialURL<String>, data<Object>)`
-
-Partial takes a partialURL which is the location to a partial template and a data object which is the data to render the partial with(params, etc), then it renders the partial and puts the contents in place where the partial function was called.
-
-Not available with Swig templating.  In swig you can include a partial view like:
-```
-{% set path = [process.cwd(), "/app/views/layouts/partial.swig"] %}
-{% set partialView = path|join('') %}
-{% include partialView %}
-```
-
-* * *
-
-#### truncate
-`truncate(string<String>, options<Integer/Object>)`
-
-Truncates a given `string` after a specified `length` if `string` is longer than `length`. The last character will be replaced with an `omission` for a total length not exceeding `length`.
-
-#####Options [Integer]:
-- If an `options` is an integer it will be assumed that is the desired `length`
-
-#####Options [Object]:
-- `length [Integer]` Length the output string will be(Default: 30)
-- `len [Integer]` Alias for `length`
-- `omission [String]` Replace the last letters with an omission(Default: '...')
-- `ellipsis [String]` Alias for `omission`
-- `seperator [String/RegExp]` Break the truncated text at the nearest `seperator`
-
-#####Warnings:
-- Please be aware that truncating HTML elements may result in malformed HTML returned. If you'd like safe HTML truncation look at `truncateHTML`
-
-#####Examples:
-```
-runcate('Once upon a time in a world', {length: 10})
-// => 'Once up...'
-
-
-truncate('Once upon a time in a world', {length: 20, omission: '...(continued)'})
-// => 'Once u...(continued)'
-
-
-truncate('Once upon a time in a world', {length: 15, seperator: /\s/})
-// => 'Once upon a...'
-// Normal Output: => 'Once upon a ...'
-
-
-truncate('Once upon a time in a world', {length: 15, seperator: ' '})
-// => 'Once upon a...'
-// Normal Output: => 'Once upon a ...'
-
-
-truncate('<p>Once upon a time</p>', {length: 20})
-// => '<p>Once upon a ti...'
-```
-
-* * *
-
-#### truncateHTML
-`truncateHTML(string<String>, options<Integer/Object>)`
-
-Truncates a given `string` after a specified `length` if `string` is longer than `length`. The lat character will be replace with an `omission` for a total length not exceeding `length`. If `once` is true, only the first string in the first HTML element will be truncated leaving others as they were.
-
-#####Options [Object]:
-- `once`[Boolean] If true only the first string in the first HTML element will be truncated(Default: false)
-
-#####Notes:
-- All options available to `truncate` are available for `truncateHTML`
-- HTML elements are not included with the length of the truncation
-- HTML elements will not be truncated, so return value will always be safe for rendering
-
-#####Examples:
-```
-truncateHTML('<p>Once upon a time in a world</p>', {length: 10})
-// => '<p>Once up...</p>'
-
-
-truncateHTML('<p>Once upon a time <small>in a world</small></p>', {length: 10})
-// => '<p>Once up...<small>in a wo...</small></p>'
-
-
-truncateHTML('<p>Once upon a time <small>in a world</small></p>', {length: 10, once: true})
-// => '<p>Once up...<small>in a world</small></p>'
-```
-
-* * *
-
-#### imageLink
-`imageLink(source<String>, link<String/Object>, imageOptions<Object>, linkOptions<Object>)`
-
-Returns an anchor element to a given `link` with the given `linkOptions`, with the content being a image element to the given `source` and includes its `imageOptions`
-
-#####Notes:
-- `linkto` is used on the backend so any `linkOption` will be used for `linkTo`
-- `imageTag` is used on the backend as well so any `imageOptions` will be used for `imageTag`
-
-#####Examples:
-```
-imageLink('images/google.png', 'http://google.com')
-// => '<a href="http://google.com"><img alt="images/google.png" src="images/google.png" /></a>'
-
-
-imageLink('images/google.png', 'http://google.com', {alt: ''}
-// => '<a href="http://google.com"><img alt="" src="images/google.png" /></a>'
-
-
-imageLink('images/google.png', 'http://google.com', {alt: '', size: '40x50'})
-// => '<a href="http://google.com"><img alt="" height="50" src="images/google.png" width="40" /></a>'
-```
-
-* * *
-
-#### imageTag
-`imageTag(source<String>, htmlOptions<Object>)`
-
-Returns an image tag with the src to a `source` and includes all the given `htmlOptions`
-
-#####Custom HTML options:
-- `size`[String] Takes a string including the width and height "{width}x{height}"(e,g: '40x50') or it can take a single string included an integer "{size}"(e,g: '40') The first being results in "height='50' width='40'" the second results in the height and width being the same value. _Note_: If the format doesn't comply, it will be ignored
-
-#####Examples:
-```
-imageTag('images/google.png')
-// => '<img alt="images/google.png" src="images/google.png" />'
-
-
-imageTag('images/google.png', {alt: ''})
-// => '<img alt="" src="images/google.png" />'
-
-
-imageTag('images/google.png', {alt: '', size: '40x50'})
-// => '<img alt="" height="50" src="images/google.png" width="40" />'
-
-
-imageTag('images/google.png', {alt: '', size: 'a string'})
-// => '<img alt="" src="images/google.png" />'
-```
-
-* * *
-
-#### styleLink
-`styleLink(source<String>, htmlOptions<Object>)`
-
-Generates a style element pointing to `source` and includes all the given `htmlOptions`
-
-#####Examples:
-```
-styleLink('/css/styles.css')
-// => '<link href="/css/style.css" />'
-
-
-styleLink('/css/styles.css', {type: 'text/javascript'})
-// => '<link href="/css/style.css" rel="stylesheet" />'
-```
-
-* * *
-
-#### scriptLink
-`scriptLink(source<String>, htmlOptions<Object>)`
-
-Generates a script element pointing to `source` and includes all the given `htmlOptions`
-
-#####Examples:
-```
-scriptLink('/js/script.js')
-// => '<script src="/js/script.js"></script>'
-
-
-scriptLink('/js/script.js', {type: 'text/javascript'})
-// => '<script src="/js/script.js" type="text/javascript"></script>'
-```
-
-* * *
-
-#### linkTo
-`linkTo(content<String>, options<String/Object>, htmlOptions<Object>)`
-
-Generates a link from the given `options`, then returns a anchor tag with the `content` and the `htmlOptions` provided
-
-#####Examples:
-```
-linkTo('some content', 'http://google.com')
-// => '<a href="http://google.com">some content</a>'
-
-
-linkTo('some content', 'http://google.com', {data: {goTo: 'http://google.com'}})
-// => '<a data-go-to="http://google.com" href="http://google.com">some content</a>'
 ```
 
 * * *
@@ -338,9 +142,27 @@ contentTag('a', 'hey there', {href: 'http://google.com', data: { goTo: 'http://g
 contentTag('a', 'hey there', {href: 'http://google.com', data_go_to: 'http://google.com'})
 // => '<a data-go-to="http://google.com" href="http://google.com">hey there</a>'
 
-contentTag('select', ['geddy', 'alex', 'neil'])
+```
+
+#### selectTag
+`selectTagString(optionsArray<Array>, selectedOption, htmlOptions<Object>)
+
+Creates a HTML select tag using the given `optionsArray` to create HTML option elements. 
+
+`optionsArray` could be an array of strings, numbers or an object with value and text properties to be used for the value attribute and option element content respectively. 
+
+#####Examples:
+```
+selectTag(['geddy', 'alex', 'neil'])
 // => '<select><option value="geddy">geddy</option><option value="alex">alex</option><option value="neil">neil</option></select>'
+
+selectTag(['open', 'close'], todo.status, { class:'span6', name:'status' })
+// => '<select class="span6" name="status"><option selected="selected" value="open">open</option><option value="close">close</option></select>'
+
+selectTag([{value: 1, text: "Text 1"}, {value: 2, text: "Text 2"}], 2)
+// => <select><option value="1">Text 1</option><option selected="selected" value="2">Text 2</option></select>
 ```
 
 * * *
 
+>>>>>>> v0.7

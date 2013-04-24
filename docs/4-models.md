@@ -57,19 +57,22 @@ defines a single property
 ```
 this.property('login', 'string', {required: true});
 this.property('password', 'string', {required: true});
-this.property('joined', 'datetime);
-this.property('premium', 'boolean);
+this.property('joined', 'datetime');
+this.property('premium', 'boolean');
 ```
 
 * * *
 
 #### .validatesPresent
-`validatesPresent(property)`
+`validatesPresent(property, options)`
 
 Sets up a validation to make sure that the property is present.
 
 ##### property
 - `property [string]`: the name of the property to validate
+
+##### options
+- `message [string]`: a message to give the user if the validation fails
 
 ##### example
 ```
@@ -91,7 +94,7 @@ Sets up a validation to make sure that the property is formatted correctly.
 - `regex [regex]`: a regular expression that the property value must pass
 
 ##### options
-- `message [string]`: a message to give the use if the validation fails
+- `message [string]`: a message to give the user if the validation fails
 
 ##### example
 ```
@@ -102,31 +105,38 @@ this.validatesFormat('login', /[a-z]+/, {message: 'cannot contain numbers'});
 * * *
 
 #### .validatesLength
-`validatesLength(property, options)`
+`validatesLength(property, qualifier, options)`
 
 Sets up a validation to make sure that the property meets certain length requirements.
 
 ##### property
 - `property [string]`: the name of the property to validate
 
-##### options
+##### qualifier
 - `min [number]`: the minimum length of the property
 - `max [number]`: the maximum length of the property
+- [number]: the exact length of the property
+
+##### options
+- `message [string]`: a message to give the user if the validation fails
 
 ##### example
 ```
-this.validatesLength('login', {min: '3'});
+this.validatesLength('login', {min: 3});
 // makes sure that the login property is at least 3 characters long
 
 
-this.validatesLength('login', {max: '20'});
+this.validatesLength('login', {max: 20});
 // makes sure that the login property is not longer than 20 characters
+
+this.validatesLength('login', 3)
+// makes sure that the login property is exactly 3 characters long
 ```
 
 * * *
 
 #### .validatesConfirmed
-`validatesConfirmed(property, param)`
+`validatesConfirmed(property, param, options)`
 
 Sets up a validation to make sure that the property has been confirmed.
 
@@ -135,6 +145,9 @@ Sets up a validation to make sure that the property has been confirmed.
 
 ##### param
 - `param [string]`: the param required to match
+
+##### options
+- `message [string]`: a message to give the user if the validation fails
 
 ##### example
 ```
@@ -145,7 +158,7 @@ this.validatesConfirmed('password', 'confirmPassword');
 * * *
 
 #### .validatesWithFunction
-`validatesWithFunction(property, fn)`
+`validatesWithFunction(property, fn, options)`
 
 Sets up a validation to make sure that the property has been confirmed.
 
@@ -154,6 +167,9 @@ Sets up a validation to make sure that the property has been confirmed.
 
 ##### fn
 - `fn [function]`: a function which, when passed the value of the property, will return true or false
+
+##### options
+- `message [string]`: a message to give the user if the validation fails
 
 ##### example
 ```

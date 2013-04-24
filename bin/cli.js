@@ -18,6 +18,7 @@ var cwd = process.cwd()
   , engineCmd
   , rtCmd
   , modelCmd
+  , dirpath
   , filepath
   , die
   , jake
@@ -37,6 +38,8 @@ usage = [
   , '  --environment, -e   Environment to use'
   , '  --hostname, -b      Host name or IP to bind the server to (default: localhost)'
   , '  --port, -p          Port to bind the server to (default: 4000)'
+  , '  --geddy-root, -g    /path/to/approot The path to the root for the app you want'
+  , '                        to run (default is current working directory)'
   , '  --workers, -w       Number of worker processes to start (default: 1)'
   , '  --debug, -d         Sets the log level to output debug messages to'
   , '                        the console'
@@ -69,7 +72,7 @@ usage = [
   , 'Examples:'
   , '  geddy                    Start Geddy on localhost:4000 in development mode'
   , '                             or if the directory isn\'t a Geddy app it\'ll'
-  , '                             display this usage dialog'
+  , '                             display a prompt to use "geddy -h"'
   , '  geddy -p 3000            Start Geddy on port 3000'
   , '  geddy -e production      Start Geddy in production mode'
   , '  geddy -j scaffold user   Generate a users scaffolding using Jade templates'
@@ -130,6 +133,11 @@ optsMap = [
   , abbr: 'e'
   , args: true
   , canon: 'environment'
+  }
+, { full: 'geddy-root'
+  , abbr: 'g'
+  , args: true
+  , canon: 'geddyRoot'
   }
 , { full: 'spawned'
   , abbr: ['s', 'q', 'Q']
@@ -192,15 +200,15 @@ if (opts.version) {
 
 // `geddy app foo` or `geddy resource bar` etc. -- run generators
 if (cmds.length) {
-  // Get templates Jake file
-  filepath = path.normalize(path.join(__dirname, '..', 'templates', 'Jakefile'));
+  // Get Jake file and jakelibdir for generators
+  dirpath = path.normalize(path.join(__dirname, '..', 'gen'));
+  filepath = path.normalize(path.join(dirpath, 'Jakefile'));
 
   cmd = '';
 
   // Some commands take only one arg
   if (!(cmds[0] == 'jake' ||
       cmds[0] == 'secret' ||
-      cmds[0] == 'db:init' ||
       cmds[0] == 'auth' ||
       cmds[0] == 'auth:update' ||
       cmds[0] == 'console' ||
@@ -250,14 +258,6 @@ if (cmds.length) {
       // Update authentication
       cmd += 'auth:update';
       break;
-    case 'db:init':
-      // Create DBs
-      cmd += 'db:init';
-      break;
-    case 'db:createTable':
-      // Create DBs
-      cmd += 'db:createTable[' + cmds[1].replace(/,/g, '%') + ']';
-      break;
     case 'app':
       // Generating application
       cmd += 'gen:app[' + cmds[1] + engineCmd + rtCmd + ']';
@@ -294,6 +294,7 @@ if (cmds.length) {
   jakeProgram = jake.program;
   jakeLoader = jake.loader;
   // Load Geddy's bundled Jakefile
+  jakeLoader.loadDirectory(path.join(dirpath, 'jakelib'));
   jakeLoader.loadFile(filepath);
   if (cmd == 'jake') {
     jakeProgram.parseArgs(jakeArgs);
@@ -302,6 +303,7 @@ if (cmds.length) {
     jakeLoader.loadDirectory(jakeProgram.opts.jakelibdir);
     // Prepend env:init to load Geddy env
     jakeProgram.taskNames.unshift('env:init');
+    jakeProgram.init();
   }
   else {
     jakeProgram.init({
@@ -314,12 +316,5 @@ if (cmds.length) {
 }
 // Just `geddy` -- start the server
 else {
-  // Search for 'config' directory in parent directories
-  utils.file.searchParentPath('config', function (err, filePath) {
-    if (err) {
-      die(usage);
-    }
-
-    start();
-  });
+  start();
 }

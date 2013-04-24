@@ -96,7 +96,7 @@ tests = {
     assert.equal(string, '<a data-go-to="http://google.com" href="http://google.com">http://google.com</a>');
   }
 
-, 'test select tag for contentTag': function () {
+, 'test select tag with array for contentTag': function () {
     var string = helpers.contentTag('select', ['geddy', 'alex', 'neil']);
     assert.equal(string, '<select><option value="geddy">geddy</option><option value="alex">alex</option><option value="neil">neil</option></select>');
   }
@@ -104,6 +104,24 @@ tests = {
 , 'test select tag with a string for contentTag': function () {
     var string = helpers.contentTag('select', 'some incorrect content');
     assert.equal(string, '<select>some incorrect content</select>');
+  }
+
+, 'test select tag with array of value/text objects for contentTag': function() { 
+    var choices = [{value: 1, text: "Text 1"}, {value: 2, text: "Text 2"}]
+      string = helpers.contentTag("select", choices);
+    assert.equal(string, "<select><option value=\"1\">Text 1</option><option value=\"2\">Text 2</option></select>"); 
+  }
+
+, 'test select tag with selected option': function() { 
+    var choices = [{value: 1, text: "Text 1"}, {value: 2, text: "Text 2"}]
+      string = helpers.selectTag(choices, 2);
+    assert.equal(string, "<select><option value=\"1\">Text 1</option><option selected=\"selected\" value=\"2\">Text 2</option></select>"); 
+  }
+
+, 'test select tag with html options': function() { 
+    var choices = [{value: 1, text: "Text 1"}, {value: 2, text: "Text 2"}]
+      string = helpers.selectTag(choices, 2, {class: 'myclass'});
+    assert.equal(string, "<select class=\"myclass\"><option value=\"1\">Text 1</option><option selected=\"selected\" value=\"2\">Text 2</option></select>"); 
   }
 
 , 'test single tags in truncateHTML': function () {

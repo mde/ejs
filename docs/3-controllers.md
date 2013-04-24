@@ -193,6 +193,7 @@ Performs content-negotiation, and renders a response.
 - `layout [false]`: a flag to not use a layout file
 - `format [string]`: the format to render
 - `template [string]`: The path (without file extensions) to the template to use to render this response
+- `statusCode [number]`: The HTTP status-code to use with this response
 
 ##### examples
 ```
@@ -208,8 +209,207 @@ this.respond(params, {template: 'path/to/template'});
 // send params to path/to/template, render it, then send the response
 
 
-this.respond(params, {format: 'json'});
+this.respond(null, {statusCode: 201});
 // send the params object as the response in json format
+
+this.respond(params, {format: 'json'});
+// send a 201/created with no body
 ```
 
 * * *
+
+#### .flash
+
+The flash is a special part of the session which is cleared with each request.
+This means that values stored there will only be available in the next request.
+This is useful for storing error messages, etc. It is accessed in much the same
+way as the session, like a hash.
+
+It also includes a few convenience methods for getting/setting commonly used
+types of flash-messages.
+
+* * *
+
+#### .flash.alert
+```
+flash.alert([message])
+```
+
+Gets or sets the *alert* flash-messages for a session. If the 'message' (value)
+parameter is included it sets the value. If the 'message' paramter is not
+included, it retrieves the value and returns it.
+
+##### message
+- `message [string|object]`: The contents of the flash-message
+
+##### examples
+```
+this.flash.alert('Check it out!');
+// Sets the 'alert' flash-message to 'Check it out!'
+
+this.flash.alert();
+// Returns 'This is fantastic!'
+```
+
+* * *
+
+#### .flash.error
+```
+flash.error([message])
+```
+
+Gets or sets the *error* flash-messages for a session. If the 'message' (value)
+parameter is included it sets the value. If the 'message' paramter is not
+included, it retrieves the value and returns it.
+
+##### message
+- `message [string|object]`: The contents of the flash-message
+
+##### examples
+```
+this.flash.error('Yikes! Something wrong wrong.');
+// Sets the 'error' flash-message to 'Yikes! Something wrong wrong.'
+
+this.flash.error();
+// Returns 'This is fantastic!'
+```
+
+* * *
+
+#### .flash.success
+```
+flash.success([message])
+```
+
+Gets or sets the *success* flash-messages for a session. If the 'message' (value)
+parameter is included it sets the value. If the 'message' paramter is not
+included, it retrieves the value and returns it.
+
+##### message
+- `message [string|object]`: The contents of the flash-message
+
+##### examples
+```
+this.flash.success('Whoa! It worked.');
+// Sets the 'success' flash-message to 'Whoa! It worked.'
+
+this.flash.success();
+// Returns 'This is fantastic!'
+```
+
+* * *
+
+#### .flash.info
+```
+flash.info([message])
+```
+
+Gets or sets the *info* flash-messages for a session. If the 'message' (value)
+parameter is included it sets the value. If the 'message' paramter is not
+included, it retrieves the value and returns it.
+
+##### message
+- `message [string|object]`: The contents of the flash-message
+
+##### examples
+```
+this.flash.info('FYI. Just sayin.');
+// Sets the 'info' flash-message to 'FYI. Just sayin.'
+
+this.flash.info();
+// Returns 'This is fantastic!'
+```
+
+* * *
+
+#### .flash.set
+```
+flash.set([type], message)
+```
+
+Sets the flash-messages for a session, for a custom type, or the entire
+flash-message object
+
+##### type
+- `type [string]`: The flash-message type. If not included, this call sets
+the entire flash-message object
+
+##### message
+- `message [string|object]`: The contents of the flash-message
+
+##### examples
+```
+this.flash.set('foo', 'Foo bar baz');
+// Sets the 'foo' flash-message to 'Foo bar baz'
+
+this.flash.set({bar: 'Baz bar qux});
+// Sets the entire flash-message object
+```
+
+* * *
+
+#### .flash.get
+```
+flash.get([type])
+```
+
+Retrieves the flash-messages for a session, for a custom type, or the entire
+flash-message object
+
+##### type
+- `type [string]`: The flash-message type. If not included, this call
+retrieves the entire flash-message object
+
+##### examples
+```
+this.flash.set('foo', 'Foo bar baz');
+this.flash.get('foo');
+// Returns 'Foo bar baz'
+
+this.flash.get();
+// Returns an object: {foo: 'Foo bar baz'}
+```
+
+* * *
+
+#### .flash.keep
+```
+flash.keep([type])
+```
+
+Normally flash-message are wiped out when they are used in the current request.
+`keep` makes them persist and be available to the next request.
+
+##### type
+- `type [string]`: The type of message to preserve until the next request.
+If the type param is not included, preserves the entire flash-message object
+
+##### examples
+```
+this.flash.keep('error');
+// Keep the error flash around after a redirect
+```
+
+* * *
+
+#### .flash.discard
+```
+flash.discard([type])
+```
+
+Mark a particular flash-message entry (or the entire object) to be discarded at
+the end of the current request.
+
+##### type
+- `type [string]`: The type of message to discard at the end of the current request.
+If the type param is not included, discards the entire flash-message object
+
+##### examples
+```
+this.flash.discard('error');
+// Discard the current error flash-message
+```
+
+* * *
+
+
