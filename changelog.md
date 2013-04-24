@@ -3,6 +3,8 @@
 + Through-associations for models
 + Eager-loading model associations for SQL adapters
 + Better domains-based errors for bad requests
++ Improved round-trip persistence of 'object' datatype
++ Removed 'array' datatype (now just use 'object')
 + Improvements to selectTag helper
 + Fixes for MongoDB session-store
 + --geddy-root CLI option for setting application root
