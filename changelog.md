@@ -2,6 +2,7 @@
 + Flash-messages for session
 + Through-associations for models
 + Eager-loading model associations for SQL adapters
++ Better domains-based errors for bad requests
 + Improvements to selectTag helper
 + Fixes for MongoDB session-store
 + --geddy-root CLI option for setting application root
