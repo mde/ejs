@@ -50,6 +50,8 @@ usage = [
   , '                        templates(Default: EJS)'
   , '  --mustache, -m      When generating views this will create Mustache'
   , '                        templates(Default: EJS)'
+  , '  --swig, -s      When generating views this will create Swig'
+  , '                        templates(Default: EJS)'
   , '  --help, -h          Output this usage dialog'
   , '  --version, -v       Output the version of Geddy that\'s installed'
   , ''

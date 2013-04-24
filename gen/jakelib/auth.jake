@@ -107,6 +107,7 @@ namespace('auth', function () {
           , jade: '.jade'
           , handlebars: '.hbs'
           , mustache: '.ms'
+          , swig: '.swig'
           };
 
       // Copy files to the application
