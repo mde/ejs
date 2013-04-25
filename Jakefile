@@ -50,7 +50,7 @@ var p = new jake.NpmPublishTask('geddy', [
 , 'bin/**'
 , 'deps/**'
 , 'lib/**'
-, 'templates/**'
+, 'gen/**'
 , 'test/**'
 ]);
 
