@@ -65,6 +65,8 @@ var Main = function () {
     , getTree = function (url, callback) {
         var tree;
         opts.url = url;
+        opts.headers = {'User-Agent': 'GeddyJS documentation site'}
+
         geddy.request(opts, function (err, trees) {
           if (err || !trees) {
             params.error = err;
@@ -83,6 +85,7 @@ var Main = function () {
       var options = {
         url: paths[i].url
       , dataType: 'json'
+      , headers: {'User-Agent': 'GeddyJS documentation site'}
       }
       geddy.request(options, function (err, resp) {
 
@@ -137,6 +140,7 @@ var Main = function () {
     , opts = {
         url: 'https://api.github.com/repos/mde/geddy/commits'
       , dataType: 'json'
+      , headers: {'User-Agent': 'GeddyJS documentation site'}
     }
     geddy.request(opts, gotCommits);
   };
@@ -166,7 +170,10 @@ var Main = function () {
     }
 
     // get the tutorial markdown file
-    geddy.request({url: 'https://raw.github.com/mde/geddy/master/tutorial.md'}, gotTutorial);
+    geddy.request({
+      url: 'https://raw.github.com/mde/geddy/master/tutorial.md'
+      , headers: {'User-Agent': 'GeddyJS documentation site'}
+      }, gotTutorial);
   };
 
   this.changelog = function (req, resp, params) {
@@ -194,7 +201,11 @@ var Main = function () {
     }
 
     // get the tutorial markdown file
-    geddy.request({url: 'https://raw.github.com/mde/geddy/master/changelog.md'}, gotTutorial);
+    geddy.request({
+      url: 'https://raw.github.com/mde/geddy/master/changelog.md'
+      , headers: {'User-Agent': 'GeddyJS documentation site'}
+      
+      }, gotTutorial);
   };
 
   this.community = function (req, resp, params) {
@@ -210,6 +221,7 @@ var Main = function () {
     var opts = {
       url: 'https://api.github.com/repos/mde/geddy/stargazers?page='+(Math.floor(Math.random()*10)+1)
     , dataType: 'json'
+      , headers: {'User-Agent': 'GeddyJS documentation site'}
     };
     geddy.request(opts, gotStars);
   };
