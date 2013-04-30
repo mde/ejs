@@ -10,13 +10,13 @@ tests = {
   }
 
 , 'Cmd parseArgs gen app --jade': function () {
-    var c = new Cmd(['app', 'foo'], {jade: true});
+    var c = new Cmd(['app', 'foo', '--jade']);
     assert.equal('gen:app[foo,jade,default]', c.jakeTaskName);
   }
 
 , 'Cmd parseArgs gen scaffold zooby foo bar --realtime': function () {
-    var c = new Cmd(['scaffold', 'zooby', 'foo:int', 'bar:string'],
-        {realtime: true});
+    var c = new Cmd(['scaffold', 'zooby', 'foo:int', 'bar:string',
+            '--realtime']);
     assert.equal('gen:scaffold[zooby,foo:int%bar:string,default,realtime]',
         c.jakeTaskName);
   }
