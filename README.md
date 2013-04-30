@@ -191,7 +191,7 @@ router.match('/farewells/:farewelltype/kings/:kingid').to(
 
 //Can also match specific HTTP methods only
 router.match('/xandadu', 'get').to(
-  {controller: 'Xandadu', action: 'specialHandler'});
+  {controller: 'Xanadu', action: 'specialHandler'});
 ```
 
 ***Resource routes***

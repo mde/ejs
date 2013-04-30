@@ -27,7 +27,7 @@ router.match('/').to({controller: 'Todos', action: 'index'});
 //    {controller: 'Farewells', action: 'kings'});
 // Can also match specific HTTP methods only
 // router.match('/xandadu', 'get').to(
-//    {controller: 'Xandadu', action: 'specialHandler'});
+//    {controller: 'Xanadu', action: 'specialHandler'});
 //
 // Resource-based routes
 // router.resource('hemispheres');
