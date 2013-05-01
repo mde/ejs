@@ -442,7 +442,7 @@ namespace('gen', function () {
     // Create default layout if one doesn't exist
     // Hack: There should be a better way to detect if a application layout exists
     if (!utils.file.existsSync(appLayoutPath + '.html.ejs') && !utils.file.existsSync(appLayoutPath + '.html.jade') &&
-       !utils.file.existsSync(appLayoutPath + '.html.hbs') && !utils.file.existsSync(appLayoutPath + '.html.ms')) {
+       !utils.file.existsSync(appLayoutPath + '.html.hbs') && !utils.file.existsSync(appLayoutPath + '.html.ms') && !utils.file.existsSync(appLayoutPath + '.html.swig')) {
       // Copy template layout file to apps application layout file
       jake.cpR(path.join(templateViewDir, 'layout' + ext + '.ejs'), appLayoutPath + ext, {silent: true});
     }
@@ -543,7 +543,7 @@ namespace('gen', function () {
     // Create default layout if one doesn't exist
     // Hack: There should be a better way to detect if a application layout exists
     if (!utils.file.existsSync(appLayoutPath + '.html.ejs') && !utils.file.existsSync(appLayoutPath + '.html.jade') &&
-       !utils.file.existsSync(appLayoutPath + '.html.hbs') && !utils.file.existsSync(appLayoutPath + '.html.ms')) {
+       !utils.file.existsSync(appLayoutPath + '.html.hbs') && !utils.file.existsSync(appLayoutPath + '.html.ms') && !utils.file.existsSync(appLayoutPath + '.html.swig')) {
       // Copy template layout file to apps application layout file
       jake.cpR(path.join(templateViewDir, 'layout' + ext + '.ejs'), appLayoutPath + ext, {silent: true});
     }

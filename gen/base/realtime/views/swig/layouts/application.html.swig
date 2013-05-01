@@ -9,13 +9,13 @@
 
     <!-- The HTML5 shim, for IE6-8 support of HTML elements -->
     <!--[if lt IE 9]>
-      {{ scriptLink('http://html5shim.googlecode.com/svn/trunk/html5.js', {type: 'test/javascript'}) }}
+      {{ scriptLink('http://html5shim.googlecode.com/svn/trunk/html5.js', {type: 'text/javascript'}) }}
     <![endif]-->
-    {{ scriptLink('/js/jquery.min.js', {type: 'test/javascript'}) }}
-    {{ scriptLink('/js/bootstrap.min.js', {type: 'test/javascript'}) }}
-    {{ scriptLink('/js/core/core.js', {type: 'test/javascript'}) }}
-    <!-- {{ scriptLink('/js/models/your_model.js', {type: 'test/javascript'}) }} -->
-    {{ scriptLink('/js/config/init.js', {type: 'test/javascript'}) }}
+    {{ scriptLink('/js/jquery.min.js', {type: 'text/javascript'}) }}
+    {{ scriptLink('/js/bootstrap.min.js', {type: 'text/javascript'}) }}
+    {{ scriptLink('/js/core/core.js', {type: 'text/javascript'}) }}
+    <!-- {{ scriptLink('/js/models/your_model.js', {type: 'text/javascript'}) }} -->
+    {{ scriptLink('/js/config/init.js', {type: 'text/javascript'}) }}
 
     {{ styleLink('/css/bootstrap.min.css', {rel:'stylesheet'}) }}
     {{ styleLink('/css/style.css', {rel:'stylesheet'}) }}
