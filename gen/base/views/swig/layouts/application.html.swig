@@ -9,18 +9,17 @@
 
     <!-- The HTML5 shim, for IE6-8 support of HTML elements -->
     <!--[if lt IE 9]>
-      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+      {{ scriptLink('http://html5shim.googlecode.com/svn/trunk/html5.js', {type: 'test/javascript'}) }}
     <![endif]-->
+    {{ scriptLink('/js/jquery.min.js', {type: 'test/javascript'}) }}
+    {{ scriptLink('/js/bootstrap.min.js', {type: 'test/javascript'}) }}
+    {{ scriptLink('/js/core/core.js', {type: 'test/javascript'}) }}
+    <!-- {{ scriptLink('/js/models/your_model.js', {type: 'test/javascript'}) }} -->
+    {{ scriptLink('/js/config/init.js', {type: 'test/javascript'}) }}
 
-    <script type="text/javascript" src="/js/jquery.min.js"></script>
-    <script type="text/javascript" src="/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="/js/core/core.js"></script>
-    <!-- <script type="text/javascript" src="/js/models/your_model.js"></script> -->
-    <script type="text/javascript" src="/js/config/init.js"></script>
-
-    <link rel="stylesheet" href="/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/css/style.css">
-    <link rel="stylesheet" href="/css/bootstrap.responsive.min.css">
+    {{ styleLink('/css/bootstrap.min.css', {rel:'stylesheet'}) }}
+    {{ styleLink('/css/style.css', {rel:'stylesheet'}) }}
+    {{ styleLink('/css/bootstrap.responsive.min.css', {rel:'stylesheet'}) }}
 
     <!-- The fav and touch icons -->
     <link rel="shortcut icon" href="/images/favicon.ico">

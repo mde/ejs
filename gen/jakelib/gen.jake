@@ -254,7 +254,7 @@ namespace('gen', function () {
       jake.Task['gen:test'].invoke(name,
           {properties: modelProperties});
       jake.Task['gen:controllerScaffold'].invoke(name,
-          {properties: modelProperties, engine: engine});
+          {properties: modelProperties});
       jake.Task['gen:route'].invoke(name);
       jake.Task['gen:viewsScaffold'].invoke(name,
           {engine: engine, properties: modelProperties, realtime: realtime});

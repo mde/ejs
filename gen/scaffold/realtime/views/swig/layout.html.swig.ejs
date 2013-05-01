@@ -4,10 +4,11 @@
     <meta charset="utf-8">
     <title>Geddy App | This app uses Geddy.js</title>
 
-    <script type="text/javascript" src="/js/jquery.min.js"></script>
-    <script type="text/javascript" src="/js/core/core.js"></script>
-    <!-- <script type="text/javascript" src="/js/models/your_model.js"></script> -->
-    <script type="text/javascript" src="/js/config/init.js"></script>
+    {{ scriptLink('/js/jquery.min.js', {type: 'test/javascript'}) }}
+    {{ scriptLink('/js/core/core.js', {type: 'test/javascript'}) }}
+    <!-- {{ scriptLink('/js/models/your_model.js', {type: 'test/javascript'}) }} -->
+    {{ scriptLink('/js/config/init.js', {type: 'test/javascript'}) }}
+
   </head>
   <body>
     <div class="container">
