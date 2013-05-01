@@ -1,3 +1,4 @@
+var helpers = require('./helpers')
 
 task('console', {async: true}, function () {
   var t = jake.Task['env:init'];
@@ -53,10 +54,9 @@ task('console', {async: true}, function () {
     };
 
     rl.context.routes = function (resource) {
-      console.log(getRoutes(resource));
+      console.log(helpers.getRoutes(resource));
     };
   });
 
   t.invoke();
 });
-
