@@ -67,6 +67,8 @@
                                     templates(Default: EJS)
    --mustache, -m                 When generating views this will create Mustache
                                     templates(Default: EJS)
+   --swig, -S                     When generating views this will create Swig
+                                    templates(Default: EJS)
  Generator examples:
    geddy gen app foo              Generate an app in a directory named 'foo'
    geddy gen resource user name admin:boolean
