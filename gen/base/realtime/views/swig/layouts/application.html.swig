@@ -47,7 +47,7 @@
       </div>
     </div>
     <div class="container">
-      {% block content %}{% endblock %}
+      {{ yield() }}
     </div>
   </body>
 </html>

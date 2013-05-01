@@ -1,5 +1,3 @@
-{% extends layout %}
-{% block content %}
 <div class="hero-unit">
   <h2>All <%= names.constructor.plural %></h2>
   <a href="/<%= names.property.plural %>/add" class="btn pull-right">Create a new <%= names.constructor.singular %></a>
@@ -63,4 +61,3 @@ $(function () {
   geddy.model.<%= names.constructor.singular %>.on('remove' , geddy.<%= names.constructor.plural %>.remove);
 });
 </script>
-{% endblock %}

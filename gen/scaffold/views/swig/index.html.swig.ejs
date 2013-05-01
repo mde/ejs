@@ -1,5 +1,3 @@
-{% extends layout %}
-{% block content %}
 <div class="hero-unit">
   <h2>All <%= names.constructor.plural %></h2>
   <a href="/<%= names.property.plural %>/add" class="btn pull-right">Create a new <%= names.constructor.singular %></a>
@@ -19,4 +17,3 @@
 {% endfor %}
 {% endif %}
 </div>
-{% endblock %}

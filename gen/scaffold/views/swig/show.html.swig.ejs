@@ -1,5 +1,3 @@
-{% extends layout %}
-{% block content %}
 <div class="hero-unit">
   <h2 class="<%= properties['default'].name || "id" %>">{{ <%= names.property.singular %>.<%= properties['default'].name || "id" %> }}</h2>
   <a href="/<%= names.property.plural %>/{{params.id}}/edit" class="btn pull-right">Edit this <%= names.property.singular %></a>
@@ -16,5 +14,3 @@
   </div>
 </div>
 {% endfor %}
-
-{% endblock %}
