@@ -16,7 +16,7 @@
  *
 */
 
-var Adapter = require('../../../lib/template/adapters')
+var Adapter = require('../../../lib/template/adapters').Adapter
   , assert = require('assert')
   , tests
   , render = function (str, data) {
