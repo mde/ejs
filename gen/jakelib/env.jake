@@ -1,6 +1,6 @@
 
 namespace('env', function () {
-  task('init', function () {
+  task('init', {async: true}, function () {
     var cfg = {};
     if (process.env.environment) {
       cfg.environment = process.env.environment;
@@ -17,7 +17,7 @@ namespace('env', function () {
     require('../../lib/init').init(geddy, function () {
       complete();
     });
-  }, {async: true});
+  });
 
   task('cleanup', function () {
     // Disconnect all the adapters

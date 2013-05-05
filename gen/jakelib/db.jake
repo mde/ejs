@@ -10,26 +10,10 @@ var cwd = process.cwd()
 
 namespace('db', function () {
 
-  task('createMigrationModel', ['env:init'], {async: true}, function () {
-    var Migration = function () {
-          this.property('migration', 'string');
-        };
-    // Create a model definition for Migrations
-    Migration = geddy.model.register('Migration', Migration);
-    // Get a DB adapter for this new model, and create its table
-    modelInit.loadAdapterForModel(Migration, function () {
-      var createTask = jake.Task['db:createTable'];
-      createTask.once('complete', function () {
-        complete();
-      });
-      createTask.invoke('Migration');
-    });
-  });
-
-  task('createTable', ['env:init'], {async: true}, function (name) {
-
-    var modelName
-      , createTable
+  var createOrDrop = function (action, name, cb) {
+    var msg = action == 'create' ? 'Creating' : 'Dropping'
+      , modelName
+      , doAction
       , adapters
       , adapter;
 
@@ -45,7 +29,7 @@ namespace('db', function () {
       modelNames = name;
     }
 
-    createTable = function () {
+    doAction = function () {
       if ((m = modelNames.shift())) {
 
         // Make sure this is a correct model-name
@@ -56,14 +40,14 @@ namespace('db', function () {
 
         adapter = geddy.model.adapters[m];
         if (adapter) {
-          console.log('Creating table for ' + m);
-          adapter.createTable(m, function (err, data) {
+          console.log(msg + ' table for ' + m);
+          adapter[action + 'Table'](m, function (err, data) {
             if (err) { throw err }
-            createTable();
+            doAction();
           });
         }
         else {
-          createTable();
+          doAction();
         }
       }
       else {
@@ -72,17 +56,47 @@ namespace('db', function () {
     };
     // Defer until associations are set up
     setTimeout(function () {
-      createTable();
+      doAction();
     }, 0);
+  };
+
+  task('dropTable', ['env:init', 'createMigrationModel'], {async: true},
+      function (name) {
+    createOrDrop('drop', name, complete);
+  });
+
+  task('createTable', ['env:init', 'createMigrationModel'], {async: true},
+      function (name) {
+    createOrDrop('create', name, complete);
+  });
+
+  task('createMigrationModel', ['env:init'], {async: true}, function () {
+    var Migration = function () {
+          this.property('migration', 'string');
+        };
+    // Create a model definition for Migrations
+    Migration = geddy.model.register('Migration', Migration);
+    // Get a DB adapter for this new model, and create its table
+    modelInit.loadAdapterForModel(Migration, function () {
+      complete();
+    });
   });
 
   task('init', ['env:init', 'createMigrationModel'], {async: true}, function () {
-    var modelNames = Object.keys(geddy.model.descriptionRegistry)
+    var modelName = 'Migration'
       , createTask = jake.Task['db:createTable'];
+
+      if (geddy.model.defaultAdapter == 'memory') {
+        fail('Please set geddy.model.defaultAdapter to use a SQL adapter');
+      }
+
       createTask.once('complete', function () {
+        var dir = path.join(process.cwd(), 'migration');
+        console.log('Created ' + dir);
+        jake.mkdirP('migration');
         complete();
       });
-      createTask.invoke(modelNames);
+      createTask.invoke(modelName);
   });
 
   task('migrate', ['env:init'], {async: true}, function () {
