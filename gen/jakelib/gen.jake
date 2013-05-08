@@ -265,7 +265,8 @@ namespace('gen', function () {
   }, {async: true});
 
   task('model', function (name, properties, modelPath) {
-    var createTableTask;
+    var props = _formatModelProperties(properties)
+      , createTableTask;
     if (!name) {
       throw new Error('No model name specified.');
     }
@@ -276,16 +277,17 @@ namespace('gen', function () {
 
     _writeTemplate(name, modelPath, path.join('app', 'models'), {
         inflection: 'singular'
-      , properties: _formatModelProperties(properties)
+      , properties: props
     });
 
     // Try to create a table -- should be a no-op if an
     // appropriate DB adapter can't be found
-    createTableTask = jake.Task['db:createTable'];
+    createTableTask = jake.Task['migration:createForTable'];
     createTableTask.on('complete', function () {
       complete();
     });
     createTableTask.invoke(name);
+
 
   }, {async: true});
 
