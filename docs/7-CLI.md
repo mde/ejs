@@ -9,7 +9,7 @@ Geddy has a robust CLI tool to help you generate apps, run your tests, or play w
 - `—jade, -j`: When generating views, use Jade templates(Default: EJS)
 - `—handle, -H`: When generating views, use Handlebars templates(Default: EJS)
 - `—mustache, -m`: When generating views, use Mustache templates(Default: EJS)
-- `—swig, -S`: When generating views, use Swig templates(Default: EJS)
+- `—swig, -s`: When generating views, use Swig templates(Default: EJS)
 - `—version, -v`: Output the version of Geddy installed
 - `—help, -h`: Output the list of commands and options
 
