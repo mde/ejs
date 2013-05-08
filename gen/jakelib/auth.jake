@@ -107,6 +107,7 @@ namespace('auth', function () {
           , jade: '.jade'
           , handlebars: '.hbs'
           , mustache: '.ms'
+          , swig: '.swig'
           };
 
       // Copy files to the application
@@ -126,7 +127,7 @@ namespace('auth', function () {
 
         // Delete any existing interferring templates
         if (item.match('/app/views')) {
-          ['.jade', '.ejs', '.ms', '.mustache', '.hbs', '.handlebars'].forEach(function (ext) {
+          ['.jade', '.ejs', '.ms', '.mustache', '.hbs', '.handlebars', '.swig'].forEach(function (ext) {
             p = path.basename(item, path.extname(item)) + ext;
 
             jake.rmRf(path.join(to, p), {silent: true});

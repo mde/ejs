@@ -9,6 +9,7 @@ The view layer supports these four templating engines:
 + Jade(.jade)
 + Mustache(.mu, .ms, .mustache)
 + Handlebars(.hbs, .handlebars)
++ [Swig](http://paularmstrong.github.io/swig/)(.swig)
 
 To use a certain template engine just give the view a corresponding extension listed above.
 
@@ -25,6 +26,9 @@ $ geddy scaffold -j user
 
 $ geddy app --handle my_app
 $ geddy scaffold -H user
+
+$ geddy app --swig my_app
+$ geddy scaffold --swig user
 ```
 
 * * *
