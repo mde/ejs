@@ -237,7 +237,7 @@ namespace('gen', function () {
   }, {async: true});
 
   // Creates a full scaffold with views, a model, controller and a resource route
-  task('scaffold', function (name, realtime, engine, modelProperties) {
+  task('scaffold', function (name, modelProperties, engine, realtime) {
     var modelTask = jake.Task['gen:model'];
 
     if (!name) {
