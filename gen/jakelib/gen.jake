@@ -576,5 +576,14 @@ namespace('gen', function () {
         'DO make a backup of it, keep it someplace safe.');
   });
 
+  task('auth', {async: true}, function () {
+    var authTask = jake.Task['auth:init'];
+    authTask.on('complete', function () {
+      complete();
+    });
+    authTask.invoke.apply(authTask, arguments);
+
+  });
+
 });
 
