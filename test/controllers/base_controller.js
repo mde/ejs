@@ -106,6 +106,42 @@ tests = {
     c._handleAction('foo');
   }
 
+, 'action with multiple async before-filters and "except" on the first': function (next) {
+    var c = createController()
+      , incr = 0;
+    c.foo = function () {
+      assert.equal(1, incr);
+      next();
+    };
+    c.before(function (n) {
+      incr++;
+      n();
+    }, {async: true, except: ['foo']});
+    c.before(function (n) {
+      incr++;
+      n();
+    }, {async: true});
+    c._handleAction('foo');
+  }
+
+, 'action with multiple async before-filters and "only" on the first': function (next) {
+    var c = createController()
+      , incr = 0;
+    c.foo = function () {
+      assert.equal(1, incr);
+      next();
+    };
+    c.before(function (n) {
+      incr++;
+      n();
+    }, {async: true, only: ['bar']});
+    c.before(function (n) {
+      incr++;
+      n();
+    }, {async: true});
+    c._handleAction('foo');
+  }
+
 /*
 , 'action with sync after-filter': function (next) {
     var c = createController()

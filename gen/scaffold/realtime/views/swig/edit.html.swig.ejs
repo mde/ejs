@@ -1,0 +1,58 @@
+<div class="hero-unit">
+  <form id="<%= names.property.singular %>-form" class="form-horizontal" action="/<%= names.filename.plural %>/{{params.id}}?_method=PUT" method="POST">
+    <fieldset>
+      <legend>Update this <%= names.constructor.singular %></legend>
+      {% if params.errors %}
+      <div class="control-group">
+        <ul>
+        {% for err in params.errors %}
+          <li>{{err}}</li>
+        {% endfor %}
+        </ul>
+      </div>
+      {% endif %}
+
+      <% for(var i in properties) { -%>
+      <% if(properties[i].name && properties[i].name !== 'id') { -%>
+      <div class="control-group">
+        <label for="<%= properties[i].name %>" class="control-label"><%= properties[i].name %></label>
+        <div class="controls">
+      <% if(properties[i].type === 'string') { -%>
+      <% if(properties[i].name === 'password') { -%>
+          <input type="password" class="span6" name="<%= properties[i].name %>" value="{{<%= names.property.singular %>.<%= properties[i].name %>}}" />
+      <% } else { -%>
+          <input type="text" class="span6" name="<%= properties[i].name %>" value="{{<%= names.property.singular %>.<%= properties[i].name %>}}" />
+      <% } -%>
+      <% } else if(properties[i].type === 'text') { -%>
+          <textarea rows="10" class="span6" name="<%= properties[i].name %>"></textarea>
+      <% } else if(properties[i].type === 'number' || properties[i].type === 'int') { -%>
+          <input type="number" class="span2" name="<%= properties[i].name %>" value="{{<%= names.property.singular %>.<%= properties[i].name %>}}" />
+      <% } else if(properties[i].type === 'boolean') { -%>
+          <select name="<%= properties[i].name %>", class="span1">
+            {% if <%= names.property.singular %>.<%= properties[i].name %>  %}
+            <option>false</option>
+            <option selected>true</option>
+            {% else %}
+            <option selected>false</option>
+            <option>true</option>
+            {% endif %}
+          </select>
+      <% } else if(properties[i].type === 'datetime') {  -%>
+          <input type="datetime" class="span3" name="<%= properties[i].name %>" value="{{<%= names.property.singular %>.<%= properties[i].name %>}}" />
+      <% } else if(properties[i].type === 'date') { -%>
+          <input type="date" class="span2" name="<%= properties[i].name %>" value="{{<%= names.property.singular %>.<%= properties[i].name %>}}" />
+      <% } else { -%>
+          <%= properties[i].type %>
+      <% } -%>
+        </div>
+      </div>
+      <% } -%>
+      <% } -%>
+
+      <div class="form-actions">
+        <input type="submit" class="btn btn-primary" value="Save" />
+        <input type="submit" class="btn btn-danger" value="Delete" formaction="/<%= names.filename.plural %>/{{params.id}}?_method=DELETE" />
+      </div>
+    </fieldset>
+  </form>
+</div>

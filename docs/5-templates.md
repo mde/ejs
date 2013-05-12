@@ -9,6 +9,7 @@ The view layer supports these four templating engines:
 + Jade(.jade)
 + Mustache(.mu, .ms, .mustache)
 + Handlebars(.hbs, .handlebars)
++ [Swig](http://paularmstrong.github.io/swig/)(.swig)
 
 To use a certain template engine just give the view a corresponding extension listed above.
 
@@ -25,6 +26,9 @@ $ geddy scaffold -j user
 
 $ geddy app --handle my_app
 $ geddy scaffold -H user
+
+$ geddy app --swig my_app
+$ geddy scaffold --swig user
 ```
 
 * * *
@@ -145,7 +149,8 @@ contentTag('a', 'hey there', {href: 'http://google.com', data_go_to: 'http://goo
 
 Creates a HTML select tag using the given `optionsArray` to create HTML option elements. 
 
-`optionsArray` could be an array of strings, numbers or an object with value and text properties to be used for the value attribute and option element content respectively. 
+`optionsArray` could be an array of strings, numbers or an object with value and text properties to be used for the value attribute and option element content respectively,
+along with an `attr` object which will include any other html options. (you can even pass `selected:true` and 'value:VALUE' with the `attr` object as well, but the outer ones, if there is any, will take precedence)
 
 #####Examples:
 ```
@@ -157,6 +162,10 @@ selectTag(['open', 'close'], todo.status, { class:'span6', name:'status' })
 
 selectTag([{value: 1, text: "Text 1"}, {value: 2, text: "Text 2"}], 2)
 // => <select><option value="1">Text 1</option><option selected="selected" value="2">Text 2</option></select>
+
+selectTag([{text: "Text 1", attrs: {value: 1, class: 'anoption', data: {thing: 'vip', rate: '0.99'}}}, {value: 2, text: "Text 2", attrs: {value: 0, data: {thing: 'basic'}}}], 2)
+// => <select><option data-thing="vip" data-rate="0.99" class="anoption" value="1">Text 1</option><option data-thing="basic" selected="selected" value="2">Text 2</option></select>
+
 ```
 
 * * *

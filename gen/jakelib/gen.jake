@@ -222,7 +222,7 @@ namespace('gen', function () {
     }
 
     modelTask.on('complete', function () {
-      jake.Task['gen:controllerMin'].invoke(name);
+      jake.Task['gen:controller'].invoke(name);
       jake.Task['gen:route'].invoke(name);
       jake.Task['gen:test'].invoke(name,
           {properties: modelProperties});
@@ -291,33 +291,33 @@ namespace('gen', function () {
 
   }, {async: true});
 
+  task('controller', function (name) {
+    if (!name) {
+      throw new Error('No controller name specified.');
+    }
+
+
+    _writeTemplate(name, 'resource/controller', path.join('app', 'controllers'),
+        {inflection: 'plural', bare: false});
+  });
+
   task('test', function (name) {
     if (!name) {
       throw new Error('No test name specified.');
     }
+
     _writeTemplate(name, 'resource/test_model', 'test/models',
         {inflection: 'singular'});
     _writeTemplate(name, 'resource/test_controller', 'test/controllers',
         {inflection: 'plural'});
   });
 
-  // Called by gen:resource
-  task('controllerMin', function (name) {
-    if (!name) {
-      throw new Error('No controller name specified.');
-    }
-    _writeTemplate(name, 'resource/controller', path.join('app', 'controllers'), {
-        inflection: 'plural'
-      , bare: false
-    });
-  });
-
-  // Called by gen:scaffold
   task('controllerScaffold', function (name, options) {
     if (!name) {
       throw new Error('No controller name specified.');
     }
     options = options || {};
+
     _writeTemplate(name, 'scaffold/controller', path.join('app', 'controllers'), {
         inflection: 'plural'
       , bare: false
@@ -325,14 +325,14 @@ namespace('gen', function () {
     });
   });
 
-  // Called by `geddy gen controller <controller_name>`
-  task('controller', function (name, engine) {
+  task('bareController', function (name, engine) {
     if (!name) {
       throw new Error('No controller name specified.');
     }
     if (!engine || engine == 'default') {
       engine = 'ejs';
     }
+
     _writeTemplate(name, 'resource/controller', path.join('app', 'controllers'),
         {inflection: 'plural', bare: true});
     jake.Task['gen:route'].invoke(name, {bare: true});
@@ -418,6 +418,9 @@ namespace('gen', function () {
       case 'mustache':
         ext += '.ms';
         break;
+      case 'swig':
+        ext += '.swig';
+        break;
     }
 
     // Set application layout path
@@ -441,7 +444,8 @@ namespace('gen', function () {
     // Create default layout if one doesn't exist
     // Hack: There should be a better way to detect if a application layout exists
     if (!utils.file.existsSync(appLayoutPath + '.html.ejs') && !utils.file.existsSync(appLayoutPath + '.html.jade') &&
-       !utils.file.existsSync(appLayoutPath + '.html.hbs') && !utils.file.existsSync(appLayoutPath + '.html.ms')) {
+       !utils.file.existsSync(appLayoutPath + '.html.hbs') && !utils.file.existsSync(appLayoutPath + '.html.ms') &&
+       !utils.file.existsSync(appLayoutPath + '.html.swig')) {
       // Copy template layout file to apps application layout file
       jake.cpR(path.join(templateViewDir, 'layout' + ext + '.ejs'), appLayoutPath + ext, {silent: true});
     }
@@ -500,6 +504,9 @@ namespace('gen', function () {
       case 'mustache':
         ext += '.ms';
         break;
+      case 'swig':
+        ext += '.swig';
+        break;
     }
 
     // Get view path
@@ -539,7 +546,8 @@ namespace('gen', function () {
     // Create default layout if one doesn't exist
     // Hack: There should be a better way to detect if a application layout exists
     if (!utils.file.existsSync(appLayoutPath + '.html.ejs') && !utils.file.existsSync(appLayoutPath + '.html.jade') &&
-       !utils.file.existsSync(appLayoutPath + '.html.hbs') && !utils.file.existsSync(appLayoutPath + '.html.ms')) {
+       !utils.file.existsSync(appLayoutPath + '.html.hbs') && !utils.file.existsSync(appLayoutPath + '.html.ms') &&
+       !utils.file.existsSync(appLayoutPath + '.html.swig')) {
       // Copy template layout file to apps application layout file
       jake.cpR(path.join(templateViewDir, 'layout' + ext + '.ejs'), appLayoutPath + ext, {silent: true});
     }
@@ -568,15 +576,6 @@ namespace('gen', function () {
     console.log('Added app-secret to config/secrets.json.\n' +
         'DO NOT add this file into your revision control.\n' +
         'DO make a backup of it, keep it someplace safe.');
-  });
-
-  // Delegate to stuff in jakelib/auth.jake
-  task('auth', {async: true}, function () {
-    var t = jake.Task['auth:init'];
-    t.on('complete', function () {
-      complete();
-    });
-    t.invoke.apply(t, arguments);
   });
 
   // Delegate to stuff in jakelib/auth.jake

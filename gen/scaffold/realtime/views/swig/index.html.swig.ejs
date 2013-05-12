@@ -1,0 +1,63 @@
+<div class="hero-unit">
+  <h2>All <%= names.constructor.plural %></h2>
+  <a href="/<%= names.property.plural %>/add" class="btn pull-right">Create a new <%= names.constructor.singular %></a>
+</div>
+
+{% if <%= names.property.plural %> %}
+<div id="<%= names.property.plural %>-list">
+{% for <%= names.property.singular %> in <%= names.property.plural %> %}
+  <div class="row list-item" id="<%= names.property.singular %>-{{ <%= names.property.singular %>.id }}">
+    <div class="span8">
+      <h3><a href="/<%= names.property.plural %>/{{<%= names.property.singular %>.id}}">{{<%= names.property.singular %>.id}}</a></h3>
+    </div>
+    <div class="span4">
+      <h3><i class="icon-list-alt"></i>{{<%= names.property.singular %>.id}}</h3>
+    </div>
+  </div>
+{% endfor %}
+{% endif %}
+</div>
+
+
+<script type="text/javascript">
+$(function () {
+  geddy.io.addListenersForModels(['<%= names.constructor.singular %>']);
+
+  var renderTemplate = function (<%= names.property.singular %>) {
+    var template = [ ''
+      , '<div class="row list-item" id="<%= names.property.singular %>-' + <%= names.property.singular %>.id + '">'
+      , '  <div class="span8">'
+      , '    <h3><a href="/<%= names.property.plural %>/' + <%= names.property.singular %>.id + '">' + <%= names.property.singular %>.<%= properties['default'].name || "id" %> + '</a></h3>'
+      , '  </div>'
+      , '  <div class="span4">'
+      , '    <h3><i class="icon-list-alt"></i>' + <%= names.property.singular %>.id + '</h3>'
+      , '  </div>'
+      , '</div>'
+    ].join('');
+
+    return $(template);
+  }
+
+  var <%= names.constructor.plural %>Controller = function (opts) {
+    this.options = opts || {};
+
+    this.create = function (<%= names.property.singular %>) {
+      $('#<%= names.property.plural %>-list').append(renderTemplate(<%= names.property.singular %>));
+    };
+
+    this.update = function (<%= names.property.singular %>) {
+      $('#<%= names.property.singular %>-' + <%= names.property.singular %>.id).replaceWith(renderTemplate(<%= names.property.singular %>));
+    };
+
+    this.remove = function (id) {
+      $('#<%= names.property.singular %>-' + id).remove();
+    };
+
+  };
+  geddy.<%= names.constructor.plural %> = new <%= names.constructor.plural %>Controller();
+
+  geddy.model.<%= names.constructor.singular %>.on('save'   , geddy.<%= names.constructor.plural %>.create);
+  geddy.model.<%= names.constructor.singular %>.on('update' , geddy.<%= names.constructor.plural %>.update);
+  geddy.model.<%= names.constructor.singular %>.on('remove' , geddy.<%= names.constructor.plural %>.remove);
+});
+</script>

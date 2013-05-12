@@ -9,6 +9,7 @@ Geddy has a robust CLI tool to help you generate apps, run your tests, or play w
 - `—jade, -j`: When generating views, use Jade templates(Default: EJS)
 - `—handle, -H`: When generating views, use Handlebars templates(Default: EJS)
 - `—mustache, -m`: When generating views, use Mustache templates(Default: EJS)
+- `—swig, -s`: When generating views, use Swig templates(Default: EJS)
 - `—version, -v`: Output the version of Geddy installed
 - `—help, -h`: Output the list of commands and options
 
@@ -22,7 +23,7 @@ $ geddy
 ```
 
 #### app
-`app` takes a single argument being the name you'd like, then it will generate a base application. If no name is given the command will fail. If you include the `—jade`, `—handle`, or `—mustache` option you can substitute the templating language to your liking
+`app` takes a single argument being the name you'd like, then it will generate a base application. If no name is given the command will fail. If you include the `—jade`, `—handle`, `—mustache`, or '-swig' option you can substitute the templating language to your liking
 
 ```
 $ geddy app app_name
@@ -38,7 +39,7 @@ $ geddy resource user name description password
 ```
 
 #### scaffold
-`scaffold` takes one or more arguments, the first being a name and the others being a set of model properties. Scaffolding includes a controller, a model including the given model properties as well as a default model adapter a resource route and will create all views. If you also include the options `—jade`, `—handle` or `—mustache` you can substitute the template language to your liking.
+`scaffold` takes one or more arguments, the first being a name and the others being a set of model properties. Scaffolding includes a controller, a model including the given model properties as well as a default model adapter a resource route and will create all views. If you also include the options `—jade`, `—handle`, `—mustache`, or '-swig' you can substitute the template language to your liking.
 
 ```
 $geddy scaffold user name description password
@@ -46,7 +47,7 @@ $geddy scaffold user name description password
 ```
 
 #### controller
-`controller` takes a single argument being a name. It will create a new controller, a route and an index view. If you also include the options `—jade`, `—handle` or `—mustache` you can substitute the template language to your liking.
+`controller` takes a single argument being a name. It will create a new controller, a route and an index view. If you also include the options `—jade`, `—handle`, `—mustache`, or '-swig' you can substitute the template language to your liking.
 
 ```
 $ geddy controller users

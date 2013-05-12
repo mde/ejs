@@ -108,20 +108,44 @@ tests = {
 
 , 'test select tag with array of value/text objects for contentTag': function() { 
     var choices = [{value: 1, text: "Text 1"}, {value: 2, text: "Text 2"}]
-      string = helpers.contentTag("select", choices);
+      , string = helpers.contentTag("select", choices);
     assert.equal(string, "<select><option value=\"1\">Text 1</option><option value=\"2\">Text 2</option></select>"); 
   }
 
 , 'test select tag with selected option': function() { 
     var choices = [{value: 1, text: "Text 1"}, {value: 2, text: "Text 2"}]
-      string = helpers.selectTag(choices, 2);
+      , string = helpers.selectTag(choices, 2);
     assert.equal(string, "<select><option value=\"1\">Text 1</option><option selected=\"selected\" value=\"2\">Text 2</option></select>"); 
   }
 
-, 'test select tag with html options': function() { 
+, 'test select tag with html options': function() {
     var choices = [{value: 1, text: "Text 1"}, {value: 2, text: "Text 2"}]
-      string = helpers.selectTag(choices, 2, {class: 'myclass'});
+      , string = helpers.selectTag(choices, 2, {class: 'myclass'});
     assert.equal(string, "<select class=\"myclass\"><option value=\"1\">Text 1</option><option selected=\"selected\" value=\"2\">Text 2</option></select>"); 
+  }
+
+, 'test select tag with array of text/attrs objects for contentTag': function() {
+    var choices = [{text: "Text 1", attrs: {value: 1, data: {thing: "avalue"}}}, {value: 2, text: "Text 2", attrs: {value: 3, data: {thing: "avalue"}}}]
+      , string = helpers.contentTag("select", choices);
+    assert.equal(string, "<select><option data-thing=\"avalue\" value=\"1\">Text 1</option><option data-thing=\"avalue\" value=\"2\">Text 2</option></select>");
+  }
+
+  , 'test select tag with text/attrs and selected option using the seleted param': function() {
+    var choices = [{value: 1, text: "Text 1", attrs: {data: {thing: "avalue"}}}, {value: 2, text: "Text 2", attrs: { data: {thing: "avalue"}}}]
+      , string = helpers.selectTag(choices, 2);
+    assert.equal(string, "<select><option data-thing=\"avalue\" value=\"1\">Text 1</option><option data-thing=\"avalue\" selected=\"selected\" value=\"2\">Text 2</option></select>");
+  }
+
+, 'test select tag with text/attrs and selected option using the selected in attrs': function() {
+    var choices = [{value: 1, text: "Text 1", attrs: {data: {thing: "avalue"}}}, {value: 2, text: "Text 2", attrs: {selected: true, data: {thing: "avalue"}}}]
+      , string = helpers.selectTag(choices);
+    assert.equal(string, "<select><option data-thing=\"avalue\" value=\"1\">Text 1</option><option data-thing=\"avalue\" selected=\"selected\" value=\"2\">Text 2</option></select>");
+  }
+
+, 'test select tag with text/attrs and selected option using a selected in attrs and an outer one too to make sure the outer takes precedence': function() {
+    var choices = [{value: 1, text: "Text 1", attrs: {data: {thing: "avalue"}, selected: true}}, {value: 2, text: "Text 2", attrs: {data: {thing: "avalue"}}}]
+      , string = helpers.selectTag(choices, 2);
+    assert.equal(string, "<select><option data-thing=\"avalue\" value=\"1\">Text 1</option><option data-thing=\"avalue\" selected=\"selected\" value=\"2\">Text 2</option></select>");
   }
 
 , 'test single tags in truncateHTML': function () {

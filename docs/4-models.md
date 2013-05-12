@@ -45,7 +45,6 @@ defines a single property
 	- `'int'`
 	- `'boolean'`
 	- `'object'`
-	- `'array'`
 	- `'datetime'`
 	- `'date'`
 	- `'time'`

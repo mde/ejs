@@ -1,0 +1,19 @@
+<div class="hero-unit">
+  <h2>All <%= names.constructor.plural %></h2>
+  <a href="/<%= names.property.plural %>/add" class="btn pull-right">Create a new <%= names.constructor.singular %></a>
+</div>
+
+{% if <%= names.property.plural %> %}
+<div id="<%= names.property.plural %>-list">
+{% for <%= names.property.singular %> in <%= names.property.plural %> %}
+  <div class="row list-item" id="<%= names.property.singular %>-{{ <%= names.property.singular %>.id }}">
+    <div class="span8">
+      <h3><a href="/<%= names.property.plural %>/{{<%= names.property.singular %>.id}}">{{<%= names.property.singular %>.id}}</a></h3>
+    </div>
+    <div class="span4">
+      <h3><i class="icon-list-alt"></i>{{<%= names.property.singular %>.id}}</h3>
+    </div>
+  </div>
+{% endfor %}
+{% endif %}
+</div>
