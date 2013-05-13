@@ -286,7 +286,7 @@ namespace('gen', function () {
     createTableTask.on('complete', function () {
       complete();
     });
-    createTableTask.invoke(name);
+    createTableTask.invoke(name, props);
 
 
   }, {async: true});

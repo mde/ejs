@@ -1,6 +1,6 @@
 var <%= ctorName %> = function () {
-  this.up = function () {};
-  this.down = function () {};
+  this.up = function () {<%= upCode %>};
+  this.down = function () {<%= downCode %>};
 };
 
 exports.<%= ctorName %> = <%= ctorName %>;

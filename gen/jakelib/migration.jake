@@ -6,13 +6,20 @@ var utils = require('utilities')
 
 namespace('migration', function () {
 
-  var createMigration = function (name) {
-        var filename = utils.string.snakeize(name)
+  var createMigration = function (name, options) {
+        var opts = options || {}
+          , filename = utils.string.snakeize(name)
           , ctorName = utils.string.camelize(filename, {initialCap: true})
+          , upCode = opts.upCode || ''
+          , downCode = opts.downCode || ''
           , text = fs.readFileSync(path.join(genDirname, 'base',
                 'migration.ejs'), 'utf8').toString()
           , adapter = new Adapter({engine: 'ejs', template: text})
-          , templContent = adapter.render({ctorName: ctorName});
+          , templContent = adapter.render({
+              ctorName: ctorName
+            , upCode: upCode
+            , downCode: downCode
+            });
         return templContent;
       }
     , getFilename = function (name) {
@@ -36,12 +43,20 @@ namespace('migration', function () {
   });
 
   task('createForTable', function (name, props) {
-    var templContent = createMigration(name)
-      , upStub = 'this.up = function () {};'
-      , upContent = '';
+    var templContent = ''
+      , upCode = ''
+      , downCode = '';
 
-    templContent = templContent.replace(upStub, upContent);
+    console.dir(props);
 
+    Object.keys(props).forEach(function (p) {
+      console.log(props[p]);
+    });
+
+    templContent = createMigration(name, {
+      upCode: upCode
+    , downCode: downCode
+    })
     console.log(templContent);
   });
 
