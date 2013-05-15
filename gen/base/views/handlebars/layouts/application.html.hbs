@@ -47,7 +47,22 @@
       </div>
     </div>
     <div class="container">
+      <!-- Displays flash messages -->
+      <div id="flash-container">
+        {{#each flash.messages}}
+          {{#this}}
+          <div class="{{displayClass}}">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            {{message}}
+          </div>
+          {{/this}}
+        {{/each}}
+      </div>
       {{{yield}}}
     </div>
+    <script type="text/javascript">
+      /* Initializes the dismiss buttons on the flash messages */
+      $("#flash-container .alert").alert();
+    </script>
   </body>
 </html>
