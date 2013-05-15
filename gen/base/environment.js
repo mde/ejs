@@ -7,7 +7,7 @@ var config = {
     classes: {
       success: 'alert alert-success',
       alert: 'alert',
-      error: 'alert alert-danger',
+      error: 'alert alert-error',
       info: 'alert alert-info'
     }
   }
