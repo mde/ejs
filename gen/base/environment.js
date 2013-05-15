@@ -6,7 +6,8 @@ var config = {
     defaultClass: 'alert',
     classes: {
       success: 'alert alert-success',
-      alert: 'alert alert-danger',
+      alert: 'alert',
+      error: 'alert alert-danger',
       info: 'alert alert-info'
     }
   }
