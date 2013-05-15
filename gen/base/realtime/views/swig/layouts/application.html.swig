@@ -9,18 +9,17 @@
 
     <!-- The HTML5 shim, for IE6-8 support of HTML elements -->
     <!--[if lt IE 9]>
-      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+      {{ scriptLink('http://html5shim.googlecode.com/svn/trunk/html5.js', {type: 'text/javascript'}) }}
     <![endif]-->
+    {{ scriptLink('/js/jquery.min.js', {type: 'text/javascript'}) }}
+    {{ scriptLink('/js/bootstrap.min.js', {type: 'text/javascript'}) }}
+    {{ scriptLink('/js/core/core.js', {type: 'text/javascript'}) }}
+    <!-- {{ scriptLink('/js/models/your_model.js', {type: 'text/javascript'}) }} -->
+    {{ scriptLink('/js/config/init.js', {type: 'text/javascript'}) }}
 
-    <script type="text/javascript" src="/js/jquery.min.js"></script>
-    <script type="text/javascript" src="/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="/js/core/core.js"></script>
-    <!-- <script type="text/javascript" src="/js/models/your_model.js"></script> -->
-    <script type="text/javascript" src="/js/config/init.js"></script>
-
-    <link rel="stylesheet" href="/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/css/style.css">
-    <link rel="stylesheet" href="/css/bootstrap.responsive.min.css">
+    {{ styleLink('/css/bootstrap.min.css', {rel:'stylesheet'}) }}
+    {{ styleLink('/css/style.css', {rel:'stylesheet'}) }}
+    {{ styleLink('/css/bootstrap.responsive.min.css', {rel:'stylesheet'}) }}
 
     <!-- The fav and touch icons -->
     <link rel="shortcut icon" href="/images/favicon.ico">
@@ -38,9 +37,9 @@
           <a class="brand" href="{{mainsPath}}">Geddy App</a>
           <div class="nav-collapse">
             <ul class="nav">
-              <li class="active">{{{linkTo 'Home' mainsPath}}}</li>
-              <li>{{{linkTo 'Tutorial' 'http://geddyjs.org/tutorial'}}}</li>
-              <li>{{{linkTo 'Docs' 'http://geddyjs.org/documentation'}}}</li>
+              <li class="active"><a href="{{mainsPath}}">Home</a></li>
+              <li><a href="http://geddyjs.org/tutorial">Tutorial</a></li>
+              <li><a href="http://geddyjs.org/documentation">Docs</a></li>
             </ul>
           </div><!--/.nav-collapse -->
         </div>
@@ -49,21 +48,19 @@
     <div class="container">
       <!-- Displays flash messages -->
       <div id="flash-container">
-        {{#each flash.messagesArr}}
-          {{#this}}
-          <div class="{{displayClass}}">
-            <button type="button" class="close" data-dismiss="alert">&times;</button>
-            {{#if isInline}}
-                <strong>{{heading}}:</strong>&nbsp;
-            {{else}}
-                <h4>{{heading}}</h4>
-            {{/if}}
-            {{description}}
-          </div>
-          {{/this}}
-        {{/each}}
+        {% for msg in flash.messagesArr %}
+            <div class="{{ msg.displayClass }}">
+              <button type="button" class="close" data-dismiss="alert">&times;</button>
+              {% if msg.isInline %}
+                <strong>{{ msg.heading }}:</strong>&nbsp;
+              {% else %}
+                <h4>{{ msg.heading }}</h4>
+              {% endif %}
+              {{msg.description}}
+            </div>
+        {% endfor %}
       </div>
-      {{{yield}}}
+      {{ yield() }}
     </div>
     <script type="text/javascript">
       /* Initializes the dismiss buttons on the flash messages */
