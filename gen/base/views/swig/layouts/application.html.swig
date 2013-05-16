@@ -51,7 +51,12 @@
         {% for msg in flash.messages %}
             <div class="{{ msg.displayClass }}">
               <button type="button" class="close" data-dismiss="alert">&times;</button>
-              {{ msg.message }}
+              {% if msg.isInline %}
+                <strong>{{ msg.heading }}:</strong>&nbsp;
+              {% else %}
+                <h4>{{ msg.heading }}</h4>
+              {% endif %}
+              {{msg.description}}
             </div>
         {% endfor %}
       </div>

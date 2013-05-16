@@ -53,7 +53,12 @@
           {{#this}}
           <div class="{{displayClass}}">
             <button type="button" class="close" data-dismiss="alert">&times;</button>
-            {{message}}
+            {{#if isInline}}
+                <strong>{{heading}}:</strong>&nbsp;
+            {{else}}
+                <h4>{{heading}}</h4>
+            {{/if}}
+            {{description}}
           </div>
           {{/this}}
         {{/each}}
