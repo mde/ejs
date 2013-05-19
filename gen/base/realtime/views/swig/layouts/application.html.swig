@@ -46,7 +46,25 @@
       </div>
     </div>
     <div class="container">
+      <!-- Displays flash messages -->
+      <div id="flash-container">
+        {% for msg in flash.messages %}
+            <div class="{{ msg.displayClass }}">
+              <button type="button" class="close" data-dismiss="alert">&times;</button>
+              {% if msg.isInline %}
+                <strong>{{ msg.heading }}:</strong>&nbsp;
+              {% else %}
+                <h4>{{ msg.heading }}</h4>
+              {% endif %}
+              {{msg.description}}
+            </div>
+        {% endfor %}
+      </div>
       {{ yield() }}
     </div>
+    <script type="text/javascript">
+      /* Initializes the dismiss buttons on the flash messages */
+      $("#flash-container .alert").alert();
+    </script>
   </body>
 </html>

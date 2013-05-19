@@ -46,7 +46,32 @@
       </div>
     </div>
     <div class="container">
+      <!-- Displays flash messages -->
+      <div id="flash-container">
+        <%
+        var flashes = flash.messages;
+        for(var type in flashes) {
+          if(flash.messages.hasOwnProperty(type)) {
+        %>
+            <div class="<%= flashes[type].displayClass %>">
+              <button type="button" class="close" data-dismiss="alert">&times;</button>
+              <% if(flashes[type].isInline) { %>
+                <strong><%= flashes[type].heading %>:</strong>&nbsp;
+              <% } else { %>
+                <h4><%= flashes[type].heading %></h4>
+              <% } %>
+              <%= flashes[type].description %>
+            </div>
+        <%
+          }
+        }
+        %>
+      </div>
       <%- yield(); %>
     </div>
+    <script type="text/javascript">
+      /* Initializes the dismiss buttons on the flash messages */
+      $("#flash-container .alert").alert();
+    </script>
   </body>
 </html>
