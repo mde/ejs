@@ -44,7 +44,7 @@ Apache License, Version 2
 
 ### Prerequisites
 
-Geddy requires version 0.6.x of Node.js or higher, and the
+Geddy requires version 0.8.x of Node.js or higher, and the
 [Jake](https://github.com/mde/jake) JavaScript build-tool.
 
 ### Installing with [NPM](http://npmjs.org/)
@@ -55,30 +55,6 @@ Geddy requires version 0.6.x of Node.js or higher, and the
 
 Note: Geddy (specifically, the generators) is a system-level
 tool, and wants to be installed globally.
-
-### Installing from Github
-
-To get Geddy from Github and install it do:
-
-```
-git clone git@github.com:mde/geddy.git
-cd geddy
-make && sudo make install
-```
-
-By default Geddy is installed in "/usr/local." To install it into a
-different directory (e.g., one that doesn't require super-user
-privilege), pass the PREFIX variable to the `make install` command.
-For example, to install it into a "geddy" directory in your home
-directory, you could use this:
-
-```
-make && make install PREFIX=~/geddy
-```
-
-If you do install Geddy somewhere special, you'll need to add the
-"bin" directory in the install target to your PATH to get access
-to the `geddy` executable.
 
 ### Creating a Geddy application
 
@@ -178,6 +154,8 @@ geddy resource user name:default admin:boolean
 The above example will use the property `name`(string) to display the items in the views instead of the default ID property. This way when generating scaffolds, it will look better out of the box.
 
 ### Routes
+
+Geddy uses the Barista router: https://github.com/kieran/barista
 
 Routes are created in a similar fashion to Merb or Rails.
 
