@@ -56,7 +56,7 @@ html(lang="en")
             - else
               h4 #{msg.heading}
             | #{msg.description}
-      != yield()
+      != render()
   script
     /* Initializes the dismiss buttons on the flash messages */
     $("#flash-container .alert").alert();
