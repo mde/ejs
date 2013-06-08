@@ -47,30 +47,8 @@
       </div>
     </div>
     <div class="container">
-      <!-- Displays flash messages -->
-      <div id="flash-container">
-        <%
-        var flashes = flash.messagesArr;
-        for(var i=0, ii=flashes.length; i<ii; i++) {
-        %>
-          <div class="<%= flashes[i].displayClass %>">
-            <button type="button" class="close" data-dismiss="alert">&times;</button>
-            <% if(flashes[i].isInline) { %>
-              <strong><%= flashes[i].heading %>:</strong>&nbsp;
-            <% } else { %>
-              <h4><%= flashes[i].heading %></h4>
-            <% } %>
-            <%= flashes[i].description %>
-          </div>
-        <%
-        }
-        %>
-      </div>
+      <%- displayFlash(flash); %>
       <%- render(); %>
     </div>
-    <script type="text/javascript">
-      /* Initializes the dismiss buttons on the flash messages */
-      $("#flash-container .alert").alert();
-    </script>
   </body>
 </html>

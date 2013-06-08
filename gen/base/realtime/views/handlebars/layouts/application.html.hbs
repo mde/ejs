@@ -46,27 +46,8 @@
       </div>
     </div>
     <div class="container">
-      <!-- Displays flash messages -->
-      <div id="flash-container">
-        {{#each flash.messagesArr}}
-          {{#this}}
-          <div class="{{displayClass}}">
-            <button type="button" class="close" data-dismiss="alert">&times;</button>
-            {{#if isInline}}
-                <strong>{{heading}}:</strong>&nbsp;
-            {{else}}
-                <h4>{{heading}}</h4>
-            {{/if}}
-            {{description}}
-          </div>
-          {{/this}}
-        {{/each}}
-      </div>
+      {{{displayFlash flash}}}
       {{{render}}}
     </div>
-    <script type="text/javascript">
-      /* Initializes the dismiss buttons on the flash messages */
-      $("#flash-container .alert").alert();
-    </script>
   </body>
 </html>
