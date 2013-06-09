@@ -328,7 +328,7 @@ contentTag('a', 'hey there', {href: 'http://google.com', data_go_to: 'http://goo
 ```
 
 #### selectTag
-`selectTagString(optionsArray<Array>, selectedOption, htmlOptions<Object>)
+`selectTagString(optionsArray<Array>, selectedOption, htmlOptions<Object>)`
 
 Creates a HTML select tag using the given `optionsArray` to create HTML option elements. 
 
@@ -345,5 +345,14 @@ selectTag(['open', 'close'], todo.status, { class:'span6', name:'status' })
 selectTag([{value: 1, text: "Text 1"}, {value: 2, text: "Text 2"}], 2)
 // => <select><option value="1">Text 1</option><option selected="selected" value="2">Text 2</option></select>
 ```
+
+#### displayFlash
+`displayFlash()`
+
+Displays a small banner automatically for items in the session flash -- e.g., if
+in your action you call `this.flash.error('Something went wrong.');` when the
+page renders, it will display an error banner with that text.
+
+Support is built in for flash types of `error`, `success`, and `info`.
 
 * * *

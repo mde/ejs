@@ -20,7 +20,6 @@ tests = {
     assert.equal('gen:scaffold[zooby,foo:int%bar:string,default,realtime]',
         c.jakeTaskName);
   }
-
 };
 
 module.exports = tests;

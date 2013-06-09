@@ -45,7 +45,6 @@ tests = {
     flash.set('foo', 'Zerb');
     msg = flash.get('foo');
     assert.equal('Zerb', msg);
-    assert.equal('b', flash.messages.foo.displayClass);
     sessionMock.data = {};
   }
 
@@ -55,7 +54,6 @@ tests = {
     flash.set('moo', 'Zerb');
     msg = flash.get('moo');
     assert.equal('Zerb', msg);
-    assert.equal('a', flash.messages.moo.displayClass);
     sessionMock.data = {};
   }
 
@@ -64,7 +62,7 @@ tests = {
       , msg;
     flash.set('foo', {Zerb:'Zoob'});
     msg = flash.get('foo');
-    assert.equal('f', flash.messages.foo.displayClass);
+    assert.deepEqual({Zerb:'Zoob'}, msg);
     sessionMock.data = {};
   }
 
@@ -74,7 +72,6 @@ tests = {
     flash.set({foo: 'Zerb'});
     msg = flash.get();
     assert.equal('Zerb', msg.foo);
-    assert.equal('b', flash.messages.foo.displayClass);
     sessionMock.data = {};
   }
 
@@ -82,9 +79,7 @@ tests = {
     var flash;
     sessionMock.data = {
       flashMessages: {
-        foo: {
-          message: 'Zerb'
-        }
+        foo: 'Zerb'
       }
     };
     flash = new Flash(sessionMock,config);
@@ -98,9 +93,7 @@ tests = {
     var flash;
     sessionMock.data = {
       flashMessages: {
-        foo: {
-          message: 'Zerb'
-        }
+        foo: 'Zerb'
       }
     };
     flash = new Flash(sessionMock,config);
@@ -123,9 +116,7 @@ tests = {
     var flash;
     sessionMock.data = {
       flashMessages: {
-        foo: {
-          message: 'Zerb'
-        }
+        foo: 'Zerb'
       }
     };
     flash = new Flash(sessionMock,config);
@@ -150,9 +141,6 @@ tests = {
     var flash = new Flash(sessionMock,config);
     flash.set('foo', 'Zerb');
     assert.ok(flash.get('foo'));
-    var desc = flash.describe(flash.get('foo'));
-    assert.equal(desc.text, flash.get('foo'));
-    assert.equal(desc.mode, 'inline');
     sessionMock.data = {};
   }
 
@@ -160,9 +148,6 @@ tests = {
     var flash = new Flash(sessionMock,config);
     flash.set('foo', {Zerb:'Zooby'});
     assert.ok(flash.get('foo'));
-    var desc = flash.describe(flash.get('foo'));
-    assert.equal(desc.text, 'Zerb: Zooby.');
-    assert.equal(desc.mode, 'block');
     sessionMock.data = {};
   }
 
@@ -170,9 +155,6 @@ tests = {
     var flash = new Flash(sessionMock,config);
     flash.set('foo', {Zerb:'Zooby',Merb:'Mooby'});
     assert.ok(flash.get('foo'));
-    var desc = flash.describe(flash.get('foo'));
-    assert.equal(desc.text, 'Zerb: Zooby, Merb: Mooby.');
-    assert.equal(desc.mode, 'block');
     sessionMock.data = {};
   }
 
@@ -180,9 +162,6 @@ tests = {
     var flash = new Flash(sessionMock,config);
     flash.set('foo', {zerb:'Zooby',merb:'Mooby'});
     assert.ok(flash.get('foo'));
-    var desc = flash.describe(flash.get('foo'));
-    assert.equal(desc.text, 'Zerb: Zooby, Merb: Mooby.');
-    assert.equal(desc.mode, 'block');
     sessionMock.data = {};
   }
 

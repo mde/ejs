@@ -45,18 +45,5 @@ html(lang="en")
                 != linkTo('Docs', 'http://geddyjs.org/documentation')
 
     .container
-      #flash-container
-        // Displays flash messages
-        each msg in flash.messages
-          div(class="#{ msg.displayClass }")
-            button(type="button",class="close",data-dismiss="alert") &times;
-            - if(msg.isInline)
-              strong #{msg.heading}
-              | &nbsp;
-            - else
-              h4 #{msg.heading}
-            | #{msg.description}
-      != yield()
-  script
-    /* Initializes the dismiss buttons on the flash messages */
-    $("#flash-container .alert").alert();
+      != displayFlash(flash)
+      != render()
