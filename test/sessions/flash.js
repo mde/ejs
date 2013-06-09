@@ -62,6 +62,7 @@ tests = {
       , msg;
     flash.set('foo', {Zerb:'Zoob'});
     msg = flash.get('foo');
+    assert.deepEqual({Zerb:'Zoob'}, msg);
     sessionMock.data = {};
   }
 
