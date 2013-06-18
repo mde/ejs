@@ -108,20 +108,36 @@ namespace('migration', function () {
       , findMigration = function () {
           var file = files.pop()
             , migration;
-          if (file && /\.js$/.test(file)) {
-            migration = file.replace(/\.js$/, '');
-            geddy.model.Migration.first({migration: migration},
-                function (err, data) {
-              if (err) {
-                throw err;
-              }
-              if (!data) {
-                unrunMigrations.push(file);
-              }
+          if (file) {
+            // Valid JS file
+            // TODO: CoffeeScript crazies will want this
+            if (/\.js$/.test(file)) {
+              migration = file.replace(/\.js$/, '');
+              // Is this migration already run and recorded?
+              // Could do this as an 'in' lookup with an array, but this could
+              // be a pretty big number of files -- likely better to iterate
+              geddy.model.Migration.first({migration: migration},
+                  function (err, data) {
+                if (err) {
+                  throw err;
+                }
+                // No match -- need to run this one
+                if (!data) {
+                  unrunMigrations.push(file);
+                }
+                // Next
+                findMigration();
+            }
+            // Can't do anything with this file -- just go next
+            else {
+              // Next
               findMigration();
+            }
             });
           }
+          // No more files
           else {
+            // Migrations to run, hand off to runner
             if (unrunMigrations.length) {
               unrunMigrations.sort();
               runnerTask = jake.Task['migration:runUnrun'];
@@ -130,6 +146,7 @@ namespace('migration', function () {
               });
               runnerTask.invoke(unrunMigrations);
             }
+            // No un-run migrations, all done
             else {
               console.log('(No migrations to run)');
               complete();
@@ -150,21 +167,29 @@ namespace('migration', function () {
           if (migrationPath) {
             migration = migrationPath.replace(/\.js$/, '');
 
-            // Pull off the date-stamp
+            // Pull off the date-stamp, get the underscoreized
+            // migration-name
             ctorName = migration.split(/\d+_/)[1];
             console.log('Running ' + ctorName);
 
+            // Grab the exported migration ctor
             ctorName = geddy.string.camelize(ctorName, {initialCap: true});
-
             ctor = require(path.join(process.cwd(), '/db/migrations/',
                 migration))[ctorName];
+            // Inherit all the Migration methods
+            // TODO: Should this be a mixin to preserve statics?
             ctor.prototype = Object.create(Migration.prototype);
             inst = new ctor();
+            // Hook up the DB adapter
+            // TODO: API for using a different adapter if using multiple
+            // SQL adapters?
             inst.adapter = geddy.model.loadedAdapters.Migration;
+            // Run it
             inst.up(function () {
               var m = geddy.model.Migration.create({
                 migration: migration
               });
+              // Record it in the DB so it doesn't get run again
               m.save(function (err, data) {
                 if (err) { throw err; }
                 runMigrations();
