@@ -101,8 +101,9 @@ namespace('migration', function () {
     writeMigration(filename, templContent);
   });
 
-  task('run', {async: true}, function () {
+  task('findUnrun', {async: true}, function () {
     var files = fs.readdirSync('db/migrations')
+      , runnerTask
       , unrunMigrations = []
       , findMigration = function () {
           var file = files.pop()
@@ -123,15 +124,23 @@ namespace('migration', function () {
           else {
             if (unrunMigrations.length) {
               unrunMigrations.sort();
-              runMigrations();
+              runnerTask = jake.Task['migration:runUnrun'];
+              runnerTask.once('complete', function () {
+                complete();
+              });
+              runnerTask.invoke(unrunMigrations);
             }
             else {
               console.log('(No migrations to run)');
               complete();
             }
           }
-        }
-      , runMigrations = function () {
+        };
+    findMigration();
+  });
+
+  task('runUnrun', {async: true}, function (unrunMigrations) {
+    var runMigrations = function () {
           var migrationPath = unrunMigrations.shift()
             , migration
             , inst
@@ -166,9 +175,17 @@ namespace('migration', function () {
             complete();
           }
         };
+    runMigrations();
+  });
+
+  task('run', {async: true}, function () {
     console.log('Running migrations for ' + geddy.config.environment +
         ' environment...');
-    findMigration();
+    finderTask = jake.Task['migration:findUnrun'];
+    finderTask.once('complete', function () {
+      complete();
+    });
+    finderTask.invoke();
   });
 
 });
