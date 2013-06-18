@@ -46,6 +46,7 @@
       </div>
     </div>
     <div class="container">
+      {{ displayFlash(flash) }}
       {{ yield() }}
     </div>
   </body>

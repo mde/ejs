@@ -44,4 +44,5 @@ html(lang="en")
                 != linkTo('Docs', 'http://geddyjs.org/documentation')
 
     .container
-      != yield()
+      != displayFlash(flash)
+      != render()
