@@ -86,6 +86,7 @@ namespace('db', function () {
     var modelName = 'Migration'
       , createTask = jake.Task['db:createTable'];
 
+      console.log('Initializing DB for ' + geddy.config.environment + ' environment...');
       if (geddy.model.defaultAdapter == 'memory') {
         fail('Please set geddy.model.defaultAdapter to use a SQL adapter');
       }
@@ -99,7 +100,7 @@ namespace('db', function () {
       createTask.invoke(modelName);
   });
 
-  task('migrate', ['env:init'], {async: true}, function () {
-  });
+  task('migrate', ['env:init', 'createMigrationModel',
+      'migration:run'], function () {});
 
 });
