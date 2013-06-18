@@ -38,7 +38,10 @@ namespace('migration', function () {
       };
 
   task('create', function (name) {
-    var templContent = createMigration(name)
+    var templContent = createMigration(name, {
+          upCode: "    next();"
+        , downCode: "    next();"
+        })
       , filename = getFilename(name);
     writeMigration(filename, templContent);
   });
@@ -47,8 +50,8 @@ namespace('migration', function () {
     var templContent = ''
       , ctorName = utils.string.camelize(name, {initialCap: true})
       , filename
-      , upCode = []
-      , downCode = []
+      , upCode = ['']
+      , downCode = ['']
 
     ctorName = 'Create' + utils.inflection.pluralize(ctorName);
 
@@ -102,9 +105,12 @@ namespace('migration', function () {
     var files = fs.readdirSync('db/migrations')
       , unrunMigrations = []
       , findMigration = function () {
-          var file = files.pop();
+          var file = files.pop()
+            , migration;
           if (file && /\.js$/.test(file)) {
-            geddy.model.Migration.first({migration: file}, function (err, data) {
+            migration = file.replace(/\.js$/, '');
+            geddy.model.Migration.first({migration: migration},
+                function (err, data) {
               if (err) {
                 throw err;
               }
@@ -115,27 +121,46 @@ namespace('migration', function () {
             });
           }
           else {
-            unrunMigrations.sort();
-            runMigrations();
+            if (unrunMigrations.length) {
+              unrunMigrations.sort();
+              runMigrations();
+            }
+            else {
+              console.log('(No migrations to run)');
+              complete();
+            }
           }
         }
       , runMigrations = function () {
-          var migration = unrunMigrations.shift()
+          var migrationPath = unrunMigrations.shift()
+            , migration
+            , inst
             , ctorName
             , ctor;
 
-          if (migration) {
-            migration = migration.replace(/\.js$/, '');
+          if (migrationPath) {
+            migration = migrationPath.replace(/\.js$/, '');
 
+            // Pull off the date-stamp
             ctorName = migration.split(/\d+_/)[1];
             console.log('Running ' + ctorName);
+
             ctorName = geddy.string.camelize(ctorName, {initialCap: true});
 
-            ctor = require(process.cwd() + '/db/migrations/' + migration)[ctorName];
+            ctor = require(path.join(process.cwd(), '/db/migrations/',
+                migration))[ctorName];
             ctor.prototype = Object.create(Migration.prototype);
-            migration = new ctor();
-            migration.adapter = geddy.model.loadedAdapters.Migration;
-            migration.up(runMigrations);
+            inst = new ctor();
+            inst.adapter = geddy.model.loadedAdapters.Migration;
+            inst.up(function () {
+              var m = geddy.model.Migration.create({
+                migration: migration
+              });
+              m.save(function (err, data) {
+                if (err) { throw err; }
+                runMigrations();
+              });
+            });
           }
           else {
             complete();
@@ -144,13 +169,6 @@ namespace('migration', function () {
     console.log('Running migrations for ' + geddy.config.environment +
         ' environment...');
     findMigration();
-    // Iterate the list and find any not recorded in the DB
-    // ===
-    // Sort them chronologically
-    // ===
-    // Iterate the list and:
-    //    Load the file, instantiate the ctor and set up inheritance
-    //    Run it
   });
 
 });
