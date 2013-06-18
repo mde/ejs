@@ -1,6 +1,11 @@
-var <%= ctorName %> = function () {
-  this.up = function () {<%= upCode %>};
-  this.down = function () {<%= downCode %>};
+var <%- ctorName %> = function () {
+  this.up = function (next) {
+<%- upCode %>
+  };
+
+  this.down = function (next) {
+<%- downCode %>
+  };
 };
 
-exports.<%= ctorName %> = <%= ctorName %>;
+exports.<%= ctorName %> = <%- ctorName %>;
