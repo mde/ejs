@@ -127,13 +127,13 @@ namespace('migration', function () {
                 }
                 // Next
                 findMigration();
+              });
             }
             // Can't do anything with this file -- just go next
             else {
               // Next
               findMigration();
             }
-            });
           }
           // No more files
           else {
