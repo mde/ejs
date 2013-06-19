@@ -91,7 +91,7 @@ namespace('gen', function () {
 
       // Manage properties that deal with changing default properties
       if (args === 'default') {
-        // Reset old default property to it's own property, only if it's not
+        // Reset old default property to its own property, only if it's not
         // already the default
         if (name !== obj['default'].name) {
           // If the new default item already exists then delete it
@@ -117,7 +117,7 @@ namespace('gen', function () {
       // If the name is name or title then set them to default, otherwise add
       // the property normally
       if (name === 'name' || name === 'title') {
-        // Reset old default to it's own property
+        // Reset old default to its own property
         obj[obj['default'].name] = obj[obj['default'].name] || obj['default'];
 
         // Add new default property
@@ -265,7 +265,8 @@ namespace('gen', function () {
   }, {async: true});
 
   task('model', function (name, properties, modelPath) {
-    var createTableTask;
+    var props = _formatModelProperties(properties)
+      , createTableTask;
     if (!name) {
       throw new Error('No model name specified.');
     }
@@ -276,16 +277,17 @@ namespace('gen', function () {
 
     _writeTemplate(name, modelPath, path.join('app', 'models'), {
         inflection: 'singular'
-      , properties: _formatModelProperties(properties)
+      , properties: props
     });
 
     // Try to create a table -- should be a no-op if an
     // appropriate DB adapter can't be found
-    createTableTask = jake.Task['db:createTable'];
+    createTableTask = jake.Task['migration:createForTable'];
     createTableTask.on('complete', function () {
       complete();
     });
-    createTableTask.invoke(name);
+    createTableTask.invoke(name, props);
+
 
   }, {async: true});
 
@@ -576,13 +578,24 @@ namespace('gen', function () {
         'DO make a backup of it, keep it someplace safe.');
   });
 
-  task('auth', {async: true}, function () {
-    var authTask = jake.Task['auth:init'];
-    authTask.on('complete', function () {
+  // Delegate to stuff in jakelib/auth.jake
+  namespace('auth', function () {
+    task('update', function () {
+      var t = jake.Task['auth:update'];
+      t.on('complete', function () {
+        complete();
+      });
+      t.invoke.apply(t, arguments);
+    });
+  });
+
+  // Delegate to stuff in jakelib/migration.jake
+  task('migration', {async: true}, function () {
+    var t = jake.Task['migration:create'];
+    t.on('complete', function () {
       complete();
     });
-    authTask.invoke.apply(authTask, arguments);
-
+    t.invoke.apply(t, arguments);
   });
 
 });
