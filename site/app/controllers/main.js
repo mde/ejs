@@ -16,8 +16,12 @@
  *
 */
 
-var md = require('marked');
-var hljs = require('highlight.js');
+var fs = require('fs')
+  , md = require('marked')
+  , hljs = require('highlight.js');
+
+var BRANCH = 'doc-updates-v0.9';
+
 md.setOptions({
   gfm: true
 , pedantic: false
@@ -48,43 +52,9 @@ var Main = function () {
     , docs = []
     , count = 0
 
-    // once we've got a list of commits, get the tree
-    // for the latest commit
-    , gotCommits = function (err, commits) {
-      if (err) {
-        params.error = err;
-        return self.error(req, resp, params);
-      }
-      var commit = commits[0] && commits[0].commit
-        , url = commit.tree && commit.tree.url;
-      return getTree(url, gotTree);
-    }
-
-    // once we've got the first tree, get 'docs' tree
-    // once we've got the 'docs' tree, call gotTree
-    , getTree = function (url, callback) {
-        var tree;
-        opts.url = url;
-        opts.headers = {'User-Agent': 'GeddyJS documentation site'}
-
-        geddy.request(opts, function (err, trees) {
-          if (err || !trees) {
-            params.error = err;
-            return self.error(req, resp, params);
-          }
-          for (var i in trees.tree) {
-            tree = trees.tree[i];
-            if (tree.path == 'docs') {
-              return getTree(tree.url, gotTree);
-            }
-          }
-          return callback(err, trees.tree);
-        });
-    }
     , getBlob = function (paths, i, callback) {
       var options = {
         url: paths[i].url
-      , dataType: 'json'
       , headers: {'User-Agent': 'GeddyJS documentation site'}
       }
       geddy.request(options, function (err, resp) {
@@ -94,8 +64,8 @@ var Main = function () {
           return self.error(req, resp, params)
         }
 
-        var content = (resp.content) ? new Buffer(resp.content, 'base64').toString('utf8') : ''
-          , name = paths[i].path.replace('.md','').split('-')
+        var content = resp
+          , name = paths[i].name
           , subs = []
           , lines = content.split('\n');
         for (var l in lines) {
@@ -103,9 +73,10 @@ var Main = function () {
             subs.push(geddy.string.trim(lines[l].replace('#### ', '')));
           }
         }
-        docs[parseInt(name[0]) - 1] = {
-          name: name[1]
-        , content: md(content)
+        content = md(content);
+        docs[i] = {
+          name: name
+        , content: content
         , subs: subs
         };
         return respond(paths.length);
@@ -138,11 +109,28 @@ var Main = function () {
 
     // inital call to get the commits
     , opts = {
-        url: 'https://api.github.com/repos/mde/geddy/commits'
+        url: 'https://raw.github.com/mde/geddy/' + BRANCH + '/docs/topics.json'
       , dataType: 'json'
       , headers: {'User-Agent': 'GeddyJS documentation site'}
     }
-    geddy.request(opts, gotCommits);
+    geddy.request(opts, function (err, data) {
+      var self = this
+        , topics
+        , paths = [];
+      if (err) {
+        return self.error(err);
+      }
+      topics = data.topics;
+      topics.forEach(function (t) {
+        paths.push(
+          { name: t
+          , url: 'https://raw.github.com/mde/geddy/' + BRANCH + '/docs/' + t + '.md'
+          }
+        );
+      });
+      gotTree(null, paths);
+    });
+
   };
 
   this.tutorial = function (req, resp, params) {

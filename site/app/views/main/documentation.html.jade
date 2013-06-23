@@ -7,7 +7,7 @@
       ul
         each doc in docs
           li
-            a(href="#"+doc.name)=doc.name
+            a(href="#"+doc.name)=geddy.string.capitalize(doc.name)
             if doc.subs
               ul
                 each sub in doc.subs
