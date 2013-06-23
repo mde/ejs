@@ -1,20 +1,8 @@
-Geddy has a robust CLI tool to help you generate apps, run your tests, or play with your app in a console.
-
-####Options:
-
-- `—environment, -e`: Environment to use
-- `—port, -p`: Port to connect server to
-- `—workers, -w`: Number of workers to use (default: 1)
-- `—debug, -d`: Sets the log level to output debug messages to console
-- `—jade, -j`: When generating views, use Jade templates(Default: EJS)
-- `—handle, -H`: When generating views, use Handlebars templates(Default: EJS)
-- `—mustache, -m`: When generating views, use Mustache templates(Default: EJS)
-- `—swig, -s`: When generating views, use Swig templates(Default: EJS)
-- `—version, -v`: Output the version of Geddy installed
-- `—help, -h`: Output the list of commands and options
+Geddy has a robust CLI tool to help you generate apps, run tests or scripting tasks in your app, or interact with your app in a console.
 
 #### geddy
-`geddy` takes no arguments, it will run the geddy app in the current directory.
+
+Running the `geddy` command with no arguments will run the geddy app in the current directory.
 
 ```
 $ cd path/to/app
@@ -22,63 +10,89 @@ $ geddy
 // will run the app in path/to/app
 ```
 
-#### app
-`app` takes a single argument being the name you'd like, then it will generate a base application. If no name is given the command will fail. If you include the `—jade`, `—handle`, `—mustache`, or '-swig' option you can substitute the templating language to your liking
+#### Options:
+- `--environment, -e`: Environment to use
+- `--hostname, -b`: Host name or IP to bind the server to (default: localhost)
+- `--port, -p`: Port to bind the server to (default: 4000)
+- `--geddy-root, -g`: /path/to/approot The path to the root for the app you want to run (default is current working directory)
+- `--workers, -w`: Number of worker processes to start (default: 1)
+- `--debug, -d`: Sets the log level to output debug messages to the console
+- `--help, -h`: Output this usage dialog
+- `--version, -v`: Output the version of Geddy that's installed
 
 ```
-$ geddy app app_name
-// creates a geddy app using EJS
-```
-
-#### resource
-`resource` takes one or more arguments, the first being a name and the others being a set of model properties. This will create a controller, a model including the given model properties and a resource route.
-
-```
-$ geddy resource user name description password
-// This will create a user model, users controller, and user routes
-```
-
-#### scaffold
-`scaffold` takes one or more arguments, the first being a name and the others being a set of model properties. Scaffolding includes a controller, a model including the given model properties as well as a default model adapter a resource route and will create all views. If you also include the options `—jade`, `—handle`, `—mustache`, or '-swig' you can substitute the template language to your liking.
+# Start Geddy on localhost:4000 in development mode or if the
+# directory isn\'t a Geddy app it\'ll display a prompt to use "geddy -h"
+geddy
+# Start Geddy on port 3000
+geddy -p 3000
+# Start Geddy in production mode
+geddy -e production
+# Generate a users scaffolding using Jade templates
+geddy -j scaffold user
 
 ```
-$geddy scaffold user name description password
-// This will create a user model, users controller, user views, and user routes
-```
+#### geddy gen [command] [options] [arguments]
 
-#### controller
-`controller` takes a single argument being a name. It will create a new controller, a route and an index view. If you also include the options `—jade`, `—handle`, `—mustache`, or '-swig' you can substitute the template language to your liking.
+This is the generator script which you can use to create apps, resource
+scaffolds, or bare models and controllers.
 
-```
-$ geddy controller users
-```
+#### Commands
 
-#### model
-`model` takes one or more arguments, the first being a name and the others being a set of model properties. This will create a new model including the model properties given.
+- `gen app <name>`: Create a new Geddy application
+- `gen resource <name> [attrs]`: Create a new resource. A resource includes a model, controller and route
+- `gen scaffold <name> [attrs]`: Create a new scaffolding. Scaffolding includes the views, a model, controller and route
+- `gen secret`: Generate a new application secret in `config/secret.json`
+- `gen controller <name>`: Generate a new controller including an index view and and a route
+- `gen model <name> [attrs]`: Generate a new model
+- `gen auth[:update]`: Creates user authentication for you, using Passport.
 
-```
-$ geddy model user name description password
-// creates a user model with name, description and password properties
-```
+For all of these commands, `[attrs]` is a list of attributes for the model, in
+the format of 'name:datatype' (e.g., foo:int).
 
-#### secret
-`secret` doesn't take any arguments, it will find your config/environment file and create a new secret in it deleting any other secret.
+#### Options
 
-```
-$ geddy secret
-```
-
-#### console
-`console` doesn't take any arguments, it will start a geddy console.
+- `--realtime, -rt`: When generating or scaffolding, take realtime into account
+- `--jade, -j`: When generating views this will create Jade templates (Default: EJS)
+- `--handle, -H`: When generating views this will create Handlebars templates (Default: EJS)
+- `--mustache, -m`: When generating views this will create Mustache templates (Default: EJS)
+- `--swig, -s`: When generating views this will create Swig templates (Default: EJS)
 
 ```
-$ geddy console
+# Generate an app in a directory named 'foo'
+geddy gen app foo
+# Generate a users resource with the model properties name as a string and admin as a boolean
+geddy gen resource user name admin:boolean
+# Generate a users scaffolding user name as the default value to display data with
+geddy gen scaffold user name:string:default
+
 ```
 
-#### jake
-`jake` takes a task name, it will run a jake command in your apps context from your app's Jakefile
+#### geddy jake [task] [options] [env vars]
+
+This command runs a Jake task in the context of the current app. This allows you
+to run your tests or any other command-line tasks in the context of your
+application, with full access to your models.
+
+Geddy also ships with a number of useful Jake tasks built in, e.g., the `routes`
+task, which displays all the routes in your app.
+
+Options
+
+See https://github.com/mde/jake for full documentation
 
 ```
-$ geddy jake test
-// will run the test task in your app's Jakefile after loading up your app environment
+# Run your app's tests in the app environment
+geddy jake test
+# Initialize the development database for your app
+geddy jake db:init environment=development
+# Show all routes
+geddy jake routes
+# Show all routes for the user resource
+geddy jake routes[user]
+# Show the index route for the user resource
+geddy jake routes[user.index]
 ```
+
+
+
