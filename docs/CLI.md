@@ -25,7 +25,7 @@ $ geddy
 
 ```
 # Start Geddy on localhost:4000 in development mode or if the
-# directory isn\'t a Geddy app it\'ll display a prompt to use "geddy -h"
+# directory isn't a Geddy app it'll display a prompt to use "geddy -h"
 geddy
 # Start Geddy on port 3000
 geddy -p 3000
