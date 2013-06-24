@@ -22,42 +22,22 @@ Next, install Geddy from [NPM](http://npmjs.org/), this will also
 install [Jake](https://github.com/mde/jake):
 
 ```bash
-$ [sudo] npm install -g geddy
+$ sudo npm install -g geddy
 ```
 
 We need to install it globally (-g) so we can use geddy generators or
-start the server. More on this later. Note: installing packages globally
-may require super-user access.
+start the server. More on this later. (Note: installing packages globally
+may require super-user access.)
 
-#### Using the Geddy command
+#### Using the `geddy gen` command
 
-Now that we have Geddy installed we need to learn how to use its command
-from the CLI. There are a few commands and options that help with the
-development process of creating applications using Geddy. Here we will
-go over what each of them do. Note if no arguments are given Geddy will
-start up the server if it's a Geddy application, otherwise it will show
-the help dialog.
+Now that we have Geddy installed we need to learn how to use its generator
+commands from the CLI.  If no commands are given, Geddy will start up the server
+(if you're inside a Geddy application -- otherwise it will show the help
+dialog). But if you give Geddy the `gen` command, it can be used to create
+applications or resources for applications.
 
-#### Options:
-
--   `--environment`, `-e`: Environment to use
--   `--bind`, `-b`: IP to bind the server to (default: localhost)
--   `--port`, `-p`: Port to connect server to
--   `--workers`, `-w`: Number of workers to use (default: 1)
--   `--debug`, `-d`: Sets the log level to output debug messages to
-    console
--   `--swig`: When generating views, use Swig templates(Default:
-    EJS)
--   `--jade`, `-j`: When generating views, use Jade templates(Default:
-    EJS)
--   `--handle`, `-H`: When generating views, use Handlebars
-    templates(Default: EJS)
--   `--mustache`, `-m`: When generating views, use Mustache
-    templates(Default: EJS)
--   `--version`, `-v`: Output the version of Geddy installed
--   `--help`, `-h`: Output the list of commands and options
-
-#### Commands:
+#### `geddy gen` commands:
 
 -   `app <name>`: Create a new Geddy application
 -   `resource <name> [model attributes]`: Create a new Geddy resource.
@@ -72,18 +52,29 @@ the help dialog.
 -   `model <name> [model attributes]`: Generate a new model
 -   `console`: opens a console in the context of geddy
 
-#### How to use Geddy commands
+#### Options:
 
-Each of Geddy's commands(`app`, `resource`, `controller`, etc.) take a
-command or set of commands(excluding `secret` and `console`). Here we'll
-learn how to use those commands.
+-   `--swig`: When generating views, use Swig templates(Default:
+    EJS)
+-   `--jade`, `-j`: When generating views, use Jade templates(Default:
+    EJS)
+-   `--handle`, `-H`: When generating views, use Handlebars
+    templates (Default: EJS)
+-   `--mustache`, `-m`: When generating views, use Mustache
+    templates (Default: EJS)
+
+#### How to use Geddy's generator commands
+
+Each of Geddy's generator commands (e.g., `app`, `resource`, `controller`, etc.)
+takes an or set of arguments (excluding `secret` and `console`). Here we'll
+learn how to use those.
 
 -   `app` takes a single argument being the name you'd like, then it
     will generate a base application. If no name is given the command
     will fail.
 -   `secret` doesn't take any arguments, it will find your
-    `config/environment` file and create a new secret in it deleting any
-    other secret.
+    `config/environment` file and create a new application secret in it,
+    deleting any other secret.
 -   `controller` takes a single argument being a name. It will create a
     new controller, a route and an index view. If you also include the
     options `--swig`, `--jade`, `--handle` or `--mustache` you can substitute the
@@ -103,17 +94,16 @@ learn how to use those commands.
     a default model adapter a resource route and will create all views.
     If you also include the options `--swig`, `--jade`, `--handle` or `--mustache`
     you can substitute the template language to your liking.
--   `console` doesn't take any arguments, it will start a geddy console.
 
 #### Model properties
 
-There are a three commands(`resource`, `model` and `scaffold`) that also
+There are a three commands (`resource`, `model` and `scaffold`) that also
 include model property arguments. This is a list seperated by spaces
 that include the property, its type and an optional default setting.
 Below are some examples of how they are used in the commands.
 
 ```
-$ geddy scaffold user name:string
+$ geddy gen scaffold user name:string
 ```
 
 The example above will create our normal scaffolding and include a
@@ -121,7 +111,7 @@ The example above will create our normal scaffolding and include a
 `string`.
 
 ```
-$ geddy scaffold user name:default
+$ geddy gen scaffold user name:default
 ```
 
 This example creates scaffolding but includes `name` as the default
@@ -133,7 +123,7 @@ includes an alias called `def`. If no default property is given Geddy
 will use `id` as the display property.
 
 ```
-$ geddy scaffold user name:default id:int
+$ geddy gen scaffold user name:default id:int
 ```
 
 This time we used `name` type `string` as the default property. We also
@@ -154,10 +144,10 @@ First we'll create our application, this will create a base so we can
 start on.
 
 ```
-$ geddy app todo_app
+$ geddy gen app todo_app
 ```
 
-Let's spend some time reviewing what geddy did. The previous command
+Let's spend some time reviewing what Geddy did. The previous command
 created a lot. During the tutorial we will edit and review some of these
 files, but we'll briefly explain what they are now so you get familiar
 with the base application.
@@ -189,19 +179,19 @@ with the base application.
 Now from your app's root simply start geddy
 
 ```
-$ cd todo_app 
+$ cd todo_app
 $ geddy
 ```
 
-Then open your browser to [localhost:4000](http://localhost:4000/), and
-you'll find the hello world page.
+Then open your browser and navigate to [localhost:4000](http://localhost:4000/),
+and you'll find the hello world page.
 
 So now we want to create a scaffold to manage our todo items. We will
 create a title and status property so that we have some attributes to
 use.
 
 ```
-$ geddy scaffold todo title:default status
+$ geddy gen scaffold todo title:default status
 ```
 
 We are almost done. Now you have to restart geddy
@@ -251,18 +241,18 @@ tutorial](#resources).
 
 ### Without scaffolding
 
-Let's start by using the `geddy` executable to generate a basic
+Let's start by using the `geddy gen` command to generate a basic
 app-structure.
 
 ```
-$ geddy app todo_app
+$ geddy gen app todo_app
 ```
 
-Now let's try out our new application by running geddy from your
+Now let's try out our new application by running Geddy from your
 application's root
 
 ```
-$ cd todo_app 
+$ cd todo_app
 $ geddy
 ```
 
@@ -281,11 +271,11 @@ your app.
 ### Resource
 
 Now, let's get started building our To Do list manager. First, we'll
-need to generate the `todo` resource. We do this using the `geddy`
-executable as well:
+need to generate the `todo` resource. We do this using the `geddy gen`
+command as well:
 
 ```
-$ geddy resource todo title:string status
+$ geddy gen resource todo title:string status
 ```
 
 What did that do?
@@ -314,8 +304,8 @@ those being:
 -   `index.html.ejs`
 -   `show.html.ejs`
 
-We won't go into to much detail here, as it should be pretty self
-explanatory but I'll go through some things.
+We won't go into to much detail here, as it should be pretty self-explanatory
+but I'll go through some things.
 
 First we'll create the `_form.html.ejs` partial template, this will hold
 all the form data for edit and add actions .
