@@ -32,6 +32,19 @@ geddy -e production
 geddy -j scaffold user
 
 ```
+
+#### geddy console
+
+This command starts a REPL in the context of your application. It will load your
+application's environment, and you can interact with all its models.
+
+```
+# Start a REPL (in 'production' mode)
+geddy console
+# Start a REPL in 'development' mode
+geddy console environment=development
+```
+
 #### geddy gen [command] [options] [arguments]
 
 This is the generator script which you can use to create apps, resource
