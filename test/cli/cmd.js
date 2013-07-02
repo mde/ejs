@@ -1,5 +1,5 @@
 var assert = require('assert')
-  , cmd = require('../lib/cmd')
+  , cmd = require('../../lib/cmd')
   , Cmd = cmd.Cmd
   , tests;
 
