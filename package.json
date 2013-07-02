@@ -8,7 +8,7 @@
     "MVC",
     "realtime"
   ],
-  "version": "0.8.10",
+  "version": "0.8.13",
   "author": "Matthew Eernisse <mde@fleegix.org> (http://fleegix.org)",
   "dependencies": {
     "jake": "0.5.x",
@@ -31,7 +31,11 @@
   "preferGlobal": true,
   "devDependencies": {
     "browserify": "1.16.x",
-    "socket.io-client": "0.9.x"
+    "socket.io-client": "0.9.x",
+    "handlebars": "latest",
+    "jade": "latest",
+    "swig": "latest",
+    "ejs": "latest"
   },
   "engines": {
     "node": "*"

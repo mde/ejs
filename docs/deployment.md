@@ -1,5 +1,60 @@
 We use the following example as a reference. There will be some differences with other environments.
 
+#### Windows Azure
+
+##### Pre-requisites
+1. Install the azure-cli module.
+```
+npm install -g azure-cli
+```
+2. Download your Azure .publishsettings file. You will be asked to login with your Azure credentials. If you do not have an account you can create one for free.
+```
+azure account download
+```
+3. Import your .publishsettings file
+```
+azure account import [file]
+```
+4. Install Geddy. If you're new, you can start with the [tutorial](http://geddyjs.org/tutorial)
+
+##### Notes
+* Your Geddy app is deployed via Git, which will ignore anyhting specified in the .gitignore including the config/secrets.json file. 
+
+If you need something that requires the secret such as sessions, etc. you'll encounter errors about doing `geddy secret` when you deploy. Currently there's no way to circumvent this other than removing it from your .gitignore file. More info here: https://github.com/mde/geddy/issues/309
+
+Now we need to create a `server.js` file which Windows Azure will pick up for running Geddy server:
+
+```javascript
+var geddy = require('geddy');
+
+geddy.start({
+  port: process.env.PORT || '3000',
+  // you can manually set the environment, or configure to use the node_env setting which is configurable via iisnode.yml after the site is created.
+  environment: 'production'
+  // To configure based on NODE_ENV use the following:
+  //environment: process.env.NODE_ENV || 'development'
+});
+```
+In the object we're giving to `geddy.start` you can use any other arguments you'd for the configuration files, these will override the ones loaded for the environment. For more information about this file you can go [here](https://github.com/mde/geddy/wiki/Using-Geddy-without-the-CLI)
+
+Open you .gitignore file and remove the line for `config\secrets.json` - **note:** This is insecure, on public repo's as it exposes your cookie's secret hash.
+
+Now it's time to create a node site. Subsitute 'mysite' below with your site name.
+
+```
+azure site create mysite --git
+```
+
+After selecting a location add everything to git and push to Windows Azure
+
+```
+git push azure master
+```
+
+For more information about deploying and supporting Node Apps on Windows Azure Websites see the [Command Line Tools How-To-Guide](http://www.windowsazure.com/en-us/develop/nodejs/how-to-guides/command-line-tools/#WebSites) article. 
+
+To learn more about Node Websites in Windows Azure see this [article](http://www.windowsazure.com/en-us/develop/nodejs/tutorials/create-a-website-(mac)/)
+
 #### Nodejitsu
 
 ##### Pre-requisites
