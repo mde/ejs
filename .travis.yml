@@ -9,4 +9,4 @@ before_script:
   - npm install https://github.com/mde/model/archive/master.tar.gz
   - npm install https://github.com/mde/utilities/archive/master.tar.gz
 
-script: node_modules/jake/bin/cli.js test
+script: node_modules/jake/bin/cli.js test --trace
