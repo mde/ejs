@@ -31,7 +31,11 @@
   "preferGlobal": true,
   "devDependencies": {
     "browserify": "1.16.x",
-    "socket.io-client": "0.9.x"
+    "socket.io-client": "0.9.x",
+    "handlebars": "latest",
+    "jade": "latest",
+    "swig": "latest",
+    "ejs": "latest"
   },
   "engines": {
     "node": "*"

@@ -2,6 +2,8 @@
 require('./lib/geddy')
 
 var fs = require('fs')
+  , path = require('path')
+  , utils = require('utilities')
   , createPackageTask
   , JSPAT = /\.js$/
   , testTask;
@@ -61,7 +63,7 @@ testTask = new jake.TestTask('Geddy', function () {
 });
 
 desc('Run the Geddy tests');
-task('test', function () {
+task('test', ['clean'], function () {
   var t = jake.Task.testBase;
   t.addListener('error', function (err) {
     var module
@@ -89,3 +91,9 @@ task('test', function () {
   t.invoke.apply(t, arguments);
 }, {async: true});
 
+desc('Clears the test temp dir');
+task('clean', function () {
+  tmpDir = path.join(__dirname, 'test', 'tmp');
+  utils.file.rmRf(tmpDir, {silent:true});
+  fs.mkdirSync(tmpDir);
+});

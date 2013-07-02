@@ -1,6 +1,17 @@
 <div class="hero-unit">
-  <h3>Params</h3>
-  {{#params}}
-  <p>{{action}} action on {{controller}} controller.</p>
-  {{/params}}
+  <h2>All <%= names.constructor.plural %></h2>
+  <a href="/<%= names.property.plural %>/add" class="btn pull-right">Create a new <%= names.constructor.singular %></a>
+</div>
+
+<div id="<%= names.property.plural %>-list">
+{{#<%= names.property.plural %>}}
+  <div class="row list-item" id="<%= names.property.singular %>-{{id}}">
+    <div class="span8">
+      <h3><a href="/<%= names.property.plural %>/{{id}}">{{id}}</a></h3>
+    </div>
+    <div class="span4">
+      <h3><i class="icon-list-alt"></i>{{id}}</h3>
+    </div>
+  </div>
+{{/<%= names.property.plural %>}}
 </div>
