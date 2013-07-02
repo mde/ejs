@@ -1,6 +1,17 @@
 <div class="hero-unit">
-  <h3>Params</h3>
-  {{#params}}
-  <p>{{action}} action on {{controller}} controller.</p>
-  {{/params}}
+  <h2 class="<%= properties['default'].name || "id" %>">{{ <%= names.property.singular %>.<%= properties['default'].name || "id" %> }}</h2>
+  <a href="/<%= names.property.plural %>/{{params.id}}/edit" class="btn pull-right">Edit this <%= names.property.singular %></a>
 </div>
+
+<h2><%= names.constructor.singular %> Properties</h2>
+<% for(var i in properties) { -%>
+  <div class="row list-item">
+    <div class="span4">
+      <h3><%= properties[i].name %></h3>
+    </div>
+    <div class="span8">
+      <h3><i class="icon-list-alt"></i>
+      <span class="<%= properties[i].name %>"><% if(properties[i].name === 'id') { %>{{ params.id }}<% } else { %>{{ <%= names.property.singular %>.<%= properties[i].name %> }}<% } %></span></h3>
+    </div>
+  </div>
+<% } -%>
