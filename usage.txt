@@ -26,15 +26,18 @@
    geddy -j scaffold user         Generate a users scaffolding using Jade templates
 
 -------------------------------------------------------
+ Console usage:
+  geddy console                   Runs a REPL in the context of your app
+
+-------------------------------------------------------
  Jake usage:
   geddy jake [task] [options] [env vars]
-                                  Runs a Jake task in the context of the current app
+                                  Runs a Jake task in the context of your app
 
  Jake options:
   (See https://github.com/mde/jake for full documentation)
 
  Jake examples:
-   geddy jake console             Run a REPL in your app environment
    geddy jake test                Run your application's tests in the app environment
    geddy jake db:init environment=development
                                   Initialize the development database for your app
@@ -60,6 +63,7 @@
    gen auth[:update]              Creates user authentication for you, using Passport.
 
  Generator options:
+   --trace, -t                    Output detailed error information for failures
    --realtime, -rt                When generating or scaffolding, take realtime into account
    --jade, -j                     When generating views this will create Jade
                                     templates(Default: EJS)
