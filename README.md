@@ -9,8 +9,7 @@ $ geddy
 // app now running on localhost:4000
 ```
 
-
-[![build status](https://secure.travis-ci.org/mde/geddy.png)](http://travis-ci.org/mde/geddy)
+[![Build Status](https://travis-ci.org/mde/geddy.png?branch=master)](https://travis-ci.org/mde/geddy)
 
 ### Documentation
 
