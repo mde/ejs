@@ -58,7 +58,10 @@ var p = new jake.NpmPublishTask('geddy', [
 
 testTask = new jake.TestTask('Geddy', function () {
   this.testName = 'testBase';
+  // FIXME: The partial test fails when run too early. This "fix" sucks.
+  this.testFiles.exclude('test/templates/partial.js');
   this.testFiles.include('test/**/*.js');
+  this.testFiles.include('test/templates/partial.js');
   this.showDescription = false;
 });
 
