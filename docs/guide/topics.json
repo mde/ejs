@@ -2,15 +2,8 @@
   [
     "architecture",
     "i18n",
-    "utilities",
-    "authentication",
-    "router",
-    "controllers",
-    "models",
     "templates",
-    "helpers",
     "CLI",
-    "sessions",
     "deployment"
   ]
 }
