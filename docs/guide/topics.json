@@ -1,9 +1,10 @@
 { "topics":
   [
     "architecture",
-    "i18n",
-    "templates",
     "CLI",
+    "templates",
+    "model",
+    "i18n",
     "deployment"
   ]
 }

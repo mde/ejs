@@ -48,7 +48,10 @@ var Main = function () {
   };
 
   this.documentation = function (req, resp, params) {
-
+    this.respond(params, {
+      format: 'html'
+    , template: 'app/views/main/documentation'
+    });
   };
 
   var self = this;
