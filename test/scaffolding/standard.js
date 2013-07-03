@@ -124,7 +124,8 @@
     }
   , tests = {}
   , servers = []
-  , port = 8080
+  , port = 8090
+  , portCopy = port
   , base = 'http://127.0.0.1:'
   , baseUrl
   , reqOpts = {
@@ -136,9 +137,20 @@
   */
   for(var engine in engines) {
     (function (baseUrl) {
+      
       tests["test " + engine + " shows site index"] = function(next) {
         //Request index
         request(baseUrl, reqOpts, function(err, res, body) {
+          assert.strictEqual(err, null, err);
+          assert.strictEqual(res.statusCode, 200, 'Error '+res.statusCode+' when requesting ' + baseUrl);
+          assert.notStrictEqual(body.match(/Hello, World!/), null, 'Hello world text is missing')
+          next();
+        });
+      };
+      
+      tests["test " + engine + " site index with malformed query string"] = function(next) {
+        //Request index
+        request(baseUrl + '?test=t%\'2B', reqOpts, function(err, res, body) {
           assert.strictEqual(err, null, err);
           assert.strictEqual(res.statusCode, 200, 'Error '+res.statusCode+' when requesting ' + baseUrl);
           assert.notStrictEqual(body.match(/Hello, World!/), null, 'Hello world text is missing')
@@ -290,10 +302,10 @@
         });
       };
       
-    }(base + port));
+    }(base + portCopy));
     
     // Increment Port Number
-    port++;
+    portCopy++;
   }
   
   /*
@@ -302,7 +314,7 @@
   tests.before = function (next) {
     var generators = []
       , chain
-      , port = 8080;
+      , portCopy = port;
     
     // Generate a new app for each engine
     for(var engine in engines) {
@@ -324,10 +336,10 @@
             servers.push(server);
           }
         });
-      }(port));
+      }(portCopy));
       
       // Increment port number
-      port++;
+      portCopy++;
     }
     
     chain = new utils.async.AsyncChain(generators);
