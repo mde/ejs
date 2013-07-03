@@ -152,8 +152,7 @@
         //Request index
         request(baseUrl + '?test=t%\'2B', reqOpts, function(err, res, body) {
           assert.strictEqual(err, null, err);
-          assert.strictEqual(res.statusCode, 200, 'Error '+res.statusCode+' when requesting ' + baseUrl);
-          assert.notStrictEqual(body.match(/Hello, World!/), null, 'Hello world text is missing')
+          assert.strictEqual(res.statusCode, 400, 'Error '+res.statusCode+' when requesting ' + baseUrl);
           next();
         });
       };
