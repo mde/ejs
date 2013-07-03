@@ -3,7 +3,7 @@
     "architecture",
     "CLI",
     "templates",
-    "model",
+    "models",
     "i18n",
     "deployment"
   ]
