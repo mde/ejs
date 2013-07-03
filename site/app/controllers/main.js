@@ -48,6 +48,10 @@ var Main = function () {
   };
 
   this.documentation = function (req, resp, params) {
+
+  };
+
+  this.reference = function (req, resp, params) {
     var self = this
     , docs = []
     , count = 0
@@ -102,7 +106,7 @@ var Main = function () {
       if (count == total) {
         self.respond({docs: docs}, {
           format: 'html'
-        , template: 'app/views/main/documentation'
+        , template: 'app/views/main/reference'
         });
       }
     }
