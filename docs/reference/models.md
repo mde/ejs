@@ -71,12 +71,31 @@ Sets up a validation to make sure that the property is present.
 - `property [string]`: the name of the property to validate
 
 ##### options
+- `on [string|array]`: specifies when validation happens (defaults to ['create', 'update'])
 - `message [string]`: a message to give the user if the validation fails
 
 ##### example
 ```
 this.validatesPresent('login');
 // makes sure that the login property is present
+```
+
+#### .validatesAbsent
+`validatesAbsent(property, options)`
+
+Sets up a validation to make sure that the property is not present.
+
+##### property
+- `property [string]`: the name of the property to validate
+
+##### options
+- `on [string|array]`: specifies when validation happens (defaults to ['create', 'update'])
+- `message [string]`: a message to give the user if the validation fails
+
+##### example
+```
+this.validatesAbsent('zerb');
+// makes sure that the zerb property is not present
 ```
 
 * * *
@@ -93,6 +112,7 @@ Sets up a validation to make sure that the property is formatted correctly.
 - `regex [regex]`: a regular expression that the property value must pass
 
 ##### options
+- `on [string|array]`: specifies when validation happens (defaults to ['create', 'update'])
 - `message [string]`: a message to give the user if the validation fails
 
 ##### example
@@ -104,19 +124,18 @@ this.validatesFormat('login', /[a-z]+/, {message: 'cannot contain numbers'});
 * * *
 
 #### .validatesLength
-`validatesLength(property, qualifier, options)`
+`validatesLength(property, options)`
 
 Sets up a validation to make sure that the property meets certain length requirements.
 
 ##### property
 - `property [string]`: the name of the property to validate
 
-##### qualifier
+##### options
 - `min [number]`: the minimum length of the property
 - `max [number]`: the maximum length of the property
-- [number]: the exact length of the property
-
-##### options
+- `is [number]:` the exact length of the property
+- `on [string|array]`: specifies when validation happens (defaults to ['create', 'update'])
 - `message [string]`: a message to give the user if the validation fails
 
 ##### example
@@ -128,7 +147,7 @@ this.validatesLength('login', {min: 3});
 this.validatesLength('login', {max: 20});
 // makes sure that the login property is not longer than 20 characters
 
-this.validatesLength('login', 3)
+this.validatesLength('login', {is: 3})
 // makes sure that the login property is exactly 3 characters long
 ```
 
@@ -146,6 +165,7 @@ Sets up a validation to make sure that the property has been confirmed.
 - `param [string]`: the param required to match
 
 ##### options
+- `on [string|array]`: specifies when validation happens (defaults to ['create', 'update'])
 - `message [string]`: a message to give the user if the validation fails
 
 ##### example
@@ -168,6 +188,7 @@ Sets up a validation to make sure that the property has been confirmed.
 - `fn [function]`: a function which, when passed the value of the property, will return true or false
 
 ##### options
+- `on [string|array]`: specifies when validation happens (defaults to ['create', 'update'])
 - `message [string]`: a message to give the user if the validation fails
 
 ##### example
