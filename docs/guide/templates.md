@@ -1,8 +1,5 @@
 Geddy's view layer provides a versatile set of templating languages and helpers to get you started quickly.
 
-* * *
-
-#### engines
 The view layer supports these four templating engines:
 
 + EJS(.ejs)

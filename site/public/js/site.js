@@ -83,7 +83,8 @@ app.docs = new (function() {
 // wait for document to load
 // then init this page
 $(document).ready(function () {
-  if (app.state.page == 'documentation' ||
+  if (app.state.page == 'guide' ||
+      app.state.page == 'reference' ||
       app.state.page == 'tutorial' ||
       app.state.page == 'changelog') {
     app.docs.init();
