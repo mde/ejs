@@ -14,7 +14,10 @@ createController = function () {
   var controller = new BaseController();
   controller.app = {};
   controller.request = {};
-  controller.response = {};
+  controller.response = {
+    setHeaders: function () {}
+  , finalize: function () {}
+  };
   controller.method = 'GET';
   controller.params = {};
   controller.name = 'Base';
@@ -142,20 +145,105 @@ tests = {
     c._handleAction('foo');
   }
 
-/*
+
 , 'action with sync after-filter': function (next) {
     var c = createController()
       , incr = 0;
     c.foo = function () {
       incr++;
+      c._doResponse(200,
+          {'Content-Type': 'text/plain'}, 'howdy');
     };
     c.after(function () {
       assert.equal(1, incr);
       next();
     });
+    c.params = {
+      action: 'foo'
+    };
     c._handleAction('foo');
   }
-*/
+
+, 'action with sync after-filter and "only" with same action': function (next) {
+    var c = createController()
+      , incr = 0;
+    c.foo = function () {
+      incr++;
+      c._doResponse(200,
+          {'Content-Type': 'text/plain'}, 'howdy');
+    };
+    c.after(function () {
+      assert.equal(1, incr);
+      next();
+    }, {only: ['foo']});
+    c.params = {
+      action: 'foo'
+    };
+    c._handleAction('foo');
+  }
+
+, 'action with sync after-filters and "only" with different action': function (next) {
+    var c = createController()
+      , incr = 0;
+    c.bar = function () {
+      incr++;
+      c._doResponse(200,
+          {'Content-Type': 'text/plain'}, 'howdy');
+    };
+    c.after(function () {
+      incr++;
+    }, {only: ['foo']});
+    c.after(function () {
+      assert.equal(1, incr);
+      next();
+    });
+    c.params = {
+      action: 'bar'
+    };
+    c._handleAction('bar');
+  }
+
+, 'action with sync after-filters and "except" with same action': function (next) {
+    var c = createController()
+      , incr = 0;
+    c.foo = function () {
+      incr++;
+      c._doResponse(200,
+          {'Content-Type': 'text/plain'}, 'howdy');
+    };
+    c.after(function () {
+      incr++;
+    }, {except: ['foo']});
+    c.after(function () {
+      assert.equal(1, incr);
+      next();
+    });
+    c.params = {
+      action: 'foo'
+    };
+    c._handleAction('foo');
+  }
+
+, 'action with sync after-filters and "except" with different action': function (next) {
+    var c = createController()
+      , incr = 0;
+    c.bar = function () {
+      incr++;
+      c._doResponse(200,
+          {'Content-Type': 'text/plain'}, 'howdy');
+    };
+    c.after(function () {
+      incr++;
+    }, {except: 'foo'});
+    c.after(function () {
+      assert.equal(2, incr);
+      next();
+    });
+    c.params = {
+      action: 'bar'
+    };
+    c._handleAction('bar');
+  }
 
 };
 
