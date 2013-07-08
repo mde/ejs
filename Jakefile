@@ -62,6 +62,7 @@ testTask = new jake.TestTask('Geddy', function () {
   this.testFiles.exclude('test/templates/partial.js');
   this.testFiles.include('test/**/*.js');
   this.testFiles.include('test/templates/partial.js');
+  this.testFiles.exclude('test/controllers/shim.js');
   this.showDescription = false;
 });
 
