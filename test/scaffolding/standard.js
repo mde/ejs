@@ -26,22 +26,22 @@
           , srcModules = path.join(__dirname, '..', '..', 'node_modules')
           , appDir = path.join(testDir, engine + 'App')
           , proc;
-        
+
         if(flag) {
           opts.push(flag);
         }
-        
+
         proc = spawn(cmd, opts, {cwd:testDir});
-        
+
         proc.stderr.setEncoding('utf8');
-        
+
         proc.stderr.on('data', function (data) {
           console.error(data);
           if (/^execvp\(\)/.test(data)) {
             assert.ok(false, 'Failed to generate scaffolding for ' + engine);
           }
         });
-        
+
         proc.on('close', function (code) {
           // Create a copy of node_modules so the generated apps don't need to
           // do an `npm install`
@@ -59,24 +59,24 @@
           , cmd = geddyCli
           , opts = ['gen', 'scaffold']
           , proc;
-        
+
         if(flag) {
           opts.push(flag);
         }
-        
+
         opts = opts.concat(['zoobies', 'foo:string', 'bar:number']);
-        
+
         proc = spawn(cmd, opts, {cwd:testAppDir});
-        
+
         proc.stderr.setEncoding('utf8');
-        
+
         proc.stderr.on('data', function (data) {
           console.error(data);
           if (/^execvp\(\)/.test(data)) {
             assert.ok(false, 'Failed to generate scaffolding for ' + engine);
           }
         });
-        
+
         proc.on('close', function (code) {
           cb();
         });
@@ -92,20 +92,20 @@
           , server
           , notified = false
           , failed = false;
-        
+
         server = spawn(cmd, opts, {cwd:testAppDir});
-        
+
         server.stderr.setEncoding('utf8');
-        
+
         server.stderr.on('data', function (data) {
           console.log(data);
         });
-        
+
         console.log("Starting " + engine + " app on port " + port);
-  
+
         server.stdout.on('data', function (data) {
           var ready = data.toString().match(/Server worker running in [a-z]+? on port [0-9]+? with a PID of: [0-9]+?/)?true:false;
-          
+
           if(!notified && ready) {
             notified = true;
             cb(server);
@@ -119,7 +119,7 @@
       server.on('close', function (code) {
         cb();
       });
-      
+
       server.kill("SIGHUP");
     }
   , tests = {}
@@ -131,13 +131,13 @@
   , reqOpts = {
       timeout: 1000
     };
-  
+
   /*
   * CRUD Tests
   */
   for(var engine in engines) {
     (function (baseUrl) {
-      
+
       tests["test " + engine + " shows site index"] = function(next) {
         //Request index
         request(baseUrl, reqOpts, function(err, res, body) {
@@ -147,7 +147,7 @@
           next();
         });
       };
-      
+
       tests["test " + engine + " site index with malformed query string"] = function(next) {
         //Request index
         request(baseUrl + '?test=t%\'2B', reqOpts, function(err, res, body) {
@@ -156,7 +156,7 @@
           next();
         });
       };
-      
+
       tests["test " + engine + " index when empty"] = function(next) {
         //Request index
         request(baseUrl + '/zoobies', reqOpts, function(err, res, body) {
@@ -166,7 +166,7 @@
           next();
         });
       };
-      
+
       tests["test " + engine + " create entry"] = function(next) {
         //Request index
         request({
@@ -189,7 +189,7 @@
           next();
         });
       };
-      
+
       tests["test " + engine + " show initial values"] = function(next) {
         //Request index
         request({
@@ -205,7 +205,7 @@
           next();
         });
       };
-      
+
       tests["test " + engine + " update form persists values"] = function(next) {
         //Request index
         request({
@@ -216,23 +216,23 @@
         , function(err, res, body) {
           assert.strictEqual(err, null, err);
           assert.strictEqual(res.statusCode, 200, 'Error '+res.statusCode+' when updating zooby');
-          
+
           // FIXME: Is there a less stupid way of asserting this?
-          
+
           assert.strictEqual(
             body.indexOf('input type="text" class="span6" name="foo" value="zerb"') >= 0  // ms
           ||body.indexOf('input class="span6" name="foo" type="text" value="zerb"') >= 0  // ejs
           , true , 'Foo was persisted correctly')
-          
+
           assert.strictEqual(
             body.indexOf('input type="number" class="span2" name="bar" value="2112"') >= 0 // ms
           ||body.indexOf('input class="span2" name="bar" type="number" value="2112"') >= 0  // ejs
           , true , 'Bar was persisted correctly')
-          
+
           next();
         });
       };
-      
+
       tests["test " + engine + " update values"] = function(next) {
         //Request index
         request({
@@ -254,7 +254,7 @@
           next();
         });
       };
-      
+
       tests["test " + engine + " show updated values"] = function(next) {
         //Request index
         request({
@@ -270,7 +270,7 @@
           next();
         });
       };
-      
+
       tests["test " + engine + " delete entry"] = function(next) {
         //Request index
         request({
@@ -286,7 +286,7 @@
           next();
         });
       };
-      
+
       tests["test " + engine + " 404"] = function(next) {
         //Request index
         request({
@@ -300,13 +300,13 @@
           next();
         });
       };
-      
+
     }(base + portCopy));
-    
+
     // Increment Port Number
     portCopy++;
   }
-  
+
   /*
   * The before action will generate the scaffolded apps
   */
@@ -314,7 +314,7 @@
     var generators = []
       , chain
       , portCopy = port;
-    
+
     // Generate a new app for each engine
     for(var engine in engines) {
       (function (serverPort) {
@@ -336,18 +336,18 @@
           }
         });
       }(portCopy));
-      
+
       // Increment port number
       portCopy++;
     }
-    
+
     chain = new utils.async.AsyncChain(generators);
-    
+
     chain.last = next;
-    
+
     chain.run();
   };
-  
+
   /*
   * The after action cleans the temporary directory
   */
@@ -361,16 +361,16 @@
       , callback: null
       });
     }
-    
+
     chain = new utils.async.AsyncChain(killers);
-    
+
     chain.last = function () {
       //utils.file.rmRf(tmpDir, {silent:true});
       next();
     };
-    
+
     chain.run();
   };
-  
+
   module.exports = tests;
 }());
