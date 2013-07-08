@@ -183,9 +183,7 @@
         , function(err, res, body) {
           assert.strictEqual(err, null, err);
           assert.strictEqual(res.statusCode, 200, 'Error '+res.statusCode+' when creating zoobies');
-          assert.notStrictEqual(body.match(/id="zooby-[a-z0-9\-]+"/gi), null, 'There should be a zooby in the list')
-          assert.strictEqual(body.match(/id="zooby-[a-z0-9\-]+"/gi).length, 1, 'There should be exactly one zooby in the list')
-          assert.strictEqual(body.indexOf('id="zooby-' + staticId + '"')>=0, true, 'The zooby should have the expected ID')
+          assert.strictEqual(body.indexOf('<span class="id">' + staticId + '</span>')>=0, true, 'The zooby should have the expected ID')
           next();
         });
       };
@@ -248,9 +246,7 @@
         , function(err, res, body) {
           assert.strictEqual(err, null, err);
           assert.strictEqual(res.statusCode, 200, 'Error '+res.statusCode+' when updating zooby');
-          assert.notStrictEqual(body.match(/id="zooby-[a-z0-9\-]+"/gi), null, 'There should be a zooby in the list')
-          assert.strictEqual(body.match(/id="zooby-[a-z0-9\-]+"/gi).length, 1, 'There should be exactly one zooby in the list')
-          assert.strictEqual(body.indexOf('id="zooby-' + staticId + '"')>=0, true, 'The zooby should have the expected ID')
+          assert.strictEqual(body.indexOf('<span class="id">' + staticId + '</span>')>=0, true, 'The zooby should have the expected ID')
           next();
         });
       };
