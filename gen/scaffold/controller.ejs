@@ -5,7 +5,7 @@ var <%= names.constructor.plural %> = function () {
     var self = this;
 
     geddy.model.<%= names.constructor.singular %>.all(function(err, <%= names.property.plural %>) {
-      self.respond({params: params, <%= names.property.plural %>: <%= names.property.plural %>});
+      self.respondWith(<%= names.property.plural %>, {type:'<%= names.constructor.singular.toLowerCase() %>'});
     });
   };
 <% if(!bare) { %>
@@ -17,21 +17,9 @@ var <%= names.constructor.plural %> = function () {
     var self = this
       , <%= names.property.singular %> = geddy.model.<%= names.constructor.singular %>.create(params);
 
-    if (!<%= names.property.singular %>.isValid()) {
-      this.flash.error(<%= names.property.singular %>.errors);
-      this.redirect({action: 'add'});
-    }
-    else {
-      <%= names.property.singular %>.save(function(err, data) {
-        if (err) {
-          self.flash.error(err);
-          self.redirect({action: 'add'});
-        }
-        else {
-          self.redirect({controller: self.name});
-        }
-      });
-    }
+    <%= names.property.singular %>.save(function(err, data) {
+      self.respondWith(<%= names.property.singular %>, {status: err});
+    });
   };
 
   this.show = function (req, resp, params) {
@@ -44,7 +32,7 @@ var <%= names.constructor.plural %> = function () {
         self.error(err);
       }
       else {
-        self.respond({params: params, <%= names.property.singular %>: <%= names.property.singular %>.toObj()});
+        self.respondWith(<%= names.property.singular %>);
       }
     });
   };
@@ -59,7 +47,7 @@ var <%= names.constructor.plural %> = function () {
         self.error(err);
       }
       else {
-        self.respond({params: params, <%= names.property.singular %>: <%= names.property.singular %>});
+        self.respondWith(<%= names.property.singular %>);
       }
     });
   };
@@ -69,19 +57,13 @@ var <%= names.constructor.plural %> = function () {
 
     geddy.model.<%= names.constructor.singular %>.first(params.id, function(err, <%= names.property.singular %>) {
       <%= names.property.singular %>.updateProperties(params);
+
       if (!<%= names.property.singular %>.isValid()) {
-        this.flash.error(<%= names.property.singular %>.errors);
-        this.redirect({action: 'edit'});
+        self.respondWith(<%= names.property.singular %>);
       }
       else {
         <%= names.property.singular %>.save(function(err, data) {
-          if (err) {
-            self.flash.error(err);
-            self.redirect({action: 'edit'});
-          }
-          else {
-            self.redirect({controller: self.name});
-          }
+          self.respondWith(<%= names.property.singular %>, {status: err});
         });
       }
     });
@@ -90,13 +72,16 @@ var <%= names.constructor.plural %> = function () {
   this.destroy = function (req, resp, params) {
     var self = this;
 
-    geddy.model.<%= names.constructor.singular %>.remove(params.id, function(err) {
-      if (err) {
-        self.flash.error(err);
-        self.redirect({action: 'edit'});
+    geddy.model.<%= names.constructor.singular %>.first(params.id, function(err, <%= names.property.singular %>) {
+      if (!<%= names.property.singular %>) {
+        var err = new Error();
+        err.statusCode = 400;
+        self.error(err);
       }
       else {
-        self.redirect({controller: self.name});
+        geddy.model.<%= names.constructor.singular %>.remove(params.id, function(err) {
+          self.respondWith(<%= names.property.singular %>, {status: err});
+        });
       }
     });
   };
