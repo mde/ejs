@@ -652,3 +652,207 @@ if (!someTeam.players) {
 }
 ```
 
+#### Migrations (SQL adapters only)
+
+Migrations are a convenient way to make changes to your SQL database schema over
+time, consistently and easily. They use a simply JavaScript API. This means
+that you don't have to write SQL by hand, and changes to your schema can be
+database independent.
+
+This is an example of a migration:
+
+```javascript
+var CreateUsers = function () {
+  this.up = function (next) {
+    var def = function (t) {
+          t.column('username', 'string');
+          t.column('password', 'string');
+          t.column('familyName', 'string');
+          t.column('givenName', 'string');
+          t.column('email', 'string');
+        }
+      , callback = function (err, data) {
+          if (err) {
+            throw err;
+          }
+          else {
+            next();
+          }
+        };
+    this.createTable('users', def, callback);
+  };
+
+  this.down = function (next) {
+    var callback = function (err, data) {
+          if (err) {
+            throw err;
+          }
+          else {
+            next();
+          }
+        };
+    this.dropTable('users', callback);
+  };
+};
+
+exports.CreateUsers = CreateUsers;
+```
+
+This migration will create a 'users' table a number of columns of
+string (varchar(256)) datatype.
+
+An 'id' column will be added implicitly, as well as timestamp columns for the
+'createdAt' and 'updatedAt' properties of data items. (These will be in
+snake-case in the database, e.g., 'created_at'.) These properties are
+automatically managed by Model.
+
+The `up` method makes the change (in this case, creating the table), and the
+`down` method reverses the change. The `down` method is used to roll back
+undesirable changes.
+
+##### Creating a migration
+
+Migrations live in the db/migrations folder in your application. The name is in
+the form  YYYYMMDDHHMMSS_my_migration_name.js. Using these timestamps with
+migration names allows you to run migrations in the order in which they're
+created, even with different developers working independently, creating
+migrations at overlapping times.
+
+To create a new migration, run the generator script:
+
+```
+$ ../geddy/bin/cli.js gen migration zerp_derp
+[Added] db/migrations/20130708212330_zerp_derp.js
+```
+If you open the new migration file, you'll see a blank migration file ready to be filled in:
+
+```javascript
+var ZerpDerp = function () {
+  this.up = function (next) {
+    next();
+  };
+
+  this.down = function (next) {
+    next();
+  };
+};
+
+exports.ZerpDerp = ZerpDerp;
+```
+
+##### Migrations API
+
+`createTable(name<string>, definition<function>,
+    callback<function>)`
+
+Creates a new table. The `definition` function is used to define the columns on
+the new table.
+
+```javascript
+// CREATE TABLE distributors (id string PRIMARY KEY, address varchar(256),
+// created_at timestamp, updated_at timestamp);
+this.createTable('distributors',
+    function (t) { t.column('address', 'string'); },
+    function (err, data) {});
+```
+
+`dropTable(name<string>, callback<function>)`
+
+Drops an existing table.
+
+```javascript
+// DROP TABLE IF EXISTS distributors;
+this.dropTable('distributors', function (err, data) {});
+```
+
+`addColumn(table<string>, column<string>, datatype<string>,
+    callback<function>)`
+
+Adds a column to an existing table.
+
+```javascript
+// ALTER TABLE distributors ADD COLUMN address varchar(30);
+this.addColumn('distributors', 'address', 'string',
+    function (err, data) {});
+```
+
+`removeColumn(table<string>, column<string>, callback<function>)`
+
+Removes a column from an existing table.
+
+```javascript
+// ALTER TABLE distributors DROP COLUMN address;
+this.removeColumn('distributors', 'address',
+    function (err, data) {});
+```
+
+`changeColumn(table<string>, column<string>, datatype<string>,
+    callback<function>)`
+
+Changes a column on an existing table from one datatype to another.
+
+```javascript
+// ALTER TABLE distributors ALTER COLUMN address TYPE text;
+this.changeColumn('distributors', 'address', 'text',
+    function (err, data) {});
+```
+
+`renameColumn(table<string>, column<string>, newColumn<string>,
+    callback<function>)`
+
+Renames a column on an existing table.
+
+```javascript
+// ALTER TABLE distributors RENAME COLUMN address TO city;
+this.renameColumn('distributors', 'address', 'city',
+    function (err, data) {});
+```
+
+##### Migrations for scaffolds
+
+Using Geddy's scaffold-generators will also create the appropriate migration
+file for you.
+
+For example, with the following generator command:
+
+```
+$ geddy gen scaffold frang asdf:string qwer:int
+```
+
+You'll end up with the following migration to run to create the corresponding
+table for your model:
+
+```javascript
+var CreateFrangs = function () {
+  this.up = function (next) {
+    var def = function (t) {
+          t.column('asdf', 'string');
+          t.column('qwer', 'int');
+        }
+      , callback = function (err, data) {
+          if (err) {
+            throw err;
+          }
+          else {
+            next();
+          }
+        };
+    this.createTable('frang', def, callback);
+  };
+
+  this.down = function (next) {
+    var callback = function (err, data) {
+          if (err) {
+            throw err;
+          }
+          else {
+            next();
+          }
+        };
+    this.dropTable('frang', callback);
+  };
+};
+
+exports.CreateFrangs = CreateFrangs;
+```
+
