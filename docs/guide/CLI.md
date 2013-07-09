@@ -64,6 +64,7 @@ scaffolds, or bare models and controllers.
 - `gen controller <name>`: Generate a new controller including an index view and and a route
 - `gen model <name> [attrs]`: Generate a new model
 - `gen auth[:update]`: Creates user authentication for you, using Passport.
+- `gen migration <name>`: Generate an empty migration for SQL databases
 
 For all of these commands, `[attrs]` is a list of attributes for the model, in
 the format of 'name:datatype' (e.g., foo:int).
