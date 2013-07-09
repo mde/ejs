@@ -171,7 +171,7 @@ var Main = function () {
 
     // get the tutorial markdown file
     geddy.request({
-      url: 'https://raw.github.com/mde/geddy/master/tutorial.md'
+      url: 'https://raw.github.com/mde/geddy/' + BRANCH + '/tutorial.md'
       , headers: {'User-Agent': 'GeddyJS documentation site'}
       }, gotTutorial);
   };
@@ -202,9 +202,9 @@ var Main = function () {
 
     // get the tutorial markdown file
     geddy.request({
-      url: 'https://raw.github.com/mde/geddy/master/changelog.md'
+      url: 'https://raw.github.com/mde/geddy/' + BRANCH + '/changelog.md'
       , headers: {'User-Agent': 'GeddyJS documentation site'}
-      
+
       }, gotTutorial);
   };
 
