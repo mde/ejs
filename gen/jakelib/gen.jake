@@ -264,7 +264,7 @@ namespace('gen', function () {
 
   }, {async: true});
 
-  task('model', function (name, properties, modelPath) {
+  task('model', {async: true}, function (name, properties, modelPath) {
     var props = _formatModelProperties(properties)
       , createTableTask;
     if (!name) {
@@ -280,8 +280,7 @@ namespace('gen', function () {
       , properties: props
     });
 
-    // Try to create a table -- should be a no-op if an
-    // appropriate DB adapter can't be found
+    // Create the corresponding migration
     createTableTask = jake.Task['migration:createForTable'];
     createTableTask.on('complete', function () {
       complete();
@@ -289,7 +288,7 @@ namespace('gen', function () {
     createTableTask.invoke(name, props);
 
 
-  }, {async: true});
+  });
 
   task('controller', function (name) {
     if (!name) {
@@ -590,7 +589,10 @@ namespace('gen', function () {
   });
 
   // Delegate to stuff in jakelib/migration.jake
-  task('migration', {async: true}, function () {
+  task('migration', {async: true}, function (name) {
+    if (!name) {
+      throw new Error('No migration name provided.');
+    }
     var t = jake.Task['migration:create'];
     t.on('complete', function () {
       complete();
