@@ -1,3 +1,20 @@
+### 0.9
++ Migrations for SQL databases
++ Custom validation scenarios
++ Integrated flash messages with generated scaffold-code
++ Complete rewrite of template-rendering code
++ Addes Swig templating language, including to all generators
++ Complete rewrite of CLI code
++ Added support for selectTag.option to accept attributes
++ Added named-pipes support for Windows Azure deployment
++ Implemented EJS-in-JSON hack for env-var support in deploy-from-Git
++ Controller-level override for i18n setting
++ Better debug output from CLI tasks
++ Integration tests for generator tasks
++ Travis CI for all Geddy-related repos
++ Separated docs into Reference and Guide
++ Proper branch support for Docs site
+
 ### 0.8
 + Flash-messages for session
 + Through-associations for models
