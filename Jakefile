@@ -53,7 +53,6 @@ var p = new jake.NpmPublishTask('geddy', [
 , 'deps/**'
 , 'lib/**'
 , 'gen/**'
-, 'test/**'
 ]);
 
 testTask = new jake.TestTask('Geddy', function () {
