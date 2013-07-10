@@ -16,7 +16,7 @@ var color = require('./color');
  * @param {Object} stream
  * @api public
  */
-var Log = exports = module.exports = function Log(level, stream, print, loggly) {
+var Log = exports = module.exports = function Log(level, stream, printSync) {
     if ('string' == typeof level) level = exports[level.toUpperCase()];
     this.level = level || exports.DEBUG;
     this.stream = stream || process.stdout;
@@ -25,12 +25,7 @@ var Log = exports = module.exports = function Log(level, stream, print, loggly) 
       this.stream = stream;
       this.writing = false;
     }
-    this.print = print || false;
-    if (loggly && typeof loggly.log == 'function') {
-      this.loggly = loggly;
-    } else {
-      this.loggly = false;
-    }
+    this.printSync = printSync || false;
     if (this.writing && this.stream.readable) this.read(level);
 };
 /**
@@ -140,17 +135,20 @@ Log.prototype = {
               this.stream.write('[' + new Date().toUTCString() + ']' + ' ' + levelStr + ' ' + msg + '\n');
             }
 
-            if (this.print) {
-              coloredLevelStr = '';
-              if (levelStr === 'ERROR')   { coloredLevelStr = levelStr.red; }
-              if (levelStr === 'WARNING') { coloredLevelStr = levelStr.magenta; }
-              if (levelStr === 'NOTICE')  { coloredLevelStr = levelStr.green; }
-              if (levelStr === 'INFO')    { coloredLevelStr = levelStr.blue; }
-              if (levelStr === 'DEBUG')   { coloredLevelStr = levelStr.yellow; }
+            coloredLevelStr = '';
+            if (levelStr === 'ERROR')   { coloredLevelStr = levelStr.red; }
+            if (levelStr === 'WARNING') { coloredLevelStr = levelStr.magenta; }
+            if (levelStr === 'NOTICE')  { coloredLevelStr = levelStr.green; }
+            if (levelStr === 'INFO')    { coloredLevelStr = levelStr.blue; }
+            if (levelStr === 'DEBUG')   { coloredLevelStr = levelStr.yellow; }
+            // HACK: defer printing in non-developement modes
+            if (this.printSync) {
               console.log(('[' + new Date().toUTCString() + ']').cyan + ' ' + coloredLevelStr + ' ' + msg);
             }
-            if (typeof this.loggly.log == 'function' && (this.loggly.logLevel >= exports[levelStr])) {
-              this.loggly.log({eventType: levelStr, message: msg});
+            else {
+              setTimeout(function () {
+                console.log(('[' + new Date().toUTCString() + ']').cyan + ' ' + coloredLevelStr + ' ' + msg);
+              }, 0);
             }
         } else if (levelStr == 'ACCESS') {
           if (this.writing) {
