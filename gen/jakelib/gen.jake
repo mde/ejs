@@ -600,5 +600,17 @@ namespace('gen', function () {
     t.invoke.apply(t, arguments);
   });
 
+  // Delegate to stuff in jakelib/migration.jake
+  task('auth', {async: true}, function (name) {
+    if (!name) {
+      throw new Error('No migration name provided.');
+    }
+    var t = jake.Task['auth:init'];
+    t.on('complete', function () {
+      complete();
+    });
+    t.invoke.apply(t, arguments);
+  });
+
 });
 
