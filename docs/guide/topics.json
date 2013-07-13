@@ -5,6 +5,7 @@
     "templates",
     "models",
     "i18n",
+    "authentication",
     "deployment"
   ]
 }
