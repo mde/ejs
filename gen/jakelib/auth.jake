@@ -116,8 +116,8 @@ namespace('auth', function () {
         from = path.join(fromBase, item);
         to = path.dirname(path.join(cwd, item));
 
-        if (item.match('/app/views')) {
-          from = from.replace('/app/views', '/app/views_' + engine);
+        if (item.match('app/views')) {
+          from = from.replace('app/views', 'app/views_' + engine);
           from = from.replace(/\[\.ext\]$/, engineExt[engine]);
           to = to.replace(/\[\.ext\]$/, engineExt[engine]);
         }
@@ -126,7 +126,7 @@ namespace('auth', function () {
         console.log('Creating file:', path.join(to, path.basename(from)));
 
         // Delete any existing interferring templates
-        if (item.match('/app/views')) {
+        if (item.match('app/views')) {
           ['.jade', '.ejs', '.ms', '.mustache', '.hbs', '.handlebars', '.swig'].forEach(function (ext) {
             p = path.basename(item, path.extname(item)) + ext;
 
