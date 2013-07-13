@@ -92,9 +92,9 @@ namespace('db', function () {
       }
 
       createTask.once('complete', function () {
-        var dir = path.join(process.cwd(), 'migration');
+        var dir = path.join(process.cwd(), 'db', 'migrations');
         console.log('Created ' + dir);
-        jake.mkdirP('migration');
+        jake.mkdirP(dir);
         complete();
       });
       createTask.invoke(modelName);
