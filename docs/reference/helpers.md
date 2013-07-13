@@ -7,7 +7,7 @@ The exported helpers, are available in your views and throughout your applicatio
 
 For example, we have this script in a file in our `app/helpers` directory:
 ```
-module.exports = function upperCase(str) {
+exports.upperCase = function upperCase(str) {
   return str.toUpperCase();
 };
 ```
