@@ -1,7 +1,6 @@
 { "topics":
   [
     "utilities",
-    "authentication",
     "router",
     "controllers",
     "models",
