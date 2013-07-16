@@ -5,6 +5,9 @@ body.application {
   padding-top: 60px;
   padding-bottom: 40px;
 }
+code {
+  white-space: pre;
+}
 
 .navbar-fixed-top {
   box-shadow: 0px 0px 3px #000;

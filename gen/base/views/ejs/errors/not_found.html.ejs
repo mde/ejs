@@ -1,5 +1,5 @@
 <h2>Error: <%= statusCode %> <%= statusText %></h2>
-<% if (typeof message != 'undefined') { %>
-<%= message; %>
+<% if (message) { %>
+<div><%= message; %></div>
 <% } %>
 
