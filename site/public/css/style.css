@@ -1,515 +1,58 @@
 body {
-  padding-top: 40px;
-  padding-bottom: 40px;
-  color: #333;
-  font-weight: lighter;
-  font-family: 'Segoe UI Light','Segoe UI','Helvetica Nueu',Helvetica,Arial,sans-serif
+  background: url('../img/whitey.png');
 }
-
-h2 {
-  font-size: 36px;
-}
-
-h3 {
-  font-size: 24px;
-  line-height: 60px
-}
-
-h4 {
-  font-size: 18px;
-  line-height: 40px;
-}
-
-h5 {
-  font-size: 14px;
-  color: #999;
-  margin-top: 20px;
-}
-
-h1, h2, h3, h4, h5, h6 {
-  font-weight: lighter;
-}
-
-p {
-  font-size: 14px;
-  line-height: 200%;
-}
-
-li {
-  font-size: 14px;
-}
-
-pre, code {
-  background: #FDF6E3;
-  margin: 40px 0;
-  padding: 20px;
-  font-size: 12px;
-  border: none;
-  border-radius: 0px;
-}
-
-code {
-  padding: 2px 5px;
-  margin: 0;
-  color: #666;
-  background: #f5f5f5;
-}
-
-a {
-  color: #08c;
-}
-
-ul, ol {
-  margin-left: 16px;
-}
-
-input::-webkit-input-placeholder {
-  color: #ccc;
-}
-
-input:-moz-placeholder {
-  color: #ccc;
-}
-
-input:-ms-input-placeholder {
-  color: #ccc;
-}
-
-.header {
-  margin-bottom: 40px;
-}
-
-.header h1 {
-  text-align: center;
-  height: 300px;
-  line-height: 300px;
-  font-size: 128px;
-  font-weight: lighter;
-  background: #3399cc;
-  color: #fff;
-  margin-top: 0;
-  margin-bottom: 20px;
-}
-
-.header h1 a {
-  color: white;
-}
-
-.header h1 a:hover {
-  text-decoration: none;
-}
-
-.menu .icon {
-  background: #e8e8e8;
-  color: #333;
-  height: 140px;
-  margin-bottom: 20px;
-  background-position: center;
-  background-repeat: no-repeat;
-}
-
-.menu .home            { background-image: url('/img/home-dark-72.png'); }
-.menu .home:hover      { background-image: url('/img/home-light-72.png'); }
-.menu .docs            { background-image: url('/img/docs-dark-72.png'); }
-.menu .docs:hover      { background-image: url('/img/docs-light-72.png'); }
-.menu .tutorial        { background-image: url('/img/tuts-dark-72.png'); }
-.menu .tutorial:hover  { background-image: url('/img/tuts-light-72.png'); }
-.menu .changelog       { background-image: url('/img/changelog-dark-72.png'); }
-.menu .changelog:hover { background-image: url('/img/changelog-light-72.png'); }
-.menu .community       { background-image: url('/img/community-dark-72.png'); }
-.menu .community:hover { background-image: url('/img/community-light-72.png'); }
-.menu .faq             { background-image: url('/img/faq-dark-72.png'); }
-.menu .faq:hover       { background-image: url('/img/faq-light-72.png'); }
-
-.menu .icon:hover {
-  text-decoration: none;
-  background-color: #666;
-  color: #e8e8e8;
-}
-
-.menu .icon span {
-  position: relative;
-  bottom: -115px;
-  left: 10px;
-  font-size: 15px;
-}
-
-.title {
-  margin-bottom: 60px;
-}
-
-.footer {
-  border-top: 1px solid #eee;
+body.application {
   padding-top: 60px;
-  margin-top: 60px;
-  margin-left: 0;
- }
-
-.mail-list .email, .mail-list .submit {
-  height: 60px;
-  margin: 0;
-  padding: 0;
-  border-radius: 0;
+  padding-bottom: 40px;
 }
 
-.mail-list .submit {
-  background: #63A500;
-  color: #fff;
-  font-size: 30px;
-  width: 100%;
-  border: 0;
-  height: 62px;
+.navbar-fixed-top {
+  box-shadow: 0px 0px 3px #000;
+  border-bottom: 1px solid #999;
 }
 
-.footer .mail-list input.email {
-  box-shadow: none;
-  padding-left: 20px;
-  width: 600px;
-  font-size: 30px;
-  line-height: 60px;
-  color: #ccc;
+.geddy-welcome-box {
+  text-align: center;
+  background-color: rgba(200, 200, 200, .5);
+  box-shadow: 0px 0px 3px #bababa;
+  border: 1px solid #EDEDED;
 }
 
-.footer .list {
-  color: #ccc;
-}
-
-.footer .copyright {
-  margin-left: 20px;
-}
-
-.footer .list ul {
-  list-style: none;
-  float: right;
-  margin: 0 0 0 20px;
-  padding: 0;
-}
-
-.footer .list ul li {
-  display: inline-block;
-  margin-left: 10px;
-}
-
-
-/* Community Page */
-
-.box {
-  margin: 0;
-  padding: 0;
-  width: 480px;
-}
-
-.avatar, .info {
+.geddy-welcome-box h1 {
+  line-height: 1.25;
   margin-bottom: 20px;
 }
 
-.avatar {
-  height: 140px;
-  background: #e8e8e8;
+.geddy-welcome-box p {
+  max-width: 760px;
+  margin: 0 auto;
 }
 
-.info {
-  height: 300px;
-  background: #3399cc;
-  position: relative;
-}
-
-.info h3 {
-  color: white;
-  margin: 10px 15px;
-  font-size: 42px;
-  line-height: 120%;
-  font-weight: lighter;
-}
-
-.info p {
-  font-size: 20px;
-  margin: 0 15px;
-  color: white;
-  line-height: 130%;
-}
-
-.info a {
-  display: block;
-  font-size: 20px;
-  text-align: right;
-  position: absolute;
-  bottom: 20px;
-  right: 20px;
-}
-
-.info a:hover {
-  color: white;
-  text-decoration: none;
-}
-
-/* END Community Page */
-
-/* Documentation Page */
-
-.content {
-  margin-top: -40px;
-}
-
-.toc {
-  margin-top: -60px;
-  float: right;
-  right: 0;
-}
-
-.toc ul {
-  margin-left: 10px;
-}
-
-.toc ul li {
-  list-style: none;
-}
-
-.toc ul > li {
-  font-weight: bold;
-  font-size: 15px;
-  margin-bottom: 20px;
-}
-
-.toc ul li a:hover {
-  text-decoration: none;
-}
-
-.toc ul li a.selected {
-  color: #14509e;
-}
-
-.toc ul li ul {
-  margin: 15px 0 15px 0;
-  display: none;
-}
-
-.toc ul li ul.selected {
-  display: block;
-}
-
-.toc ul li ul li {
-  font-weight: lighter;
-  font-size: 12px;
-  margin-bottom: 12px;
-}
-
-#documentation h3 {
+.geddy-welcome-box .btn-large {
   margin-top: 20px;
 }
 
-/* END Documentation Page */
-
-/* FAQ Page */
-
-#faq h2 {
-  margin-bottom: -40px;
-}
-
-#faq h3 {
-  line-height: 30px;
-  margin-top: 60px;
+.list-item {
   margin-bottom: 20px;
 }
 
-#faq p {
-  font-size: 15px;
+.list-item div {
+  background: white;
+  border-bottom: 2px solid #ccc;
 }
 
-/* END FAQ Page */
-
-/* Changelog Page */
-
-#changelog code {
-  display: inline;
-  padding: 0;
-  margin: 0;
-  color: #333;
+.list-item div > * {
+  padding: 20px;
 }
 
-/* END Changelog Page */
-
-/* Large desktop */
-@media (min-width: 1200px) {
-  .header h1 {
-    height: 370px;
-    line-height: 370px;
-    margin-bottom: 30px;
-  }
-
-  .menu .icon {
-    height: 170px;
-    margin-bottom: 30px;
-  }
-
-  .menu .icon span {
-    bottom: -140px;
-  }
-
-  .box {
-    width: 600px;
-  }
-
-  .avatar, .info {
-    margin-bottom: 30px;
-  }
-
-  .avatar {
-    height: 170px;
-  }
-
-  .info {
-    height: 370px;
-  }
-
-  .footer {
-    margin-right: 0px;
-  }
-
-  .footer .mail-list input.email {
-    width: 750px;
-  }
+.list-item div h3 i {
+  margin: 5px;
 }
 
-/* Portrait tablet to landscape and desktop */
-@media (max-width: 979px) {
-  body {
-    padding: 40px 0;
-  }
-
-  .header h1 {
-    height: 228px;
-    line-height: 228px;
-    font-size: 96px;
-  }
-
-  .menu .icon {
-    height: 104px;
-  }
-
-  .menu .icon span {
-    font-size: 12px;
-    bottom: -78px;
-  }
-
-  .title h2 {
-    font-size: 34px;
-  }
-
-  #documentation .span6 {
-    width: 476px;
-  }
-
-  #documentation div.toc {
-    width: 228px;
-  }
-
-  .box {
-    width: 372px;
-  }
-
-  .avatar {
-    height: 104px;
-  }
-
-  .info {
-    height: 228px;
-  }
-
-  .info p {
-    font-size: 15px;
-  }
-
-  .footer .mail-list input.email {
-    width: 456px;
-  }
-
-}
-
-/* Landscape phone to portrait tablet */
-@media (max-width: 767px) {
-  body {
-   padding-top: 15px;
-  }
-
-  .container {
-    width: 90%;
-  }
-
-  .menu .icon {
-    float: left;
-    width: 104px;
-    margin-right: 20px;
-  }
-
-  #documentation .span6 {
-    width: 100%;
-  }
-
-  #documentation div.toc {
-    width: 100%;
-  }
-
-  .box {
-    width: 100%;
-  }
-
-  .toc {
-    margin-top: 0;
-  }
-
-  .toc ul {
-    margin-left: 0;
-  }
-
-  .info h3 {
-    font-size: 30px;
-    padding-top: 12px;
-  }
-
-  .info p {
-    font-size: 15px;
-  }
-
-  .info a {
-    bottom: 10px;
-    right: 10px;
-  }
-
-  .avatar {
-    display: none;
-  }
-
-  .footer {
-    margin-right: 0;
-  }
-
-  .footer .mail-list input.email {
-    width: 100%;
-    padding: 0;
-    margin-bottom: 20px;
-    border: none;
-    background: #f5f5f5;
-    color: #333;
-  }
-
-}
-
-/* Landscape phones and down */
 @media (max-width:480px) {
-
-  .footer .list ul {
+  .hero-unit .pull-right {
     float: none;
-  }
-
-  .footer .list ul li {
-    margin: 0 10px 0 0;
-  }
-
-}
-
-@media print {
-  .footer, .toc, .menu {
-    display: none;
+    margin-top: 10px;
   }
 }
+
