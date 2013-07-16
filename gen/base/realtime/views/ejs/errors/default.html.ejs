@@ -1,0 +1,11 @@
+<style>
+  code {
+    white-space: pre;
+  }
+</style>
+<h2>Error: <%= statusCode %> <%= statusText %></h2>
+<% if (typeof stack != 'undefined') { %>
+<code><%= stack %></code>
+<% } else if (typeof message != 'undefined') { %>
+<%= message; %>
+<% } %>
