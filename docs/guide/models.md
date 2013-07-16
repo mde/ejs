@@ -710,6 +710,11 @@ The `up` method makes the change (in this case, creating the table), and the
 `down` method reverses the change. The `down` method is used to roll back
 undesirable changes.
 
+##### Setting up your DB to use migrations
+
+Inside your app, run `geddy jake db:init` to create the 'migrations' table. You
+have to do this before you can use migrations.
+
 ##### Creating a migration
 
 Migrations live in the db/migrations folder in your application. The name is in
@@ -855,4 +860,119 @@ var CreateFrangs = function () {
 
 exports.CreateFrangs = CreateFrangs;
 ```
+
+##### Migrations FAQ
+
+Q: If I'm using Geddy-Passport for auth, how do I create the migrations for it?
+
+A: People running the `auth` generator will now get the migrations installed as
+well, but if you've previously installed the auth code, you can grab the
+migrations from here:
+https://github.com/mde/geddy-passport/tree/master/db/migrations. They will
+create 'users' and 'passport' tables with the correct associations columns.
+
+Q: How do I handle associations with my migrations?
+
+A: Right now there is not great support for migrations in the CLI generators.
+You'll have to add the appropriate database-column entries into your migrations
+manually before you run them. Essentially, four steps: 1. Run the CLI scaffold
+generator to create your model-definition file, and your migration file. 2. Add
+the association (e.g., `this.hasMany`) into your model-definition file. 3. Add
+the appropriate database-column entry into your migration file. 4. Run the
+migration to create your database table.
+
+Here's an example from geddy-passport, with a hasMany and a belongsTo. We'll
+start with a User model:
+
+```javascript
+var User = function () {
+  this.defineProperties({
+    username: {type: 'string', required: true},
+    password: {type: 'string', required: true},
+    familyName: {type: 'string', required: true},
+    givenName: {type: 'string', required: true},
+    email: {type: 'string', required: true}
+  });
+
+  this.validatesLength('username', {min: 3});
+  this.validatesLength('password', {min: 8});
+  this.validatesConfirmed('password', 'confirmPassword');
+
+  this.hasMany('Passports');
+};
+
+exports.User = User;
+```
+A User model has many Passports, and a Passport belongs to a User:
+
+```javascript
+var Passport = function () {
+  this.defineProperties({
+    authType: {type: 'string'},
+    key: {type: 'string'}
+  });
+
+  this.belongsTo('User');
+};
+
+exports.Passport = Passport;
+```
+
+This association will need a 'userId' property (a 'user_id' column) on the
+Passport. Here's the migration:
+
+```javascript
+var CreatePassports = function () {
+  this.up = function (next) {
+    var def = function (t) {
+          var datatype = geddy.model.autoIncrementId ? 'int' : 'string';
+          t.column('authType', 'string');
+          t.column('key', 'string');
+          t.column('userId', datatype); // belongsTo User
+        }
+      , callback = function (err, data) {
+          if (err) {
+            throw err;
+          }
+          else {
+            next();
+          }
+        };
+    this.createTable('passports', def, callback);
+  };
+
+  this.down = function (next) {
+    var callback = function (err, data) {
+          if (err) {
+            throw err;
+          }
+          else {
+            next();
+          }
+        };
+    this.dropTable('passports', callback);
+  };
+};
+
+exports.CreatePassports = CreatePassports;
+```
+
+If you know what type of ids you're using, then you can skip the check for the
+'userId' datatype -- just make it the same as the 'id' column on the owner
+object.
+
+Q: What happens if I change the associations, do I then re-run the migrations?
+
+A: Right now, you'll have to manage the association columns manually with
+`addColumn` and `removeColumn`. Better support for assocations in the CLI and in
+migrations is coming in the next version of Geddy.
+
+Q: How can I take an older Geddy app that has all its models and turn them into
+a migrations-based thing?
+
+A: The easiest thing to do would be to create a separate Geddy app, and use the
+generator scripts to create the migrations you want. Run those migrations in an
+empty DB, then import your data into that database using whatever tools your DB
+provides (e.g., `pg_dump`).
+
 
