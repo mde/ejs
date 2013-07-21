@@ -115,56 +115,33 @@ Now you can go to http://geddy-example.jit.su and see your application!
 3. Be familiar with GIT, the basic geddy commands, and heroku's deployment models
 4. Have an app ready to be deployed.
 
-##### Notes
-* Heroku is deployed via Git, which of course reads the .gitignore file which may include the config/secrets.json file(it should), if you need something that requires the secret such as sessions, etc. you'll encounter errors about doing `geddy secret` when you deploy. Currently there's no way to circumvent this other than removing it from your .gitignore file. More info here: https://github.com/mde/geddy/issues/309
-
 Add a `package.json` file to your app's root directory
 
-```javascript
+```
 {
   "name": "node-example",
   "version": "0.0.1",
   "dependencies": {
-    "geddy": "0.6.x"
+    "geddy": "0.9.x"
   },
   "engines": {
-    "node": "0.8.x",
-    "npm": "1.1.x"
+    "node": "0.10.x",
+    "npm": "1.2.x"
   }
 }
 ```
-Now we need to create a `app.js` file so that the Procfile can use it to boot the Geddy server, here's what it should look like
-```
-var geddy = require('geddy');
 
-geddy.startCluster({
-  hostname: '0.0.0.0',
-  port: process.env.PORT || '3000',
-  // you can manually set this to production, or set an environment variable via heroku..
-  environment: 'production'
-  // just uncomment the below line, and delete the above line.
-  // you will need to set an environment variable in heroku by running
-  // heroku config:set NODE_ENV=production
-  //environment: process.env.NODE_ENV || 'development'
-});
-```
-In the object we're giving to `geddy.startCluster` you can use any other arguments you'd for the configuration files, these will override the ones loaded for the environment. For more information about this file you can go [here](https://github.com/mde/geddy/wiki/Using-Geddy-without-the-CLI)
-
-
-Add a `Procfile` text file to your app's root directory, this is read by Heroku when booting the app
+Add a `.env` text file to your app's root directory. This is read by Foreman run booting the app locally.
 
 ```
-web: node app.js
+NODE_ENV=development
 ```
 
-Add a `Procfile` text file to your app's root directory
+Add a `Procfile` text file to your app's root directory. This is read by Heroku when booting the app.
 
 ```
-web: node app.js
+web: geddy --environment $NODE_ENV
 ```
-
-remove the line for `config\secrets.json` in your `.gitignore` file - **note:** This is insecure, on public repo's as it exposes your cookie's secret hash.
-
 
 Now it's time to create a heroku app.
 
@@ -172,10 +149,135 @@ Now it's time to create a heroku app.
 $ heroku create --stack cedar
 ```
 
-Add everything to git and push to heroku
+Add the `NODE_ENV` environment variable to Heroku.
+
+```
+heroku config:set NODE_ENV=production
+```
+
+Add everything to git and push to Heroku.
 
 ```
 $ git push heroku master
 ```
+
+##### Database Add-Ons
+
+Heroku gives you a database connection url, which you will need to parse.
+
+First, add the database of your choice:
+
+```
+heroku addons:add mongohq:sandbox
+```
+
+This will give you a new environment variable that looks like this:
+
+```
+MONGOHQ_URL: mongodb://<user>:<pass>@hatch.mongohq.com:10034/app003132345
+```
+
+You have to use something like [parse_url](https://gist.github.com/ben-ng/6041159) to parse the URL into individual options.
+
+Edit your `config/production.js` to parse the URL:
+
+```
+// See `parse_url` above
+var MONGO_PARSED = parse_url(process.env.MONGOHQ_URL);
+
+var config = {
+  detailedErrors: false
+, debug: false
+, hostname: "0.0.0.0"
+, port: process.env.PORT || 4000
+, model: {
+    defaultAdapter: 'mongo'
+  }
+, db: {
+    mongo: {
+      username: MONGO_PARSED.user
+    , dbname: MONGO_PARSED.path.substring(1)	// Get rid of the leading `/`
+    , password: MONGO_PARSED.pass
+    , host: MONGO_PARSED.host
+    , port: parseInt(MONGO_PARSED.port)
+    }
+  }
+, sessions: {
+    store: 'cookie'
+  , key: 'did'
+  , expiry: 14 * 24 * 60 * 60
+  }
+};
+
+module.exports = config;
+```
+Your app should now be configured for the database add-on.
+
+##### Secrets
+
+If your app uses sessions or auth, you'll need to push your `secrets.json` file to Heroku. To do this securely, you'll have to use environment variables.
+
+First, open up `secrets.json` and add each secret into your `.env` file.
+
+For example, if your `config/secrets.json` file looks like this:
+
+```
+{
+  "passport": {
+    "loginPath": "/login",
+    "successRedirect": "/",
+    "failureRedirect": "/login?failed=true",
+    "twitter": {
+      "consumerKey": "secret1",
+      "consumerSecret": "secret2"
+    },
+    "facebook": {
+      "clientID": "secret3",
+      "clientSecret": "secret4"
+    }
+  },
+  "secret":"secret5"
+}
+```
+
+Your `.env` file should look something like this:
+
+```
+NODE_ENV=development
+TWITTER_KEY=secret1
+TWITTER_SECRET=secret2
+FACEBOOK_ID=secret3
+FACEBOOK_SECRET=secret4
+GEDDY_SECRET=secret5
+```
+
+You'll have to run a command like the following to save the environment variables to Heroku:
+
+```
+heroku config:set TWITTER_KEY=secret1 TWITTER_SECRET=secret2 FACEBOOK_ID=secret3 FACEBOOK_SECRET=secret4 GEDDY_SECRET=secret5
+```
+
+Finally, replace the secrets in your `secrets.json` with `EJS`:
+
+```
+{
+  "passport": {
+    "loginPath": "/login",
+    "successRedirect": "/",
+    "failureRedirect": "/login?failed=true",
+    "twitter": {
+      "consumerKey": "<%= process.env.TWITTER_KEY %>",
+      "consumerSecret": "<%= process.env.TWITTER_SECRET %>"
+    },
+    "facebook": {
+      "clientID": "<%= process.env.FACEBOOK_ID %>",
+      "clientSecret": "<%= process.env.FACEBOOK_SECRET %>"
+    }
+  },
+  "secret":"<%= process.env.GEDDY_SECRET %>"
+}
+```
+
+Now remove `secrets.json` from your `.gitignore` file and push it to Heroku.
 
 For more information about deploying and supporting Node Apps on Heroku see the [Getting Started with Node.js on Heroku](https://devcenter.heroku.com/articles/nodejs) article.
