@@ -1,0 +1,5 @@
+<h2>Error: {{ statusCode }} {{ statusText }}</h2>
+{% if stack %}
+<code>{{ stack }}</code>
+{% endif %}
+
