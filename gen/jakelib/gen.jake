@@ -212,6 +212,40 @@ namespace('gen', function () {
     console.log('Created app ' + name + '.');
   });
 
+  // Upgrades an app with older scaffolding
+  task('upgrade', function (engine, realtime) {
+    var basePath = path.join(genDirname, 'base')
+      , appViewDir = path.join('app', 'views')
+      , appLayoutDir = path.join('app', 'views', 'layouts')
+      , templateErrorsDir
+      , templateLayoutsDir
+      , errorLayouts = [
+          'errors.html.ejs'
+        , 'layout_footer.html.ejs'
+        , 'layout_header.html.ejs'
+        ];
+
+    if (!engine || engine == 'default') {
+      engine = 'ejs';
+    }
+
+    // Get view paths
+    templateErrorsDir = realtime === 'realtime' ?
+                      path.join(basePath, 'realtime', 'views', engine, 'errors') :
+                      path.join(basePath, 'views', engine, 'errors');
+    templateLayoutsDir = realtime === 'realtime' ?
+                      path.join(basePath, 'realtime', 'views', engine, 'layouts') :
+                      path.join(basePath, 'views', engine, 'layouts');
+
+    // Copy in errors dir
+    jake.cpR(path.join(templateErrorsDir), path.join(appViewDir), {silent: true});
+
+    // Copy in stuff in layout folder
+    errorLayouts.forEach(function (filename) {
+      jake.cpR(path.join(templateLayoutsDir, filename), path.join(appLayoutDir, filename), {silent: true});
+    });
+  });
+
   // Creates a resource with a model, controller and a resource route
   task('resource', function (name, modelProperties) {
     var names
