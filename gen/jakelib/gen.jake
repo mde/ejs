@@ -244,6 +244,10 @@ namespace('gen', function () {
     errorLayouts.forEach(function (filename) {
       jake.cpR(path.join(templateLayoutsDir, filename), path.join(appLayoutDir, filename), {silent: true});
     });
+
+    console.log('[Added] Error templates');
+    // Remove patch number from version
+    console.log('Upgraded to ' + geddy.version.split('.').splice(0, 2).join('.'));
   });
 
   // Creates a resource with a model, controller and a resource route
