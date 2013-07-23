@@ -15,7 +15,8 @@
     "utilities": "0.0.x",
     "model": "0.2.x",
     "barista": "0.0.x",
-    "socket.io": "0.9.x"
+    "socket.io": "0.9.x",
+    "mime": "1.2.x"
   },
   "bin": {
     "geddy": "./bin/cli.js"
