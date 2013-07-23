@@ -141,7 +141,7 @@ contentTag('a', 'hey there', {href: 'http://google.com', data_go_to: 'http://goo
 #### selectTag
 `selectTagString(optionsArray<Array>, selectedOption, htmlOptions<Object>)
 
-Creates a HTML select tag using the given `optionsArray` to create HTML option elements. 
+Creates a HTML select tag using the given `optionsArray` to create HTML option elements.
 
 `optionsArray` could be an array of strings, numbers or an object with value and text properties to be used for the value attribute and option element content respectively,
 along with an `attr` object which will include any other html options. (you can even pass `selected:true` and 'value:VALUE' with the `attr` object as well, but the outer ones, if there is any, will take precedence)
@@ -336,10 +336,13 @@ scriptLink('/js/script.js', {type: 'text/javascript'})
 
 * * *
 
-#### linkTo
+####
 `linkTo(content<String>, options<String/Object>, htmlOptions<Object>)`
 
 Generates a link from the given `options`, then returns a anchor tag with the `content` and the `htmlOptions` provided
+
+#####Notes:
+- If you do not want to escape html entities in `content`, set the `_escapeContent` option to false.
 
 #####Examples:
 ```
@@ -349,6 +352,11 @@ linkTo('some content', 'http://google.com')
 
 linkTo('some content', 'http://google.com', {data: {goTo: 'http://google.com'}})
 // => '<a data-go-to="http://google.com" href="http://google.com">some content</a>'
+
+linkTo('Google<sup>TM</sup>', 'http://google.com', {_escapeContent: false})
+// => '<a href="http://google.com">Google<sup>TM</sup></a>'
+
+_escapeContent
 ```
 
 * * *
@@ -467,9 +475,9 @@ contentTag('a', 'hey there', {href: 'http://google.com', data_go_to: 'http://goo
 #### selectTag
 `selectTagString(optionsArray<Array>, selectedOption, htmlOptions<Object>)`
 
-Creates a HTML select tag using the given `optionsArray` to create HTML option elements. 
+Creates a HTML select tag using the given `optionsArray` to create HTML option elements.
 
-`optionsArray` could be an array of strings, numbers or an object with value and text properties to be used for the value attribute and option element content respectively. 
+`optionsArray` could be an array of strings, numbers or an object with value and text properties to be used for the value attribute and option element content respectively.
 
 #####Examples:
 ```
