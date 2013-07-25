@@ -204,6 +204,37 @@
         });
       };
 
+      tests["test " + engine + " show initial values in JSON"] = function(next) {
+        //Request index
+        request({
+          method: 'GET'
+        , uri: baseUrl + '/zoobies/' + staticId + '.json'
+        , timeout: 1000
+        }
+        , function(err, res, body) {
+          assert.strictEqual(err, null, err);
+          assert.strictEqual(res.statusCode, 200, 'Error '+res.statusCode+' when showing zoobies');
+
+          body = JSON.parse(body);
+
+          assert.deepEqual(body, {
+            "params": {
+              "method": "GET"
+            , "controller": "Zoobies"
+            , "action": "show"
+            , "format": "json"
+            , "id": body.params.id
+            }
+          , "zooby": {
+              "createdAt": body.zooby.createdAt
+            , "foo": "zerb"
+            , "bar": 2112
+            }
+          });
+          next();
+        });
+      };
+
       tests["test " + engine + " update form persists values"] = function(next) {
         //Request index
         request({

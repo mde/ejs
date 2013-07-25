@@ -55,7 +55,9 @@ this.respondsWith = ['txt','json','html'];
 Adds an action to be performed before a response is rendered.
 
 ##### filter
-- `filter [function]` Action to add to the beforeFilter list. If the action is asynchronous, takes a single callback parameter to call when the action is finished.
+- `filter [function]` Action to add to the beforeFilter list. If the action is
+asynchronous, takes a single callback parameter to call when the action is
+finished.
 
 ##### options
 - `except [array]` List of actions where the before-filter should not be performed.
@@ -64,16 +66,21 @@ Adds an action to be performed before a response is rendered.
 
 ##### examples
 ```
-this.before(someFunction);
-// runs someFunction before the response is rendered
-
+this.before(function () { // Do something });
+// runs the function before the action is run
 
 this.before(someFunction, {except: ['index', 'home']});
 // won't run someFunction if this is the index or home action
 
-
 this.before(someFunction, {only: ['add', 'update', 'remove']}
 // will only run someFunction if this is the add, update, or remove action
+
+this.before(function (next) {
+  doSomethingAsync(function (err, result) {
+    next();
+  });
+}, {async: true});
+// runs an async function before the action -- requires a callback to proceed
 ```
 
 * * *
@@ -84,7 +91,9 @@ this.before(someFunction, {only: ['add', 'update', 'remove']}
 Adds an action to be performed after a response is rendered.
 
 ##### filter
-- `filter [function]` Action to add to the afterFilter list. If the action is asynchronous, takes a single callback parameter to call when the action is finished.
+- `filter [function]` Action to add to the afterFilter list. If the action is
+asynchronous, takes a single callback parameter to call when the action is
+finished.
 
 ##### options
 - `except [array]` List of actions where the after-filter should not be performed.
@@ -93,16 +102,21 @@ Adds an action to be performed after a response is rendered.
 
 ##### examples
 ```
-this.after(someFunction);
-// runs someFunction after the response is rendered
-
+this.after(function () { // Do something });
+// runs the function after the action is run, but before the response is completed
 
 this.after(someFunction, {except: ['index', 'home']});
 // won't run someFunction if this is the index or home action
 
-
 this.after(someFunction, {only: ['add', 'update', 'remove']}
 // will only run someFunction if this is the add, update, or remove action
+
+this.after(function (next) {
+  doSomethingAsync(function (err, result) {
+    next();
+  });
+}, {async: true});
+// runs an async function after the action -- requires a callback to proceed
 ```
 
 * * *

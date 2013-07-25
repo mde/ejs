@@ -44,17 +44,23 @@ task('buildjs', function(){
 desc('Generate docs for Geddy');
 task('doc', ['doc:generate']);
 
-var p = new jake.NpmPublishTask('geddy', [
-  'Makefile'
-, 'Jakefile'
-, 'README.md'
-, 'package.json'
-, 'bin/**'
-, 'deps/**'
-, 'lib/**'
-, 'gen/**'
-, 'test/**'
-]);
+var p = new jake.NpmPublishTask('geddy', function () {
+  this.packageFiles.include([
+    'Makefile'
+  , 'Jakefile'
+  , 'README.md'
+  , 'package.json'
+  , 'usage.txt'
+  , 'bin/**'
+  , 'deps/**'
+  , 'lib/**'
+  , 'gen/**'
+  , 'test/**'
+  ]);
+  this.packageFiles.exclude([
+    'test/tmp'
+  ]);
+});
 
 testTask = new jake.TestTask('Geddy', function () {
   this.testName = 'testBase';

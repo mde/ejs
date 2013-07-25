@@ -61,6 +61,7 @@
                                       and and a route
    gen model <name> [attrs]       Generate a new model
    gen auth[:update]              Creates user authentication for you, using Passport.
+   gen migration <name>          Generate an empty migration file for SQL databases
 
  Generator options:
    --trace, -t                    Output detailed error information for failures

@@ -38,7 +38,7 @@ namespace('db', function () {
           throw new Error(m + ' is not a known model.');
         }
 
-        adapter = geddy.model.adapters[m];
+        adapter = geddy.model[m].adapter;
         if (adapter) {
           console.log(msg + ' table for ' + m);
           adapter[action + 'Table'](m, function (err, data) {
@@ -92,9 +92,9 @@ namespace('db', function () {
       }
 
       createTask.once('complete', function () {
-        var dir = path.join(process.cwd(), 'migration');
+        var dir = path.join(process.cwd(), 'db', 'migrations');
         console.log('Created ' + dir);
-        jake.mkdirP('migration');
+        jake.mkdirP(dir);
         complete();
       });
       createTask.invoke(modelName);

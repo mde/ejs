@@ -1,19 +1,15 @@
-#documentation
+#changelog
   .row.title
     .span12
-      h2 Framework documentation
+      h2 Documentation
   .row.content
-    .span6.toc
-      ul
-        each doc in docs
-          li
-            a(href="#"+doc.name)=doc.name
-            if doc.subs
-              ul
-                each sub in doc.subs
-                  li
-                    a(href="#"+doc.name+sub)=sub
-    .span6
-      each doc in docs
-        h3(id=doc.name)=geddy.string.capitalize(doc.name)
-        !=doc.content
+    .span8
+      :markdown
+        ###[API Reference](/reference)
+        #### A quick reference to all the API methods in the Geddy framework
+
+        ###[Geddy Guide](/guide)
+        #### More in-depth explanations of Geddy's features
+
+        ###[Tutorial](/tutorial)
+        #### Step-by-step instructions for getting up and running

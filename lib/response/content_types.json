@@ -134,4 +134,7 @@
 , "xwd": "image/x-xwindowdump"
 , "xyz": "chemical/x-pdb"
 , "zip": "application/zip"
+, "woff": "application/font-woff"
+, "otf": "application/font-otf"
+, "ttf": "application/font-ttf"
 }

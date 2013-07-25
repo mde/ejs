@@ -39,8 +39,8 @@ namespace('migration', function () {
 
   task('create', function (name) {
     var templContent = createMigration(name, {
-          upCode: "    next();"
-        , downCode: "    next();"
+          upCode: "\n    next();"
+        , downCode: "\n    next();"
         })
       , filename = getFilename(name);
     writeMigration(filename, templContent);

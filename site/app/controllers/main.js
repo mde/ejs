@@ -16,8 +16,12 @@
  *
 */
 
-var md = require('marked');
-var hljs = require('highlight.js');
+var fs = require('fs')
+  , md = require('marked')
+  , hljs = require('highlight.js');
+
+var BRANCH = 'v0.9';
+
 md.setOptions({
   gfm: true
 , pedantic: false
@@ -44,106 +48,102 @@ var Main = function () {
   };
 
   this.documentation = function (req, resp, params) {
-    var self = this
-    , docs = []
-    , count = 0
+    this.respond(params, {
+      format: 'html'
+    , template: 'app/views/main/documentation'
+    });
+  };
 
-    // once we've got a list of commits, get the tree
-    // for the latest commit
-    , gotCommits = function (err, commits) {
-      if (err) {
-        params.error = err;
-        return self.error(req, resp, params);
-      }
-      var commit = commits[0] && commits[0].commit
-        , url = commit.tree && commit.tree.url;
-      return getTree(url, gotTree);
-    }
+  var self = this;
+  ['reference', 'guide'].forEach(function (type) {
+    self[type] = function (req, resp, params) {
+      var self = this
+      , docs = []
+      , count = 0
 
-    // once we've got the first tree, get 'docs' tree
-    // once we've got the 'docs' tree, call gotTree
-    , getTree = function (url, callback) {
-        var tree;
-        opts.url = url;
-        opts.headers = {'User-Agent': 'GeddyJS documentation site'}
+      , getBlob = function (paths, i, callback) {
+        var options = {
+          url: paths[i].url
+        , headers: {'User-Agent': 'GeddyJS documentation site'}
+        }
+        geddy.request(options, function (err, resp) {
 
-        geddy.request(opts, function (err, trees) {
-          if (err || !trees) {
+          if (err) {
             params.error = err;
-            return self.error(req, resp, params);
+            return self.error(req, resp, params)
           }
-          for (var i in trees.tree) {
-            tree = trees.tree[i];
-            if (tree.path == 'docs') {
-              return getTree(tree.url, gotTree);
+
+          var content = resp
+            , name = paths[i].name
+            , subs = []
+            , lines = content.split('\n');
+          for (var l in lines) {
+            if (lines[l].indexOf('#### ') == 0) {
+              subs.push(geddy.string.trim(lines[l].replace('#### ', '')));
             }
           }
-          return callback(err, trees.tree);
+          content = md(content);
+          docs[i] = {
+            name: name
+          , content: content
+          , subs: subs
+          };
+          return respond(paths.length);
         });
-    }
-    , getBlob = function (paths, i, callback) {
-      var options = {
-        url: paths[i].url
-      , dataType: 'json'
-      , headers: {'User-Agent': 'GeddyJS documentation site'}
       }
-      geddy.request(options, function (err, resp) {
 
+      // once we've got the 'docs' tree,
+      // parse it and call getBlob for each file
+      , gotTree = function (err, tree) {
         if (err) {
           params.error = err;
-          return self.error(req, resp, params)
+          return self.error(req, resp, params);
         }
 
-        var content = (resp.content) ? new Buffer(resp.content, 'base64').toString('utf8') : ''
-          , name = paths[i].path.replace('.md','').split('-')
-          , subs = []
-          , lines = content.split('\n');
-        for (var l in lines) {
-          if (lines[l].indexOf('#### ') == 0) {
-            subs.push(geddy.string.trim(lines[l].replace('#### ', '')));
-          }
+        for (var i in tree) {
+          getBlob(tree, i, respond);
         }
-        docs[parseInt(name[0]) - 1] = {
-          name: name[1]
-        , content: md(content)
-        , subs: subs
-        };
-        return respond(paths.length);
-      });
-    }
-
-    // once we've got the 'docs' tree,
-    // parse it and call getBlob for each file
-    , gotTree = function (err, tree) {
-      if (err) {
-        params.error = err;
-        return self.error(req, resp, params);
       }
 
-      for (var i in tree) {
-        getBlob(tree, i, respond);
+      // once we've got everything done, respond with data
+      , respond = function (total) {
+        count++;
+        if (count == total) {
+          self.respond({docs: docs}, {
+            format: 'html'
+          , template: 'app/views/main/' + type
+          });
+        }
       }
-    }
 
-    // once we've got everything done, respond with data
-    , respond = function (total) {
-      count++;
-      if (count == total) {
-        self.respond({docs: docs}, {
-          format: 'html'
-        , template: 'app/views/main/documentation'
+      // inital call to get the commits
+      , opts = {
+          url: 'https://raw.github.com/mde/geddy/' + BRANCH +
+              '/docs/' + type + '/topics.json'
+        , dataType: 'json'
+        , headers: {'User-Agent': 'GeddyJS documentation site'}
+      }
+      geddy.request(opts, function (err, data) {
+        var self = this
+          , topics
+          , paths = [];
+        if (err) {
+          return self.error(err);
+        }
+        topics = data.topics;
+        topics.forEach(function (t) {
+          paths.push(
+            { name: t
+            , url: 'https://raw.github.com/mde/geddy/' + BRANCH +
+                '/docs/' + type + '/' + t + '.md'
+            }
+          );
         });
-      }
-    }
+        gotTree(null, paths);
+      });
 
-    // inital call to get the commits
-    , opts = {
-        url: 'https://api.github.com/repos/mde/geddy/commits'
-      , dataType: 'json'
-      , headers: {'User-Agent': 'GeddyJS documentation site'}
-    }
-    geddy.request(opts, gotCommits);
-  };
+    };
+  });
 
   this.tutorial = function (req, resp, params) {
     var self = this;
@@ -171,7 +171,7 @@ var Main = function () {
 
     // get the tutorial markdown file
     geddy.request({
-      url: 'https://raw.github.com/mde/geddy/master/tutorial.md'
+      url: 'https://raw.github.com/mde/geddy/' + BRANCH + '/tutorial.md'
       , headers: {'User-Agent': 'GeddyJS documentation site'}
       }, gotTutorial);
   };
@@ -202,9 +202,9 @@ var Main = function () {
 
     // get the tutorial markdown file
     geddy.request({
-      url: 'https://raw.github.com/mde/geddy/master/changelog.md'
+      url: 'https://raw.github.com/mde/geddy/' + BRANCH + '/changelog.md'
       , headers: {'User-Agent': 'GeddyJS documentation site'}
-      
+
       }, gotTutorial);
   };
 
