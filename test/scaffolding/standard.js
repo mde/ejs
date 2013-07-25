@@ -218,18 +218,10 @@
           body = JSON.parse(body);
 
           assert.deepEqual(body, {
-            "params": {
-              "method": "GET"
-            , "controller": "Zoobies"
-            , "action": "show"
-            , "format": "json"
-            , "id": body.params.id
-            }
-          , "zooby": {
-              "createdAt": body.zooby.createdAt
-            , "foo": "zerb"
-            , "bar": 2112
-            }
+            "createdAt": body.createdAt
+          , "foo": "zerb"
+          , "bar": 2112
+          , "id": body.id
           });
           next();
         });
