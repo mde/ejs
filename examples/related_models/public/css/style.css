@@ -1,7 +1,12 @@
 body {
+  background: url('../img/whitey.png');
+}
+body.application {
   padding-top: 60px;
   padding-bottom: 40px;
-  background: url('../img/whitey.png');
+}
+code {
+  white-space: pre;
 }
 
 .navbar-fixed-top {
@@ -29,3 +34,28 @@ body {
 .geddy-welcome-box .btn-large {
   margin-top: 20px;
 }
+
+.list-item {
+  margin-bottom: 20px;
+}
+
+.list-item div {
+  background: white;
+  border-bottom: 2px solid #ccc;
+}
+
+.list-item div > * {
+  padding: 20px;
+}
+
+.list-item div h3 i {
+  margin: 5px;
+}
+
+@media (max-width:480px) {
+  .hero-unit .pull-right {
+    float: none;
+    margin-top: 10px;
+  }
+}
+
