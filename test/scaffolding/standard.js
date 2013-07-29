@@ -222,6 +222,7 @@
           , "foo": "zerb"
           , "bar": 2112
           , "id": body.id
+          , "type": "Zooby"
           });
           next();
         });
