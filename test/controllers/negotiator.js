@@ -51,8 +51,7 @@ tests = {
     });
   }
 
-, 'passed-in format overrides controller\'s acceppted formats, ' +
-      'but has to match client accepts header': function () {
+, 'passed-in format overrides controller\'s acceppted formats, but has to match client accepts header': function () {
     var n = new Negotiator('application/xml,application/xhtml+xml,' +
           'text/plain;q=0.8,image/png',
           ['xml', 'html', 'json'], 'html', {});
