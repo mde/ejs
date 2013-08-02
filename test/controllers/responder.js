@@ -21,73 +21,12 @@ var assert = require('assert')
     };
 
 
-tests['negotiateContent defaults to html'] = function () {
-  var shim = new ControllerShim()
-    , rspr = new Responder(shim);
-
-  assert.deepEqual(rspr.negotiate(), {format:'html', contentType:'text/html'});
-};
-
-tests['negotiateContent json'] = function () {
-  var shim = new ControllerShim({format: 'json'})
-    , rspr = new Responder(shim);
-
-  assert.deepEqual(rspr.negotiate(), {format:'json', contentType:'application/json'});
-};
-
-tests['negotiateContent controller unsupported format'] = function () {
-  var shim = new ControllerShim({format: 'json', respondsWith: ['html']})
-    , rspr = new Responder(shim);
-
-  assert.throws(function () {
-    rspr.negotiate();
-  });
-};
-
-tests['negotiateContent client supports format'] = function () {
-  var shim = new ControllerShim({format: 'json', accepts: 'application/json'})
-    , rspr = new Responder(shim);
-
-  assert.doesNotThrow(function () {
-    rspr.negotiate();
-  });
-};
-
-tests['negotiateContent format takes precedence over accepts'] = function () {
-  var shim = new ControllerShim({
-        format: 'json'
-      , accepts: 'text/html'
-      , respondsWith: ['json']
-    })
-    , rspr = new Responder(shim);
-
-  assert.doesNotThrow(function () {
-    rspr.negotiate();
-  });
-};
-
-tests['negotiateContent server supports Accepts header format'] = function () {
-  var shim = new ControllerShim({accepts: 'text/html', respondsWith: ['html']})
-    , rspr = new Responder(shim);
-
-  assert.doesNotThrow(function () {
-    rspr.negotiate();
-  });
-};
-
-tests['negotiateContent server does not support Accepts header format'] = function () {
-  var shim = new ControllerShim({accepts: 'text/html', respondsWith: ['json']})
-    , rspr = new Responder(shim);
-
-  assert.throws(function () {
-    rspr.negotiate();
-  });
-};
-
 // Just to make sure our lowest level method is working
 tests['respond in html'] = function (next) {
   var shim = new ControllerShim()
     , rspr = new Responder(shim);
+
+  shim.responder = rspr;
 
   rspr.respond(
     '<div />'
