@@ -3,7 +3,7 @@
 */
 var formats = ['html', 'json', 'xml', 'js', 'txt']
   , utils = require('utilities')
-  , Shim = function (opts) {
+  , Controller = function (opts) {
       var self = this;
 
       //Defaults
@@ -66,4 +66,4 @@ var formats = ['html', 'json', 'xml', 'js', 'txt']
       return this;
     };
 
-module.exports = Shim;
+module.exports.Controller = Controller;
