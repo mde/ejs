@@ -27,7 +27,7 @@ var <%= names.constructor.plural %> = function () {
     this.redirect({controller: this.name, id: params.id});
   };
 
-  this.destroy = function (req, resp, params) {
+  this.remove = function (req, resp, params) {
     this.respond({params: params});
   };
 <% } %>
