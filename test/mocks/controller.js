@@ -3,6 +3,7 @@
 */
 var formats = ['html', 'json', 'xml', 'js', 'txt']
   , utils = require('utilities')
+  , BaseController = require('../../lib/controller/base_controller').BaseController
   , Controller = function (opts) {
       var self = this;
 
@@ -65,5 +66,8 @@ var formats = ['html', 'json', 'xml', 'js', 'txt']
 
       return this;
     };
+
+Controller.prototype = Object.create(BaseController);
+Controller.prototype.constructor = Controller;
 
 module.exports.Controller = Controller;

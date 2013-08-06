@@ -2,7 +2,6 @@ var assert = require('assert')
   , util = require('utilities')
   , Negotiator = require('../../lib/controller/responder/negotiator').Negotiator
   // For unit testing purposes we'll inject this shim in place of a real controller
-  , ControllerShim = require('./shim')
   , tests;
 
 tests = {

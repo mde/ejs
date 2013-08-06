@@ -1,294 +1,308 @@
 var assert = require('assert')
-  , util = require('utilities')
+  , utils = require('utilities')
   , Responder = require('../../lib/controller/responder')
-  // For unit testing purposes we'll inject this shim in place of a real controller
-  , MockController = require('../mocks/controller.js').Controller
-  , tests = {}
-  , modelMixin = {
-      id: 'mambo-no-5'
-    , type: 'zooby'
-    , toObj: function () {
-        var buf = {};
-        for(var key in this) {
-          if(this.hasOwnProperty(key)
-            && key !== 'toObj'
-            && key !== 'type') {
-            buf[key] = this[key];
-          }
-        }
-        return buf;
-      }
-    };
-
-/*
-// Just to make sure our lowest level method is working
-tests['respond in html'] = function (next) {
-  var shim = new MockController()
-    , rspr = new Responder(shim);
-
-  shim.responder = rspr;
-
-  rspr.respond(
-    '<div />'
-  , {format:'html',contentType:'text/html'}
-  , function (buffer) {
-      assert.deepEqual(buffer, {
-        headers: {"Content-Type":"text/html"}
-      , content: '"<div />"'
-      });
-      next();
-    }
-  );
-};
-
-tests['respondTo html'] = function (next) {
-  var shim = new MockController()
-    , rspr = new Responder(shim)
-    , content = {moo:'cow'};
-
-  rspr.respondTo(content, {
-    html: function (content, negotiated) {
-      this.respond(
-        content
-      , negotiated
-      , function (buffer) {
-          assert.deepEqual(buffer, {
-            headers: {"Content-Type":"text/html"}
-            // We are asserting against JSON because our testing
-            // shim stringifies whatever content it is given
-          , content: '{"moo":"cow"}'
-          });
-          next();
-        }
-      );
-    }
-  });
-};
-
-// Ensures that it throws on an unrecognized format
-tests['respondTo unknown format'] = function () {
-  var shim = new MockController({format: 'zooby'})
-    , rspr = new Responder(shim)
-    , content = {cuck:'coo'};
-
-  assert.throws(function () {
-    rspr.respondTo(content);
-  });
-};
-
-// Ensures that it does not throw on a default format, and
-// responds appropriately
-tests['respondTo default html format'] = function (next) {
-  var shim = new MockController({format: 'html'})
-    , rspr = new Responder(shim)
-    , content = {mao:'cat'};
-
-  assert.doesNotThrow(function () {
-    rspr.respondTo(content, {}, {}
-      , function () {
-          assert.deepEqual(shim.buffer
-            , {
-                headers: {"Content-Type":"text/html"}
-              , content: '{"mao":"cat"}'
-            });
-          next();
-        });
-  });
-};
-
-// The JSON format should look identical to the html
-// format because our testing shim uses JSON.stringify
-// for template rendering
-tests['respondTo default json format'] = function (next) {
-  var shim = new MockController({format: 'json'})
-    , rspr = new Responder(shim)
-    , content = {bow:'dog'};
-
-  assert.doesNotThrow(function () {
-    rspr.respondTo(content, {}, {}
-      , function (buffer) {
-          assert.deepEqual(shim.buffer
-            , {
-                headers: {"Content-Type":"application/json"}
-              , content: '{"bow":"dog"}'
-            });
-          next();
-        });
-  });
-};
-
-tests['respondWith html index'] = function (next) {
-  var shim = new MockController({
-        params: {
-          action: 'index'
-        }
-      })
-    , rspr = new Responder(shim)
-    , content = {
-      wuff:'pup'
-    };
-
-  util.mixin(content, modelMixin);
-
-  rspr.respondWith(content, {}, function (buffer) {
-    assert.deepEqual(shim.buffer
-      , {
-          headers: {"Content-Type":"text/html"}
-          // In a HTML response, we expect a params and zooby
-          // hash to be sent to the client
-        , content: JSON.stringify({
-            params:{
-              format:"html"
-            , action:"index"
+  , Controller = require('../../lib/controller/base_controller').BaseController
+  , tests
+  , createModelInstance = function () {
+      return {
+        id: 'mambo-no-5'
+      , type: 'zooby'
+      , toObj: function () {
+          var buf = {};
+          for(var key in this) {
+            if(this.hasOwnProperty(key)
+              && key !== 'toObj'
+              && key !== 'type') {
+              buf[key] = this[key];
             }
-            , zooby:{wuff:"pup",id:"mambo-no-5"}
-            })
-        });
-    next();
-  });
-};
-
-tests['respondWith html create'] = function (next) {
-  var shim = new MockController({
-        params: {
-          action: 'create'
-        }
-      })
-    , rspr = new Responder(shim)
-    , content = {
-      wuff:'pup'
-    };
-
-  util.mixin(content, modelMixin);
-
-  rspr.respondWith(content, {}, function () {
-    // On a successful create we expect a flash message and redirect
-    assert.deepEqual(shim.redirectedTo, {id: content.id});
-    assert.deepEqual(shim.flashMessage, {type:'success',msg:'zooby created'});
-    next();
-  });
-};
-
-tests['respondWith html create with errors'] = function (next) {
-  var shim = new MockController({
-        params: {
-          action: 'create'
-        }
-      })
-    , rspr = new Responder(shim)
-    , content = {
-      wuff:'pup'
-    , errors: {
-        wuff: 'bark'
-      }
-    };
-
-  util.mixin(content, modelMixin);
-
-  rspr.respondWith(content, {}, function () {
-    // On a failed create we also set a flash and redirect
-    assert.deepEqual(shim.redirectedTo, {action: 'add'});
-    assert.deepEqual(shim.flashMessage, {type:'error',msg:{wuff:'bark'}});
-    next();
-  });
-};
-
-tests['respondWith json index'] = function (next) {
-  var shim = new MockController({
-        format: 'json'
-      , params: {
-          action: 'index'
-        }
-      })
-    , rspr = new Responder(shim)
-    , content = {
-      wuff:'pup'
-    };
-
-  util.mixin(content, modelMixin);
-
-  rspr.respondWith(content, {}, function (buffer) {
-    assert.deepEqual(shim.buffer
-      , {
-          headers: {"Content-Type":"application/json"}
-          // In contrast to HTML responses, API responses
-          // shouldn't have the params cruft as they're
-          // not rendering templates
-        , content: JSON.stringify({
-              wuff:"pup"
-            , id:"mambo-no-5"
-            })
-        });
-    next();
-  });
-};
-
-tests['respondWith json create'] = function (next) {
-  var shim = new MockController({
-        format: 'json'
-      , params: {
-          action: 'create'
-        }
-      })
-    , rspr = new Responder(shim)
-    , content = {
-      wuff:'pup'
-    };
-
-  util.mixin(content, modelMixin);
-
-  rspr.respondWith(content, {}, function () {
-    assert.strictEqual(shim.redirectedTo, null);
-    assert.strictEqual(shim.flashMessage, null);
-
-    // It's hard to test stringified shit!
-    shim.buffer.content = JSON.parse(shim.buffer.content);
-
-    assert.deepEqual(shim.buffer
-      , {
-          headers: {"Content-Type":"application/json"}
-        , content: {wuff:"pup",id:"mambo-no-5"}
-        });
-    next();
-  });
-};
-
-tests['respondWith json create with errors'] = function (next) {
-  var shim = new MockController({
-        format: 'json'
-      , params: {
-          action: 'create'
-        }
-      })
-    , rspr = new Responder(shim)
-    , content = {
-      wuff:'pup'
-    , errors: {
-        wuff: 'bark'
-      }
-    };
-
-  util.mixin(content, modelMixin);
-
-  rspr.respondWith(content, {}, function () {
-    assert.strictEqual(shim.redirectedTo, null);
-    assert.strictEqual(shim.flashMessage, null);
-
-    // Hard to test stringified shit
-    shim.buffer.content = JSON.parse(shim.buffer.content);
-
-    assert.deepEqual(shim.buffer
-      , {
-          headers: {"Content-Type":"application/json"}
-        , content: {
-            wuff:"pup"
-          , id:"mambo-no-5"
-          , errors:{"wuff":"bark"}
           }
-        });
-    next();
-  });
+          return buf;
+        }
+      }
+    }
+  , createController = function () {
+      var c = new Controller();
+      c.request = new MockRequest();
+      c.params = {};
+      c.canRespondTo(['html', 'json', 'js']);
+      c.renderTemplate = function (data, opts, callback) {
+        callback('<div>' + JSON.stringify(data) + '</div>');
+      };
+      c.flash = {
+        set:function (type, msg) {
+          c.flashMessage = {type:type,msg:msg};
+        }
+      };
+      return c;
+    };
+
+
+var MockRequest = function () {
+  this.headers = {
+    accept: '*/*'
+  }
 };
-*/
+
+// Just to make sure our lowest level method is working
+tests = {
+  'respond in html, format specified and supported': function (next) {
+    var c = createController();
+    c._doResponse = function (statusCode, headers, content) {
+      assert.equal(200, statusCode);
+      assert.equal('text/html', headers['Content-Type']);
+      assert.equal('<div>{"foo":"bar"}</div>', content);
+      next();
+    };
+    c.respond({foo: 'bar'}, {format: 'html'});
+  }
+
+, 'respond in html, format in params and supported': function (next) {
+    var c = createController();
+    c.params.format = 'html';
+    c._doResponse = function (statusCode, headers, content) {
+      assert.equal(200, statusCode);
+      assert.equal('text/html', headers['Content-Type']);
+      assert.equal('<div>{"foo":"bar"}</div>', content);
+      next();
+    };
+    c.respond({foo: 'bar'});
+  }
+
+, 'respond in json, format specified and supported': function (next) {
+    var c = createController();
+    c._doResponse = function (statusCode, headers, content) {
+      assert.equal(200, statusCode);
+      assert.equal('application/json', headers['Content-Type']);
+      assert.equal('{"foo":"bar"}', content);
+      next();
+    };
+    c.respond({foo: 'bar'}, {format: 'json'});
+  }
+
+, 'respond in json, format in params and supported': function (next) {
+    var c = createController();
+    c.params.format = 'json';
+    c._doResponse = function (statusCode, headers, content) {
+      assert.equal(200, statusCode);
+      assert.equal('application/json', headers['Content-Type']);
+      assert.equal('{"foo":"bar"}', content);
+      next();
+    };
+    c.respond({foo: 'bar'});
+  }
+
+, 'respond in js (JSONP), format specified and supported': function (next) {
+    var c = createController();
+    c.params.callback = 'zoobyasdf';
+    c._doResponse = function (statusCode, headers, content) {
+      assert.equal(200, statusCode);
+      assert.equal('application/javascript', headers['Content-Type']);
+      assert.equal('zoobyasdf({"foo":"bar"});', content);
+      next();
+    };
+    c.respond({foo: 'bar'}, {format: 'js'});
+  }
+
+, 'respond in js (JSONP), format in params and supported': function (next) {
+    var c = createController();
+    c.params.format = 'js';
+    c.params.callback = 'zoobyasdf';
+    c._doResponse = function (statusCode, headers, content) {
+      assert.equal(200, statusCode);
+      assert.equal('application/javascript', headers['Content-Type']);
+      assert.equal('zoobyasdf({"foo":"bar"});', content);
+      next();
+    };
+    c.respond({foo: 'bar'});
+  }
+
+, 'respond with available built-in format even if controller \
+doesn\'t explicitly explicitly support it': function (next) {
+    var c = createController();
+    c._doResponse = function (statusCode, headers, content) {
+      assert.equal(200, statusCode);
+      assert.equal('application/xml', headers['Content-Type']);
+      assert.equal('<?xml version="1.0" encoding="UTF-8"?>\n' +
+          '<object>\n   <foo>bar</foo>\n</object>\n', content);
+      next();
+    };
+    c.respond({foo: 'bar'}, {format: 'xml'});
+  }
+
+, 'respond with first supported format if no format specified': function (next) {
+    var c = createController();
+    c._doResponse = function (statusCode, headers, content) {
+      assert.equal(200, statusCode);
+      assert.equal('text/html', headers['Content-Type']);
+      assert.equal('<div>{"foo":"bar"}</div>', content);
+      next();
+    };
+    c.respond({foo: 'bar'});
+  }
+
+, 'throw when unsupported format requested': function (next) {
+    var c = createController();
+    assert.throws(function () {
+      c.respond({foo: 'bar'}, {format: 'frang'});
+    });
+    next();
+  }
+
+, 'respond, override statusCode': function (next) {
+    var c = createController();
+    c._doResponse = function (statusCode, headers, content) {
+      assert.equal(222, statusCode);
+      assert.equal('text/html', headers['Content-Type']);
+      assert.equal('<div>{"foo":"bar"}</div>', content);
+      next();
+    };
+    c.respond({foo: 'bar'}, {statusCode: 222});
+  }
+
+// respondTo tests, mid-level API
+, 'respondTo html, format specified and supported': function (next) {
+    var c = createController();
+    c.respondTo({
+      html: function () {
+        next();
+      }
+    }, {format: 'html'});
+  }
+
+, 'respondTo html, format in params and supported': function (next) {
+    var c = createController();
+    c.params.format = 'html';
+    c.respondTo({
+      html: function () {
+        next();
+      }
+    });
+  }
+
+, 'respondTo xml, format in specified and in strategy, \
+but not explicitly supported on controller': function (next) {
+    var c = createController();
+    c.respondTo({
+      xml: function () {
+        next();
+      }
+    }, {format: 'xml'});
+  }
+
+, 'respondTo xml, format in params and in strategy, \
+but not explicitly supported on controller': function (next) {
+    var c = createController();
+    c.respondTo({
+      xml: function () {
+        next();
+      }
+    }, {format: 'xml'});
+  }
+
+// respondWith tests, top-level API
+, 'respondWith html create action, format in params': function (next) {
+    var c = createController();
+    c.params.format = 'html';
+    c.params.action = 'create';
+    c.redirect = function (target) {
+      assert.equal('mambo-no-5', target.id);
+      next();
+    };
+    c.respondWith(createModelInstance());
+  }
+
+, 'respondWith html create action with error, format in params': function (next) {
+    var c = createController()
+      , inst;
+    c.params.format = 'html';
+    c.params.action = 'create';
+    c.redirect = function (target) {
+      assert.equal('error', c.flashMessage.type);
+      assert.equal('asdf', c.flashMessage.msg.poop);
+      assert.equal('add', target.action);
+      next();
+    };
+    inst = createModelInstance();
+    inst.errors = {
+      poop: 'asdf'
+    };
+    c.respondWith(inst);
+  }
+
+, 'respondWith html remove action, format in params': function (next) {
+    var c = createController();
+    c.params.format = 'html';
+    c.params.action = 'remove';
+    c.redirect = function (target) {
+      assert.equal(undefined, target.id);
+      next();
+    };
+    c.respondWith(createModelInstance());
+  }
+
+, 'respondWith html remove action with error, format in params': function (next) {
+    var c = createController()
+      , inst;
+    c.params.format = 'html';
+    c.params.action = 'remove';
+    c.redirect = function (target) {
+      assert.equal('error', c.flashMessage.type);
+      assert.equal('zerp', c.flashMessage.msg.derp);
+      assert.equal('edit', target.action);
+      assert.equal('mambo-no-5', target.id);
+      next();
+    };
+    inst = createModelInstance();
+    inst.errors = {
+      derp: 'zerp'
+    };
+    c.respondWith(inst);
+  }
+
+, 'respondWith html update action, format in params': function (next) {
+    var c = createController();
+    c.params.format = 'html';
+    c.params.action = 'update';
+    c.redirect = function (target) {
+      assert.equal('mambo-no-5', target.id);
+      next();
+    };
+    c.respondWith(createModelInstance());
+  }
+
+, 'respondWith html update action with error, format in params': function (next) {
+    var c = createController()
+      , inst;
+    c.params.format = 'html';
+    c.params.action = 'update';
+    c.redirect = function (target) {
+      assert.equal('error', c.flashMessage.type);
+      assert.equal('zerp', c.flashMessage.msg.derp);
+      assert.equal('edit', target.action);
+      assert.equal('mambo-no-5', target.id);
+      next();
+    };
+    inst = createModelInstance();
+    inst.errors = {
+      derp: 'zerp'
+    };
+    c.respondWith(inst);
+  }
+
+, 'respondWith html show action, format in params': function (next) {
+    var c = createController();
+    c.params.format = 'html';
+    c.params.action = 'show';
+    c._doResponse = function (statusCode, headers, content) {
+      assert.equal(200, statusCode);
+      assert.equal('text/html', headers['Content-Type']);
+      assert.equal('<div>{"params":{"format":"html","action":"show"},' +
+          '"zooby":{"id":"mambo-no-5"}}</div>', content);
+      next();
+    };
+    c.respondWith(createModelInstance());
+  }
+
+};
 
 module.exports = tests;
