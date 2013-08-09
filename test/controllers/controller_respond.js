@@ -37,6 +37,12 @@ var assert = require('assert')
     };
 
 
+global.geddy = {
+  config: {
+    fullHostname: 'http://foo.com'
+  }
+};
+
 var MockRequest = function () {
   this.headers = {
     accept: '*/*'
@@ -211,6 +217,20 @@ but not explicitly supported on controller': function (next) {
     c.respondWith(createModelInstance());
   }
 
+, 'respondWith json create action, format in params': function (next) {
+    var c = createController();
+    c.params.format = 'json';
+    c.params.action = 'create';
+    c._doResponse = function (statusCode, headers, content) {
+      assert.equal(201, statusCode);
+      assert.equal('application/json', headers['Content-Type']);
+      assert.equal('http://foo.com/zoobies/mambo-no-5', headers['Location']);
+      assert.equal('{"id":"mambo-no-5","type":"zooby"}', content);
+      next();
+    };
+    c.respondWith(createModelInstance());
+  }
+
 , 'respondWith html create action with error, format in params': function (next) {
     var c = createController()
       , inst;
@@ -229,12 +249,45 @@ but not explicitly supported on controller': function (next) {
     c.respondWith(inst);
   }
 
+, 'respondWith json create action with error, format in params': function (next) {
+    var c = createController()
+      , inst;
+    c.params.format = 'json';
+    c.params.action = 'create';
+    c._doResponse = function (statusCode, headers, content) {
+      assert.equal(400, statusCode);
+      assert.equal('application/json', headers['Content-Type']);
+      assert.equal('{"id":"mambo-no-5","errors":{"poop":"asdf"},"type":"zooby"}',
+          content);
+      next();
+    };
+    inst = createModelInstance();
+    inst.errors = {
+      poop: 'asdf'
+    };
+    c.respondWith(inst);
+  }
+
 , 'respondWith html remove action, format in params': function (next) {
     var c = createController();
     c.params.format = 'html';
     c.params.action = 'remove';
     c.redirect = function (target) {
       assert.equal(undefined, target.id);
+      next();
+    };
+    c.respondWith(createModelInstance());
+  }
+
+, 'respondWith json remove action, format in params': function (next) {
+    var c = createController();
+    c.params.format = 'json';
+    c.params.action = 'remove';
+    c._doResponse = function (statusCode, headers, content) {
+      assert.equal(200, statusCode);
+      assert.equal('application/json', headers['Content-Type']);
+      assert.equal('{"id":"mambo-no-5","type":"zooby"}',
+          content);
       next();
     };
     c.respondWith(createModelInstance());
@@ -259,12 +312,45 @@ but not explicitly supported on controller': function (next) {
     c.respondWith(inst);
   }
 
+, 'respondWith json remove action with error, format in params': function (next) {
+    var c = createController()
+      , inst;
+    c.params.format = 'json';
+    c.params.action = 'remove';
+    c._doResponse = function (statusCode, headers, content) {
+      assert.equal(400, statusCode);
+      assert.equal('application/json', headers['Content-Type']);
+      assert.equal('{"id":"mambo-no-5","errors":{"derp":"zerp"},"type":"zooby"}',
+          content);
+      next();
+    };
+    inst = createModelInstance();
+    inst.errors = {
+      derp: 'zerp'
+    };
+    c.respondWith(inst);
+  }
+
 , 'respondWith html update action, format in params': function (next) {
     var c = createController();
     c.params.format = 'html';
     c.params.action = 'update';
     c.redirect = function (target) {
       assert.equal('mambo-no-5', target.id);
+      next();
+    };
+    c.respondWith(createModelInstance());
+  }
+
+, 'respondWith json update action, format in params': function (next) {
+    var c = createController();
+    c.params.format = 'json';
+    c.params.action = 'update';
+    c._doResponse = function (statusCode, headers, content) {
+      assert.equal(200, statusCode);
+      assert.equal('application/json', headers['Content-Type']);
+      assert.equal('{"id":"mambo-no-5","type":"zooby"}',
+          content);
       next();
     };
     c.respondWith(createModelInstance());
@@ -289,6 +375,25 @@ but not explicitly supported on controller': function (next) {
     c.respondWith(inst);
   }
 
+, 'respondWith json update action with error, format in params': function (next) {
+    var c = createController()
+      , inst;
+    c.params.format = 'json';
+    c.params.action = 'update';
+    c._doResponse = function (statusCode, headers, content) {
+      assert.equal(400, statusCode);
+      assert.equal('application/json', headers['Content-Type']);
+      assert.equal('{"id":"mambo-no-5","errors":{"derp":"zerp"},"type":"zooby"}',
+          content);
+      next();
+    };
+    inst = createModelInstance();
+    inst.errors = {
+      derp: 'zerp'
+    };
+    c.respondWith(inst);
+  }
+
 , 'respondWith html show action, format in params': function (next) {
     var c = createController();
     c.params.format = 'html';
@@ -298,6 +403,19 @@ but not explicitly supported on controller': function (next) {
       assert.equal('text/html', headers['Content-Type']);
       assert.equal('<div>{"params":{"format":"html","action":"show"},' +
           '"zooby":{"id":"mambo-no-5"}}</div>', content);
+      next();
+    };
+    c.respondWith(createModelInstance());
+  }
+
+, 'respondWith json show action, format in params': function (next) {
+    var c = createController();
+    c.params.format = 'json';
+    c.params.action = 'show';
+    c._doResponse = function (statusCode, headers, content) {
+      assert.equal(200, statusCode);
+      assert.equal('application/json', headers['Content-Type']);
+      assert.equal('{"id":"mambo-no-5","type":"zooby"}', content);
       next();
     };
     c.respondWith(createModelInstance());
