@@ -151,7 +151,7 @@ tests = {
       , incr = 0;
     c.foo = function () {
       incr++;
-      c._doResponse(200,
+      c.output(200,
           {'Content-Type': 'text/plain'}, 'howdy');
     };
     c.after(function () {
@@ -169,7 +169,7 @@ tests = {
       , incr = 0;
     c.foo = function () {
       incr++;
-      c._doResponse(200,
+      c.output(200,
           {'Content-Type': 'text/plain'}, 'howdy');
     };
     c.after(function () {
@@ -187,7 +187,7 @@ tests = {
       , incr = 0;
     c.bar = function () {
       incr++;
-      c._doResponse(200,
+      c.output(200,
           {'Content-Type': 'text/plain'}, 'howdy');
     };
     c.after(function () {
@@ -208,7 +208,7 @@ tests = {
       , incr = 0;
     c.foo = function () {
       incr++;
-      c._doResponse(200,
+      c.output(200,
           {'Content-Type': 'text/plain'}, 'howdy');
     };
     c.after(function () {
@@ -229,7 +229,7 @@ tests = {
       , incr = 0;
     c.bar = function () {
       incr++;
-      c._doResponse(200,
+      c.output(200,
           {'Content-Type': 'text/plain'}, 'howdy');
     };
     c.after(function () {
