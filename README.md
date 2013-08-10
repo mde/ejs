@@ -38,8 +38,8 @@ Docs are on the GeddyJS Website: http://geddyjs.org/documentation
 
 #### Community
 
-Mailing list: [https://groups.google.com/group/geddyjs](https://groups.google.com/group/geddyjs)
-IRC: #geddy on Freenode
+* Mailing list: [https://groups.google.com/group/geddyjs](https://groups.google.com/group/geddyjs)
+* IRC: #geddy on Freenode
 
 #### License
 
