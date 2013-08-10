@@ -37,14 +37,17 @@ The name of the controller constructor function, in CamelCase with uppercase ini
 
 * * *
 
-#### .respondsWith
-`this.respondsWith`
+#### .canRespondTo
+`canRespondTo(contentTypes)`
 
-Content-type the controller can respond with.
+Content-types the controller can use in responses.
+
+##### contentTypes
+- `contentTypes [array]` The list of content-types the controller can use for responding.
 
 ##### example
 ```
-this.respondsWith = ['txt','json','html'];
+this.canRespondTo(['html', 'json', 'js']);
 ```
 
 * * *
@@ -124,7 +127,8 @@ this.after(function (next) {
 #### .protectFromForgery
 `protectFromForgery()`
 
-Prevents cross-site requests by requiring a same-origin token for destructive HTTP methods (PUT, POST, DELETE)
+Prevents cross-site requests by requiring a same-origin token for destructive
+HTTP methods (PUT, POST, DELETE)
 
 * * *
 
@@ -139,7 +143,8 @@ Prevents cross-site requests by requiring a same-origin token for destructive HT
 - `action [string]`: an action name
 - `format [string]`: the file extension
 
-Sends a 302 redirect to the client, based on either a simple string-URL, or a controller/action/format combination.
+Sends a 302 redirect to the client, based on either a simple string-URL, or a
+controller/action/format combination.
 
 ##### examples
 ```
@@ -156,7 +161,9 @@ this.redirect({controller: 'users', action: 'show', id: 1});
 #### .error
 `error(err)`
 
-Respond to a request with an appropriate HTTP error-code. If a status-code is set on the error object, uses that as the error's status-code. Otherwise, responds with a 500 for the status-code.
+Respond to a request with an appropriate HTTP error-code. If a status-code is
+set on the error object, uses that as the error's status-code. Otherwise,
+responds with a 500 for the status-code.
 
 ##### err [error]
 - `statusCode [number]` optional HTTP status code to send to the client, defaults to 500
@@ -184,11 +191,76 @@ this.error(err);
 transfer(action)
 ```
 
-Transfer a request from its original action to a new one. The entire request cycle is repeated, including before-filters.
+Transfer a request from its original action to a new one. The entire request
+cycle is repeated, including before-filters.
 
 ##### action
 - `action [string]`: name of the new action designated to handle the request.
 - `action [object]`: The new action designated to handle the request.
+
+* * *
+
+#### .respondWith
+```
+respondWith(resources)
+```
+
+Uses a format-specific strategy to provide a response using the resource
+provided. In the case of an HTML response, it might render a template, or do a
+redirect -- with JSON, it will output the appropriate API-style JSON response.
+
+A good example is a CRUD `create` action. If the client requests an HTML
+response, `respondWith` will render an HTML template, and return it with a
+200/OK status-code. If the client requests a JSON response, it will output a
+JSON-formatted response with a 201/Created status-code, and a 'Location' header
+with the URL for the created item.
+
+In order to use `respondWith`, you need to declare the formats your controller
+will support using `canRespondTo`.
+
+##### resources
+- `resources [object]`: a Geddy model instance or a collection of instances to
+use in the response.
+
+##### examples
+```
+// Fetch a user and respond with an appropriate response-strategy
+var self = this;
+geddy.model.User.first({username: 'foo'}, function (err, user) {
+  self.respondWith(user);
+});
+
+```
+
+* * *
+
+#### .respondTo
+```
+respondTo(strategies)
+```
+
+When you use `respondTo`, it overrides any formats declared to be supported on
+the controller using `canRespondTo`.
+
+##### strategies
+- `strategies [object]`: Format-specific strategies for outputting a response.
+
+##### examples
+```
+// Fetch a user and respond with an appropriate response-strategy
+var self = this;
+geddy.model.User.first({username: 'foo'}, function (err, user) {
+  self.respondTo({
+    html: function () {
+      self.redirect('/user/profiles?user_id=' + user.id);
+    }
+  , json: function () {
+      self.respond(user, {format: 'json'});
+    }
+  });
+});
+
+```
 
 * * *
 
@@ -223,11 +295,42 @@ this.respond(params, {template: 'path/to/template'});
 // send params to path/to/template, render it, then send the response
 
 
-this.respond(null, {statusCode: 201});
+this.respond(params, {format: 'json'});
 // send the params object as the response in json format
 
-this.respond(params, {format: 'json'});
+this.respond(null, {statusCode: 201});
 // send a 201/created with no body
+```
+
+* * *
+
+#### .output
+```
+output(statusCode, headers, content)
+```
+
+Outputs a response with a specific HTTP response-code, HTTP headers, and
+content. This is the lowest-level response API, for when you know exactly the
+status, headers, and content you want to output.
+
+##### statusCode
+- `statusCode [number]`: HTTP status-code to be use for the response
+
+##### headers
+- `headers [object]`: HTTP headers to include in the response
+
+##### content
+- `content [string]`: Content to be used in the response-body (optional).
+If not passed, no response body is output.
+
+##### examples
+```
+this.output(200, {'Content-Type': 'application/json'},
+    '{"foo": "bar"}');
+// Output a JSON response
+
+this.output(201, {'Content-Type': 'text/html',
+    'Location': '/foobars/12345'});
 ```
 
 * * *
