@@ -37,12 +37,6 @@ var assert = require('assert')
     };
 
 
-global.geddy = {
-  config: {
-    fullHostname: 'http://foo.com'
-  }
-};
-
 var MockRequest = function () {
   this.headers = {
     accept: '*/*'
@@ -224,7 +218,7 @@ but not explicitly supported on controller': function (next) {
     c.output = function (statusCode, headers, content) {
       assert.equal(201, statusCode);
       assert.equal('application/json', headers['Content-Type']);
-      assert.equal('http://foo.com/zoobies/mambo-no-5', headers['Location']);
+      assert.equal('/zoobies/mambo-no-5', headers['Location']);
       assert.equal('{"id":"mambo-no-5","type":"zooby"}', content);
       next();
     };
