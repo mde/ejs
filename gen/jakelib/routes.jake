@@ -6,7 +6,12 @@ var helpers = require('./helpers')
 
 
 task('routes', ['env:init'], {async: true}, function (resource) {
-  console.log('Showing route results for "' + resource + '"');
+  if (resource) {
+    console.log('Showing route results for "' + resource + '"');
+  }
+  else {
+    console.log('Showing all routes');
+  }
   console.log(getRoutes(resource));
   complete();
 });
