@@ -238,9 +238,11 @@ geddy.model.User.first({username: 'foo'}, function (err, user) {
 ```
 respondTo(strategies)
 ```
+Allows you to provide specific response-strategies to use for a particular
+request.
 
-When you use `respondTo`, it overrides any formats declared to be supported on
-the controller using `canRespondTo`.
+NOTE: when you use `respondTo`, it overrides any formats declared to be
+supported on the controller using `canRespondTo`.
 
 ##### strategies
 - `strategies [object]`: Format-specific strategies for outputting a response.

@@ -4,6 +4,7 @@
     "CLI",
     "templates",
     "models",
+    "responding",
     "i18n",
     "authentication",
     "deployment"
