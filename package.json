@@ -35,7 +35,7 @@
     "socket.io-client": "0.9.x",
     "handlebars": "latest",
     "jade": "latest",
-    "swig": "latest",
+    "swig": "0.14.x",
     "ejs": "latest",
     "request": "latest"
   },
