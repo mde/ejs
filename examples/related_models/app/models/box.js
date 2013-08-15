@@ -9,4 +9,6 @@ var Box = function () {
   this.adapter = 'mongo';
 
 };
-Box = geddy.model.register('Box', Box);
+
+exports.Box = Box;
+

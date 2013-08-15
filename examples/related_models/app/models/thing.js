@@ -10,4 +10,6 @@ var Thing = function () {
   this.adapter = 'mongo';
 
 };
-Thing = geddy.model.register('Thing', Thing);
+
+exports.Thing = Thing;
+

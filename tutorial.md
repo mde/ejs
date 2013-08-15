@@ -221,7 +221,7 @@ var Todo = function () {
   });
 ...
 };
-Todo = geddy.model.register('Todo', Todo);
+exports.Todo = Todo;
 ```
 
 Here we are making it so the title property is required and have a
@@ -456,7 +456,7 @@ var Todo = function () {
 
 };
 
-Todo = geddy.model.register('Todo', Todo);
+exports.Todo = Todo;
 ```
 
 The `defineProperties` method takes any number of properties to be added
@@ -485,7 +485,7 @@ var Todo = function () {
   });
 };
 
-Todo = geddy.model.register('Todo', Todo);
+exports.Todo = Todo;
 ```
 
 For the `title` property, we made sure that the property is always

@@ -9,4 +9,7 @@ var Widget = function () {
   this.adapter = 'mongo';
 
 };
-Widget = geddy.model.register('Widget', Widget);
+
+exports.Widget = Widget;
+
+
