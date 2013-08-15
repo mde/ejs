@@ -133,7 +133,7 @@ HTTP methods (PUT, POST, DELETE)
 * * *
 
 #### .redirect
-`redirect(to)`
+`redirect(to, options)`
 
 ##### to [string]
 - if `to` is a string, it will redirect to the url in that string
@@ -143,14 +143,17 @@ HTTP methods (PUT, POST, DELETE)
 - `action [string]`: an action name
 - `format [string]`: the file extension
 
-Sends a 302 redirect to the client, based on either a simple string-URL, or a
+##### options
+- `statusCode [number]` Override for default 302 HTTP status-code. Must be valid
+3xx status code (e.g., 301 / moved permanently, 301 / temporary redirect)
+
+Sends a (302) redirect to the client, based on either a simple string-URL, or a
 controller/action/format combination.
 
 ##### examples
 ```
 this.redirect('/users/1');
 // will redirect the browser to /users/1
-
 
 this.redirect({controller: 'users', action: 'show', id: 1});
 // will redirect the browser to /users/1

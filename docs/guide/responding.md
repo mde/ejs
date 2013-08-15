@@ -12,6 +12,8 @@ specific things with your responses.
 
 #### respondWith
 
+[`respondWith` method in API reference](/reference#controllers.respondWith)
+
 The `respondWith` method is the highest-level response API. It handles
 formatting your output in the correct way, but also allows more general
 format-specific behaviors like doing redirects, or adding needed headers.
@@ -72,6 +74,8 @@ a statusCode, statusText, message, and stack, if one is available.
 
 #### respondTo
 
+[`respondTo` method in API reference](/reference#controllers.respondTo)
+
 The `respondTo` method is the next level down in API granularity. It allows you
 to specify your own response-strategies to use for the response. NOTE: calling
 `respondTo` will override any formats declared using `canRespondTo`.
@@ -84,6 +88,9 @@ var Users = function () {
   this.show = function (req, resp, params) {
     var self = this;
     geddy.model.User.first({username: 'foo'}, function (err, user) {
+      if (err) {
+        throw err;
+      }
       self.respondTo({
         html: function () {
           self.redirect('/user/profiles?user_id=' + user.id);
@@ -105,11 +112,69 @@ a custom responder.
 
 #### respond and redirect
 
-The `respond` method is a lower-level API call that simply outputs content in
-the correct format for a request. The `redirect` method is exactly what it
-sounds like -- a way to tell the browser to request a different URL from your
-application.
+[`respond` method in API reference](/reference#controllers.respond)
 
+[`redirect` method in API reference](/reference#controllers.redirect)
+
+The `respond` method is a lower-level API call that simply outputs content in
+the correct format for a request. The 'html' format will render the appropriate
+template for the request, and API-style formats like 'json' will simply output
+the data-payload you pass in with the desired format:
+
+```javascript
+var Users = function () {
+
+  this.show = function (req, resp, params) {
+    var self = this;
+    geddy.model.User.first({username: 'foo'}, function (err, user) {
+      if (err) {
+        throw err;
+      }
+      this.respond(user);
+    });
+  };
+};
+```
+
+The `respond` method takes an 'options' object that allows you set specific
+properties like the layout, or format to respond with. If you don't pass a
+format-override, Geddy will figure out the right format based on the
+file-extension requested, and the formats your controller supports.
+
+The `redirect` method is exactly what it sounds like -- a way to tell the
+browser to request a different URL from your application. You can pass it a
+location string, or an object referencing specific controller or action.
+
+#### output
+
+[`output` method in API reference](/reference#controllers.output)
+
+The `output` method is the lowest-level API for responding to a request. You
+should only use this method when you know precisely what you want in the
+response (i.e., HTTP status-code, headers, and content). Here's an example:
+
+```javascript
+var Users = function () {
+
+  this.create = function (req, resp, params) {
+    var self = this
+      , user = geddy.model.User.create(params);
+    if (!user.isValid()) {
+      throw new geddy.errors.BadRequestError('Oops!');
+    }
+    user.save((function (err, data) {
+      if (err) {
+        throw err;
+      }
+      // Respond with a 201/created and no content
+      this.output(201, {
+        'Content-Type': 'application/json'
+      , 'Location': '/users/' + user.id
+      });
+    });
+  };
+};
+```
 
 
 
