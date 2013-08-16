@@ -228,7 +228,8 @@
             , "id": body.params.id
             }
           , "zooby": {
-              "createdAt": body.zooby.createdAt
+              "id": body.params.id
+            , "createdAt": body.zooby.createdAt
             , "foo": "zerb"
             , "bar": 2112
             }
