@@ -5,7 +5,7 @@ var <%= names.constructor.plural %> = function () {
     var self = this;
 
     geddy.model.<%= names.constructor.singular %>.all(function(err, <%= names.property.plural %>) {
-      self.respondWith(<%= names.property.plural %>, {type:'<%= names.constructor.singular.toLowerCase() %>'});
+      self.respondWith(<%= names.property.plural %>, {type:'<%= names.constructor.singular; %>'});
     });
   };
 <% if(!bare) { %>
