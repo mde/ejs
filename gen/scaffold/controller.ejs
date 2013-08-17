@@ -18,6 +18,9 @@ var <%= names.constructor.plural %> = function () {
       , <%= names.property.singular %> = geddy.model.<%= names.constructor.singular %>.create(params);
 
     <%= names.property.singular %>.save(function(err, data) {
+      if (err) {
+        throw err;
+      }
       self.respondWith(<%= names.property.singular %>, {status: err});
     });
   };
@@ -26,6 +29,9 @@ var <%= names.constructor.plural %> = function () {
     var self = this;
 
     geddy.model.<%= names.constructor.singular %>.first(params.id, function(err, <%= names.property.singular %>) {
+      if (err) {
+        throw err;
+      }
       if (!<%= names.property.singular %>) {
         throw new geddy.errors.NotFoundError();
       }
@@ -39,6 +45,9 @@ var <%= names.constructor.plural %> = function () {
     var self = this;
 
     geddy.model.<%= names.constructor.singular %>.first(params.id, function(err, <%= names.property.singular %>) {
+      if (err) {
+        throw err;
+      }
       if (!<%= names.property.singular %>) {
         throw new geddy.errors.BadRequestError();
       }
@@ -52,6 +61,9 @@ var <%= names.constructor.plural %> = function () {
     var self = this;
 
     geddy.model.<%= names.constructor.singular %>.first(params.id, function(err, <%= names.property.singular %>) {
+      if (err) {
+        throw err;
+      }
       <%= names.property.singular %>.updateProperties(params);
 
       if (!<%= names.property.singular %>.isValid()) {
@@ -59,6 +71,9 @@ var <%= names.constructor.plural %> = function () {
       }
       else {
         <%= names.property.singular %>.save(function(err, data) {
+          if (err) {
+            throw err;
+          }
           self.respondWith(<%= names.property.singular %>, {status: err});
         });
       }
@@ -69,12 +84,18 @@ var <%= names.constructor.plural %> = function () {
     var self = this;
 
     geddy.model.<%= names.constructor.singular %>.first(params.id, function(err, <%= names.property.singular %>) {
+      if (err) {
+        throw err;
+      }
       if (!<%= names.property.singular %>) {
         throw new geddy.errors.BadRequestError();
       }
       else {
         geddy.model.<%= names.constructor.singular %>.remove(params.id, function(err) {
-          self.respondWith(<%= names.property.singular %>, {status: err});
+          if (err) {
+            throw err;
+          }
+          self.respondWith(<%= names.property.singular %>);
         });
       }
     });
