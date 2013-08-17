@@ -27,9 +27,7 @@ var <%= names.constructor.plural %> = function () {
 
     geddy.model.<%= names.constructor.singular %>.first(params.id, function(err, <%= names.property.singular %>) {
       if (!<%= names.property.singular %>) {
-        var err = new Error();
-        err.statusCode = 404;
-        self.error(err);
+        throw new geddy.errors.NotFoundError();
       }
       else {
         self.respondWith(<%= names.property.singular %>);
@@ -42,9 +40,7 @@ var <%= names.constructor.plural %> = function () {
 
     geddy.model.<%= names.constructor.singular %>.first(params.id, function(err, <%= names.property.singular %>) {
       if (!<%= names.property.singular %>) {
-        var err = new Error();
-        err.statusCode = 400;
-        self.error(err);
+        throw new geddy.errors.BadRequestError();
       }
       else {
         self.respondWith(<%= names.property.singular %>);
@@ -74,9 +70,7 @@ var <%= names.constructor.plural %> = function () {
 
     geddy.model.<%= names.constructor.singular %>.first(params.id, function(err, <%= names.property.singular %>) {
       if (!<%= names.property.singular %>) {
-        var err = new Error();
-        err.statusCode = 400;
-        self.error(err);
+        throw new geddy.errors.BadRequestError();
       }
       else {
         geddy.model.<%= names.constructor.singular %>.remove(params.id, function(err) {
