@@ -100,7 +100,15 @@ namespace('db', function () {
       createTask.invoke(modelName);
   });
 
-  task('migrate', ['env:init', 'createMigrationModel',
-      'migration:run'], function () {});
+  // targetMigration can be a full migration-name, or the
+  // timestamp prefix for a migration
+  task('migrate', ['env:init', 'createMigrationModel'], {async: true},
+      function (targetMigration) {
+    var runTask = jake.Task['migration:run'];
+    runTask.once('complete', function () {
+      complete();
+    });
+    runTask.invoke(targetMigration);
+  });
 
 });

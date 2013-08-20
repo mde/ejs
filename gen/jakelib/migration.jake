@@ -7,6 +7,8 @@ var utils = require('utilities')
 
 namespace('migration', function () {
 
+  var FILE_PAT = /\.js$/;
+
   var createMigration = function (name, options) {
         var opts = options || {}
           , filename = utils.string.snakeize(name)
@@ -35,6 +37,86 @@ namespace('migration', function () {
         utils.file.mkdirP(migrationDir);
         fs.writeFileSync(filename, templContent);
         console.log('[Added] ' + filename);
+      }
+    , runMigrations = function (migrationList, direction, targetTimestampString,
+          callback) {
+        var doIt = function () {
+              var migrationItem = migrationList.pop()
+                , isNeeded = true
+                , migrationItemTimestampString;
+              if (migrationItem) {
+                if (targetTimestampString) {
+                  migrationItemTimestampString = migrationItem.split('_')[0];
+                  if (direction == 'up') {
+                    isNeeded = migrationItemTimestampString <= targetTimestampString;
+                  }
+                  else if (direction == 'down') {
+                    isNeeded = migrationItemTimestampString > targetTimestampString;
+                  }
+                  else {
+                    throw new Error('Migration direction must be up or down');
+                  }
+                }
+                if (isNeeded) {
+                  runMigration(migrationItem, direction, doIt);
+                }
+                else {
+                  doIt();
+                }
+              }
+              else {
+                callback();
+              }
+            };
+        doIt();
+      }
+    , runMigration = function (migration, direction, next) {
+        var pathName = migration + '.js' // TODO: What about the Coffee crazies
+        , inst
+        , ctorName
+        , ctor;
+
+        // Pull off the date-stamp, get the underscoreized
+        // migration-name
+        ctorName = migration.split(/\d+_/)[1];
+        console.log('Running ' + ctorName + ' (' + direction + ')');
+
+        // Grab the exported migration ctor
+        ctorName = geddy.string.camelize(ctorName, {initialCap: true});
+        ctor = require(path.join(process.cwd(), '/db/migrations/',
+            pathName))[ctorName];
+        // Inherit all the Migration methods
+        // TODO: Should this be a mixin to preserve statics?
+        ctor.prototype = Object.create(Migration.prototype);
+        inst = new ctor();
+        // Hook up the DB adapter
+        // TODO: API for using a different adapter if using multiple
+        // SQL adapters?
+        inst.adapter = geddy.model.loadedAdapters.Migration;
+        // Run it, up or down
+        inst[direction](function () {
+          var m;
+          if (direction == 'up') {
+            m = geddy.model.Migration.create({
+              migration: migration
+            });
+            // Record it in the DB so it doesn't get run again
+            m.save(function (err, data) {
+              if (err) { throw err; }
+              next();
+            });
+          }
+          else if (direction == 'down') {
+            geddy.model.Migration.remove({migration: migration},
+                function (err, data) {
+              if (err) { throw err; }
+              next();
+            });
+          }
+          else {
+            throw new Error('Migration direction must be up or down');
+          }
+        });
       };
 
   task('create', function (name) {
@@ -101,114 +183,74 @@ namespace('migration', function () {
     writeMigration(filename, templContent);
   });
 
-  task('findUnrun', {async: true}, function () {
+  // Creates two separate lists:
+  // already-run migrations, and not-yet-run migrations
+  task('filterMigrations', {async: true}, function () {
     var files = fs.readdirSync('db/migrations')
       , runnerTask
-      , unrunMigrations = []
-      , findMigration = function () {
-          var file = files.pop()
-            , migration;
-          if (file) {
-            // Valid JS file
-            // TODO: CoffeeScript crazies will want this
-            if (/\.js$/.test(file)) {
-              migration = file.replace(/\.js$/, '');
-              // Is this migration already run and recorded?
-              // Could do this as an 'in' lookup with an array, but this could
-              // be a pretty big number of files -- likely better to iterate
-              geddy.model.Migration.first({migration: migration},
-                  function (err, data) {
-                if (err) {
-                  throw err;
-                }
-                // No match -- need to run this one
-                if (!data) {
-                  unrunMigrations.push(file);
-                }
-                // Next
-                findMigration();
-              });
-            }
-            // Can't do anything with this file -- just go next
-            else {
-              // Next
-              findMigration();
-            }
+      , alreadyRunMigrations = []
+      , notYetRunMigrations = [];
+
+    geddy.model.Migration.all({}, {sort: 'migration'},
+        function (err, data) {
+      if (err) {
+        throw err;
+      }
+
+      data.forEach(function (item) {
+        alreadyRunMigrations.push(item.migration);
+      });
+
+      files.forEach(function (f) {
+        if (FILE_PAT.test(f)) {
+          var migr = f.replace(FILE_PAT, '');
+          if (alreadyRunMigrations.indexOf(migr) == -1) {
+            notYetRunMigrations.push(migr);
           }
-          // No more files
-          else {
-            // Migrations to run, hand off to runner
-            if (unrunMigrations.length) {
-              unrunMigrations.sort();
-              runnerTask = jake.Task['migration:runUnrun'];
-              runnerTask.once('complete', function () {
-                complete();
-              });
-              runnerTask.invoke(unrunMigrations);
-            }
-            // No un-run migrations, all done
-            else {
-              console.log('(No migrations to run)');
-              complete();
-            }
-          }
-        };
-    findMigration();
+        }
+      });
+      notYetRunMigrations.sort().reverse();
+      complete({
+        notYetRunMigrations: notYetRunMigrations
+      , alreadyRunMigrations: alreadyRunMigrations
+      });
+    });
+
+
   });
 
-  task('runUnrun', {async: true}, function (unrunMigrations) {
-    var runMigrations = function () {
-          var migrationPath = unrunMigrations.shift()
-            , migration
-            , inst
-            , ctorName
-            , ctor;
+  task('runMigrations', {async: true}, function (notYetRunMigrations,
+      alreadyRunMigrations, targetTimestampString) {
 
-          if (migrationPath) {
-            migration = migrationPath.replace(/\.js$/, '');
+      if (!notYetRunMigrations.length &&
+          !(targetTimestampString && alreadyRunMigrations.length)) {
+          console.log('(No migrations to run)');
+          return complete();
+      }
 
-            // Pull off the date-stamp, get the underscoreized
-            // migration-name
-            ctorName = migration.split(/\d+_/)[1];
-            console.log('Running ' + ctorName);
-
-            // Grab the exported migration ctor
-            ctorName = geddy.string.camelize(ctorName, {initialCap: true});
-            ctor = require(path.join(process.cwd(), '/db/migrations/',
-                migration))[ctorName];
-            // Inherit all the Migration methods
-            // TODO: Should this be a mixin to preserve statics?
-            ctor.prototype = Object.create(Migration.prototype);
-            inst = new ctor();
-            // Hook up the DB adapter
-            // TODO: API for using a different adapter if using multiple
-            // SQL adapters?
-            inst.adapter = geddy.model.loadedAdapters.Migration;
-            // Run it
-            inst.up(function () {
-              var m = geddy.model.Migration.create({
-                migration: migration
-              });
-              // Record it in the DB so it doesn't get run again
-              m.save(function (err, data) {
-                if (err) { throw err; }
-                runMigrations();
-              });
-            });
-          }
-          else {
-            complete();
-          }
-        };
-    runMigrations();
+      runMigrations(notYetRunMigrations, 'up', targetTimestampString, function () {
+        if (targetTimestampString) {
+          runMigrations(alreadyRunMigrations, 'down', targetTimestampString, complete);
+        }
+        else {
+          complete();
+        }
+      });
   });
 
-  task('run', {async: true}, function () {
+  task('run', {async: true}, function (targetMigration) {
     console.log('Running migrations for ' + geddy.config.environment +
         ' environment...');
-    finderTask = jake.Task['migration:findUnrun'];
-    finderTask.once('complete', function () {
-      complete();
+    var targetTimestampString = targetMigration ?
+            targetMigration.split('_')[0] : null
+      , finderTask = jake.Task['migration:filterMigrations']
+      , runnerTask = jake.Task['migration:runMigrations'];
+    finderTask.once('complete', function (vals) {
+      runnerTask.once('complete', function () {
+        complete();
+      });
+      runnerTask.invoke(vals.notYetRunMigrations, vals.alreadyRunMigrations,
+          targetTimestampString);
     });
     finderTask.invoke();
   });
