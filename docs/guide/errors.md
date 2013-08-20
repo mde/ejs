@@ -73,4 +73,10 @@ without a specific view in that directory will use the 'default' view.
 
 All error pages use the 'errors' layout in 'app/views/layouts'.
 
+#### Errors with your errors
+
+When there's an error rendering your custom error page ('Error Inception'),
+Geddy fallback to a simple, low-fi error-page to display the rendering error.
+Fix the rendering error, and your nice, customized error will appear.
+
 
