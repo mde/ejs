@@ -176,5 +176,65 @@ var Users = function () {
 };
 ```
 
+#### Custom responders
+
+You can write your own Responder (with its own response-strategies) to use in
+your controller with `respondWith`.
+
+The simplest possible example of a custom responder is just a function. Set it
+to your own custom responder in your controller like so:
+
+```javascript
+this.responder = function (controller, content, opts) {
+  // Redirect Web content
+  if (opts.format == 'html') {
+    controller.redirect('/web' + controller.request.url);
+  }
+  else {
+    controller.respond(content, opts);
+  }
+};
+```
+
+Or you can subclass the built-in Geddy responder, and change its strategies, or
+its `respond` method. Its strategies live on its 'strategies' property:
+
+```javascript
+var CustomResponder = function () {
+  var builtIns = geddy.responder.strategies;
+  this.strategies = {
+    html: builtIns.html
+  , json: builtIns.json
+  , xml: function (content, opts) {
+      // Do something special for XML responses
+    }
+  };
+};
+CustomResponder.prototype = Object.create(geddy.responder.Responder.prototype);
+```
+
+Strategies are invoked on your controller instance, so 'this' will be a
+reference to your controller.
+
+Also, you can also override the responder's `respond` method:
+
+```javascript
+CustomResponder.respond = function (controller, content, opts) {
+  var strategies = this.strategies;
+  if (opts.format == 'xml') {
+    throw new Error('Nobody uses XML anymore, buddy.');
+  }
+  // Otherwise, we don't care what format, just output
+  controller.respond(content, opts);
+};
+
+```
+
+To use your subclassed responder, set it in your controller:
+
+```javascript
+this.responder = new CustomResponder();
+```
+
 
 

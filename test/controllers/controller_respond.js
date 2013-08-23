@@ -1,6 +1,6 @@
 var assert = require('assert')
   , utils = require('utilities')
-  , Responder = require('../../lib/controller/responder')
+  , Responder = require('../../lib/controller/responder').Responder
   , Controller = require('../../lib/controller/base_controller').BaseController
   , tests
   , createModelInstance = function () {
