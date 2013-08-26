@@ -24,7 +24,7 @@
           <input type="text" class="span6" name="<%= properties[i].name %>" value="{{<%= names.property.singular %>.<%= properties[i].name %>}}" />
       <% } -%>
       <% } else if(properties[i].type === 'text') { -%>
-          <textarea rows="10" class="span6" name="<%= properties[i].name %>"></textarea>
+          <textarea rows="10" class="span6" name="<%= properties[i].name %>">{{<%= names.property.singular %>.<%= properties[i].name %>}}</textarea>
       <% } else if(properties[i].type === 'number' || properties[i].type === 'int') { -%>
           <input type="number" class="span2" name="<%= properties[i].name %>" value="{{<%= names.property.singular %>.<%= properties[i].name %>}}" />
       <% } else if(properties[i].type === 'boolean') { -%>
