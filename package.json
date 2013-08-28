@@ -11,7 +11,7 @@
   "version": "0.9.17",
   "author": "Matthew Eernisse <mde@fleegix.org> (http://fleegix.org)",
   "dependencies": {
-    "jake": "0.5.x",
+    "jake": "0.6.x",
     "utilities": "0.0.x",
     "model": "0.2.x",
     "barista": "0.0.x",
@@ -22,7 +22,7 @@
     "geddy": "./bin/cli.js"
   },
   "scripts": {
-    "test": "jake test"
+    "test": "jake test --trace"
   },
   "main": "./lib/geddy",
   "repository": {
