@@ -5,8 +5,8 @@ Geddy has a robust CLI tool to help you generate apps, run tests or scripting ta
 Running the `geddy` command with no arguments will run the geddy app in the current directory.
 
 ```
-$ cd path/to/app
-$ geddy
+cd path/to/app
+geddy
 // will run the app in path/to/app
 ```
 

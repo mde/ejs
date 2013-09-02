@@ -1,7 +1,7 @@
 body {
   padding-top: 40px;
   padding-bottom: 40px;
-  color: #333;
+  color: #222;
   font-weight: lighter;
   font-family: 'Segoe UI Light','Segoe UI','Helvetica Nueu',Helvetica,Arial,sans-serif
 }
@@ -31,21 +31,25 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 p {
-  font-size: 14px;
-  line-height: 200%;
+  font-size: 16px;
+  line-height: 32px;
+  margin-bottom: 18px;
 }
 
 li {
-  font-size: 14px;
+  font-size: 16px;
+  line-height: 24px;
+  margin-bottom: 8px;
 }
 
 pre, code {
   background: #FDF6E3;
   margin: 40px 0;
   padding: 20px;
-  font-size: 12px;
+  font-size: 14px;
   border: none;
   border-radius: 0px;
+  color: #546a72 !important;
 }
 
 code {
@@ -267,7 +271,7 @@ input:-ms-input-placeholder {
 
 .toc ul > li {
   font-weight: bold;
-  font-size: 15px;
+  font-size: 16px;
   margin-bottom: 20px;
 }
 
@@ -290,8 +294,8 @@ input:-ms-input-placeholder {
 
 .toc ul li ul li {
   font-weight: lighter;
-  font-size: 12px;
-  margin-bottom: 12px;
+  font-size: 14px;
+  margin-bottom: 14px;
 }
 
 #documentation h3 {
