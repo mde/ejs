@@ -70,8 +70,8 @@ var <%= names.constructor.plural %> = function () {
     geddy.model.<%= names.constructor.singular %>.first(params.id, function(err, <%= names.property.singular %>) {
       <%= names.property.singular %>.updateProperties(params);
       if (!<%= names.property.singular %>.isValid()) {
-        this.flash.error(<%= names.property.singular %>.errors);
-        this.redirect({action: 'edit'});
+        self.flash.error(<%= names.property.singular %>.errors);
+        self.redirect({action: 'edit'});
       }
       else {
         <%= names.property.singular %>.save(function(err, data) {
