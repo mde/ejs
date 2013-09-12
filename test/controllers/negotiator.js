@@ -17,12 +17,10 @@ tests = {
     assert.equal('txt', n.negotiate().format);
   }
 
-, 'negotiate will throw when controller does not support default format': function () {
+, 'negotiate will return null when controller does not support default format': function () {
     var n = new Negotiator();
     n.init('*/*', ['html', 'json'], 'txt');
-    assert.throws(function () {
-      n.negotiate();
-    });
+      assert.ok(!n.negotiate());
   }
 
 , 'passed-in format overrides controller\'s acceppted formats': function () {
@@ -47,14 +45,12 @@ tests = {
     assert.equal('html', n.negotiate().format);
   }
 
-, 'negotiator will throw if no client accept format matches requested param': function () {
+, 'negotiator will return null if no client accept format matches requested param': function () {
     var n = new Negotiator();
     n.init('application/xml,application/xhtml+xml,' +
           'text/plain;q=0.8,image/png',
           ['xml', 'html', 'json'], 'html');
-    assert.throws(function () {
-      n.negotiate();
-    });
+    assert.ok(!n.negotiate());
   }
 
 , 'passed-in format overrides controller\'s acceppted formats, but has to match client accepts header': function () {
@@ -62,9 +58,7 @@ tests = {
     n.init('application/xml,application/xhtml+xml,' +
           'text/plain;q=0.8,image/png',
           ['xml', 'html', 'json'], 'html', {});
-    assert.throws(function () {
-      n.negotiate('html');
-    });
+    assert.ok(!n.negotiate('html'));
   }
 
 }
