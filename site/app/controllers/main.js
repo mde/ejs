@@ -32,14 +32,6 @@ md.setOptions({
 
 var Main = function () {
 
-  this.error = function (req, resp, params) {
-    console.log(params.error);
-    this.respond(params, {
-      format: 'html'
-    , template: 'app/views/main/error'
-    });
-  };
-
   this.index = function (req, resp, params) {
     this.respond(params, {
       format: 'html'
@@ -69,8 +61,7 @@ var Main = function () {
         geddy.request(options, function (err, resp) {
 
           if (err) {
-            params.error = err;
-            return self.error(req, resp, params)
+            throw err;
           }
 
           var content = resp
@@ -124,11 +115,10 @@ var Main = function () {
         , headers: {'User-Agent': 'GeddyJS documentation site'}
       }
       geddy.request(opts, function (err, data) {
-        var self = this
-          , topics
+        var topics
           , paths = [];
         if (err) {
-          return self.error(err);
+          throw err;
         }
         topics = data.topics;
         topics.forEach(function (t) {
@@ -158,6 +148,9 @@ var Main = function () {
 
     // find the sections
     var gotTutorial = function (err, tutorial) {
+      if (err) {
+        throw err;
+      }
       var content = md(tutorial);
       var lines = tutorial.split('\n');
       var sections = [];
