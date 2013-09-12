@@ -57,7 +57,9 @@ code {
   margin: 0;
   color: #666;
   background: #f5f5f5;
+  white-space: pre;
 }
+
 
 a {
   color: #08c;
