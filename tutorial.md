@@ -22,12 +22,12 @@ Next, install Geddy from [NPM](http://npmjs.org/), this will also
 install [Jake](https://github.com/mde/jake):
 
 ```bash
-$ sudo npm install -g geddy
+$ npm install -g geddy
 ```
 
 We need to install it globally (-g) so we can use geddy generators or
 start the server. More on this later. (Note: installing packages globally
-may require super-user access.)
+may require super-user access `sudo npm install -g geddy`)
 
 #### Using the `geddy gen` command
 
