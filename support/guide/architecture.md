@@ -2,7 +2,7 @@ Geddy is built on the same MVC principles that many popular frameworks are based
 
 * * *
 
-#### structure
+### structure
 
 ```
 ├── app
@@ -30,7 +30,7 @@ Geddy is built on the same MVC principles that many popular frameworks are based
 
 * * *
 
-#### config
+### config
 `geddy.config`
 
 Geddy has built in configuration management. Global config options should go in your 'config/environments.js` file. Likewise, your production and development config options should go in their respective files
@@ -43,12 +43,12 @@ $ geddy -e production
 
 * * *
 
-#### logger
+### logger
 `geddy.log[level]`
 
 Geddy automatically logs requests to an access log, and you can log anything you'd like to stdout or a file. It supports 9 different log levels from debug to emergency.
 
-##### levels
+#### levels
 - `access`: outputs to the access log and stdout
 - `debug`: debug level logging
 - `info`: info level logging
@@ -59,7 +59,7 @@ Geddy automatically logs requests to an access log, and you can log anything you
 - `alert`: alert level logging
 - `emergency`: emergency level logging
 
-##### examples
+#### examples
 ```
 geddy.log.debug('someting to debug')
 // prints `something to debug` to the console

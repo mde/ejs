@@ -2,14 +2,14 @@ Geddy provides tons of useful utilities to make tasks easier, they are provided 
 
 * * *
 
-#### xml
+### xml
 
-#### setIndentLevel
+### setIndentLevel
 `setIndentLevel(level<Number>)`
 
 SetIndentLevel changes the indent level for XML.stringify and returns it
 
-#####Examples
+####Examples
 ```
 setIndentLevel(6)
 // => 6
@@ -17,10 +17,10 @@ setIndentLevel(6)
 
 * * *
 
-#### stringify
+### stringify
 `stringify(obj<Object>, opts<Object>)`
 
-#####Options
+####Options
 - `whitespace` [Boolean] Don't insert indents and newlines after xml entities(Default: true)
 - `name` [String] Use custom name as global namespace(Default: typeof obj)
 - `fragment` [Boolean] If true no header fragment is added to the top(Default: false)
@@ -29,7 +29,7 @@ setIndentLevel(6)
 
 Stringify returns an XML representation of the given `obj`
 
-#####Examples
+####Examples
 ```
 stringify({user: 'name'})
 // => '<?xml version="1.0" encoding="UTF-8"?>\n<object>\n    <user>name</user>\n</object>\n'
@@ -43,14 +43,14 @@ stringify({user: 'name'}, {fragment: true})
 
 * * *
 
-#### array
+### array
 
-#### humanize
+### humanize
 `humanize(array<Array>)`
 
 Creates a string containing the array elements in a readable format
 
-#####Examples
+####Examples
 ```
 humanize(["array", "array", "array"])
 // => "array, array and array"
@@ -61,12 +61,12 @@ humanize(["array", "array"])
 
 * * *
 
-#### include
+### include
 `include(array<Array>, item<Any>)`
 
 Checks if an `item` is included in an `array`
 
-#####Examples
+####Examples
 ```
 include(["array"], "array")
 // => true
@@ -80,14 +80,14 @@ include(["array", false], false)
 
 * * *
 
-#### uri
+### uri
 
-#### getFileExtension
+### getFileExtension
 `getFileExtension(path<String>)`
 
 Gets the file extension for a path and returns it
 
-#####Examples
+####Examples
 ```
 getFileExtension('users.json')
 // => 'json'
@@ -95,10 +95,10 @@ getFileExtension('users.json')
 
 * * *
 
-#### paramify
+### paramify
 `paramify(obj<Object>, o<Object>)`
 
-#####Options
+####Options
 - `consolidate` [Boolean] take values from elements that can return(Default: false)
 - `includeEmpty` [Boolean] include keys in the string for all elements, even(Default: false)
 - `snakeize` [Boolean] change param names from camelCase to snake_case.(Default: false)
@@ -106,7 +106,7 @@ getFileExtension('users.json')
 
 Convert a JS Object to a querystring (key=val&key=val). Values in arrays
 
-#####Examples
+####Examples
 ```
 paramify({username: 'user', token: 'token', secret: 'secret'})
 // => 'username=user&token=token&secret=secret'
@@ -123,15 +123,15 @@ paramify({username: 'user', token: '<token'}, {escapeVals: true})
 
 * * *
 
-#### objectify
+### objectify
 `objectify(str<String>, o<Object>)`
 
-#####Options
+####Options
 - `consolidate` [Boolean] Convert multiple instances of the same(Default: true)
 
 Convert the values in a query string (key=val&key=val) to an Object
 
-#####Examples
+####Examples
 ```
 objectify('name=user')
 // => {name: 'user'}
@@ -145,14 +145,14 @@ objectify('name=user&name=user2', {consolidate: false})
 
 * * *
 
-#### EventBuffer
+### EventBuffer
 
-#### proxyEmit
+### proxyEmit
 `proxyEmit(name<String>, args<Array>)`
 
 Emit an event by name and arguments or add it to the buffer if no outlet is set
 
-#####Examples
+####Examples
 ```
 proxyEmit("close")
 // => undefined
@@ -163,12 +163,12 @@ proxyEmit("data", "some content here")
 
 * * *
 
-#### emit
+### emit
 `emit(name<String>, args<Array>)`
 
 Emit an event by name and arguments
 
-#####Examples
+####Examples
 ```
 emit("close")
 // => undefined
@@ -179,12 +179,12 @@ emit("data", "some content here")
 
 * * *
 
-#### sync
+### sync
 `sync(outlet<Object>)`
 
 Flush the buffer and continue piping new events to the outlet
 
-#####Examples
+####Examples
 ```
 sync(new EventEmitter())
 // => undefined
@@ -192,14 +192,14 @@ sync(new EventEmitter())
 
 * * *
 
-#### SortedCollection
+### SortedCollection
 
-#### addItem
+### addItem
 `addItem(key<String>, val<Any>)`
 
 Adds a new key/value to the collection
 
-#####Examples
+####Examples
 ```
 addItem('testA', 'AAAA');
 // => 'AAAA'
@@ -210,12 +210,12 @@ addItem('testV', 'VVVV');
 
 * * *
 
-#### getItem
+### getItem
 `getItem(p<String/Number>)`
 
 Retrieves the value for the given identifier that being a key or index
 
-#####Examples
+####Examples
 ```
 getItem('testA');
 // => 'AAAA'
@@ -226,12 +226,12 @@ getItem(1);
 
 * * *
 
-#### setItem
+### setItem
 `setItem(p<String/Number>, val<Any>)`
 
 Sets the item in the collection with the given val, overwriting the existsing item
 
-#####Examples
+####Examples
 ```
 setItem('testA', 'aaaa');
 // => 'aaaa'
@@ -242,12 +242,12 @@ setItem(1, 'vvvv');
 
 * * *
 
-#### removeItem
+### removeItem
 `removeItem(p<String/Number>)`
 
 Removes the item for the given identifier
 
-#####Examples
+####Examples
 ```
 removeItem('testA')
 // => true
@@ -258,12 +258,12 @@ removeItem(3)
 
 * * *
 
-#### getByKey
+### getByKey
 `getByKey(key<String>)`
 
 Retrieves the value for the given key
 
-#####Examples
+####Examples
 ```
 getByKey('testA');
 // => 'AAAA'
@@ -274,12 +274,12 @@ getByKey('testV');
 
 * * *
 
-#### setByKey
+### setByKey
 `setByKey(key<String>, val<Any>)`
 
 Sets a item by key assigning the given val
 
-#####Examples
+####Examples
 ```
 setByKey('testA', 'aaaa');
 // => 'aaaa'
@@ -290,12 +290,12 @@ setByKey('testV', 'vvvv');
 
 * * *
 
-#### removeByKey
+### removeByKey
 `removeByKey(key<String>)`
 
 Removes a collection item by key
 
-#####Examples
+####Examples
 ```
 removeByKey('testA')
 // => true
@@ -306,12 +306,12 @@ removeByKey('testC')
 
 * * *
 
-#### getByIndex
+### getByIndex
 `getByIndex(ind<Number>)`
 
 Retrieves the value for the given index
 
-#####Examples
+####Examples
 ```
 getByIndex(0);
 // => 'AAAA'
@@ -322,12 +322,12 @@ getByIndex(1);
 
 * * *
 
-#### setByIndex
+### setByIndex
 `setByIndex(ind<Number>, val<Any>)`
 
 Sets a item by index assigning the given val
 
-#####Examples
+####Examples
 ```
 setByIndex(0, 'aaaa');
 // => 'aaaa'
@@ -338,12 +338,12 @@ setByIndex(1, 'vvvv');
 
 * * *
 
-#### removeByIndex
+### removeByIndex
 `removeByIndex(ind<Number>)`
 
 Removes a collection item by index
 
-#####Examples
+####Examples
 ```
 removeByIndex(0)
 // => true
@@ -354,12 +354,12 @@ removeByIndex(3)
 
 * * *
 
-#### hasKey
+### hasKey
 `hasKey(key<String>)`
 
 Checks if a key item exists in the collection
 
-#####Examples
+####Examples
 ```
 hasKey('testA')
 // => true
@@ -370,12 +370,12 @@ hasKey('testC')
 
 * * *
 
-#### hasValue
+### hasValue
 `hasValue(val<Any>)`
 
 Checks if a key item in the collection has a given val
 
-#####Examples
+####Examples
 ```
 hasValue('aaaa')
 // => true
@@ -386,12 +386,12 @@ hasValue('cccc')
 
 * * *
 
-#### allKeys
+### allKeys
 `allKeys(str<String>)`
 
 Joins all the keys into a string
 
-#####Examples
+####Examples
 ```
 allKeys(", ")
 // => "testA, testV"
@@ -399,12 +399,12 @@ allKeys(", ")
 
 * * *
 
-#### replaceKey
+### replaceKey
 `replaceKey(oldKey<String>, newKey<String>)`
 
 Joins all the keys into a string
 
-#####Examples
+####Examples
 ```
 replaceKey("testV", "testC")
 // => undefined
@@ -412,12 +412,12 @@ replaceKey("testV", "testC")
 
 * * *
 
-#### insertAtIndex
+### insertAtIndex
 `insertAtIndex(ind<Number>, key<String>, val<Any>)`
 
 Inserts a key/value at a specific index in the collection
 
-#####Examples
+####Examples
 ```
 insertAtIndex(1, "testB", "bbbb")
 // => true
@@ -425,12 +425,12 @@ insertAtIndex(1, "testB", "bbbb")
 
 * * *
 
-#### insertAfterKey
+### insertAfterKey
 `insertAfterKey(refKey<String>, key<String>, val<Any>)`
 
 Inserts a key/value item after the given reference key in the collection
 
-#####Examples
+####Examples
 ```
 insertAfterKey("testB", "testB1", "b1b1b1b1b1b1")
 // => true
@@ -438,12 +438,12 @@ insertAfterKey("testB", "testB1", "b1b1b1b1b1b1")
 
 * * *
 
-#### getPosition
+### getPosition
 `getPosition(key<String>)`
 
 Retrieves the index of the key item
 
-#####Examples
+####Examples
 ```
 getPosition("testA")
 // => 0
@@ -454,16 +454,16 @@ getPosition("testB1")
 
 * * *
 
-#### each
+### each
 `each(func<Function>, opts<Object>)`
 
-#####Options
+####Options
 - `keyOnly` [Boolean] Only give the function the key
 - `valueOnly` [Boolean] Only give the function the value
 
 Loops through the collection and calls the given function
 
-#####Examples
+####Examples
 ```
 each(function (val, key) {
   console.log("Key: " + key + " Value: " + val);
@@ -480,12 +480,12 @@ each(function (val) {
 
 * * *
 
-#### eachKey
+### eachKey
 `eachKey(func<Function>)`
 
 Loops through the collection and calls the given function
 
-#####Examples
+####Examples
 ```
 each(function (key) {
   console.log("Key: " + key);
@@ -494,12 +494,12 @@ each(function (key) {
 
 * * *
 
-#### eachValue
+### eachValue
 `eachValue(func<Function>)`
 
 Loops through the collection and calls the given function
 
-#####Examples
+####Examples
 ```
 each(function (val) {
   console.log("Val: " + val);
@@ -508,12 +508,12 @@ each(function (val) {
 
 * * *
 
-#### clone
+### clone
 `clone()`
 
 Creates a cloned version of the current collection and returns it
 
-#####Examples
+####Examples
 ```
 clone()
 // => SortedCollection
@@ -521,12 +521,12 @@ clone()
 
 * * *
 
-#### concat
+### concat
 `concat(hNew<Object>)`
 
 Join a given collection with the current one
 
-#####Examples
+####Examples
 ```
 concat(new SortedCollection())
 // => undefined
@@ -534,12 +534,12 @@ concat(new SortedCollection())
 
 * * *
 
-#### push
+### push
 `push(key<String>, val<Any>)`
 
 Appends a new item to the collection
 
-#####Examples
+####Examples
 ```
 push("testZ", "zzzz")
 // => 5
@@ -547,12 +547,12 @@ push("testZ", "zzzz")
 
 * * *
 
-#### pop
+### pop
 `pop()`
 
 Pops off the last item in the collection and returns it's value
 
-#####Examples
+####Examples
 ```
 pop()
 // => "zzzz"
@@ -560,12 +560,12 @@ pop()
 
 * * *
 
-#### unshift
+### unshift
 `unshift(key<String>, val<Any>)`
 
 Prepends a new item to the beginning of the collection
 
-#####Examples
+####Examples
 ```
 unshift("testA0", "a0a0a0a0")
 // => 6
@@ -573,12 +573,12 @@ unshift("testA0", "a0a0a0a0")
 
 * * *
 
-#### shift
+### shift
 `shift()`
 
 Removes the first item in the list and returns it's value
 
-#####Examples
+####Examples
 ```
 shift()
 // => "a0a0a0a0"
@@ -586,12 +586,12 @@ shift()
 
 * * *
 
-#### splice
+### splice
 `splice(index<Number>, numToRemove<Number>, hash<Object>)`
 
 Removes items from index to the given max and then adds the given collections items
 
-#####Examples
+####Examples
 ```
 splice(2, 1, new SortedCollection())
 // => undefined
@@ -599,12 +599,12 @@ splice(2, 1, new SortedCollection())
 
 * * *
 
-#### reverse
+### reverse
 `reverse()`
 
 Reverse the collection item list
 
-#####Examples
+####Examples
 ```
 reverse()
 // => undefined
@@ -612,21 +612,21 @@ reverse()
 
 * * *
 
-#### date
+### date
 
-#### supportedFormats
+### supportedFormats
 `supportedFormats`
 
 Object of supported strftime formats
 
 * * *
 
-#### getSupportedFormats
+### getSupportedFormats
 `getSupportedFormats()`
 
 return the list of formats in a string
 
-#####Examples
+####Examples
 ```
 getSupportedFormats()
 // => "aAbhBcCdDefFgGHI..."
@@ -634,12 +634,12 @@ getSupportedFormats()
 
 * * *
 
-#### strftime
+### strftime
 `strftime(dt<Date>, format<String>)`
 
 Formats the given date with the strftime formated
 
-#####Examples
+####Examples
 ```
 strftime(new Date(), "%w")
 // => 3
@@ -647,12 +647,12 @@ strftime(new Date(), "%w")
 
 * * *
 
-#### calcCentury
+### calcCentury
 `calcCentury(year<Number>)`
 
 Find the century for the given `year`
 
-#####Examples
+####Examples
 ```
 calcCentury()
 // => "21"
@@ -663,12 +663,12 @@ calcCentury(2000)
 
 * * *
 
-#### calcDays
+### calcDays
 `calcDays(dt<Date>)`
 
 Calculate the day number in the year a particular date is on
 
-#####Examples
+####Examples
 ```
 calcDays(new Date())
 // => 150
@@ -676,12 +676,12 @@ calcDays(new Date())
 
 * * *
 
-#### getMeridiem
+### getMeridiem
 `getMeridiem(h<Number>)`
 
 Return 'AM' or 'PM' based on hour in 24-hour format
 
-#####Examples
+####Examples
 ```
 getMeridiem(14)
 // => "PM"
@@ -692,12 +692,12 @@ getMeridiem(7)
 
 * * *
 
-#### hrMil2Std
+### hrMil2Std
 `hrMil2Std(hour<String>)`
 
 Convert a 24-hour formatted hour to 12-hour format
 
-#####Examples
+####Examples
 ```
 hrMil2Std("14")
 // => 2
@@ -708,12 +708,12 @@ hrMil2Std("7")
 
 * * *
 
-#### hrStd2Mil
+### hrStd2Mil
 `hrStd2Mil(hour<String>, pm<Boolean>)`
 
 Convert a 12-hour formatted hour with meridian flag to 24-hour format
 
-#####Examples
+####Examples
 ```
 hrStd2Mil("7", true)
 // => 14
@@ -724,12 +724,12 @@ hrStd2Mil("7")
 
 * * *
 
-#### add
+### add
 `add(dt<Date>, interv<String>, incr<Number>)`
 
 Add to a Date in intervals of different size, from milliseconds to years
 
-#####Examples
+####Examples
 ```
 add(new Date(), "hour", 1)
 // => Date
@@ -740,12 +740,12 @@ add(new Date(), "minute", 10)
 
 * * *
 
-#### diff
+### diff
 `diff(date1<Date>, date2<Date>, interv<String>)`
 
 Get the difference in a specific unit of time (e.g., number of months, weeks, days, etc.) between two dates.
 
-#####Examples
+####Examples
 ```
 diff(new Date(), new Date(), "hour")
 // => 0
@@ -756,12 +756,12 @@ diff(new Date(), new Date(), "minute")
 
 * * *
 
-#### parse
+### parse
 `parse(val<String>)`
 
 Convert various sorts of strings to JavaScript Date objects
 
-#####Examples
+####Examples
 ```
 parse("12:00 March 5 1950")
 // => Sun Mar 05 1950 12:00:00 GMT-0500 (EST)
@@ -769,15 +769,15 @@ parse("12:00 March 5 1950")
 
 * * *
 
-#### relativeTime
+### relativeTime
 `relativeTime(dt<Date>, opts<Object>)`
 
-#####Options
+####Options
 - `abbreviated` [Boolean] Use short strings(Default: false)
 
 Convert a Date to an English sentence representing
 
-#####Examples
+####Examples
 ```
 relativeTime(new Date())
 // => 'less than a minute ago'
@@ -785,12 +785,12 @@ relativeTime(new Date())
 
 * * *
 
-#### toISO8601
+### toISO8601
 `toISO8601(dt<Date>)`
 
 Convert a Date to an ISO8601-formatted string
 
-#####Examples
+####Examples
 ```
 toISO8601(new Date())
 // => '2012-10-17T17:57:03.892-04'
@@ -798,14 +798,14 @@ toISO8601(new Date())
 
 * * *
 
-#### object
+### object
 
-#### merge
+### merge
 `merge(object<Object>, otherObject<Object>)`
 
 Merge merges `otherObject` into `object` and takes care of deep merging of objects
 
-#####Examples
+####Examples
 ```
 merge({user: 'geddy'}, {key: 'key'})
 // => {user: 'geddy', key: 'key'}
@@ -816,12 +816,12 @@ merge({user: 'geddy', key: 'geddyKey'}, {key: 'key'})
 
 * * *
 
-#### reverseMerge
+### reverseMerge
 `reverseMerge(object<Object>, defaultObject<Object>)`
 
 ReverseMerge merges `object` into `defaultObject`
 
-#####Examples
+####Examples
 ```
 reverseMerge({user: 'geddy'}, {key: 'key'})
 // => {user: 'geddy', key: 'key'}
@@ -832,12 +832,12 @@ reverseMerge({user: 'geddy', key: 'geddyKey'}, {key: 'key'})
 
 * * *
 
-#### isEmpty
+### isEmpty
 `isEmpty(object<Object>)`
 
 isEmpty checks if an Object is empty
 
-#####Examples
+####Examples
 ```
 isEmpty({user: 'geddy'})
 // => false
@@ -848,12 +848,12 @@ isEmpty({})
 
 * * *
 
-#### toArray
+### toArray
 `toArray(object<Object>)`
 
 Converts an object to an array of objects each including the original key/value
 
-#####Examples
+####Examples
 ```
 toArray({user: 'geddy'})
 // => [{key: 'user', value: 'geddy'}]
@@ -861,14 +861,14 @@ toArray({user: 'geddy'})
 
 * * *
 
-#### network
+### network
 
-#### isPortOpen
+### isPortOpen
 `isPortOpen(port<Number>, host<String>, callback<Function>)`
 
 Checks if the given port in the given host is open
 
-#####Examples
+####Examples
 ```
 isPortOpen(3000, 'localhost', function (err, isOpen) {
   if (err) { throw err; }
@@ -879,21 +879,21 @@ isPortOpen(3000, 'localhost', function (err, isOpen) {
 
 * * *
 
-#### request
+### request
 
-#### request
+### request
 `request(opts<Object>, callback<Function>)`
 
 Sends requests to the given url sending any data if the method is POST or PUT
 
-#####Options
+####Options
 - `url` [String] The URL to send the request to
 - `method` [String] The method to use for the request(Default: 'GET')
 - `headers` [Object] Headers to send on requests
 - `data` [String] Data to send on POST and PUT requests
 - `dataType` [String] The type of data to send
 
-#####Examples
+####Examples
 ```
 request({url: 'google.com', method: 'GET'}, function (err, data) {
   if (err) { throw err; }
@@ -904,21 +904,21 @@ request({url: 'google.com', method: 'GET'}, function (err, data) {
 
 * * *
 
-#### inflection
+### inflection
 
-#### inflections
+### inflections
 `inflections`
 
 A list of rules and replacements for different inflection types
 
 * * *
 
-#### parse
+### parse
 `parse(type<String>, word<String>)`
 
 Parse a word from the given inflection type
 
-#####Examples
+####Examples
 ```
 parse('plurals', 'carrier')
 // => 'carriers'
@@ -929,12 +929,12 @@ parse('singulars', 'pluralities')
 
 * * *
 
-#### pluralize
+### pluralize
 `pluralize(word<String>)`
 
 Create a plural inflection for a word
 
-#####Examples
+####Examples
 ```
 pluralize('carrier')
 // => 'carriers'
@@ -942,12 +942,12 @@ pluralize('carrier')
 
 * * *
 
-#### singularize
+### singularize
 `singularize(word<String>)`
 
 Create a singular inflection for a word
 
-#####Examples
+####Examples
 ```
 singularize('pluralities')
 // => 'plurality'
@@ -955,17 +955,17 @@ singularize('pluralities')
 
 * * *
 
-#### file
+### file
 
-#### cpR
+### cpR
 `cpR(fromPath<String>, toPath<String>, opts<Object>)`
 
-#####Options
+####Options
 - `silent` [Boolean] If false then will log the command
 
 Copies a directory/file to a destination
 
-#####Examples
+####Examples
 ```
 cpR('path/to/directory', 'destination/path')
 // => undefined
@@ -973,12 +973,12 @@ cpR('path/to/directory', 'destination/path')
 
 * * *
 
-#### mkdirP
+### mkdirP
 `mkdirP(dir<String>, mode<Number>)`
 
 Create the given directory(ies) using the given mode permissions
 
-#####Examples
+####Examples
 ```
 mkdirP('dir', 0755)
 // => undefined
@@ -989,15 +989,15 @@ mkdirP('recursive/dirs')
 
 * * *
 
-#### readdirR
+### readdirR
 `readdirR(dir<String>, opts<Object>)`
 
-#####Options
+####Options
 - `format` [String] Set the format to return(Default: Array)
 
 Reads the given directory returning it's contents
 
-#####Examples
+####Examples
 ```
 readdirR('dir')
 // => ['dir', 'item.txt']
@@ -1008,15 +1008,15 @@ readdirR('path/to/dir')
 
 * * *
 
-#### rmRf
+### rmRf
 `rmRf(p<String>, opts<Object>)`
 
-#####Options
+####Options
 - `silent` [String] If false then logs the command
 
 Deletes the given directory/file
 
-#####Examples
+####Examples
 ```
 rmRf('file.txt')
 // => undefined
@@ -1024,12 +1024,12 @@ rmRf('file.txt')
 
 * * *
 
-#### isAbsolute
+### isAbsolute
 `isAbsolute(p<String>)`
 
 Checks if a given path is absolute or relative
 
-#####Examples
+####Examples
 ```
 isAbsolute('/path/to/file.txt')
 // => true
@@ -1040,12 +1040,12 @@ isAbsolute('C:\\path\\to\\file.txt')
 
 * * *
 
-#### absolutize
+### absolutize
 `absolutize(p<String>)`
 
 Returns the absolute path for the given path
 
-#####Examples
+####Examples
 ```
 absolutize(path/to/dir)
 // => /home/user/path/to/dir
@@ -1053,12 +1053,12 @@ absolutize(path/to/dir)
 
 * * *
 
-#### searchParentPath
+### searchParentPath
 `searchParentPath(p<String>, callback<Function>)`
 
 Search for a directory/file in the current directory and parent directories
 
-#####Examples
+####Examples
 ```
 searchParentPath('path/to/file.txt', function (err, path) {
   if (err) { throw err; }
@@ -1069,12 +1069,12 @@ searchParentPath('path/to/file.txt', function (err, path) {
 
 * * *
 
-#### watch
+### watch
 `watch(path<String>, callback<Function>)`
 
 Watch a given path then calls the callback once a change occurs
 
-#####Examples
+####Examples
 ```
 watch('path/to/dir', function (currStat, oldStat) {
   console.log('the current mtime is: ' + currStat.mtime);
@@ -1084,12 +1084,12 @@ watch('path/to/dir', function (currStat, oldStat) {
 
 * * *
 
-#### requireLocal
+### requireLocal
 `requireLocal(module<String>, message<String>)`
 
 Require a local module from the node_modules in the current directory
 
-#####Examples
+####Examples
 ```
 requireLocal('utilities', 'optional error message')
 // => { ... }
@@ -1097,14 +1097,14 @@ requireLocal('utilities', 'optional error message')
 
 * * *
 
-#### string
+### string
 
-#### escapeRegExpChars
+### escapeRegExpChars
 `escapeRegExpChars(string<String>)`
 
 Escapes regex control-characters in strings used to build regexes dynamically
 
-#####Examples
+####Examples
 ```
 escapeRegExpChars('/\s.*/')
 // => '\\\\/s\\\\.\\\\*\\\\/'
@@ -1112,12 +1112,12 @@ escapeRegExpChars('/\s.*/')
 
 * * *
 
-#### toArray
+### toArray
 `toArray(string<String>)`
 
 Converts a string to an array
 
-#####Examples
+####Examples
 ```
 toArray('geddy')
 // => ['g', 'e', 'd', 'd', 'y']
@@ -1125,12 +1125,12 @@ toArray('geddy')
 
 * * *
 
-#### reverse
+### reverse
 `reverse(string<String>)`
 
 Reverses a string
 
-#####Examples
+####Examples
 ```
 reverse('geddy')
 // => 'yddeg'
@@ -1138,12 +1138,12 @@ reverse('geddy')
 
 * * *
 
-#### ltrim
+### ltrim
 `ltrim(string<String>, char<String>)`
 
 Ltrim trims `char` from the left of a `string` and returns it if no `char` is given it will trim spaces
 
-#####Examples
+####Examples
 ```
 ltrim('&geddy', '&')
 // => 'geddy'
@@ -1154,12 +1154,12 @@ ltrim('    geddy')
 
 * * *
 
-#### rtrim
+### rtrim
 `rtrim(string<String>, char<String>)`
 
 Rtrim trims `char` from the right of a `string` and returns it if no `char` is given it will trim spaces
 
-#####Examples
+####Examples
 ```
 rtrim('geddy&', '&')
 // => 'geddy'
@@ -1170,12 +1170,12 @@ rtrim('geddy    ')
 
 * * *
 
-#### trim
+### trim
 `trim(string<String>, char<String>)`
 
 Trim trims `char` from the left and right of a `string` and returns it if no `char` is given it will trim spaces
 
-#####Examples
+####Examples
 ```
 trim('&&&&geddy&', '&')
 // => 'geddy'
@@ -1186,12 +1186,12 @@ trim('    geddy    ')
 
 * * *
 
-#### chop
+### chop
 `chop(string<String>)`
 
 Returns a new String with the last character removed. If the string ends with \r\n, both characters are removed. Applying chop to an empty string returns an empty string.
 
-#####Examples
+####Examples
 ```
 chop('geddy&')
 // => 'geddy'
@@ -1199,12 +1199,12 @@ chop('geddy&')
 
 * * *
 
-#### lpad
+### lpad
 `lpad(string<String>, char<String>, width<Number>)`
 
 Lpad adds `char` to the left of `string` until the length of `string` is more than `width`
 
-#####Examples
+####Examples
 ```
 lpad('geddy', '&', 6)
 // => '&geddy'
@@ -1212,12 +1212,12 @@ lpad('geddy', '&', 6)
 
 * * *
 
-#### rpad
+### rpad
 `rpad(string<String>, char<String>, width<Number>)`
 
 Rpad adds `char` to the right of `string` until the length of `string` is more than `width`
 
-#####Examples
+####Examples
 ```
 rpad('geddy', '&', 7)
 // => 'geddy&'
@@ -1225,12 +1225,12 @@ rpad('geddy', '&', 7)
 
 * * *
 
-#### pad
+### pad
 `pad(string<String>, char<String>, width<Number>)`
 
 Pad adds `char` to the left and right of `string` until the length of `string` is more than `width`
 
-#####Examples
+####Examples
 ```
 rpad('geddy', '&', 6)
 // => '&geddy&'
@@ -1238,10 +1238,10 @@ rpad('geddy', '&', 6)
 
 * * *
 
-#### truncate
+### truncate
 `truncate(string<String>, options<Integer/Object>, callback<Function>)`
 
-#####Options
+####Options
 - `length` [Integer] Length the output string will be(Default: string.length)
 - `len` [Integer] Alias for `length`
 - `omission` [String] Replace last characters with an omission(Default: '...')
@@ -1250,7 +1250,7 @@ rpad('geddy', '&', 6)
 
 Truncates a given `string` after a specified `length` if `string` is longer than `length`. The last characters will be replaced with an `omission` for a total length not exceeding `length`. If `callback` is given it will fire if `string` is truncated.
 
-#####Examples
+####Examples
 ```
 truncate('Once upon a time in a world', { length: 10 })
 // => 'Once up...'
@@ -1270,15 +1270,15 @@ truncate('<p>Once upon a time in a world</p>', { length: 20 })
 
 * * *
 
-#### truncateHTML
+### truncateHTML
 `truncateHTML(string<String>, options<Integer/Object>, callback<Function>)`
 
-#####Options
+####Options
 - `once` [Boolean] If true, it will only be truncated once, otherwise the(Default: false)
 
 Truncates a given `string` inside HTML tags after a specified `length` if string` is longer than `length`. The last characters will be replaced with an `omission` for a total length not exceeding `length`. If `callback` is given it will fire if `string` is truncated. If `once` is true only the first string in the first HTML tags will be truncated leaving the others as they were
 
-#####Examples
+####Examples
 ```
 truncateHTML('<p>Once upon a time in a world</p>', { length: 10 })
 // => '<p>Once up...</p>'
@@ -1292,12 +1292,12 @@ truncateHTML('<p>Once upon a time <small>in a world</small></p>', { length: 10, 
 
 * * *
 
-#### nl2br
+### nl2br
 `nl2br(string<String>)`
 
 Nl2br returns a string where all newline chars are turned into line break HTML tags
 
-#####Examples
+####Examples
 ```
 nl2br("geddy\n")
 // => 'geddy<br />'
@@ -1305,12 +1305,12 @@ nl2br("geddy\n")
 
 * * *
 
-#### snakeize
+### snakeize
 `snakeize(string<String>, separ='_'<String>)`
 
 Snakeize converts camelCase and CamelCase strings to snake_case strings
 
-#####Examples
+####Examples
 ```
 snakeize("geddyJs")
 // => 'geddy_js'
@@ -1321,16 +1321,16 @@ snakeize("GeddyJs")
 
 * * *
 
-#### camelize
+### camelize
 `camelize(string<String>, options<Object>)`
 
-#####Options
+####Options
 - `initialCap` [Boolean] If initialCap is true the returned
 - `leadingUnderscore` [Boolean] If leadingUnderscore os true then if
 
 Camelize takes a string and optional options and returns a camelCase version of the given `string`
 
-#####Examples
+####Examples
 ```
 camelize("geddy_js")
 // => 'geddyJs'
@@ -1347,12 +1347,12 @@ camelize("_geddy_js", {leadingUnderscore: true})
 
 * * *
 
-#### decapitalize
+### decapitalize
 `decapitalize(string<String>)`
 
 Decapitalize returns the given string with the first letter uncapitalized.
 
-#####Examples
+####Examples
 ```
 decapitalize("Geddy")
 // => 'geddy'
@@ -1360,12 +1360,12 @@ decapitalize("Geddy")
 
 * * *
 
-#### capitalize
+### capitalize
 `capitalize(string<String>)`
 
 capitalize returns the given string with the first letter capitalized.
 
-#####Examples
+####Examples
 ```
 decapitalize("geddy")
 // => 'Geddy'
@@ -1373,12 +1373,12 @@ decapitalize("geddy")
 
 * * *
 
-#### dasherize
+### dasherize
 `dasherize(string<String>, replace='-'<String>)`
 
 Dasherize returns the given `string` converting camelCase and snakeCase to dashes or replace them with the `replace` character.
 
-#####Examples
+####Examples
 ```
 dasherize("geddyJs")
 // => 'geddy-js'
@@ -1389,12 +1389,12 @@ dasherize("geddyJs", "_")
 
 * * *
 
-#### include
+### include
 `include(searchIn<String>, searchFor<String>)`
 
 Searches for a particular string in another string
 
-#####Examples
+####Examples
 ```
 include('geddy', 'js')
 // => false
@@ -1405,15 +1405,15 @@ include('geddyjs', 'js')
 
 * * *
 
-#### getInflections
+### getInflections
 `getInflections(string<String>, options<Object>)`
 
-#####Options
+####Options
 - `initialCap` [Boolean]
 
 Inflection returns an object that contains different inflections created from the given `name`
 
-#####Examples
+####Examples
 ```
 getInflections('user')
 // => {filename: { ... }, constructor: { ... }, property: { ... }}

@@ -3,7 +3,11 @@
   "irc": {"server": "irc.freenode.net", "channel": "#geddy"},
   "domain": "geddyjs.org",
   "sections": [
-    "layout",
-    "premium"
+    "utilities",
+    "router",
+    "controllers",
+    "models",
+    "helpers",
+    "sessions"
   ]
 }

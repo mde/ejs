@@ -10,7 +10,7 @@ In general, you'll be able to use the highest-level API and expect Geddy to do
 the right thing, but the lower-level APIs are there if you need to do more
 specific things with your responses.
 
-#### respondWith
+### respondWith
 
 [`respondWith` method in API reference](/reference#controllers.respondWith)
 
@@ -72,7 +72,7 @@ respond with an error of the correct format. If the requests wants a JSON
 response, Geddy will respond with a nice, parseable JSON response that includes
 a statusCode, statusText, message, and stack, if one is available.
 
-#### respondTo
+### respondTo
 
 [`respondTo` method in API reference](/reference#controllers.respondTo)
 
@@ -110,7 +110,7 @@ content. You can perform redirects, set headers, etc.
 If you want to create your own specific response-strategies, you can also create
 a custom responder.
 
-#### respond and redirect
+### respond and redirect
 
 [`respond` method in API reference](/reference#controllers.respond)
 
@@ -145,7 +145,7 @@ The `redirect` method is exactly what it sounds like -- a way to tell the
 browser to request a different URL from your application. You can pass it a
 location string, or an object referencing specific controller or action.
 
-#### output
+### output
 
 [`output` method in API reference](/reference#controllers.output)
 
@@ -176,7 +176,7 @@ var Users = function () {
 };
 ```
 
-#### Custom responders
+### Custom responders
 
 You can write your own Responder (with its own response-strategies) to use in
 your controller with `respondWith`.
@@ -235,6 +235,3 @@ To use your subclassed responder, set it in your controller:
 ```javascript
 this.responder = new CustomResponder();
 ```
-
-
-

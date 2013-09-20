@@ -1,7 +1,7 @@
 Geddy makes it easy to return errors, and gives you an easy way to customize the
 error-responses you return.
 
-#### Returning an error
+### Returning an error
 
 To return an error as your response, simply `throw` the error you want. Geddy
 includes the full range of HTTP errors (as subclasses of the base JavaScript
@@ -38,7 +38,7 @@ Here's an example:
   };
 ```
 
-#### Error formats
+### Error formats
 
 If you make an API-style request for JSON data, and an error occurs, it's stupid
 for the server to respond with a rendered HTML page. Why would you expect a
@@ -60,7 +60,7 @@ For example, a 404/NotFoundError for a JSON response would look like this:
 The stack-trace, if one is available, will be included in the 'stack' property
 of the response.
 
-#### Customizing errors
+### Customizing errors
 
 For HTML responses, Geddy makes it easy to customize error pages. Views for
 errors can be found in your app in 'app/views/errors'. To add a customized view
@@ -73,10 +73,8 @@ without a specific view in that directory will use the 'default' view.
 
 All error pages use the 'errors' layout in 'app/views/layouts'.
 
-#### Errors with your errors
+### Errors with your errors
 
 When there's an error rendering your custom error page ('Error Inception'),
 Geddy fallback to a simple, low-fi error-page to display the rendering error.
 Fix the rendering error, and your nice, customized error will appear.
-
-
