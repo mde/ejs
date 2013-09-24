@@ -1,13 +1,5 @@
 {
   "googleGroup": "geddyjs",
   "irc": {"server": "irc.freenode.net", "channel": "#geddy"},
-  "domain": "geddyjs.org",
-  "sections": [
-    "utilities",
-    "router",
-    "controllers",
-    "models",
-    "helpers",
-    "sessions"
-  ]
+  "domain": "geddyjs.org"
 }
