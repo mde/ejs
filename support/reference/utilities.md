@@ -1276,7 +1276,11 @@ truncate('<p>Once upon a time in a world</p>', { length: 20 })
 ####Options
 - `once` [Boolean] If true, it will only be truncated once, otherwise the(Default: false)
 
-Truncates a given `string` inside HTML tags after a specified `length` if string` is longer than `length`. The last characters will be replaced with an `omission` for a total length not exceeding `length`. If `callback` is given it will fire if `string` is truncated. If `once` is true only the first string in the first HTML tags will be truncated leaving the others as they were
+Truncates a given `string` inside HTML tags after a specified `length`, if `string` is longer than `length`.
+The last characters will be replaced with an `omission` for a total length not exceeding `length`.
+If `callback` is given it will fire if `string` is truncated. If `once` is true only the first string in
+the first HTML tags will be truncated leaving the others as they were.
+
 
 ####Examples
 ```
