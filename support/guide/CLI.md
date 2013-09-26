@@ -1,6 +1,6 @@
 Geddy has a robust CLI tool to help you generate apps, run tests or scripting tasks in your app, or interact with your app in a console.
 
-#### geddy
+### geddy
 
 Running the `geddy` command with no arguments will run the geddy app in the current directory.
 
@@ -36,7 +36,7 @@ geddy -j scaffold user
 
 ```
 
-#### geddy console
+### geddy console
 
 This command starts a REPL in the context of your application. It will load your
 application's environment, and you can interact with all its models.
@@ -50,7 +50,7 @@ geddy console
 geddy console environment=development
 ```
 
-#### geddy gen [command] [options] [arguments]
+### geddy gen [command] [options] [arguments]
 
 This is the generator script which you can use to create apps, resource
 scaffolds, or bare models and controllers.
@@ -89,7 +89,7 @@ geddy gen scaffold user name:string:default
 
 ```
 
-#### geddy jake [task] [options] [env vars]
+### geddy jake [task] [options] [env vars]
 
 This command runs a Jake task in the context of the current app. This allows you
 to run your tests or any other command-line tasks in the context of your
@@ -116,6 +116,3 @@ geddy jake routes[user]
 # Show the index route for the user resource
 geddy jake routes[user.index]
 ```
-
-
-

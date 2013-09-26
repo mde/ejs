@@ -1,8 +1,8 @@
 We use the following example as a reference. There will be some differences with other environments.
 
-#### Windows Azure
+### Windows Azure
 
-##### Pre-requisites
+#### Pre-requisites
 1. Install the azure-cli module.
 ```
 npm install -g azure-cli
@@ -17,7 +17,7 @@ azure account import [file]
 ```
 4. Install Geddy. If you're new, you can start with the [tutorial](http://geddyjs.org/tutorial)
 
-##### Notes
+#### Notes
 * Your Geddy app is deployed via Git, which will ignore anyhting specified in the .gitignore including the config/secrets.json file. 
 
 If you need something that requires the secret such as sessions, etc. you'll encounter errors about doing `geddy secret` when you deploy. Currently there's no way to circumvent this other than removing it from your .gitignore file. More info here: https://github.com/mde/geddy/issues/309
@@ -55,15 +55,15 @@ For more information about deploying and supporting Node Apps on Windows Azure W
 
 To learn more about Node Websites in Windows Azure see this [article](http://www.windowsazure.com/en-us/develop/nodejs/tutorials/create-a-website-(mac)/)
 
-#### Nodejitsu
+### Nodejitsu
 
-##### Pre-requisites
+#### Pre-requisites
 1. Install the [jitsu](https://npmjs.org/package/jitsu) module
 2. Install Geddy. If you're new, you can start with the [tutorial](http://geddyjs.org/tutorial)
 3. Create a Nodejitsu account(Not required: we'll go over creating one from the CLI)
 4. Have an app ready to be deployed
 
-##### Notes
+#### Notes
 * Nodejitsu reads the deployed .gitignore file, so if you have the config/secrets.json file in there(you should), then you'll encounter errors about needing to do `geddy secret` if you need the secrets for sessions, etc. To circumvent this, create a .npmignore file and include all the contents from the .gitignore _except_ the config/secrets.json line. Nodejitsu ignores the .gitignore file only if a .npmignore file is included as well.
 
 If you haven't already you'll need to sign up and log in to Nodejitsu which you can do from the jitsu executable.
@@ -107,9 +107,9 @@ jitsu deploy
 ```
 Now you can go to http://geddy-example.jit.su and see your application!
 
-#### Heroku
+### Heroku
 
-##### Pre-requisites
+#### Pre-requisites
 1. Install [heroku toolbelt](https://devcenter.heroku.com/articles/quickstart#step-2-install-the-heroku-toolbelt)
 2. Install Geddy. If you're new, you can start with the [tutorial](http://geddyjs.org/tutorial)
 3. Be familiar with GIT, the basic geddy commands, and heroku's deployment models
@@ -161,7 +161,7 @@ Add everything to git and push to Heroku.
 $ git push heroku master
 ```
 
-##### Database Add-Ons
+#### Database Add-Ons
 
 Heroku gives you a database connection url, which you will need to parse.
 
@@ -213,7 +213,7 @@ module.exports = config;
 ```
 Your app should now be configured for the database add-on.
 
-##### Secrets
+#### Secrets
 
 If your app uses sessions or auth, you'll need to push your `secrets.json` file to Heroku. To do this securely, you'll have to use environment variables.
 

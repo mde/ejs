@@ -2,18 +2,18 @@ Geddy uses [Barista](http://github.com/kieran/barista) as its router. Its API is
 
 * * *
 
-#### .match
+### .match
 `router.match(path [, method])`
 
 defines the url to match to a controller action.
 
-##### path
+#### path
 - `path [string]`: the url to match to an action
 
-##### method
+#### method
 - `method [string]`: the http method to match
 
-##### examples
+#### examples
 ```
 router.match('/').to('Main.index');
 // will route any request to '/' to the Main controller's index action
@@ -35,16 +35,16 @@ router.match('/products/:id(.:format)', 'GET').to('products.show')
 
 * * *
 
-#### .to
+### .to
 `router.match(path).to(action)`
 
 defines the action to map the path to.
 
-##### action
+#### action
 - `action [string]`: a controller name plus an action name as a string
 - `action [object]`: an object that defines a controller and action property
 
-##### examples
+#### examples
 ```
 router.match('/').to('Main.index');
 // will route any request to '/' to the Main controller's index action
@@ -56,43 +56,43 @@ router.match('/').to({controller: 'Main', action: 'index'});
 
 * * *
 
-#### .get
+### .get
 `router.get(path)`
 
 Equivalent to `router.match(path, 'GET')`
 
 * * *
 
-#### .post
+### .post
 `router.post(path)`
 
 Equivalent to `router.match(path, 'POST')`
 
 * * *
 
-#### .put
+### .put
 `router.put(path)`
 
 Equivalent to `router.match(path, 'PUT')`
 
 * * *
 
-#### .del
+### .del
 `router.del(path)`
 
 Equivalent to `router.match(path, 'DELETE')`
 
 * * *
 
-#### .resource
+### .resource
 `router.resource(controller)`
 
 generates standard resource routes for a controller name
 
-##### controller
+#### controller
 - `controller [string]`: the camelCased controller name that needs resourceful routes
 
-##### examples
+#### examples
 ```
 router.resource('products')
 

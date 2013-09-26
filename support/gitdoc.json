@@ -1,0 +1,5 @@
+{
+  "googleGroup": "geddyjs",
+  "irc": {"server": "irc.freenode.net", "channel": "#geddy"},
+  "domain": "geddyjs.org"
+}

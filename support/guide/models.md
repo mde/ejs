@@ -4,7 +4,7 @@ Model currently implements adapters for:
 * Riak
 * MongoDB
 
-#### Defining models
+### Defining models
 
 Model uses a pretty simple syntax for defining a model. (It should look familiar
 to anyone who has used an ORM like ActiveRecord, DataMapper, Django's models, or
@@ -40,7 +40,7 @@ User.prototype.someOtherMethod = function () {
 exports.User = User;
 ```
 
-##### Abbreviated syntax
+#### Abbreviated syntax
 
 Alternatively, you can use the `defineProperties` method to lay out your model's
 properties in one go:
@@ -56,7 +56,7 @@ var User = function () {
 }
 ```
 
-##### Datatypes
+#### Datatypes
 
 Model supports the following datatypes:
 
@@ -70,7 +70,7 @@ Model supports the following datatypes:
 * time
 * object
 
-#### Creating instances
+### Creating instances
 
 Creating an instance of one of these models is easy:
 
@@ -84,7 +84,7 @@ var params = {
 var user = User.create(params);
 ```
 
-#### Validations
+### Validations
 
 Validations provide a nice API for making sure your data items are in a good
 state. When an item is "valid," it means that its data meet all the criteria
@@ -100,7 +100,7 @@ Here's a list of supported validation methods:
  * validatesConfirmed -- validates a match against another named parameter
  * validatesWithFunction -- uses an arbitrary function to validate
 
-##### Common options
+#### Common options
 
 You can specify a custom error message for when a validation fails using the
 'message' option:
@@ -150,7 +150,7 @@ User.first(query, {scenario: 'create'}, cb);
 User.updateProperties(newAttrs, {scenario: 'creditCardPayment'});
 ```
 
-##### Validation errors
+#### Validation errors
 
 Any validation errors show up inside an `errors` property on the instance, keyed
 by field name. Instances have an `isValid` method that returns a Boolean
@@ -170,7 +170,7 @@ console.log(user.errors.password);
 ```
 
 
-#### Saving items
+### Saving items
 
 After creating the instance, call the `save` method on the instance. This method
 takes a callback in the familiar (err, data) format for Node.
@@ -186,7 +186,7 @@ if (user.isValid()) {
 }
 ```
 
-#### Updating items
+### Updating items
 
 Use the `updateProperties` method to update the values of the properties on an
 instance with the appropriate validations. Then call `save` on the instance.
@@ -205,7 +205,7 @@ if (user.isValid()) {
 }
 ```
 
-#### Lifecycle events
+### Lifecycle events
 
 Both the base model 'constructors,' and model instances are EventEmitters. They
 emit events during the create/update/remove lifecycle of model instances. In all
@@ -236,7 +236,7 @@ Model-item instances emit these events:
  * beforeUpdate
  * update
 
-#### Associations
+### Associations
 
 Model has support for associations: including hasMany/belongsTo and
 hasOne/belongsTo. For example, if you had a `User` model with a single
@@ -359,7 +359,7 @@ book.save(function (err, data) {
 });
 ```
 
-##### 'Through' associations
+#### 'Through' associations
 
 'Through' associations allow a model to be associated with another *through* a
 third model. A good example would be a Team linked to Players through
@@ -393,7 +393,7 @@ and `get`, with the appropriate association name (not the model name). For
 example, in the case of the Team adding Players, you'd use `addPlayer` and
 `getPlayer`.
 
-##### Named associations
+#### Named associations
 
 Sometimes you need mutliple associations to the same type of model (e.g., I have
 lots of Friends and Relatives who are all Users). You can accomplish this in
@@ -412,7 +412,7 @@ The API for this is the same as with normal associations, using the `set`/`add`
 and `get`, with the appropriate association name (not the model name). For
 example, in the case of `Kids`, you'd use `addKid` and `getKids`.
 
-#### Querying
+### Querying
 
 Model uses a simple API for finding and sorting items. Again, it should look
 familiar to anyone who has used a similar ORM for looking up records. The only
@@ -421,7 +421,7 @@ asynchronous.
 
 Methods for querying are static methods on each model constructor.
 
-##### Finding a single item
+#### Finding a single item
 
 Use the `first` method to find a single item. You can pass it an id, or a set of
 query parameters in the form of an object-literal. In the case of a query, it
@@ -440,7 +440,7 @@ User.first({login: 'alerxst'}, function (err, data) {
 });
 ```
 
-##### Collections of items
+#### Collections of items
 
 Use the `all` method to find lots of items. Pass it a set of query parameters in
 the form of an object-literal, where each key is a field to compare, and the
@@ -477,7 +477,7 @@ Here are some more examples of queries:
 {foo: {lt: 2112}, bar: 'BAZ'}
 ```
 
-##### Comparison operators
+#### Comparison operators
 
 Here is the list of comparison operators currently supported:
 
@@ -503,7 +503,7 @@ Zooby.all({foo: {'like': 'b'}}, {nocase: true}, ...
 // The "bar" comparison will be case-sensitive, and the "foo" will not
 Zooby.all({or: [{foo: {'like': 'b'}}, {bar: 'baz'}]}, {nocase: ['foo']},
 ```
-#### More complex queries
+### More complex queries
 
 Model supports combining queries with OR and negating queries with NOT.
 
@@ -534,13 +534,13 @@ These OR and NOT queries can be nested and combined:
 {or: [{foo: {'like': 'b'}}, {foo: 'foo'}], not: {foo: 'baz'}}
 ```
 
-#### Options: sort, skip, limit
+### Options: sort, skip, limit
 
 The `all` API-call for querying accepts an optional options-object after the
 query-conditions for doing sorting, skipping to particular records (i.e., SQL
 OFFSET), and limiting the number of results returned.
 
-##### Sorting
+#### Sorting
 
 Set a 'sort' in that options-object to specifiy properties to
 sort on, and the sort-direction for each one:
@@ -560,7 +560,7 @@ User.all({updatedAt: {ne: null}}, {sort: {createdAt: 'asc', lastName: 'desc'}},
 });
 ```
 
-##### Simplified syntax for sorting
+#### Simplified syntax for sorting
 
 You can use a simplified syntax for specifying the sort. The default
 sort-direction is ascending ('asc'), so you can specify a property to sort on
@@ -574,7 +574,7 @@ sort-direction is ascending ('asc'), so you can specify a property to sort on
 {sort: ['createdAt', 'updatedAt', 'lastName', 'firstName']}
 ```
 
-##### Skip and limit
+#### Skip and limit
 
 The 'skip' option allows you to return records beginning at a certain item
 number. Using 'limit' will return you only the desired number of items in your
@@ -590,7 +590,7 @@ end up with a random subset instead of the items you want.
 
 ```
 
-#### Eager loading of associations (SQL adpaters only)
+### Eager loading of associations (SQL adpaters only)
 
 You can use the 'includes' option to specify second-order associations that
 should be eager-loaded in a particular query (avoiding the so-called N + 1 Query
@@ -624,7 +624,7 @@ Team.all({}, opts, function (err, data) {
 });
 ```
 
-##### Sorting results
+#### Sorting results
 
 Notice that it's possible to sort the eager-loaded associations in the above
 query. Just pass the association-names + properties in the 'sort' property.
@@ -635,7 +635,7 @@ associations. This will result in a list where the teams are initially sorted by
 name, and the contents of their 'players' list have the players sorted by given
 name, then first name.
 
-##### Checking for loaded associations
+#### Checking for loaded associations
 
 The eagerly fetched association will be in a property on the top-level item with
 the same name as the association (e.g., Players will be in `players`).
@@ -652,7 +652,7 @@ if (!someTeam.players) {
 }
 ```
 
-#### Migrations (SQL adapters only)
+### Migrations (SQL adapters only)
 
 Migrations are a convenient way to make changes to your SQL database schema over
 time, consistently and easily. They use a simply JavaScript API. This means
@@ -710,12 +710,12 @@ The `up` method makes the change (in this case, creating the table), and the
 `down` method reverses the change. The `down` method is used to roll back
 undesirable changes.
 
-##### Setting up your DB to use migrations
+#### Setting up your DB to use migrations
 
 Inside your app, run `geddy jake db:init` to create the 'migrations' table. You
 have to do this before you can use migrations.
 
-##### Creating a migration
+#### Creating a migration
 
 Migrations live in the db/migrations folder in your application. The name is in
 the form  YYYYMMDDHHMMSS_my_migration_name.js. Using these timestamps with
@@ -745,7 +745,7 @@ var ZerpDerp = function () {
 exports.ZerpDerp = ZerpDerp;
 ```
 
-##### Migrations API
+#### Migrations API
 
 `createTable(name<string>, definition<function>,
     callback<function>)`
@@ -813,7 +813,7 @@ this.renameColumn('distributors', 'address', 'city',
     function (err, data) {});
 ```
 
-##### Migrations for scaffolds
+#### Migrations for scaffolds
 
 Using Geddy's scaffold-generators will also create the appropriate migration
 file for you.
@@ -861,7 +861,7 @@ var CreateFrangs = function () {
 exports.CreateFrangs = CreateFrangs;
 ```
 
-##### Migrations FAQ
+#### Migrations FAQ
 
 Q: If I'm using Geddy-Passport for auth, how do I create the migrations for it?
 
@@ -974,5 +974,3 @@ A: The easiest thing to do would be to create a separate Geddy app, and use the
 generator scripts to create the migrations you want. Run those migrations in an
 empty DB, then import your data into that database using whatever tools your DB
 provides (e.g., `pg_dump`).
-
-

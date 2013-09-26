@@ -27,15 +27,15 @@ console.log(geddy.viewHelper.upperCase("some string"));
 
 * * *
 
-#### urlFor
+### urlFor
 `urlFor(options<String/Object>)`
 
 Returns a URL based on the `options` provided
 
-#####Options [String]:
+####Options [String]:
 - `'back'` [String] The 'back' string will return a URL that points to the last URL in history
 
-#####Options [Object]:
+####Options [Object]:
 - `relPath` [Boolean] If true, the relative URL is returned(Default: false)
 - `protocol` [String] The protocol to use(Default: What your Geddy instance is using('http' default))
 - `username` [String] Includes a username in the path. Requires `password` or it'll be ignored
@@ -51,11 +51,11 @@ Returns a URL based on the `options` provided
 - `fragment` [String] Appends a fragment to the end of the path/domain
 - `anchor` [String] Alias for `fragment`
 
-#####Notes:
+####Notes:
 - If `options` is a String it will just be returned, unless the String is equal to 'back'
 - Any other `options` added will be considered as a query to be appended to the URL
 
-#####Examples:
+####Examples:
 ```
 urlFor('http://google.com')
 // => 'http://google.com'
@@ -95,15 +95,15 @@ urlFor({controller: 'tasks', action: 'new', host: 'somehost.com', authToken: 'so
 
 * * *
 
-#### contentTag
+### contentTag
 `contentTag(tag<String>, content<String>, htmlOptions<Object>)`
 
 Returns an HTML element from a given `tag` and includes the `content` and all `htmlOptions`
 
-#####Custom HTML options:
+####Custom HTML options:
 - `data`[Array] The data attribute takes an Array containing data attributes you want, when parsed they each get parsed as a full data attribute(e,g: `data: {goTo: 'google.com'}` will be `data-go-to="google.com"`).
 
-#####Examples:
+####Examples:
 ```
 contentTag('p', 'this is some content')
 // => '<p>this is some content</p>'
@@ -138,7 +138,7 @@ contentTag('a', 'hey there', {href: 'http://google.com', data_go_to: 'http://goo
 
 ```
 
-#### selectTag
+### selectTag
 `selectTagString(optionsArray<Array>, selectedOption, htmlOptions<Object>)
 
 Creates a HTML select tag using the given `optionsArray` to create HTML option elements.
@@ -146,7 +146,7 @@ Creates a HTML select tag using the given `optionsArray` to create HTML option e
 `optionsArray` could be an array of strings, numbers or an object with value and text properties to be used for the value attribute and option element content respectively,
 along with an `attr` object which will include any other html options. (you can even pass `selected:true` and 'value:VALUE' with the `attr` object as well, but the outer ones, if there is any, will take precedence)
 
-#####Examples:
+####Examples:
 ```
 selectTag(['geddy', 'alex', 'neil'])
 // => '<select><option value="geddy">geddy</option><option value="alex">alex</option><option value="neil">neil</option></select>'
@@ -164,37 +164,37 @@ selectTag([{text: "Text 1", attrs: {value: 1, class: 'anoption', data: {thing: '
 
 * * *
 
-#### render
+### render
 `render` is a function that's only available on layout templates. It `render` the template content, which is inserted in the place where the `yield` function is called.
 
 * * *
 
-#### partial
+### partial
 `partial(partialURL<String>, data<Object>)`
 
 Partial takes a partialURL which is the location to a partial template and a data object which is the data to render the partial with(params, etc), then it renders the partial and puts the contents in place where the partial function was called.
 
 * * *
 
-#### truncate
+### truncate
 `truncate(string<String>, options<Integer/Object>)`
 
 Truncates a given `string` after a specified `length` if `string` is longer than `length`. The last character will be replaced with an `omission` for a total length not exceeding `length`.
 
-#####Options [Integer]:
+####Options [Integer]:
 - If an `options` is an integer it will be assumed that is the desired `length`
 
-#####Options [Object]:
+####Options [Object]:
 - `length [Integer]` Length the output string will be(Default: 30)
 - `len [Integer]` Alias for `length`
 - `omission [String]` Replace the last letters with an omission(Default: '...')
 - `ellipsis [String]` Alias for `omission`
 - `seperator [String/RegExp]` Break the truncated text at the nearest `seperator`
 
-#####Warnings:
+####Warnings:
 - Please be aware that truncating HTML elements may result in malformed HTML returned. If you'd like safe HTML truncation look at `truncateHTML`
 
-#####Examples:
+####Examples:
 ```
 runcate('Once upon a time in a world', {length: 10})
 // => 'Once up...'
@@ -220,20 +220,20 @@ truncate('<p>Once upon a time</p>', {length: 20})
 
 * * *
 
-#### truncateHTML
+### truncateHTML
 `truncateHTML(string<String>, options<Integer/Object>)`
 
 Truncates a given `string` after a specified `length` if `string` is longer than `length`. The lat character will be replace with an `omission` for a total length not exceeding `length`. If `once` is true, only the first string in the first HTML element will be truncated leaving others as they were.
 
-#####Options [Object]:
+####Options [Object]:
 - `once`[Boolean] If true only the first string in the first HTML element will be truncated(Default: false)
 
-#####Notes:
+####Notes:
 - All options available to `truncate` are available for `truncateHTML`
 - HTML elements are not included with the length of the truncation
 - HTML elements will not be truncated, so return value will always be safe for rendering
 
-#####Examples:
+####Examples:
 ```
 truncateHTML('<p>Once upon a time in a world</p>', {length: 10})
 // => '<p>Once up...</p>'
@@ -249,16 +249,16 @@ truncateHTML('<p>Once upon a time <small>in a world</small></p>', {length: 10, o
 
 * * *
 
-#### imageLink
+### imageLink
 `imageLink(source<String>, link<String/Object>, imageOptions<Object>, linkOptions<Object>)`
 
 Returns an anchor element to a given `link` with the given `linkOptions`, with the content being a image element to the given `source` and includes its `imageOptions`
 
-#####Notes:
+####Notes:
 - `linkto` is used on the backend so any `linkOption` will be used for `linkTo`
 - `imageTag` is used on the backend as well so any `imageOptions` will be used for `imageTag`
 
-#####Examples:
+####Examples:
 ```
 imageLink('images/google.png', 'http://google.com')
 // => '<a href="http://google.com"><img alt="images/google.png" src="images/google.png" /></a>'
@@ -274,15 +274,15 @@ imageLink('images/google.png', 'http://google.com', {alt: '', size: '40x50'})
 
 * * *
 
-#### imageTag
+### imageTag
 `imageTag(source<String>, htmlOptions<Object>)`
 
 Returns an image tag with the src to a `source` and includes all the given `htmlOptions`
 
-#####Custom HTML options:
+####Custom HTML options:
 - `size`[String] Takes a string including the width and height "{width}x{height}"(e,g: '40x50') or it can take a single string included an integer "{size}"(e,g: '40') The first being results in "height='50' width='40'" the second results in the height and width being the same value. _Note_: If the format doesn't comply, it will be ignored
 
-#####Examples:
+####Examples:
 ```
 imageTag('images/google.png')
 // => '<img alt="images/google.png" src="images/google.png" />'
@@ -302,12 +302,12 @@ imageTag('images/google.png', {alt: '', size: 'a string'})
 
 * * *
 
-#### styleLink
+### styleLink
 `styleLink(source<String>, htmlOptions<Object>)`
 
 Generates a style element pointing to `source` and includes all the given `htmlOptions`
 
-#####Examples:
+####Examples:
 ```
 styleLink('/css/styles.css')
 // => '<link href="/css/style.css" />'
@@ -319,12 +319,12 @@ styleLink('/css/styles.css', {type: 'text/javascript'})
 
 * * *
 
-#### scriptLink
+### scriptLink
 `scriptLink(source<String>, htmlOptions<Object>)`
 
 Generates a script element pointing to `source` and includes all the given `htmlOptions`
 
-#####Examples:
+####Examples:
 ```
 scriptLink('/js/script.js')
 // => '<script src="/js/script.js"></script>'
@@ -336,15 +336,15 @@ scriptLink('/js/script.js', {type: 'text/javascript'})
 
 * * *
 
-####
+### linkTo
 `linkTo(content<String>, options<String/Object>, htmlOptions<Object>)`
 
 Generates a link from the given `options`, then returns a anchor tag with the `content` and the `htmlOptions` provided
 
-#####Notes:
+####Notes:
 - If you do not want to escape html entities in `content`, set the `_escapeContent` option to false.
 
-#####Examples:
+####Examples:
 ```
 linkTo('some content', 'http://google.com')
 // => '<a href="http://google.com">some content</a>'
@@ -361,15 +361,15 @@ _escapeContent
 
 * * *
 
-#### urlFor
+### urlFor
 `urlFor(options<String/Object>)`
 
 Returns a URL based on the `options` provided
 
-#####Options [String]:
+####Options [String]:
 - `'back'` [String] The 'back' string will return a URL that points to the last URL in history
 
-#####Options [Object]:
+####Options [Object]:
 - `relPath` [Boolean] If true, the relative URL is returned(Default: false)
 - `protocol` [String] The protocol to use(Default: What your Geddy instance is using('http' default))
 - `username` [String] Includes a username in the path. Requires `password` or it'll be ignored
@@ -385,11 +385,11 @@ Returns a URL based on the `options` provided
 - `fragment` [String] Appends a fragment to the end of the path/domain
 - `anchor` [String] Alias for `fragment`
 
-#####Notes:
+####Notes:
 - If `options` is a String it will just be returned, unless the String is equal to 'back'
 - Any other `options` added will be considered as a query to be appended to the URL
 
-#####Examples:
+####Examples:
 ```
 urlFor('http://google.com')
 // => 'http://google.com'
@@ -429,15 +429,15 @@ urlFor({controller: 'tasks', action: 'new', host: 'somehost.com', authToken: 'so
 
 * * *
 
-#### contentTag
+### contentTag
 `contentTag(tag<String>, content<String>, htmlOptions<Object>)`
 
 Returns an HTML element from a given `tag` and includes the `content` and all `htmlOptions`
 
-#####Custom HTML options:
+####Custom HTML options:
 - `data`[Array] The data attribute takes an Array containing data attributes you want, when parsed they each get parsed as a full data attribute(e,g: `data: {goTo: 'google.com'}` will be `data-go-to="google.com"`).
 
-#####Examples:
+####Examples:
 ```
 contentTag('p', 'this is some content')
 // => '<p>this is some content</p>'
@@ -472,14 +472,14 @@ contentTag('a', 'hey there', {href: 'http://google.com', data_go_to: 'http://goo
 
 ```
 
-#### selectTag
+### selectTag
 `selectTagString(optionsArray<Array>, selectedOption, htmlOptions<Object>)`
 
 Creates a HTML select tag using the given `optionsArray` to create HTML option elements.
 
 `optionsArray` could be an array of strings, numbers or an object with value and text properties to be used for the value attribute and option element content respectively.
 
-#####Examples:
+####Examples:
 ```
 selectTag(['geddy', 'alex', 'neil'])
 // => '<select><option value="geddy">geddy</option><option value="alex">alex</option><option value="neil">neil</option></select>'
@@ -491,7 +491,7 @@ selectTag([{value: 1, text: "Text 1"}, {value: 2, text: "Text 2"}], 2)
 // => <select><option value="1">Text 1</option><option selected="selected" value="2">Text 2</option></select>
 ```
 
-#### displayFlash
+### displayFlash
 `displayFlash()`
 
 Displays a small banner automatically for items in the session flash -- e.g., if

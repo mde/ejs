@@ -2,20 +2,20 @@ Geddy uses the [Model](http://github.com/mde/model) module for its model layer. 
 
 * * *
 
-#### summary
+### summary
 Model uses a pretty simple syntax for defining a model. (It should look familiar to anyone who has used an ORM like ActiveRecord, DataMapper, Django's models, or SQLAlchemy.)
 
 * * *
 
-#### .defineProperties
+### .defineProperties
 `defineProperties(properties)`
 
 defines the properties for your model.
 
-##### properties
+#### properties
 - `properties [object]`: an object keyed by name of properties to define
 
-##### example
+#### example
 ```
 var User = function () {
   this.defineProperties({
@@ -29,15 +29,15 @@ var User = function () {
 
 * * *
 
-#### .property
+### .property
 `property(name, type, options)`
 
 defines a single property
 
-##### name
+#### name
 - `name [string]`: the name of the property
 
-##### type
+#### type
 - `type [string]`: the type of the property
 	- `'string'`
 	- `'text'`
@@ -49,10 +49,10 @@ defines a single property
 	- `'date'`
 	- `'time'`
 
-##### options
+#### options
 - `required [boolean]`: sets the property to be required
 
-##### examples
+#### examples
 ```
 this.property('login', 'string', {required: true});
 this.property('password', 'string', {required: true});
@@ -62,37 +62,37 @@ this.property('premium', 'boolean');
 
 * * *
 
-#### .validatesPresent
+### .validatesPresent
 `validatesPresent(property, options)`
 
 Sets up a validation to make sure that the property is present.
 
-##### property
+#### property
 - `property [string]`: the name of the property to validate
 
-##### options
+#### options
 - `on [string|array]`: specifies when validation happens (defaults to ['create', 'update'])
 - `message [string]`: a message to give the user if the validation fails
 
-##### example
+#### example
 ```
 this.validatesPresent('login');
 // makes sure that the login property is present
 ```
 
-#### .validatesAbsent
+### .validatesAbsent
 `validatesAbsent(property, options)`
 
 Sets up a validation to make sure that the property is not present.
 
-##### property
+#### property
 - `property [string]`: the name of the property to validate
 
-##### options
+#### options
 - `on [string|array]`: specifies when validation happens (defaults to ['create', 'update'])
 - `message [string]`: a message to give the user if the validation fails
 
-##### example
+#### example
 ```
 this.validatesAbsent('zerb');
 // makes sure that the zerb property is not present
@@ -100,22 +100,22 @@ this.validatesAbsent('zerb');
 
 * * *
 
-#### .validatesFormat
+### .validatesFormat
 `validatesFormat(property, regex, options)`
 
 Sets up a validation to make sure that the property is formatted correctly.
 
-##### property
+#### property
 - `property [string]`: the name of the property to validate
 
-##### regex
+#### regex
 - `regex [regex]`: a regular expression that the property value must pass
 
-##### options
+#### options
 - `on [string|array]`: specifies when validation happens (defaults to ['create', 'update'])
 - `message [string]`: a message to give the user if the validation fails
 
-##### example
+#### example
 ```
 this.validatesFormat('login', /[a-z]+/, {message: 'cannot contain numbers'});
 // makes sure that the login property does not contain numbers
@@ -123,22 +123,22 @@ this.validatesFormat('login', /[a-z]+/, {message: 'cannot contain numbers'});
 
 * * *
 
-#### .validatesLength
+### .validatesLength
 `validatesLength(property, options)`
 
 Sets up a validation to make sure that the property meets certain length requirements.
 
-##### property
+#### property
 - `property [string]`: the name of the property to validate
 
-##### options
+#### options
 - `min [number]`: the minimum length of the property
 - `max [number]`: the maximum length of the property
 - `is [number]:` the exact length of the property
 - `on [string|array]`: specifies when validation happens (defaults to ['create', 'update'])
 - `message [string]`: a message to give the user if the validation fails
 
-##### example
+#### example
 ```
 this.validatesLength('login', {min: 3});
 // makes sure that the login property is at least 3 characters long
@@ -153,22 +153,22 @@ this.validatesLength('login', {is: 3})
 
 * * *
 
-#### .validatesConfirmed
+### .validatesConfirmed
 `validatesConfirmed(property, param, options)`
 
 Sets up a validation to make sure that the property has been confirmed.
 
-##### property
+#### property
 - `property [string]`: the name of the property to validate
 
-##### param
+#### param
 - `param [string]`: the param required to match
 
-##### options
+#### options
 - `on [string|array]`: specifies when validation happens (defaults to ['create', 'update'])
 - `message [string]`: a message to give the user if the validation fails
 
-##### example
+#### example
 ```
 this.validatesConfirmed('password', 'confirmPassword');
 // confirms that password and confirmPassword are equal
@@ -176,22 +176,22 @@ this.validatesConfirmed('password', 'confirmPassword');
 
 * * *
 
-#### .validatesWithFunction
+### .validatesWithFunction
 `validatesWithFunction(property, fn, options)`
 
 Sets up a validation to make sure that the property has been confirmed.
 
-##### property
+#### property
 - `property [string]`: the name of the property to validate
 
-##### fn
+#### fn
 - `fn [function]`: a function which, when passed the value of the property, will return true or false
 
-##### options
+#### options
 - `on [string|array]`: specifies when validation happens (defaults to ['create', 'update'])
 - `message [string]`: a message to give the user if the validation fails
 
-##### example
+#### example
 ```
 this.validatesWithFunction('password', function (val) {
       // Something that returns true or false
@@ -202,15 +202,15 @@ this.validatesWithFunction('password', function (val) {
 
 * * *
 
-#### .hasOne
+### .hasOne
 `hasOne(model)`
 
 Sets up a has-one relationship between this model and another.
 
-##### model
+#### model
 - `model [string]`: the name of the model that this model has one of.
 
-##### example
+#### example
 ```
 this.hasOne('Profile');
 // sets up a has one relationship
@@ -219,15 +219,15 @@ this.hasOne('Profile');
 
 * * *
 
-#### .hasMany
+### .hasMany
 `hasMany(model)`
 
 Sets up a has-many relationship between this model and another.
 
-##### model
+#### model
 - `model [string]`: the pluralized name of the model that this model has many of.
 
-##### example
+#### example
 ```
 this.hasMany('Friends');
 // sets up a has many relationship
@@ -236,17 +236,17 @@ this.hasMany('Friends');
 
 * * *
 
-#### .belongsTo
+### .belongsTo
 `belongsTo(model)`
 
 Sets up a belongs-to relationship between this model and another. A belongs-to
 is often used as the inverse of a has-many or has-one. Note however that this
 is not required -- associations are unidirectional.
 
-##### model
+#### model
 - `model [string]`: the singular name of the model that this model belongs to.
 
-##### example
+#### example
 ```
 this.belongsTo('User');
 // sets up a belongs-to relationship
@@ -255,12 +255,12 @@ this.belongsTo('User');
 
 * * *
 
-#### .adapter
+### .adapter
 `this.adapter`
 
 Defines the database adapter for this model
 
-##### examples
+#### examples
 ```
 this.adapter = 'mongo';
 // makes this model use mongo for it's database
@@ -277,11 +277,11 @@ this.adapter = 'memory'
 
 * * *
 
-#### instance
+### instance
 
 Instance methods can be defined in the model definition as well.
 
-##### example
+#### example
 ```
 var User = function () {
 ...
@@ -295,27 +295,27 @@ var User = function () {
 
 * * *
 
-#### .isValid
+### .isValid
 `isValid()`
 
 Returns true if the model instance passes all validations, otherwise it returns false.
 
-##### example
+#### example
 ```
 user.isValid()
 ```
 
 * * *
 
-#### .save
+### .save
 `save(fn)`
 
 Saves the instance to the database.
 
-##### fn
+#### fn
 - `fn [function]`: the function to be called when saving is complete
 
-##### example
+#### example
 ```
 user.save(function (err, data) {
 // do things
@@ -325,15 +325,15 @@ user.save(function (err, data) {
 
 * * *
 
-#### .updateProperties
+### .updateProperties
 `updateProperties(properties)`
 
 Updates the properties of a model and asserts that they are valid; This method will not call save on the instance.
 
-##### properties
+#### properties
 - `properties [object]`: an object who's keys are property names and its values are the values to change the property to.
 
-##### example
+#### example
 ```
 user.updateProperties({
   login: 'alerxst'
@@ -341,55 +341,55 @@ user.updateProperties({
 // updates the login property and validates it
 ```
 
-#### .add
+### .add
 `.add{target_model_name}( instance )`
 
 If a model has a hasMany relationship established with another model, you can use this method to add instaces of one model to it’s “parent” model.
 
-##### target_model_name
+#### target_model_name
 - The name of the model you’d like to add
 
-##### instance
+#### instance
 - `instace [modelInstance]`: The instance to add
 
-##### example
+#### example
 ```
 var user = geddy.model.User.create(userParams);
 var post = geddy.model.Post.create(postParams);
 user.addPost(post);
 ```
 
-#### .set
+### .set
 `.set{target_model_name}( instance )`
 
 If a model has a hasOne relationship established with another model, you can use this method to add an instace of one model to it’s “parent” model.
 
-##### target_model_name
+#### target_model_name
 - The name of the model you’d like to set
 
-##### instance
+#### instance
 - `instace [modelInstance]`: The instance to set
 
-##### example
+#### example
 ```
 var user = geddy.model.User.create(userParams);
 var account = geddy.model.Account.create(accountParams);
 user.setAccount(account);
 ```
 
-#### .get
+### .get
 `.get{target_model_name}( fn )`
 
 If a model has a hasOne relationship established with another model, you can use this method to add an instace of one model to it’s “parent” model.
 
-##### target_model_name
+#### target_model_name
 - `hasMany`: the plural name of the model you’d like to get a collection of
 - `hasOne`: the singular name of the model you like to get an instance of
 
-##### fn
+#### fn
 - `fn [function]`: The function to call once the models are retrieved.
 
-##### example
+#### example
 ```
 var user = geddy.model.User.create(params);
 
@@ -406,7 +406,7 @@ user.getPosts(function (err, posts) {
 
 * * *
 
-#### static
+### static
 
 Static methods can be added by creating a method on the model definition object.
 
@@ -423,15 +423,15 @@ User.findByLogin = function (login, callback) {
 
 * * *
 
-#### .create
+### .create
 `create(params)`
 
 Creates a new model instance and returns it.
 
-##### params
+#### params
 - `params [object]`: an object whos keys are model properties
 
-##### example
+#### example
 ```
 var params = {
   login: 'alex'
@@ -444,18 +444,18 @@ var user = User.create(params);
 
 * * *
 
-#### .first
+### .first
 `first(query, options, fn)`
 
 Use the `first` method to find a single item. You can pass it an id, or a set of query parameters in the form of an object-literal. In the case of a query, it will return the first item that matches, according to whatever sort you've specified.
 
-##### query [string]
+#### query [string]
 - `query [string]`: if the query is a string, it will be assumed that it's an id
 
-##### query [object]
+#### query [object]
 - `query [object]`: if the query is an object, it will be interpreted as a Query object
 
-##### example
+#### example
 ```
 User.first('sdfs-asd-1', function (err, user) {
   // do stuff with user
@@ -469,18 +469,18 @@ User.first({login: 'alerxst'}, function (err, user) {
 
 * * *
 
-#### .all
+### .all
 `all(query, options, fn)`
 
 Use the `all` method to find lots of items. Pass it a set of query parameters in the form of an object-literal, where each key is a field to compare, and the value is either a simple value for comparison (equal to), or another object-literal where the key is the comparison-operator, and the value is the value to use for the comparison.
 
-##### query [object]
+#### query [object]
 - `query [object]`: if the query is an object, it will be interpreted as a Query object
 
-##### options
+#### options
 - `sort [object]`: each key is a property name, each value can either be `asc` or `desc`
 
-##### example
+#### example
 ```
 User.all({location: 'san francisco'}, function (err, users) {
   // do stuff with users
@@ -494,15 +494,15 @@ User.all({location: 'san francisco'}, {sort: {createdAt: 'desc'}}, function (err
 
 * * *
 
-#### .remove
+### .remove
 `remove(id, fn)`
 
 Remove an instance from the database by id.
 
-##### id
+#### id
 - `id [string]`: the id of the instance to be removed
 
-##### examples
+#### examples
 ```
 User.remove('abc-123', function (err, data) {
   // do something now that it's removed.
@@ -511,14 +511,14 @@ User.remove('abc-123', function (err, data) {
 
 * * *
 
-#### queries
+### queries
 
 Model uses a simple API for finding and sorting items. Again, it should look
 familiar to anyone who has used a similar ORM for looking up records. The only
 wrinkle with Model is that the API is (as you might expect for a NodeJS library)
 asynchronous.
 
-##### comparison operators
+#### comparison operators
 - `eql`: equal to
 - `ne`: not equal to
 - `gt`: greater than
@@ -530,7 +530,7 @@ asynchronous.
 A simple string-value for a query parameter is the same as 'eql'. `{foo: 'bar'}`
 is the same as `{foo: {eql: 'bar'}}`.
 
-##### combining queries
+#### combining queries
 Model supports combining queries with OR and negating queries with NOT.
 
 To perform an 'or' query, use an object-literal with a key of 'or', and an array
@@ -540,7 +540,7 @@ To negate a query with 'not', simply use a query-object where 'not' is the key,
 and the value is the set of conditions to negate.
 
 
-##### examples
+#### examples
 ```javascript
 {foo: 'BAR', bar: {ne: null}}
 // Where "foo" is 'BAR' and "bar" is not null
@@ -569,7 +569,7 @@ and the value is the set of conditions to negate.
 
 * * *
 
-#### events
+### events
 
 Both the base model 'constructors,' and model instances are EventEmitters. The
 emit events during the create/update/remove lifecycle of model instances. In all
