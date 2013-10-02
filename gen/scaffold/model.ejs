@@ -62,5 +62,4 @@ for (var i in properties) {
 <%= names.constructor.singular %>.someStaticProperty = 'YYZ';
 */
 
-exports.<%= names.constructor.singular %> = <%= names.constructor.singular %>;
-
+<%= names.constructor.singular %> = geddy.model.register('<%= names.constructor.singular %>', <%= names.constructor.singular %>);
