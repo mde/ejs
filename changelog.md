@@ -1,3 +1,14 @@
+### 0.10
++ Response API (i.e., `respond`/`respondTo`/`respondWith`)
++ Customizable error pages
++ API-formatted error responses
++ Updated router to Barista v0.10
++ Simplified Model export syntax
++ Migration fixes for up/down to specific point
++ Better stacktrace in logs for error responses
++ Geddy site accessibility
++ Using tlsopts for parsing SSL and SPDY options
+
 ### 0.9
 + Migrations for SQL databases
 + Custom validation scenarios

@@ -370,7 +370,7 @@ this.flash.alert('Check it out!');
 // Sets the 'alert' flash-message to 'Check it out!'
 
 this.flash.alert();
-// Returns 'This is fantastic!'
+// Returns 'Check it out!'
 ```
 
 * * *
@@ -393,7 +393,7 @@ this.flash.error('Yikes! Something wrong wrong.');
 // Sets the 'error' flash-message to 'Yikes! Something wrong wrong.'
 
 this.flash.error();
-// Returns 'This is fantastic!'
+// Returns 'Yikes! Something wrong wrong.'
 ```
 
 * * *
@@ -416,7 +416,7 @@ this.flash.success('Whoa! It worked.');
 // Sets the 'success' flash-message to 'Whoa! It worked.'
 
 this.flash.success();
-// Returns 'This is fantastic!'
+// Returns 'Whoa! It worked.'
 ```
 
 * * *
@@ -439,7 +439,7 @@ this.flash.info('FYI. Just sayin.');
 // Sets the 'info' flash-message to 'FYI. Just sayin.'
 
 this.flash.info();
-// Returns 'This is fantastic!'
+// Returns 'FYI. Just sayin.'
 ```
 
 * * *
