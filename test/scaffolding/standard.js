@@ -316,7 +316,20 @@
         }
         , function(err, res, body) {
           assert.strictEqual(err, null, err);
-          assert.strictEqual(res.statusCode, 404, 'Should get error 404 viewing nonexistant zooby');
+          assert.strictEqual(res.statusCode, 404, 'Should get error 404 viewing nonexistent zooby');
+          next();
+        });
+      };
+
+      tests['test ' + engine + ' static file'] = function (next) {
+        request({
+          method: 'GET'
+        , uri: baseUrl + '/js/jquery.min.js'
+        , timeout: 1000
+        }
+        , function(err, res, body) {
+          assert.strictEqual(err, null, err);
+          assert.strictEqual(res.statusCode, 200, 'Should get a 200 for a static file');
           next();
         });
       };
