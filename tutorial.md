@@ -136,8 +136,8 @@ Note: an ID property will *always* be created.
 
 This will be a short tutorial as scaffolding will do almost everything
 for us, I won't go into detail on what it does as it will be covered in
-exstensive detail in the [resources tutorial](#resources). The source
-for this tutorial can be found 
+exstensive detail in the [resources tutorial](#resource). The source
+for this tutorial can be found
 [here](https://github.com/mde/geddy/tree/master/examples/todo_app).
 
 First we'll create our application, this will create a base so we can
@@ -228,7 +228,7 @@ Here we are making it so the title property is required and have a
 minumum of 5 characters. We also made it so the status acts like a
 boolean attribute but uses custom names instead of true/false. We should
 also change our `edit` and `add` views to limit the options, but we will
-do it as part of the [resources tutorial](#resources), for now we will
+do it as part of the [resources tutorial](#resource), for now we will
 leave the views the way they are.
 
 Now that we've made the needed changes, restart Geddy to update our
@@ -237,7 +237,7 @@ to edit and test the validation rules. We've got a good todo application
 running and didn't really have to do much. Scaffolding is very good when
 you need something simple to get you started. To learn more about
 controllers and views keep reading and follow the [resources
-tutorial](#resources).
+tutorial](#resource).
 
 ### Without scaffolding
 
