@@ -3,7 +3,24 @@ var assert = require('assert')
   , <%= names.constructor.singular %> = geddy.model.<%= names.constructor.singular %>;
 
 tests = {
-  'test stub, replace with your own passing test': function () {
+
+  'after': function (next) {
+    // cleanup DB
+    <%= names.constructor.singular %>.remove({}, function (err, data) {
+      if (err) { throw err; }
+      next();
+    });
+  }
+
+, 'simple test if the model saves without a error': function (next) {
+    var <%= names.constructor.singular.toLowerCase()  %> = <%= names.constructor.singular %>.create({});
+    <%= names.constructor.singular.toLowerCase() %>.save(function (err, data) {
+      assert.equal(err, null);
+      next();
+    });
+  }
+
+, 'test stub, replace with your own passing test': function () {
     assert.equal(true, false);
   }
 
