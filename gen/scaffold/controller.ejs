@@ -17,12 +17,17 @@ var <%= names.constructor.plural %> = function () {
     var self = this
       , <%= names.property.singular %> = geddy.model.<%= names.constructor.singular %>.create(params);
 
-    <%= names.property.singular %>.save(function(err, data) {
-      if (err) {
-        throw err;
-      }
-      self.respondWith(<%= names.property.singular %>, {status: err});
-    });
+    if (!<%= names.property.singular %>.isValid()) {
+      this.respondWith(<%= names.property.singular %>);
+    }
+    else {
+      <%= names.property.singular %>.save(function(err, data) {
+        if (err) {
+          throw err;
+        }
+        self.respondWith(<%= names.property.singular %>, {status: err});
+      });
+    }
   };
 
   this.show = function (req, resp, params) {
