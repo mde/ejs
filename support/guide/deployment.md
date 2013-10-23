@@ -297,6 +297,7 @@ Now remove `secrets.json` from your `.gitignore` file and push it to Heroku.
 
 For more information about deploying and supporting Node Apps on Heroku see the [Getting Started with Node.js on Heroku](https://devcenter.heroku.com/articles/nodejs) article.
 
-#### My app still does not boot
+#### Debugging Heroku Apps
 
-Don't worry! A good point to start is to enable stack traces in the production mode to see in the logs from heroku what is going on: in `config/production.js` set `detailedErrors` to `true`.
+Set `detailedErrors` to `true` in your `config/production.js` to get more detail in your logs. Then run `heroku logs` from your app directory to see what went wrong on Heroku.
+
