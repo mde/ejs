@@ -230,7 +230,7 @@ Your app should now be configured for the database add-on.
 
 #### Secrets
 
-If your app uses sessions or auth, you'll need to push your `secrets.json` file to Heroku. To do this securely, you'll have to use environment variables.
+If your app uses sessions or auth, you'll need to push your `secrets.json` file to Heroku. If you have no session type defined for production, you will also need a secret as the setting defaults to cookies. To do this securely, you'll have to use environment variables.
 
 First, open up `secrets.json` and add each secret into your `.env` file.
 
@@ -296,3 +296,7 @@ Finally, replace the secrets in your `secrets.json` with `EJS`:
 Now remove `secrets.json` from your `.gitignore` file and push it to Heroku.
 
 For more information about deploying and supporting Node Apps on Heroku see the [Getting Started with Node.js on Heroku](https://devcenter.heroku.com/articles/nodejs) article.
+
+#### My app still does not boot
+
+Don't worry! A good point to start is to enable stack traces in the production mode to see in the logs from heroku what is going on: in `config/production.js` set `detailedErrors` to `true`.
