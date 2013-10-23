@@ -1,19 +1,28 @@
 
 namespace('env', function () {
-  task('init', {async: true}, function () {
+  task('init', ['model', 'controller', 'app'], function () {
+    jake.addListener('complete', function (e) {
+      jake.Task['env:cleanup'].invoke();
+    });
+  });
+
+  task('config', function () {
     var cfg = {};
     if (process.env.environment) {
       cfg.environment = process.env.environment;
     }
-
-    jake.addListener('complete', function (e) {
-      jake.Task['env:cleanup'].invoke();
-    });
-
     geddy.config = require('../../lib/config').readConfig(cfg);
-    geddy.model = require('model');
-    geddy.controller = require('../../lib/controller');
+  });
 
+  task('model', ['config'], function () {
+    geddy.model = require('model');
+  });
+
+  task('controller', ['config'], function () {
+    geddy.controller = require('../../lib/controller');
+  });
+
+  task('app', ['config'], {async: true}, function () {
     require('../../lib/init').init(geddy, function () {
       complete();
     });

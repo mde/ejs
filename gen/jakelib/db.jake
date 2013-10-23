@@ -82,22 +82,71 @@ namespace('db', function () {
     });
   });
 
-  task('init', ['env:init', 'createMigrationModel'], {async: true}, function () {
-    var modelName = 'Migration'
-      , createTask = jake.Task['db:createTable'];
+  //task('init', ['env:init', 'createMigrationModel'], {async: true}, function () {
+  task('init', ['env:model'], {async: true}, function () {
 
-      console.log('Initializing DB for ' + geddy.config.environment + ' environment...');
-      if (geddy.model.defaultAdapter == 'memory') {
-        fail('Please set geddy.model.defaultAdapter to use a SQL adapter');
-      }
+    var packagePath = path.join(__dirname,
+            '../../node_modules/model/package.json')
+      , packageFile = fs.readFileSync(packagePath).toString()
+      , deps = JSON.parse(packageFile).devDependencies
+      , adapters = require(path.join(__dirname,
+            '../../node_modules/model/lib/adapters'))
+      , adapter = adapters.getAdapterInfo(geddy.config.model.defaultAdapter)
+      , lib
+      , libVersion
+      , cmd;
 
-      createTask.once('complete', function () {
-        var dir = path.join(process.cwd(), 'db', 'migrations');
-        console.log('Created ' + dir);
-        jake.mkdirP(dir);
-        complete();
+    if (!adapter) {
+      fail('This environment has no valid DB adapter.');
+    }
+
+    console.log('Setting up DB supprt for ' + adapter.name +
+        ' adapter, ' +
+        geddy.config.environment + ' environment...');
+
+    lib = adapter.lib;
+    if (lib) {
+      lib += '@' + deps[lib];
+      cmd = 'npm install ' + lib;
+
+      console.log('Installing ' + lib + '...');
+
+      jake.exec(cmd, {printStdout: true}, function () {
+        var createMigrationModelTask;
+
+        // SQL DB -- set up for migrations
+        if (adapter.type == 'sql') {
+          createMigrationModelTask = jake.Task['db:createMigrationModel'];
+          createMigrationModelTask.once('complete', function () {
+            var modelName = 'Migration'
+              , createTableTask = jake.Task['db:createTable'];
+
+            console.log('Setting up Migrations for ' +
+                geddy.config.environment + ' environment...');
+
+            createTableTask.once('complete', function () {
+              var dir = path.join(process.cwd(), 'db', 'migrations');
+              console.log('Created ' + dir);
+              jake.mkdirP(dir);
+              complete();
+            });
+            createTableTask.invoke(modelName);
+          });
+          createMigrationModelTask.invoke();
+        }
+        // Non-relational, all done
+        else {
+          complete();
+        }
       });
-      createTask.invoke(modelName);
+    }
+    else {
+      console.log('(Nothing to install.)');
+      complete();
+    }
+
+    return;
+
   });
 
   // targetMigration can be a full migration-name, or the
