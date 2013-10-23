@@ -22,7 +22,7 @@ var config = {
 , hostname: null
 , port: 4000
 , model: {
-    defaultAdapter: 'memory'
+    defaultAdapter: 'filesystem'
   }
 , sessions: {
     store: 'memory'
