@@ -15,7 +15,6 @@
     "utilities": "0.0.x",
     "model": "0.3.x",
     "barista": "0.1.x",
-    "socket.io": "0.9.x",
     "mime": "1.2.x",
     "tlsopts": "0.0.1"
   },
