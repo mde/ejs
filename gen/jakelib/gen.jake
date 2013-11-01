@@ -59,10 +59,10 @@ namespace('gen', function () {
 
     i = -1;
     while (++i < itemsArr.length) {
-      value = itemsArr[i];
-      name = utils.string.camelize(value.replace(/:.*/g, ''));
-      type = value.replace(/[a-zA-Z]*:?/, '');
-      args = type.replace(/[a-zA-Z]*:?/, '');
+      value = itemsArr[i].split(':');
+      name = utils.string.camelize(value.shift());
+      type = value.shift() || null;
+      args = value.shift() || null;
 
       // Take off any args on the type
       type = type.replace(/:.*/g, '');
