@@ -20,7 +20,7 @@ var fs = require('fs')
   , md = require('marked')
   , hljs = require('highlight.js');
 
-var BRANCH = 'v0.10';
+var BRANCH = 'v0.11';
 
 md.setOptions({
   gfm: true
