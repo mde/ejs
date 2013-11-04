@@ -212,8 +212,31 @@ namespace('gen', function () {
     console.log('Created app ' + name + '.');
   });
 
+  task('upgrade', {async: true}, function () {
+    var envs = ['development', 'production']
+      , doIt = function () {
+          var installTask;
+          if ((env = envs.shift())) {
+            console.log('env', env);
+            process.env.environment = env;
+            jake.Task['env:config'].reenable();
+            jake.Task['env:model'].reenable();
+            installTask = jake.Task['db:install'];
+            installTask.reenable();
+            installTask.on('complete', function () {
+              doIt();
+            });
+            installTask.invoke();
+          }
+          else {
+            complete();
+          }
+        };
+    doIt();
+  });
+
   // Upgrades an app with older scaffolding
-  task('upgrade', function (engine, realtime) {
+  task('upgradePrevious', function (engine, realtime) {
     var basePath = path.join(genDirname, 'base')
       , appViewDir = path.join('app', 'views')
       , appLayoutDir = path.join('app', 'views', 'layouts')

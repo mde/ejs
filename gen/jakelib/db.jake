@@ -11,54 +11,54 @@ var cwd = process.cwd()
 namespace('db', function () {
 
   var createOrDrop = function (action, name, cb) {
-    var msg = action == 'create' ? 'Creating' : 'Dropping'
-      , modelName
-      , doAction
-      , adapters
-      , adapter;
+        var msg = action == 'create' ? 'Creating' : 'Dropping'
+          , modelName
+          , doAction
+          , adapters
+          , adapter;
 
-    if (typeof name == 'string') {
-      if (name.indexOf('%') > -1) {
-        modelNames = name.split('%');
-      }
-      else {
-        modelNames = [name];
-      }
-    }
-    else {
-      modelNames = name;
-    }
-
-    doAction = function () {
-      if ((m = modelNames.shift())) {
-
-        // Make sure this is a correct model-name
-        m = utils.string.getInflections(m).constructor.singular;
-        if (!geddy.model[m]) {
-          throw new Error(m + ' is not a known model.');
-        }
-
-        adapter = geddy.model[m].adapter;
-        if (adapter) {
-          console.log(msg + ' table for ' + m);
-          adapter[action + 'Table'](m, function (err, data) {
-            if (err) { throw err }
-            doAction();
-          });
+        if (typeof name == 'string') {
+          if (name.indexOf('%') > -1) {
+            modelNames = name.split('%');
+          }
+          else {
+            modelNames = [name];
+          }
         }
         else {
-          doAction();
+          modelNames = name;
         }
-      }
-      else {
-        complete();
-      }
-    };
-    // Defer until associations are set up
-    setTimeout(function () {
-      doAction();
-    }, 0);
-  };
+
+        doAction = function () {
+          if ((m = modelNames.shift())) {
+
+            // Make sure this is a correct model-name
+            m = utils.string.getInflections(m).constructor.singular;
+            if (!geddy.model[m]) {
+              throw new Error(m + ' is not a known model.');
+            }
+
+            adapter = geddy.model[m].adapter;
+            if (adapter) {
+              console.log(msg + ' table for ' + m);
+              adapter[action + 'Table'](m, function (err, data) {
+                if (err) { throw err }
+                doAction();
+              });
+            }
+            else {
+              doAction();
+            }
+          }
+          else {
+            complete();
+          }
+        };
+        // Defer until associations are set up
+        setTimeout(function () {
+          doAction();
+        }, 0);
+      };
 
   task('dropTable', ['env:init', 'createMigrationModel'], {async: true},
       function (name) {
@@ -82,9 +82,7 @@ namespace('db', function () {
     });
   });
 
-  //task('init', ['env:init', 'createMigrationModel'], {async: true}, function () {
-  task('init', ['env:model'], {async: true}, function () {
-
+  task('install', ['env:model'], {async: true}, function () {
     var packagePath = path.join(__dirname,
             '../../node_modules/model/package.json')
       , packageFile = fs.readFileSync(packagePath).toString()
@@ -96,11 +94,14 @@ namespace('db', function () {
       , libVersion
       , cmd;
 
+    // Hacky, save this where db:init can find it
+    geddy.config.model.defaultAdapterInfo = adapter;
+
     if (!adapter) {
       fail('This environment has no valid DB adapter.');
     }
 
-    console.log('Setting up DB supprt for ' + adapter.name +
+    console.log('Setting up DB support for ' + adapter.name +
         ' adapter, ' +
         geddy.config.environment + ' environment...');
 
@@ -110,43 +111,48 @@ namespace('db', function () {
       cmd = 'npm install ' + lib;
 
       console.log('Installing ' + lib + '...');
-
       jake.exec(cmd, {printStdout: true}, function () {
-        var createMigrationModelTask;
-
-        // SQL DB -- set up for migrations
-        if (adapter.type == 'sql') {
-          createMigrationModelTask = jake.Task['db:createMigrationModel'];
-          createMigrationModelTask.once('complete', function () {
-            var modelName = 'Migration'
-              , createTableTask = jake.Task['db:createTable'];
-
-            console.log('Setting up Migrations for ' +
-                geddy.config.environment + ' environment...');
-
-            createTableTask.once('complete', function () {
-              var dir = path.join(process.cwd(), 'db', 'migrations');
-              console.log('Created ' + dir);
-              jake.mkdirP(dir);
-              complete();
-            });
-            createTableTask.invoke(modelName);
-          });
-          createMigrationModelTask.invoke();
-        }
-        // Non-relational, all done
-        else {
-          complete();
-        }
+        complete();
       });
     }
     else {
       console.log('(Nothing to install.)');
       complete();
     }
+  });
 
-    return;
+  task('init', ['db:install'], {async: true}, function () {
+    var adapter = geddy.config.model.defaultModelInfo // From db:install
+      , createMigrationModelTask;
 
+    if (!adapter) {
+      fail('This environment has no valid DB adapter.');
+    }
+
+    // SQL DB -- set up for migrations
+    if (adapter.type == 'sql') {
+      createMigrationModelTask = jake.Task['db:createMigrationModel'];
+      createMigrationModelTask.once('complete', function () {
+        var modelName = 'Migration'
+          , createTableTask = jake.Task['db:createTable'];
+
+        console.log('Setting up Migrations for ' +
+            geddy.config.environment + ' environment...');
+
+        createTableTask.once('complete', function () {
+          var dir = path.join(process.cwd(), 'db', 'migrations');
+          console.log('Created ' + dir);
+          jake.mkdirP(dir);
+          complete();
+        });
+        createTableTask.invoke(modelName);
+      });
+      createMigrationModelTask.invoke();
+    }
+    // Non-relational, all done
+    else {
+      complete();
+    }
   });
 
   // targetMigration can be a full migration-name, or the
