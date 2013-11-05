@@ -122,7 +122,7 @@ namespace('db', function () {
   });
 
   task('init', ['db:install'], {async: true}, function () {
-    var adapter = geddy.config.model.defaultModelInfo // From db:install
+    var adapter = geddy.config.model.defaultAdapterInfo // From db:install
       , createMigrationModelTask;
 
     if (!adapter) {
