@@ -61,8 +61,8 @@ namespace('gen', function () {
     while (++i < itemsArr.length) {
       value = itemsArr[i].split(':');
       name = utils.string.camelize(value.shift());
-      type = value.shift() || null;
-      args = value.shift() || null;
+      type = value.shift() || '';
+      args = value.shift() || '';
 
       // Take off any args on the type
       type = type.replace(/:.*/g, '');
