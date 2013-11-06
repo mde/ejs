@@ -1,3 +1,17 @@
+### 0.11
++ New Model adapters: MySQL, SQLite, LevelDB, Filesystem
++ Streaming query results from Model
++ Model adapters require local installation of DB lib in app
++ Default model adapter for development is Filesystem
++ No-model configuration option
++ Opts for response.sendFile
++ Improved docs for Azure and Heroku deployment
++ Updated Swig adapter for latest Swig version
++ Realtime fixes
++ Fix for circular references in models
++ Model test stubs
++ Fixed numeric property 'failbotage'
+
 ### 0.10
 + Response API (i.e., `respond`/`respondTo`/`respondWith`)
 + Customizable error pages
