@@ -52,6 +52,10 @@ code {
   margin: 5px;
 }
 
+#flash-container {
+  margin-top: 48px;
+}
+
 @media (max-width:480px) {
   .hero-unit .pull-right {
     float: none;
