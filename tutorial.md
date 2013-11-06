@@ -1,9 +1,8 @@
 ### Introduction
 
-In this tutorial we'll learn how to use Geddy by creating a simple todo
+In this tutorial we'll learn how to use Geddy by creating a simple To-Do
 manager applciation. We will create two applications one using
-scaffolding and one using resources. See the [finished
-version](https://github.com/mde/geddy/tree/master/examples/todo_app).
+scaffolding and one using resources.
 
 #### In this tutorial we'll cover:
 
