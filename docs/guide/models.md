@@ -1,8 +1,13 @@
 Model currently implements adapters for:
 
 * Postgres
+* MySQL
+* SQLite
 * Riak
 * MongoDB
+* LevelDB
+* In-memory
+* Filesystem
 
 #### Defining models
 
@@ -37,7 +42,7 @@ User.prototype.someOtherMethod = function () {
   // Do some other stuff
 };
 
-exports.User = User;
+User = model.register('User', User);
 ```
 
 ##### Abbreviated syntax
@@ -100,7 +105,7 @@ Here's a list of supported validation methods:
  * validatesConfirmed -- validates a match against another named parameter
  * validatesWithFunction -- uses an arbitrary function to validate
 
-##### Common options
+###### Common options
 
 You can specify a custom error message for when a validation fails using the
 'message' option:
@@ -169,7 +174,6 @@ console.log(user.isValid());
 console.log(user.errors.password);
 ```
 
-
 #### Saving items
 
 After creating the instance, call the `save` method on the instance. This method
@@ -235,6 +239,31 @@ Model-item instances emit these events:
  * save
  * beforeUpdate
  * update
+
+Model-item instances also have the following lifecycle methods:
+
+ * afterCreate
+ * beforeValidate
+ * afterValidate
+ * beforeUpdateProperties
+ * afterUpdateProperties
+ * beforeSave
+ * afterSave
+ * beforeUpdate
+ * afterUpdate
+
+If these methods are defined, they will be called at the appropriate time:
+```
+var User = function () {
+  this.property('name', 'string', {required: false});
+
+  // Lowercase the name before validating
+  this.beforeValidate = function () {
+    // `this` will refer to the model instance
+    this.name = this.name.toLowerCase();
+  };
+};
+```
 
 #### Associations
 
@@ -383,8 +412,8 @@ var Team = function () {
 };
 
 var Membership = function () {
-  this.hasMany('Memberships');
-  this.hasMany('Teams');
+  this.belongsTo('User');
+  this.belongsTo('Team');
 };
 ```
 
@@ -448,6 +477,14 @@ value is either a simple value for comparison (equal to), or another
 object-literal where the key is the comparison-operator, and the value is the
 value to use for the comparison.
 
+In SQL adapters, you can pass a callback to the `all` method if you want the
+results buffered and returned all at once, or steam the results using events.
+
+###### Using a callback
+
+Pass your callback function as a final argument. Callbacks use the normal `(err,
+data)` pattern. Here's an example:
+
 ```javascript
 var users
   , dt;
@@ -466,7 +503,41 @@ User.all({createdAt: {gt: dt}, function (err, data) {
 });
 ```
 
-Here are some more examples of queries:
+###### Streaming results with events (SQL adapters only)
+
+The `all` method returns an EventedQueryProcessor which emits the normal 'data',
+'end', and 'error' events. Each 'data' event will return a single model-item.
+
+NOTE: Do not pass a callback to the `all` method if you're streaming -- passing
+a callback will cause the results to be buffered internally. If you need
+something to happen when the stream ends, use the 'end' event.
+
+```javascript
+var users
+  , dt
+  , processor;
+
+dt = new Date();
+dt.setHours(dt.getHours() - 24);
+
+// Find all the users created since yesterday
+processor = User.all({createdAt: {gt: dt});
+processor.on('data', function (user) {
+  console.log('Found user');
+  console.dir(user);
+});
+processor.on('error', function (err) {
+  console.log('whoops');
+  throw err;
+});
+processor.on('end', function () {
+  console.log('No more users');
+});
+```
+
+###### Examples of queries
+
+Here are a few more examples of queries you can pass to the `all` method:
 
 ```javascript
 // Where "foo" is 'BAR' and "bar" is not null
