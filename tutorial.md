@@ -193,9 +193,18 @@ $ geddy
 Then open your browser and navigate to [localhost:4000](http://localhost:4000/),
 and you'll find the hello world page.
 
-So now we want to create a scaffold to manage our to-do items. We will
-create a 'title' and 'status' property so that we have some attributes to
-use.
+#### Optional: check out your app on a mobile phone
+
+-   Open up your favorite phone simulator and go to
+    [http://localhost:4000](http://localhost:4000)
+-   OR resize your browser to at most 480px wide
+-   OR set your app to listen on an external IP address
+    and use your actual phone
+
+### Create a resource
+
+So now we want to create a resource for our ToDo items. We will create a
+'title' and 'status' property so that we have some attributes to use.
 
 ```
 $ geddy gen scaffold to_do title:default status
@@ -208,13 +217,16 @@ $ geddy
 ```
 
 Open your browser to [localhost:4000/to_dos](http://localhost:4000/to_dos)
-and you'll get a list of the to_dos which should be empty. Go ahead and
-look around, you can create show edit and delete to_do items. We're going
-to make a few changes though.
+and you'll get a list of the to_dos which should be empty.
 
-The first thing we'll do is to add some validation to our ToDo model. So
-open 'app/models/to_do.js' in your editor and add the following lines
-anywhere inside the constructor function
+Go ahead and look around, you can create show edit and delete to_do items. We're
+going to make a few changes though.
+
+#### Add validation
+
+The first thing we'll do is to add some validation to our ToDo model. So open
+'app/models/to_do.js' in your editor and add the following lines anywhere inside
+the constructor function
 
 ```
 var ToDo = function () {
@@ -228,413 +240,184 @@ var ToDo = function () {
   }, {message: "Status must be 'open' or 'done.'"});
 ...
 };
-exports.ToDo = ToDo;
+ToDo = geddy.model.register('ToDo', ToDo);
 ```
 
-Here we are making it so the title property is required and have a
-minumum of 5 characters. We also made it so the status acts like a boolean
-attribute but uses custom names instead of true/false.
+Here we are making it so the title property is required and have a minumum of 5
+characters. We also made it so the status acts like a boolean attribute but uses
+custom names instead of true/false. The 'message' property passed in the opts
+sets the error message that will show in the flash-message when an item fails
+validation.
 
 We will later also change our `edit` and `add` views to limit the options, but
 for now we will leave the views the way they are.
 
-The auto process-restart should pick up the changes we've just made, so go and
-play with the app again. Create a to-do item, try to edit and test the
-validation rules. We've got a good to-do application running and didn't really
-have to do much. Scaffolding is very good when you need something simple to get
-you started.
+The auto process-restart for development-mode should pick up the changes we've
+just made, so go and play with the app again.
 
-#### Optional: check out your app on a mobile phone
+Create a few ToDo items, try to edit them, and test the validation rules. We've
+got a good ToDo application running and didn't really have to do much.
+Scaffolding is very good when you need something simple to get you started.
 
--   Open up your favorite phone simulator and go to
-    [http://localhost:4000](http://localhost:4000)
--   OR resize your browser to at most 480px wide
--   OR set your app to listen on an external IP address
-    and use your actual phone
+### Create an association
 
-### Resource
-
-Now, let's get started building our To Do list manager. First, we'll
-need to generate the `to_do` resource. We do this using the `geddy gen`
-command as well:
+Now we're going to create another resource, and relate it to our ToDos. We'll
+assume that a ToDo has a number of steps to finish before the ToDo can be
+completed. Let's scaffold out our Step resource.
 
 ```
-$ geddy gen resource to_do title:string status
+$ geddy gen scaffold step title:default description:text status
 ```
 
-What did that do?
-
--   It generated a `to_do` model including the given model properties
--   It generated a `to_dos` controller
--   It created a `to_dos` view directory. Please note the folder is empty
-    since resource won't generate any views for you.
--   It generated these routes from a resource route:
-    -   `/to_dos` (GET)
-    -   `/to_dos` (POST)
-    -   `/to_dos/add` (GET)
-    -   `/to_dos/:id/edit` (GET)
-    -   `/to_dos/:id` (GET)
-    -   `/to_dos/:id` (PUT)
-    -   `/to_dos/:id` (DELETE)
-
-### Views
-
-To start creating our views, create a few files in `app/views/to_dos`,
-those being:
-
--   `_form.html.ejs`
--   `add.html.ejs`
--   `edit.html.ejs`
--   `index.html.ejs`
--   `show.html.ejs`
-
-We won't go into to much detail here, as it should be pretty self-explanatory
-but I'll go through some things.
-
-First we'll create the `_form.html.ejs` partial template, this will hold
-all the form data for edit and add actions .
+Now we can create Steps to link to a particular ToDo. Let's quickly add some
+validation to ensure each Step has at least a 'title'. Add this to your Step
+model (app/models/step.js):
 
 ```
-<%
-  var isUpdate = params.action == 'edit'
-    , formTitle = isUpdate ? 'Update this To Do Item' : 'Create a new To Do Item'
-    , action = isUpdate ? to_doPath(params.id) + '?_method=PUT' : to_dosPath
-    , deleteAction = isUpdate ? to_doPath(params.id) + '?_method=DELETE' : ''
-    , btnText = isUpdate ? 'Update' : 'Add'
-    , doneSelectAttributes = isUpdate && to_do.status === 'done' ? "selected=true" : ''
-    , openSelectAttributes = isUpdate && to_do.status === 'open' ? "selected=true" : ''
-    , titleValue = isUpdate ? to_do.title : ''
-    , errors = params.errors;
-%>
-<form id="to_do-form" class="form-horizontal" action="<%= action %>" method="POST">
-  <fieldset>
-    <legend><%= formTitle %></legend>
-    <div class="control-group">
-      <label for="title" class="control-label">Title</label>
-      <div class="controls">
-        <%- contentTag('input', titleValue, {type:'text', class:'span6', placeholder:'enter title', name:'title'}) %>
-        <%  if (errors) { %>
-          <p>
-          <% for (var p in errors) { %>
-            <div><%=  errors[p];  %></div>
-          <% } %>
-          </p>
-        <% } %>
-      </div>
-    </div>
-    <% if (isUpdate) { %>
-      <div class="control-group">
-        <label for="status" class="control-label">Status</label>
-        <div class="controls">
-          <select name="status" class="span6">
-            <option <%=openSelectAttributes%>>open</option>
-            <option <%=doneSelectAttributes%>>done</option>
-          </select>
-        </div>
-      </div>
-    <% } %>
-    <div class="form-actions">
-      <%- contentTag('input', btnText, {type: 'submit', class: 'btn btn-primary'}) %>
-      <% if (isUpdate) { %>
-        <%- contentTag('button', 'Remove', {type: 'submit', formaction: deleteAction, formmethod: 'POST', class: 'btn btn-danger'}) %>
-      <% } %>
-    </div>
-  </fieldset>
-</form>
-```
-
-Here we created a couple variables so we can tell if it's for a edit or
-add action, then if we have any errors we dislay them. Also we are using
-a couple view helpers (contentTag) which are helpful with dealing with
-assets, links, etc. You can read more about our view helpers
-[here](https://github.com/mde/geddy/wiki/View-Helpers).
-
-Now that we've created a base for our add and edit actions, we'll do
-them now. They're simple they just use the \_form partial. Add the
-following code to `add.html.ejs`
-
-```
-<div class="hero-unit">
-  <%= partial('_form', {params: params}); %>
-</div>
-```
-
-The edit view is slightly different because we will need to pass the
-to_do object to the partial. Modify `app/views/to_dos/edit.html.ejs` with
-the following code:
-
-```
-<div class="hero-unit">
-  <%= partial('_form', {params: params, to_do: to_do}); %>
-</div>
-```
-
-Now that we have views that will create to_do items let's add a simple
-`show.html.ejs` just so we can test everything end to end. In the
-following code I just loop through the params.
-
-```
-<div class="hero-unit">
-  <%- linkTo('Edit this to_do', editToDoPath(params.id), {class: 'btn pull-right'}); %>
-  <h3>Params</h3>
-  <ul>
-  <% for (var p in to_do) { %>
-    <li><%= p + ': ' + params[p]; %></li>
-  <% } %>
-  </ul>
-</div>
-```
-
-Finally we need to create the index action to link everything together.
-
-```
-<div class="hero-unit">
-  <h2>To Do List</h2>
-  <%- linkTo('Create a new To Do', addToDoPath, {class: 'btn pull-right'}) %>
-</div>
-<% if (to_dos && to_dos.length) { %>
-  <% for (var i in to_dos) { %>
-  <div class="row to_do-item">
-    <div class="span8">
-        <h3><%- linkTo(to_dos[i].title, to_doPath(to_dos[i].id)) %></h3>
-    </div>
-    <div class="span4"><h3><i class="icon-list-alt"></i><%= to_dos[i].status; %></h3></div>
-  </div>
-  <% } %>
-<% } %>
-```
-
-For the index action we just have a link to add new items, and a list of
-all the items, with a link to each of their edit paths. If you notice
-we're using special helpers here, that create links to the path
-specified.
-
-### Model
-
-We're ready to start in on modeling our data. Geddy provides us with
-some pretty cool tools to do this:
-
--   Validation
--   Typed Data
--   Instance Methods
--   Static Methods
-
-These tools should look somewhat familiar to anyone who's used an
-ORM-system like Ruby's ActiveRecord, or DataMapper.
-
-Go ahead and open up `app/models/to_do.js`. Read through the commented
-out code there for some ideas on what you can do with models. We'll be
-writing our model from scratch for this tutorial, so let's leave that
-commented out.
-
-So, minus the commented out code, you should have a file that looks like
-this:
-
-```
-var ToDo = function () {
-
-  this.defineProperties({
-      title: {type: 'string'}
-    , status: {type: 'string'}
-  });
-
-};
-
-exports.ToDo = ToDo;
-```
-
-The `defineProperties` method takes any number of properties to be added
-to the model. The keys in the object will be added as properties on the
-model. The values are just objects that describe the properties. When we
-ran the scaffold command it created these for us. But we want to change
-it so they are all \`required\`. To learn more, check out the
-[readme](https://github.com/mde/geddy/blob/master/README.md).
-
-There's also a more detailed validation API. While we're here, let's add
-some validation as well. The final code should look like this:
-
-```
-var ToDo = function () {
-
-  this.defineProperties({
-      title: {type: 'string'}
-    , status: {type: 'string'}
-  });
-  
+var Step = function () {
+...
   this.validatesPresent('title');
   this.validatesLength('title', {min: 5});
 
   this.validatesWithFunction('status', function (status) {
     return status == 'open' || status == 'done';
-  });
+  }, {message: "Status must be 'open' or 'done.'"});
+...
 };
-
-exports.ToDo = ToDo;
+Step = geddy.model.register('Step', Step);
 ```
 
-For the `title` property, we made sure that the property is always
-present and we made sure that the `title` property is a minimum of 5
-characters long.
+Exactly the same validation for our ToDos.
 
-For the `status` property, we used a function to validate that the
-property is always set to either `open` or `done`.
+Now, let's make the changes to our models to create the association between
+them.
 
-For more information about Geddy's Models, you can check out the [Model
-wiki page](https://github.com/mde/geddy/wiki/Models).
-
-#### Model-adapter
-
-Now that we've set up our `to_do` model, we need to define a way to store
-it. To keep our models persistance agnostic, Geddy uses model-adapters.
-By default it will store objects in memory using the `memory` model
-adapter. You can change the default memoryAdapter in
-`config/development.js`.
+Add the following line inside your ToDo model:
 
 ```
-defaultAdapter: 'memory'
-```
-
-Now we've got a place to store our `to_do`'s. This is in your
-application's memory, so it will disappear when you restart the server.
-
-#### Optional: use mongo for persistence
-
-Install a [mongodb](http://www.mongodb.org/downloads) server if you
-haven't already and ` $ [sudo] npm install mongodb-wrapper` to
-install the required mongodb-wrapper and set `defaultAdapter = 'mongo'`
-in config/development.js instead of the memory adapter. You will also
-have to specify the db configuration
-`db: { mongo: { dbname: 'model_test' }`. For more information see the
-[Model API reference](/documentation#models)
-
-### Controller
-
-Controllers sit between the views and models. They are also the entry
-point of our code. When a user gets a page a function in a controller,
-also called a controller acton, will get invoked. The controller will
-usually interact with the model and pass it to the view. The pattern
-isn't as black and white, but for the purpose of the tutorial, let's
-move on to actually write some controller actions.
-
-#### Saving to_dos
-
-To save a to_do we need to edit the `create` action in
-`app/controllers/to_dos.js`. It's not doing much at the momment so lets
-modify it a little bit.
-
-```
-this.create = function (req, resp, params) {
-  var self = this
-    , to_do = geddy.model.ToDo.create({title:params.title, status:'open'});
-
-  to_do.save(function(err, data) {
-    if (err) {
-      params.errors = err;
-      self.transfer('add');
-    } else {
-      self.redirect({controller: self.name});
-    }
-  });
+var ToDo = function () {
+...
+  this.hasMany('Steps');
+...
 };
+ToDo = geddy.model.register('ToDo', ToDo);
 ```
 
-First, we create a new instance of the `ToDo` model with
-`geddy.model.ToDo.create`, passing in the title that our form will post
-up to us, and setting up the default status.
+This is pretty straighforward, but it basically means that a ToDo can have
+multiple Steps associated with it.
 
-Then we call we call the `save` method. Internally, save does two
-things. It validates the model based on the rules we defined earlier.
-This is similar to calling `to_do.isValid()`. If the model was valid, it
-will delegate to the model adapter configured previously to actually
-persist the model. If either step fails, you will get an error
-collection as the first parameter of the function and we redirect the
-user back to the /to_dos/add route. Otherwise we redirect to the
-controller's default action `self.redirect({controller: self.name});`.
-
-#### Listing all to_dos
-
-Now that we we can create To Do items, we should probably list them
-somewhere. Lets change the `index` action in the `to_dos` controller.
-
-Open up `/app/controllers/to_dos.js` again and replace the current
-implementaton with the following code.
+Add the following line inside your Step model:
 
 ```
-this.index = function (req, resp, params) {
-  var self = this;
-
-  geddy.model.ToDo.all(function(err, to_dos) {
-    self.respond({params: params, to_dos: to_dos});
-  });
+var Step = function () {
+...
+  this.belongsTo('ToDo');
+...
 };
+Step = geddy.model.register('Step', Step);
 ```
 
-This part is a bit simpler and it follows a similar pattern. Instead of
-calling create in `geddy.model.ToDo` this time we simply call `all` and
-we pass the data back to the view for rendering
+This is pretty simple too -- it says that each Step is owned by a ToDo.
 
-Now that we can can load to_do items you can test it by starting up Geddy
-and going to [localhost:4000/to_dos](http://localhost:4000/to_dos) and you
-can view the list of items.
+Now you can restart Geddy to pick up the new Step files, and navigate to
+[http://localhost:4000/steps](http://localhost:4000/steps) to see the empty list
+for Steps.
 
-#### Showing a to_do
+When you click the "Create a new Step" button, you can see the expected Title
+and Description field, but no way to link them with any of the ToDo items we
+created earlier. Let's fix that.
 
-Now that we have our index action working as expected, we should work on
-the `show` controller action to display to_do details.
+When we handle the 'add' action (later, the 'edit' action as well) for a Step,
+we need to load the list of ToDos, so we can dump them into a select box we can
+use to choose the ToDo for the Step.
 
-```
-this.show = function (req, resp, params) {
-  var self = this;
+Open up the Step controller: app/controllers/steps.js, and look at the 'add'
+action (`this.add`, just a method on the controller).
 
-  geddy.model.ToDo.load(params.id, function(err, to_do) {
-    self.respond({params: params, to_do: to_do});
-  });
-};
-```
-
-Now we have a working show action in the controller to load items.
-
-#### Updating a to_do
-
-Alright, now that we can view our to_dos let's edit the `update` and
-`edit` actions in the `to_dos` controller. They should look something
-like this:
+Use the `all` method on Geddy's ORM to load all the ToDos you've made so far,
+before rendering out the 'edit' page, like this:
 
 ```
-this.edit = function (req, resp, params) {
-  var self = this;
-
-  geddy.model.ToDo.load(params.id, function(err, to_do) {
-    self.respond({params: params, to_do: to_do});
-  });
-};
-
-this.update = function (req, resp, params) {
-  var self = this;
-
-  geddy.model.ToDo.load(params.id, function(err, to_do) {
-    to_do.updateAttributes(params);
-
-    to_do.save(function(err, data) {
+  this.add = function (req, resp, params) {
+    var self = this;
+    geddy.model.ToDo.all(function (err, data) {
       if (err) {
-        params.errors = err;
-        self.transfer('edit');
-      } else {
-        self.redirect({controller: self.name});
+        throw err;
       }
+      self.respond({toDos: data});
     });
-  });
-};
+  };
+
 ```
 
-#### Deleting a to_do
+What did we do here? We grabbed all the ToDo items we've created, and in the
+callback, rendered our 'edit' action, passing the items (`data`) to the response
+as the `toDos` param. Because we're grabbing all the ToDos, we're only passing a
+callback and no query query object to the `all` call. We want *everything.*
 
-The delete is really simple specially now that you're familiar with the
-pattern. This time you will have to call remove passing the id of the
-to_do you want to delete. We will leave the details as an excercise.
-Remember that you can always compare your solution to the [final
-version](https://github.com/mde/geddy/tree/master/examples/to_do_app).
+Remember, this callback is an asynchronous function, so you need to declare a
+`self` variable to keep a reference to the controller instance so you can call
+`respond` on it.
 
+Now we need to pass this data to the form we use to create a Step. Open up
+app/views/steps/add.html.ejs, and you'll see that the actual form is rendered as
+a partial. This lets us share the same form between the add and the edit
+actions.
+
+We need to pass this list of ToDos down into the partial. Where you see the call
+to `partial`, make the code look like this:
+
+```
+<%- partial('form', {step: {}, toDos: toDos}) %>
+```
+
+The params you pass in the object literal that is the second arg will become
+local variables in the rendered partial template.
+
+Let's open up the partial template now, app/views/steps/form.html.ejs. We're
+going to dump the list of ToDos we retrieved in the controller into a select
+tag.
+
+Geddy has a handy helper for this that takes away a lot of the grunt work,
+called `selectTag`, as well as a bunch of other nice helpers.
+
+You can find the [docs for the helpers
+here](http://geddyjs.org/reference#helpers).
+
+Just inside the container div with the class 'control-group', add this code:
+
+```
+  <label for="title" class="control-label">To-Do for this step</label>
+  <div>
+    <%- selectTag(toDos, step.toDoId, {
+      name: 'toDoId'
+    , valueField: 'id'
+    , textField: 'title'
+    }); %>
+  </div>
+```
+
+What did we do here? We just passed the list of ToDos to the `selectTag` helper,
+telling it the 'name' attribute for the select elements should be 'toDoId'.
+(This will be the foreign key used by each Step to link itself back to a ToDo.)
+
+We also set a `valueField` and `textField`, telling the helper to use the 'id'
+property of each ToDo as the value of its option element, and the Step's 'title'
+as the text displayed.
+
+You can see that in the second param of this call, we're passing `step.toDoId`
+-- this specifies the what option element should be preselected. We're not using
+this yet, but it will come into play when we begin editing Steps.
+
+Refresh your 'Create a new Step' page, and you should see a select box at the
+top with all your ToDos in it.
+
+Select a ToDo for this step, and save it. If you remembered to add a title, and
+it passes validation, you should be redirected to the scaffold page displaying
+the new Step.
+
+Verify that the association got added correctly by checking to see if your new
+Step has a toDoId -- this should correspond to the id of the associated ToDo.
 
 ### API
 
