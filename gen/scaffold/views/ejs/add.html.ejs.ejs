@@ -12,7 +12,7 @@
       </div>
       <%% } %>
 
-      <@- partial('form', {<%= names.property.singular %>: {}}) @>
+      <@- partial('form', {<%= names.property.singular %>: params}) @>
 
       <div class="form-actions">
         <@- contentTag('input', 'Add', {type: 'submit', class: 'btn btn-primary'}) @>

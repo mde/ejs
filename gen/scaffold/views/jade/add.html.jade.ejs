@@ -8,7 +8,7 @@
           for err in params.errors
             li= err
 
-      != partial('form', {<%= names.property.singular %>: {}})
+      != partial('form', {<%= names.property.singular %>: params})
 
       .form-actions
         != contentTag('input', 'Add', {type: 'submit', class: 'btn btn-primary'})

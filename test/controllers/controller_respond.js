@@ -230,10 +230,8 @@ but not explicitly supported on controller': function (next) {
       , inst;
     c.params.format = 'html';
     c.params.action = 'create';
-    c.redirect = function (target) {
-      assert.equal('error', c.flashMessage.type);
-      assert.equal('asdf', c.flashMessage.msg.poop);
-      assert.equal('add', target.action);
+    c.transfer = function (action) {
+      assert.equal('add', action);
       next();
     };
     inst = createModelInstance();
@@ -292,11 +290,8 @@ but not explicitly supported on controller': function (next) {
       , inst;
     c.params.format = 'html';
     c.params.action = 'remove';
-    c.redirect = function (target) {
-      assert.equal('error', c.flashMessage.type);
-      assert.equal('zerp', c.flashMessage.msg.derp);
-      assert.equal('edit', target.action);
-      assert.equal('mambo-no-5', target.id);
+    c.transfer = function (action) {
+      assert.equal('edit', action);
       next();
     };
     inst = createModelInstance();
@@ -355,11 +350,8 @@ but not explicitly supported on controller': function (next) {
       , inst;
     c.params.format = 'html';
     c.params.action = 'update';
-    c.redirect = function (target) {
-      assert.equal('error', c.flashMessage.type);
-      assert.equal('zerp', c.flashMessage.msg.derp);
-      assert.equal('edit', target.action);
-      assert.equal('mambo-no-5', target.id);
+    c.transfer = function (action) {
+      assert.equal('edit', action);
       next();
     };
     inst = createModelInstance();
