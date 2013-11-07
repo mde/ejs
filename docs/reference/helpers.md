@@ -139,12 +139,31 @@ contentTag('a', 'hey there', {href: 'http://google.com', data_go_to: 'http://goo
 ```
 
 #### selectTag
-`selectTag(optionsArray<Array>, selectedOption, htmlOptions<Object>)
+`selectTag(data<Array>, selectedOption, options<Object>)
 
-Creates a HTML select tag using the given `optionsArray` to create HTML option elements.
+Creates a HTML select tag using the given `data` array to create HTML option
+elements.
 
-`optionsArray` could be an array of strings, numbers or an object with value and text properties to be used for the value attribute and option element content respectively,
-along with an `attr` object which will include any other html options. (you can even pass `selected:true` and 'value:VALUE' with the `attr` object as well, but the outer ones, if there is any, will take precedence)
+`data` could be an array of strings (to use for both text and value in the
+option elements); or objects, each with a 'text' and 'value' property which will
+directly map to the option elements. This helper will also look for an `attr`
+property on the elements in the array to use for HTML attributes on each option
+element.
+
+There's also a way to map arbitrary fields in your data set to the text/value of
+the option elements. This is helpful when you don't want to have to iterate over
+your data just to set a text/value -- see `options` below.
+
+`selectedOption` should be a string whose value matches the value of the option
+element you want to be pre-selected.
+
+`options` is the list of HTML attributes you want to set on the select element
+itself. This is where you will set the 'name' attribute needed when submitting
+it.
+
+The `options` param can also include two special properties: 'textField' and
+'valueField'. Setting these will tell the helper to map these property names on
+your data set to the 'text' and 'value' attributes of your option elements.
 
 #####Examples:
 ```
