@@ -117,5 +117,9 @@ geddy jake routes[user]
 geddy jake routes[user.index]
 ```
 
+**To run "geddy jake" in a different environment** do
 
+```
+geddy jake environment=[myEnvironment]
+```
 
