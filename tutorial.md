@@ -259,7 +259,8 @@ Create a few ToDo items, try to edit them, and test the validation rules. When
 an item can't be saved bcause it's not valid, you'll see an error message on the
 page in the session flash.
 
-[Click here](????????????????????????????????????????????????????????????????) to learn more about the session flash.
+[Click here](http://geddyjs.org/reference#controllers.flash) to learn more about
+the session flash.
 
 We've got a good ToDo application running and didn't really have to do much.
 Scaffolding is very good when you need something simple to get you started.
@@ -477,7 +478,8 @@ lower-level `respond`. The `respondWith` method is very handy when all you have
 is a model instance, but in this case we're passing along some other data, and
 we need to drop down to the lower-level `respond' method.
 
-[Click here](????????????????????????????????????????????????????) to learn more about the various ways to respond to a request.
+[Click here](http://geddyjs.org/guide#responding) to learn more about the
+various ways to respond to a request.
 
 Now open the corresponding view (app/views/steps/edit.html.ejs), and pass the
 `toDos` into the partial call, like so:
@@ -564,7 +566,7 @@ Check these urls out in your browser:
 
 ### Conclusion
 
-At this point you should have a working To Do List app!
+At this point you should have a working To-Do List app!
 
 If you want to explore a little more, here are some other things you
 could do:
