@@ -109,7 +109,7 @@ models are defined, and what datatypes are supported.
 Here are some examples of how model properties are added:
 
 ```
-$ geddy gen scaffold frang title:string description:text
+$ geddy gen scaffold book title:string description:text
 ```
 
 The example above will create a scaffolded model that includes a `title` property
@@ -210,7 +210,7 @@ So now we want to create a resource for our ToDo items. We will create a
 $ geddy gen scaffold to_do title:default status
 ```
 
-We are almost done. Now you have to restart geddy
+After this, you have to restart Geddy to pick up the newly created files.
 
 ```
 $ geddy
@@ -255,19 +255,29 @@ for now we will leave the views the way they are.
 The auto process-restart for development-mode should pick up the changes we've
 just made, so go and play with the app again.
 
-Create a few ToDo items, try to edit them, and test the validation rules. We've
-got a good ToDo application running and didn't really have to do much.
+Create a few ToDo items, try to edit them, and test the validation rules. When
+an item can't be saved bcause it's not valid, you'll see an error message on the
+page in the session flash.
+
+[Click here](????????????????????????????????????????????????????????????????) to learn more about the session flash.
+
+We've got a good ToDo application running and didn't really have to do much.
 Scaffolding is very good when you need something simple to get you started.
 
 ### Create an association
 
-Now we're going to create another resource, and relate it to our ToDos. We'll
-assume that a ToDo has a number of steps to finish before the ToDo can be
+Now we're going to create another resource, and relate it to our ToDos.
+
+Let's say that a ToDo has a number of steps to finish before the ToDo can be
 completed. Let's scaffold out our Step resource.
 
 ```
 $ geddy gen scaffold step title:default description:text status
 ```
+
+That creates the same sort of scaffolded resource we saw with ToDos.
+
+#### Add validation for Steps
 
 Now we can create Steps to link to a particular ToDo. Let's quickly add some
 validation to ensure each Step has at least a 'title'. Add this to your Step
@@ -288,6 +298,8 @@ Step = geddy.model.register('Step', Step);
 ```
 
 Exactly the same validation for our ToDos.
+
+#### Create the association
 
 Now, let's make the changes to our models to create the association between
 them.
@@ -319,6 +331,8 @@ Step = geddy.model.register('Step', Step);
 
 This is pretty simple too -- it says that each Step is owned by a ToDo.
 
+### Displaying the association
+
 Now you can restart Geddy to pick up the new Step files, and navigate to
 [http://localhost:4000/steps](http://localhost:4000/steps) to see the empty list
 for Steps.
@@ -330,6 +344,8 @@ created earlier. Let's fix that.
 When we handle the 'add' action (later, the 'edit' action as well) for a Step,
 we need to load the list of ToDos, so we can dump them into a select box we can
 use to choose the ToDo for the Step.
+
+#### Retrieve the ToDos
 
 Open up the Step controller: app/controllers/steps.js, and look at the 'add'
 action (`this.add`, just a method on the controller).
@@ -359,6 +375,8 @@ Remember, this callback is an asynchronous function, so you need to declare a
 `self` variable to keep a reference to the controller instance so you can call
 `respond` on it.
 
+#### Pass the data to the form
+
 Now we need to pass this data to the form we use to create a Step. Open up
 app/views/steps/add.html.ejs, and you'll see that the actual form is rendered as
 a partial. This lets us share the same form between the add and the edit
@@ -373,6 +391,8 @@ to `partial`, make the code look like this:
 
 The params you pass in the object literal that is the second arg will become
 local variables in the rendered partial template.
+
+#### Display the ToDos in a select element
 
 Let's open up the partial template now, app/views/steps/form.html.ejs. We're
 going to dump the list of ToDos we retrieved in the controller into a select
@@ -412,12 +432,126 @@ this yet, but it will come into play when we begin editing Steps.
 Refresh your 'Create a new Step' page, and you should see a select box at the
 top with all your ToDos in it.
 
-Select a ToDo for this step, and save it. If you remembered to add a title, and
-it passes validation, you should be redirected to the scaffold page displaying
-the new Step.
+#### Save your Step
+
+Select a ToDo for this step, and save it. If you remembered to add a title and a
+valid status, and it passes validation, you should be redirected to the scaffold
+page displaying the new Step.
 
 Verify that the association got added correctly by checking to see if your new
 Step has a toDoId -- this should correspond to the id of the associated ToDo.
+
+#### Editing Steps
+
+Right now, if you try to edit one of your existing steps, the page will blow up
+in your face, because the form isn't getting the `toDos` variable passed in (so
+it's 'undefined').
+
+We basically have to go through the same set of steps for the 'edit' action.
+Open up your Step controller, and changed the edit action to look like this:
+
+```
+  this.edit = function (req, resp, params) {
+    var self = this;
+    geddy.model.Step.first(params.id, function(err, step) {
+      if (err) {
+        throw err;
+      }
+      if (!step) {
+        throw new geddy.errors.BadRequestError();
+      }
+      else {
+        geddy.model.ToDo.all(function (err, data) {
+          if (err) {
+            throw err;
+          }
+          self.respond({step: step, toDos: data});
+        });
+      }
+    });
+  };
+```
+
+IMPORTANT: Notice we've replaced the `respondWith` method call here with the
+lower-level `respond`. The `respondWith` method is very handy when all you have
+is a model instance, but in this case we're passing along some other data, and
+we need to drop down to the lower-level `respond' method.
+
+[Click here](????????????????????????????????????????????????????) to learn more about the various ways to respond to a request.
+
+Now open the corresponding view (app/views/steps/edit.html.ejs), and pass the
+`toDos` into the partial call, like so:
+
+```
+<%- partial('form', {step: step, toDos: toDos}) %>
+```
+
+Go ahead and create a few more Steps, and link them to the same ToDo. We still
+have to take care of the other side of the association -- displaying all the
+Steps for a ToDo.
+
+### The ToDo-side of the association
+
+It's a similar process for the ToDo side. We need to open the ToDo controller
+(app/controllers/to_dos.js), and update the 'show' action to get all the
+associated Steps for a particular ToDo.
+
+Change the code to look like this:
+
+```
+  this.show = function (req, resp, params) {
+    var self = this;
+
+    geddy.model.ToDo.first(params.id, function(err, toDo) {
+      if (err) {
+        throw err;
+      }
+      if (!toDo) {
+        throw new geddy.errors.NotFoundError();
+      }
+      else {
+        toDo.getSteps(function (err, data) {
+          self.respond({toDo: toDo, steps: data});
+        });
+      }
+    });
+  };
+```
+
+Notice this action called the `first` action to look up the first ToDo that
+matches the desired id. Once we have the ToDo, we can call `getSteps` on it to
+look up all the associated Steps. This is a convenience method Geddy provides
+automatically based on the associated model. If we had given ToDo a `hasMany` of
+the Zoobie model, Geddy would automatically make a `getZoobies` method to fetch
+them.
+
+IMPORTANT: We also have to do the same thing as before, with the 'update' action
+for the Step: change the `respondWith` method to `respond` so that we can pass
+the extra data of the retrieved Steps to the view.
+
+Now open the 'show' view (app/views/to_dos/show.html.ejs), and add some code to
+print them out for each ToDo.
+
+The built-in code that just iterates over properties on the object is nice to
+verify your item is actually saved, but it's not very practically useful. Remove
+that section in the bottom half of the code in the template (ignore the
+'hero-unit' navigation section at the top), and replace it with this:
+
+```
+<h3>Status: <%= toDo.status %></h3>
+
+<h3>Steps</h3>
+<% steps.forEach(function (step) { %>
+<h4>
+  <%- linkTo(step.title, {controller: 'steps', action: 'show', id: step.id}l); %>
+</h4>
+<% }); %>
+```
+
+What did we just do? We just iterated over the list of Steps returned by the
+lookup in the controller, and printed out a link for each one, with the title of
+the Step as the anchor text, and the correct URL for navigating to the 'show'
+action for that Step.
 
 ### API
 
@@ -440,3 +574,5 @@ could do:
 -   Add some logging with `geddy.log`
 -   Configure mongo, riak or postgress and use it instead of the memory
     modelAdapter. See how easy it's to switch
+
+
