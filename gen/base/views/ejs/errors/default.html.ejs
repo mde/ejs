@@ -1,4 +1,7 @@
 <h2>Error: <%= statusCode %> <%= statusText %></h2>
 <% if (stack) { %>
 <code><%= stack %></code>
+<% } else if (typeof message != 'undefined') { %>
+<code><%= message %></code>
 <% } %>
+
