@@ -588,6 +588,126 @@ lookup in the controller, and printed out a link for each one, with the title of
 the Step as the anchor text, and the correct URL for navigating to the 'show'
 action for that Step.
 
+### Bonus: Using eager-fetch of associations with a SQL adapter
+
+Up to now we've just been using the built-in Filesystem adapter Geddy defaults
+to using in development mode. This just takes the JSON of the objects created,
+and dumps them in a flat file in your application directory (_datastore.json).
+
+This adapter behaves very similarly to MongoDB, Riak, or LevelDB in that it's
+'non-relational.' It doesn't know anything about the relationships between items
+in the datastore. This is fine for some types of applications, and gives you a
+lot of flexibility, not requiring you to know quite as much about the structure
+of your data before you begin developing.
+
+#### Relational datastores
+
+But using a relational datastore -- like a SQL database -- allows you to do
+certain things you can't do with a non-relational store. The main ability you
+get is the ability to 'eager fetch' a list of associations.
+
+This means that with our previous example, you would be able to fetch all the
+ToDos, and their associated Steps in one go, instead of getting the ToDos, and
+having to iterate over them to get all the Steps. (This is sometimes called the
+'N plus 1 problem,' because you have one query to fetch your main items, then
+'N' more queries, one for each item.)
+
+#### Setting the DB for production mode
+
+In an actual production app, you'd be using a relational database like
+PostgreSQL or MySQL, but for this tutorial, we'll just use SQLite. It's
+installed already on all Macs, and it's easy to install on other platforms. If
+you don't have it, install it.
+
+Then, open up the production config (config/production.js), and you'll see a
+bunch of different possible DB configurations. In the 'model' section, set
+'defaultAdapter' to 'sqlite'. Remove the 'db' section -- you don't need any
+configuration for that with SQLite.
+
+Now, start up your app in production mode. To do that, pass the `geddy` startup
+script the "-e production" flag, like this:
+
+```bash
+$ geddy -e production
+```
+The app will blow up at this point, because you need to install the correct
+SQLite library for Node, for Geddy's ORM to use, and initialize the database.
+Use this command:
+
+```bash
+$ geddy jake db:init environment=production
+```
+
+What did this do? Geddy uses Jake (https://github.com/mde/jake) as a build-tool
+for lots of its internal scripting tasks. This tells Geddy's bundled Jake to
+initialize the DB specified in your production config file. This does a couple
+of things:
+
+- Installed the correct SQLite lib for Node
+- Creates a Migrations table
+
+#### Migrations
+
+What are Migrations? Migrations are used with SQL DBs to manage the schema over
+time.
+
+[Click here](>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>) to learn more about how Geddy's migrations work.
+
+To create the tables needed by your models, you'll need to run the migrations
+that were initially created when you scaffolded out your models.
+
+Run the migrations like this:
+
+```bash
+$ geddy jake db:migrate environment=production
+```
+
+We'll also need to create the columns needed by the association we created
+between ToDos and Steps. Since Steps all belong to a ToDo, we'll need to add a
+column for the `toDoId` property on a Step used to link back to a particular
+ToDo.
+
+Create a blank migration by running this command:
+
+```bash
+$ geddy  ????????????????????????????????
+```
+
+Then open the generated migration file, and add the command for adding your foreign-key column:
+
+```
+  this.up = function (next) {
+    //////////////////////////
+  };
+```
+
+Run this migration, and then start up your app and verify things work correctly
+-- create some ToDos, and some Steps, and associate each step with a ToDo.
+
+#### Doing the eager-fetch of Steps
+
+Now we'll add the code that fetches all associated Steps along with the list of
+ToDos loaded in the 'index' view of ToDos.
+
+Just specify the association you want to include in the query, using the
+'includes' property on the query opts.
+
+Change the 'index' action on the ToDo controller (app/controllers/to_dos.js) to
+look like this:
+
+```
+  this.index = function (req, resp, params) {
+    var self = this;
+
+    geddy.model.ToDo.all({}, {includes 'steps'}, function(err, toDos) {
+      if (err) {
+        throw err;
+      }
+      self.respondWith(toDos, {type:'ToDo'});
+    });
+  };
+```
+
 ### API
 
 Check these urls out in your browser:
