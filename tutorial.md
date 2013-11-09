@@ -201,6 +201,39 @@ and you'll find the hello world page.
 -   OR set your app to listen on an external IP address
     and use your actual phone
 
+### Check out the config
+
+Look in the config directory -- the development.js file is the one that
+interests us here now, because we'll be working in 'development' mode, and this
+file is what the server uses for its configuration when starting that
+environment up.
+
+Here's the contents:
+
+```
+var config = {
+  detailedErrors: true
+, debug: true
+, hostname: null
+, port: 4000
+, model: {
+    defaultAdapter: 'filesystem'
+  }
+, sessions: {
+    store: 'memory'
+  , key: 'sid'
+  , expiry: 14 * 24 * 60 * 60
+  }
+};
+```
+
+You can see the default Model adapter is the Filesystem adapter. That means
+we're just writing stuff to a flat file, and you don't need to install any DB to
+play around with Geddy.
+
+In the prodution environment, you'll likely be using an actual DB like Postgres
+or MongoDB.
+
 ### Create a resource
 
 So now we want to create a resource for our ToDo items. We will create a
