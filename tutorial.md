@@ -394,7 +394,7 @@ before rendering out the 'edit' page, like this:
       if (err) {
         throw err;
       }
-      self.respond({toDos: data});
+      self.respond({params: params, toDos: data});
     });
   };
 
@@ -588,7 +588,29 @@ lookup in the controller, and printed out a link for each one, with the title of
 the Step as the anchor text, and the correct URL for navigating to the 'show'
 action for that Step.
 
-### Bonus: Using eager-fetch of associations with a SQL adapter
+### API
+
+Check these urls out in your browser:
+
+-   GET: `localhost:4000/to_dos.json`
+-   GET: `localhost:4000/to_dos/:id.json`
+-   POST: `localhost:4000/to_dos`
+-   PUT: `localhost:4000/to_dos/:id`
+
+### Conclusion
+
+At this point you should have a working To-Do List app!
+
+If you want to explore a little more, here are some other things you
+could do:
+
+-   Change the `Main#index` route to point to the `ToDos#index` action
+    (hint, check out `config/router.js`)
+-   Add some logging with `geddy.log`
+-   Configure mongo, riak or postgress and use it instead of the memory
+    modelAdapter. See how easy it's to switch
+
+### Next: Using eager-fetch of associations with a SQL adapter
 
 Up to now we've just been using the built-in Filesystem adapter Geddy defaults
 to using in development mode. This just takes the JSON of the objects created,
@@ -612,30 +634,24 @@ having to iterate over them to get all the Steps. (This is sometimes called the
 'N plus 1 problem,' because you have one query to fetch your main items, then
 'N' more queries, one for each item.)
 
-#### Setting the DB for production mode
+#### Setting the DB
 
 In an actual production app, you'd be using a relational database like
-PostgreSQL or MySQL, but for this tutorial, we'll just use SQLite. It's
-installed already on all Macs, and it's easy to install on other platforms. If
-you don't have it, install it.
+PostgreSQL or MySQL, but for this tutorial, we'll just continue using
+development mode, and use SQLite. It's installed already on all Macs, and it's
+easy to install on other platforms. If you don't have it, install it.
 
-Then, open up the production config (config/production.js), and you'll see a
+Then, open up the development config (config/development.js), and you'll see a
 bunch of different possible DB configurations. In the 'model' section, set
-'defaultAdapter' to 'sqlite'. Remove the 'db' section -- you don't need any
-configuration for that with SQLite.
+'defaultAdapter' to 'sqlite'. (You don't need any 'db' section for configuring
+the database when you're using SQLite.)
 
-Now, start up your app in production mode. To do that, pass the `geddy` startup
-script the "-e production" flag, like this:
-
-```bash
-$ geddy -e production
-```
-The app will blow up at this point, because you need to install the correct
-SQLite library for Node, for Geddy's ORM to use, and initialize the database.
-Use this command:
+If you start up your app app now, it will blow up at this point, because you
+need to install the correct SQLite library for Node, for Geddy's ORM to use, and
+initialize the database.  Use this command:
 
 ```bash
-$ geddy jake db:init environment=production
+$ geddy jake db:init
 ```
 
 What did this do? Geddy uses Jake (https://github.com/mde/jake) as a build-tool
@@ -649,9 +665,12 @@ of things:
 #### Migrations
 
 What are Migrations? Migrations are used with SQL DBs to manage the schema over
-time.
+time. It's very similar to versioning your programming code with an RCS
+('revision control system') like Git or Subversion.
 
-[Click here](>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>) to learn more about how Geddy's migrations work.
+[Click
+here](http://geddyjs.org/guide#modelsMigrations%20%28SQL%20adapters%20only%29)
+to learn more about how Geddy's migrations work.
 
 To create the tables needed by your models, you'll need to run the migrations
 that were initially created when you scaffolded out your models.
@@ -659,7 +678,7 @@ that were initially created when you scaffolded out your models.
 Run the migrations like this:
 
 ```bash
-$ geddy jake db:migrate environment=production
+$ geddy jake db:migrate
 ```
 
 We'll also need to create the columns needed by the association we created
@@ -670,18 +689,41 @@ ToDo.
 Create a blank migration by running this command:
 
 ```bash
-$ geddy  ????????????????????????????????
+$ geddy gen migration create_to_do_step_association
+[Added] db/migrations/20131111135707create_to_do_step_association.js
 ```
 
-Then open the generated migration file, and add the command for adding your foreign-key column:
+This creates a blank migration you can fill in. Open the generated migration
+file, and add or remove the command for adding your foreign-key column:
 
 ```
+var CreateToDoStepAssociation = function () {
   this.up = function (next) {
-    //////////////////////////
+    this.addColumn('steps', 'toDoId', 'string', function (err, data) {
+      if (err) { throw err; }
+      next();
+    });
   };
+
+  this.down = function (next) {
+    this.removeColumn('steps', 'toDoId', function (err, data) {
+      if (err) { throw err; }
+      next();
+    });
+  };
+};
+
+exports.CreateToDoStepAssociation = CreateToDoStepAssociation;
 ```
 
-Run this migration, and then start up your app and verify things work correctly
+Run this migration, like so:
+
+```bash
+$ geddy jake db:migrate
+```
+
+Then start up your app, and navigate to
+[http://localhost/to_dos](http://localhost/to_dos). Verify that things work correctly
 -- create some ToDos, and some Steps, and associate each step with a ToDo.
 
 #### Doing the eager-fetch of Steps
@@ -699,7 +741,7 @@ look like this:
   this.index = function (req, resp, params) {
     var self = this;
 
-    geddy.model.ToDo.all({}, {includes 'steps'}, function(err, toDos) {
+    geddy.model.ToDo.all({}, {includes: 'steps'}, function(err, toDos) {
       if (err) {
         throw err;
       }
@@ -708,26 +750,48 @@ look like this:
   };
 ```
 
-### API
+We're passing the name of the association to eager-fetch in the 'includes'
+property of the query -- notice we now have to pass an empty query-object to the
+query, to allow us to pass options as a second arg.
 
-Check these urls out in your browser:
+Note that there's no calling `getSteps` on any of the returned objects, as the
+query generated uses a SQL JOIN to load the associated Step objects directly in
+the same query. All the Steps associated with each ToDo will be found on a
+`steps` property on the ToDo item.
 
--   GET: `localhost:4000/to_dos.json`
--   GET: `localhost:4000/to_dos/:id.json`
--   POST: `localhost:4000/to_dos`
--   PUT: `localhost:4000/to_dos/:id`
+Now let's open up the list view (app/views/to_dos/index.html.ejs) to render out
+these Steps inline with the list of ToDos.
 
-### Conclusion
+Get rid of the div that's displaying the id of the ToDo item. We don't need
+that. Replace the entire bottom section of the code with this:
 
-At this point you should have a working To-Do List app!
+```
+<div id="toDos-list">
+<% if (toDos) { %>
+  <% for (var i = 0, ii = toDos.length; i < ii; i++) { %>
+    <div class="row list-item" id="toDo-<%= toDos[i].id; %>">
+      <div class="span8">
+        <h3><%- linkTo(toDos[i].title, toDoPath(toDos[i].id)); %></h3>
+        <% var steps = toDos[i].steps || [];
+          steps.forEach(function (step) { %>
+            <div>
+              <%= step.title %>
+            </div>
+          <%
+          });
+        %>
+      </div>
+    </div>
+  <% } %>
+<% } %>
+</div>
+```
 
-If you want to explore a little more, here are some other things you
-could do:
+What does this code do? It adds a section underneath the title of each ToDo that
+renders the list of any Steps associated with it. It will do this for the entire
+list of ToDos, without you having to iterate of the list of them, and run a
+query to fetch the Steps. This is the advantage that eager-fetch of associations
+gives you.
 
--   Change the `Main#index` route to point to the `ToDos#index` action
-    (hint, check out `config/router.js`)
--   Add some logging with `geddy.log`
--   Configure mongo, riak or postgress and use it instead of the memory
-    modelAdapter. See how easy it's to switch
 
 
