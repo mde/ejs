@@ -797,7 +797,7 @@ migrations at overlapping times.
 To create a new migration, run the generator script:
 
 ```
-$ ../geddy/bin/cli.js gen migration zerp_derp
+$ geddy gen migration zerp_derp
 [Added] db/migrations/20130708212330_zerp_derp.js
 ```
 If you open the new migration file, you'll see a blank migration file ready to be filled in:
