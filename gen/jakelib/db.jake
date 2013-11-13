@@ -75,7 +75,7 @@ namespace('db', function () {
 
     , _writeAppPackageInfo = function (info) {
         var packagePath = 'package.json';
-        fs.writeFileSync(packagePath, JSON.stringify(info));
+        fs.writeFileSync(packagePath, JSON.stringify(info, null, 2));
       }
 
     , _getAdapterInfo = function () {
@@ -113,6 +113,7 @@ namespace('db', function () {
     var frameworkPackageInfo = _getFrameworkPackageInfo()
       , frameworkDevDeps = frameworkPackageInfo.devDependencies
       , appPackageInfo = _getAppPackageInfo()
+      , appDeps = appPackageInfo.dependencies || {}
       , adapter = _getAdapterInfo()
       , lib
       , libVersion
@@ -129,17 +130,19 @@ namespace('db', function () {
     lib = adapter.lib;
     if (lib) {
       // Bail if the support lib is already there
-      if (appPackageInfo[lib]) {
+      if (appDeps[lib]) {
+        console.log(lib + ' lib found in app\'s package.json, skipping installation.');
         return complete();
       }
       // If not, add to package.json and install
       else {
-        appPackageInfo[lib] = frameworkDevDeps[lib];
+        appDeps[lib] = frameworkDevDeps[lib];
 
         lib += '@' + frameworkDevDeps[lib];
         cmd = 'npm install ' + lib;
 
         console.log('Adding ' + lib + ' to app\'s package.json...');
+        appPackageInfo.dependencies = appDeps;
         _writeAppPackageInfo(appPackageInfo);
 
         console.log('Installing ' + lib + '...');
