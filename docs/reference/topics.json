@@ -1,5 +1,6 @@
 { "topics":
   [
+    "global",
     "utilities",
     "router",
     "controllers",
