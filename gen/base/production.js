@@ -49,6 +49,20 @@ var config = {
   }
 */
 
+/* // Using MySQL as the default, with only a MySQL DB
+, model: {
+    defaultAdapter: 'mysql'
+  }
+, db: {
+    mysql: {
+      host: 'localhost'
+    , user: process.env.USER
+    , database: process.env.USER
+    , password: null
+    }
+  }
+*/
+
 /* // Using Postgres as the default, with both Postgres and Riak
 , model: {
     defaultAdapter: 'postgres'
