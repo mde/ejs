@@ -1,4 +1,16 @@
-Geddy uses the [Model](http://github.com/mde/model) module for its model layer. Model is an abstract ORM that is compatible with many different types of databases, including Postgres, in-memory, MongoDB and Riak.
+Geddy uses the [Model](http://github.com/mde/model) module for its model layer.
+
+Model is an abstract ORM that is compatible with many different types of
+databases, including:
+
+* Postgres
+* MySQL
+* SQLite
+* Riak
+* MongoDB
+* LevelDB
+* In-memory
+* Filesystem
 
 * * *
 
