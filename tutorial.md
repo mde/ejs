@@ -610,7 +610,7 @@ could do:
 -   Configure mongo, riak or postgress and use it instead of the memory
     modelAdapter. See how easy it's to switch
 
-### Next: Using eager-fetch of associations with a SQL adapter
+### Next: Eager-fetch associations (SQL adapters)
 
 Up to now we've just been using the built-in Filesystem adapter Geddy defaults
 to using in development mode. This just takes the JSON of the objects created,
