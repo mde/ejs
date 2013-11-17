@@ -58,7 +58,34 @@ namespace('db', function () {
         setTimeout(function () {
           doAction();
         }, 0);
+      }
+
+    , _getFrameworkPackageInfo = function () {
+        var packagePath = path.join(__dirname,
+                '../../node_modules/model/package.json')
+          , packageFile = fs.readFileSync(packagePath).toString();
+        return JSON.parse(packageFile);
+      }
+
+    , _getAppPackageInfo = function () {
+        var packagePath = 'package.json'
+          , packageFile = fs.readFileSync(packagePath).toString();
+        return JSON.parse(packageFile);
+      }
+
+    , _writeAppPackageInfo = function (info) {
+        var packagePath = 'package.json';
+        fs.writeFileSync(packagePath, JSON.stringify(info, null, 2));
+      }
+
+    , _getAdapterInfo = function () {
+        var adapters = require(path.join(__dirname,
+                '../../node_modules/model/lib/adapters'))
+          , adapter = adapters.getAdapterInfo(geddy.config.model.defaultAdapter);
+        return adapter;
       };
+
+
 
   task('dropTable', ['env:init', 'createMigrationModel'], {async: true},
       function (name) {
@@ -83,19 +110,14 @@ namespace('db', function () {
   });
 
   task('install', ['env:model'], {async: true}, function () {
-    var packagePath = path.join(__dirname,
-            '../../node_modules/model/package.json')
-      , packageFile = fs.readFileSync(packagePath).toString()
-      , deps = JSON.parse(packageFile).devDependencies
-      , adapters = require(path.join(__dirname,
-            '../../node_modules/model/lib/adapters'))
-      , adapter = adapters.getAdapterInfo(geddy.config.model.defaultAdapter)
+    var frameworkPackageInfo = _getFrameworkPackageInfo()
+      , frameworkDevDeps = frameworkPackageInfo.devDependencies
+      , appPackageInfo = _getAppPackageInfo()
+      , appDeps = appPackageInfo.dependencies || {}
+      , adapter = _getAdapterInfo()
       , lib
       , libVersion
       , cmd;
-
-    // Hacky, save this where db:init can find it
-    geddy.config.model.defaultAdapterInfo = adapter;
 
     if (!adapter) {
       fail('This environment has no valid DB adapter.');
@@ -107,13 +129,27 @@ namespace('db', function () {
 
     lib = adapter.lib;
     if (lib) {
-      lib += '@' + deps[lib];
-      cmd = 'npm install ' + lib;
+      // Bail if the support lib is already there
+      if (appDeps[lib]) {
+        console.log(lib + ' lib found in app\'s package.json, skipping installation.');
+        return complete();
+      }
+      // If not, add to package.json and install
+      else {
+        appDeps[lib] = frameworkDevDeps[lib];
 
-      console.log('Installing ' + lib + '...');
-      jake.exec(cmd, {printStdout: true}, function () {
-        complete();
-      });
+        lib += '@' + frameworkDevDeps[lib];
+        cmd = 'npm install ' + lib;
+
+        console.log('Adding ' + lib + ' to app\'s package.json...');
+        appPackageInfo.dependencies = appDeps;
+        _writeAppPackageInfo(appPackageInfo);
+
+        console.log('Installing ' + lib + '...');
+        jake.exec(cmd, {printStdout: true}, function () {
+          complete();
+        });
+      }
     }
     else {
       console.log('(Nothing to install.)');
@@ -122,7 +158,7 @@ namespace('db', function () {
   });
 
   task('init', ['db:install'], {async: true}, function () {
-    var adapter = geddy.config.model.defaultAdapterInfo // From db:install
+    var adapter = _getAdapterInfo()
       , createMigrationModelTask;
 
     if (!adapter) {

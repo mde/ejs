@@ -137,11 +137,11 @@ Add a `package.json` file to your app's root directory
   "name": "node-example",
   "version": "0.0.1",
   "dependencies": {
-    "geddy": "0.9.x"
+    "geddy": "0.11.x"
   },
   "engines": {
     "node": "0.10.x",
-    "npm": "1.2.x"
+    "npm": "1.3.x"
   }
 }
 ```

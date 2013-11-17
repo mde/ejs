@@ -45,11 +45,17 @@ li {
 pre, code {
   background: #FDF6E3;
   margin: 40px 0;
-  padding: 20px;
+  padding: 0px;
   font-size: 14px;
   border: none;
   border-radius: 0px;
   color: #546a72 !important;
+}
+
+pre {
+  word-wrap: normal;
+  word-break: normal;
+  overflow-x: auto;
 }
 
 code {
@@ -236,12 +242,14 @@ input:-ms-input-placeholder {
 }
 
 .info a {
+  color: #333;
   display: block;
   font-size: 20px;
   text-align: right;
   position: absolute;
   bottom: 20px;
   right: 20px;
+  font-style: italic;
 }
 
 .info a:hover {
