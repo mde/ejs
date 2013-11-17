@@ -42,10 +42,14 @@ li {
   margin-bottom: 8px;
 }
 
+pre {
+  overflow-x: auto;
+}
+
 pre, code {
   background: #FDF6E3;
   margin: 40px 0;
-  padding: 20px;
+  padding: 0px;
   font-size: 14px;
   border: none;
   border-radius: 0px;
