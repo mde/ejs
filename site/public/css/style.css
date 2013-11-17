@@ -42,10 +42,6 @@ li {
   margin-bottom: 8px;
 }
 
-pre {
-  overflow-x: auto;
-}
-
 pre, code {
   background: #FDF6E3;
   margin: 40px 0;
@@ -54,6 +50,12 @@ pre, code {
   border: none;
   border-radius: 0px;
   color: #546a72 !important;
+}
+
+pre {
+  word-wrap: normal;
+  word-break: normal;
+  overflow-x: auto;
 }
 
 code {
