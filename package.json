@@ -14,7 +14,7 @@
     "jake": "0.7.x",
     "utilities": "0.0.x",
     "model": "0.4.x",
-    "barista": "0.1.x",
+    "barista": "0.2.x",
     "mime": "1.2.x",
     "tlsopts": "0.0.1"
   },
