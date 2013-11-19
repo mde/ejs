@@ -28,17 +28,29 @@ namespace('env', function () {
     });
   });
 
-  task('cleanup', function () {
+  task('cleanup', {async: true}, function () {
     // Disconnect all the adapters
     var adapters = geddy.model.loadedAdapters
-      , adapter;
-
-    for (var p in adapters) {
-      adapter = adapters[p];
-      if (typeof adapter.disconnect == 'function') {
-        adapter.disconnect();
-      }
-    }
+      , adapter
+      , keys = Object.keys(adapters)
+      , doIt = function () {
+          var key;
+          if ((key = keys.shift())) {
+            adapter = adapters[key];
+            // Try to disconnect nicely
+            if (typeof adapter.disconnect == 'function') {
+              // If there's a disconnect error, don't flip out about it
+              adapter.on('error', function () {});
+              adapter.disconnect(function () {
+                doIt();
+              });
+            }
+          }
+          else {
+            complete();
+          }
+        };
+    doIt();
   });
 
 });

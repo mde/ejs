@@ -270,7 +270,7 @@ namespace('gen', function () {
 
     console.log('[Added] Error templates');
     // Remove patch number from version
-    console.log('Upgraded to ' + geddy.version.split('.').splice(0, 2).join('.'));
+    console.log('Upgraded to 0.10. Please run `geddy gen upgrade`.');
   });
 
   // Creates a resource with a model, controller and a resource route
