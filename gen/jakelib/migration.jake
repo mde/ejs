@@ -92,10 +92,10 @@ namespace('migration', function () {
         // Hook up the DB adapter
         // TODO: API for using a different adapter if using multiple
         // SQL adapters?
-        inst.adapter = geddy.model.loadedAdapters.Migration;
-        // Run it, up or down
+        Migration.call(inst, ctorName, geddy.model.loadedAdapters.Migration);
         inst[direction](function () {
           var m;
+          // Run it, up or down
           if (direction == 'up') {
             m = geddy.model.Migration.create({
               migration: migration
