@@ -207,7 +207,7 @@ namespace('gen', function () {
     console.log('Created app ' + name + '.');
     // one offs
     if (realtime) {
-      console.log('This is a realtime app. Please `npm install socket.io` in your app.');
+      console.log('This is a realtime app. Please `npm install socket.io --save` in your app.');
     }
 
   });
