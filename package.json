@@ -8,7 +8,7 @@
     "MVC",
     "realtime"
   ],
-  "version": "0.11.7",
+  "version": "0.11.8",
   "author": "Matthew Eernisse <mde@fleegix.org> (http://fleegix.org)",
   "dependencies": {
     "jake": "0.7.x",
