@@ -5,8 +5,7 @@ var fs = require('fs')
   , path = require('path')
   , utils = require('utilities')
   , createPackageTask
-  , JSPAT = /\.js$/
-  , testTask;
+  , JSPAT = /\.js$/;
 
 namespace('doc', function () {
   task('generate', ['doc:clobber'], function () {
@@ -44,7 +43,7 @@ task('buildjs', function(){
 desc('Generate docs for Geddy');
 task('doc', ['doc:generate']);
 
-var p = new jake.NpmPublishTask('geddy', function () {
+npmPublishTask('geddy', function () {
   this.packageFiles.include([
     'Makefile'
   , 'Jakefile'
@@ -62,46 +61,17 @@ var p = new jake.NpmPublishTask('geddy', function () {
   ]);
 });
 
-testTask = new jake.TestTask('Geddy', function () {
-  this.testName = 'testBase';
+testTask('Geddy', ['clean'], function () {
   // FIXME: The partial test fails when run too early. This "fix" sucks.
+  this.testFiles.exclude('test/tmp/**');
   this.testFiles.exclude('test/templates/partial.js');
   this.testFiles.include('test/**/*.js');
   this.testFiles.include('test/templates/partial.js');
-  this.showDescription = false;
 });
-
-desc('Run the Geddy tests');
-task('test', ['clean'], function () {
-  var t = jake.Task.testBase;
-  t.addListener('error', function (err) {
-    var module
-      , cmd
-      , errMsg = err.message
-      , match = errMsg.match('Cannot find module')
-      , absModuleName = errMsg.match(/'[a-zA-Z]*'/);
-
-    if (match && absModuleName) {
-      module = absModuleName[0].replace(/'/g, '');
-      cmd = 'npm install ' + module;
-      jake.logger.log(module + ' is not installed; Jake will attempt to install it for you.');
-      jake.exec(cmd, function () {
-        jake.logger.log('installed!');
-        t.addListener('complete', function () {
-          complete();
-        });
-        t.invoke.apply(t, arguments);
-      });
-    }
-    else {
-      throw err;
-    }
-  });
-  t.invoke.apply(t, arguments);
-}, {async: true});
 
 desc('Clears the test temp dir');
 task('clean', function () {
+  console.log('Cleaning temp files...');
   tmpDir = path.join(__dirname, 'test', 'tmp');
   utils.file.rmRf(tmpDir, {silent:true});
   fs.mkdirSync(tmpDir);
