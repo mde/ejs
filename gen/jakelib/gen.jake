@@ -182,11 +182,6 @@ namespace('gen', function () {
       jake.cpR(path.join(basePath, cp[0]), path.join(name, cp[1]), {silent: true});
     });
 
-    // one offs
-    if (realtime) {
-      jake.cpR(path.join(genDirname, '..', 'node_modules', 'socket.io' ), path.join(name, 'node_modules'), {silent: true});
-    }
-
     // Compile Jakefile
     text = fs.readFileSync(path.join(basePath, 'Jakefile.ejs'), 'utf8').toString();
     adapter = new Adapter({engine: 'ejs', template: text});
@@ -210,6 +205,11 @@ namespace('gen', function () {
     }
 
     console.log('Created app ' + name + '.');
+    // one offs
+    if (realtime) {
+      console.log('This is a realtime app. Please `npm install socket.io` in your app.');
+    }
+
   });
 
   task('upgrade', {async: true}, function () {
