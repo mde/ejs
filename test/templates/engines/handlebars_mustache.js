@@ -24,14 +24,13 @@ try {
   events.emit('error', err);
 }
 
-var Adapter = require('../../../lib/template/adapters').Adapter
+var adapter = require('../../../lib/template/adapters')
   , assert = require('assert')
   , tests
   , render = function (str, data) {
       data = data || {};
-      var adapter = new Adapter({engine: 'handlebars', template: str});
-
-      return adapter.render(data);
+      var ad = new adapter.HandlebarsAdapter(str);
+      return ad.render(data);
     };
 
 tests = {
@@ -85,16 +84,17 @@ tests = {
 , 'test hash arguments' : function () {
     var html = 'foobar.com/main/index'
       , tpl = "{{url host='foobar.com' controller='main' action='index'}}"
-      , helper, adapter;
+      , helper
+      , ad;
 
     helper = function (options) {
       return options.host + '/' + options.controller + '/' + options.action
     };
 
-    adapter = new Adapter({engine: 'handlebars', template: tpl});
-    adapter.registerHelper('url', helper);
+    var ad = new adapter.HandlebarsAdapter(tpl);
+    ad.registerHelper('url', helper);
 
-    assert.equal(html, adapter.render());
+    assert.equal(html, ad.render());
   }
 
 };

@@ -6,14 +6,13 @@ try {
   events.emit('error', err);
 }
 
-var Adapter = require('../../../lib/template/adapters').Adapter
+var adapter = require('../../../lib/template/adapters')
   , assert = require('assert')
   , tests
   , render = function (str, data) {
       data = data || {};
-      var adapter = new Adapter({engine: 'swig', template: str});
-
-      return adapter.render(data);
+      var ad = new adapter.SwigAdapter(str);
+      return ad.render(data);
     };
 
 tests = {
