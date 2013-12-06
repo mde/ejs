@@ -74,7 +74,10 @@ namespace('migration', function () {
         var pathName = migration + '.js' // TODO: What about the Coffee crazies
         , inst
         , ctorName
-        , ctor;
+        , ctor
+        // TODO: API for using a different adapter if using multiple
+        // SQL adapters?
+        , adapter = geddy.model.loadedAdapters.Migration;
 
         // Pull off the date-stamp, get the underscoreized
         // migration-name
@@ -89,10 +92,12 @@ namespace('migration', function () {
         // TODO: Should this be a mixin to preserve statics?
         ctor.prototype = Object.create(Migration.prototype);
         inst = new ctor();
-        // Hook up the DB adapter
-        // TODO: API for using a different adapter if using multiple
-        // SQL adapters?
-        Migration.call(inst, ctorName, geddy.model.loadedAdapters.Migration);
+        // Hook up the DB adapter -- throw if this isn't a SQL adapter
+        if (adapter.type != 'sql') {
+          throw new Error('Currently loaded adapter (' + adapter.name +
+              ') is not a SQL adapter. Are you running migrations for the right environment?');
+        }
+        Migration.call(inst, ctorName, adapter);
         inst[direction](function () {
           var m;
           // Run it, up or down
