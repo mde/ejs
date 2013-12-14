@@ -578,7 +578,7 @@ that section in the bottom half of the code in the template (ignore the
 <h3>Steps</h3>
 <% steps.forEach(function (step) { %>
 <h4>
-  <%- linkTo(step.title, {controller: 'steps', action: 'show', id: step.id}l); %>
+  <%- linkTo(step.title, {controller: 'steps', action: 'show', id: step.id}); %>
 </h4>
 <% }); %>
 ```
