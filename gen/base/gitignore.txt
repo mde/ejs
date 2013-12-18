@@ -7,3 +7,4 @@ log/
 npm-debug.log
 config/secrets.json
 public/js/core/models.js
+public/js/core/helpers.js
