@@ -24,8 +24,9 @@ var assert = require('assert')
       var c = new Controller();
       c.request = new MockRequest();
       c.params = {};
+      c.name = 'BaseController';
       c.canRespondTo(['html', 'json', 'js']);
-      c.renderTemplate = function (data, opts, callback) {
+      c.renderTemplate = function (data, callback) {
         callback('<div>' + JSON.stringify(data) + '</div>');
       };
       c.flash = {
@@ -157,6 +158,25 @@ doesn\'t explicitly explicitly support it': function (next) {
       next();
     };
     c.respond({foo: 'bar'}, {statusCode: 222});
+  }
+
+, 'respond, with caching': function (next) {
+    var c = createController()
+      , goNext = false;
+    c.output = function (statusCode, headers, content) {
+      assert.equal(222, statusCode);
+      assert.equal('text/html', headers['Content-Type']);
+      assert.equal('<div>{"foo":"bar"}</div>', content);
+      // Go to next test after this is called twice
+      if (goNext) {
+        next();
+      }
+      goNext = true;
+    };
+    c.respond({foo: 'bar'}, {statusCode: 222, cache: true});
+    // Response should be pulled from cache,
+    // should be same as previous, 'bar', not 'asdf'
+    c.respond({foo: 'asdf'}, {statusCode: 222, cache: true});
   }
 
 // respondTo tests, mid-level API
