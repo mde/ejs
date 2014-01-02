@@ -147,8 +147,10 @@ namespace('migration', function () {
     ]);
     Object.keys(props).forEach(function (p) {
       var prop = props[p];
+      console.log('>>>>>>>>>>>', prop);
+      // Ignore empty "default" object
       // Ignore id field, auto-generated
-      if (prop.name == 'id') {
+      if (!prop.name || prop.name == 'id') {
         return;
       }
       upCode.push("          t.column('" +
