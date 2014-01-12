@@ -36,6 +36,11 @@ $ geddy gen scaffold foobar baz:string qux:int
 
 Docs are on the GeddyJS Website: http://geddyjs.org/documentation
 
+#### Commnity Tutorials
+
+Geddy.JS: A No-Brainer MVC Node.js Framework - Bhanu Pratap Chaudhary
+https://www.digitalocean.com/community/articles/geddy-js-a-no-brainer-mvc-node-js-framework
+
 #### Community
 
 * Mailing list: [https://groups.google.com/group/geddyjs](https://groups.google.com/group/geddyjs)
