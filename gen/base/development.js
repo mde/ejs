@@ -17,7 +17,8 @@
 */
 
 var config = {
-  detailedErrors: true
+  appName: 'Geddy App (development)'
+, detailedErrors: true
 , debug: true
 , hostname: null
 , port: 4000
