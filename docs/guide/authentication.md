@@ -32,7 +32,7 @@ you need.
 
 You'll need to add the settings for Passport in your config/secrets.json file.
 That includes the redirect locations for after an auth failure/success, and the
-OAuth keys for your app. The setting will look similar to this: 
+OAuth keys for your app. The setting will look similar to this:
 ```json
 {
   "passport": {
@@ -64,6 +64,20 @@ modify "/app/models/user.js" to add any other properties you want.
 
 A successful login with a third-party service like Facebook or Twitter will
 create a linked local User account if one does not exist.
+
+#### E-mail activation
+
+By default, local users require activation via e-mail. This does not apply to
+authentication via third-party services.
+
+When a user signs up, an e-mail will be sent to their account with an activation
+link. Users will not be able to authenticate until they activate. Geddy auth
+sends these e-mails using [Nodemailer](http://www.nodemailer.com/).
+
+For this feature to work, you'll have to `npm install nodemailer` and set it up
+in your app config.  You'll also need to set a hostname for your app (for the
+activation link) for this to work. You can also easily turn this feature off in
+the Users controller.
 
 #### Authenticated users
 
