@@ -20,7 +20,7 @@ var fs = require('fs')
   , md = require('marked')
   , hljs = require('highlight.js');
 
-var BRANCH = 'v0.11';
+var BRANCH = 'master';
 
 md.setOptions({
   gfm: true
@@ -31,6 +31,8 @@ md.setOptions({
 });
 
 var Main = function () {
+
+  this.cacheResponse(['reference', 'guide']);
 
   this.index = function (req, resp, params) {
     this.respond(params, {
