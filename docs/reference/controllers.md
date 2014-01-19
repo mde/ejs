@@ -340,6 +340,26 @@ this.output(201, {'Content-Type': 'text/html',
 
 * * *
 
+#### .cacheResponse
+`this.cacheResponse(actions)`
+
+Cache the response for a particular action on this controller.
+
+##### actions
+- `actions [string|array]`: Action or actions for the controller to cache
+responses for.
+
+##### examples
+```
+// Cache the response for the 'index' action
+this.cacheResponse('index');
+
+// Cache responses for the the 'main' and 'feed' actions
+this.cacheResponse(['main', 'feed']);
+```
+
+* * *
+
 #### .flash
 
 The flash is a special part of the session which is cleared with each request.

@@ -236,5 +236,52 @@ To use your subclassed responder, set it in your controller:
 this.responder = new CustomResponder();
 ```
 
+#### Caching responses
 
+Geddy lets you cache responses at the action level, so you can build the
+response for a particular action once, and then serve it from cache for all
+subsequent requests.
+
+In your controller constructor, call the `cacheResponse` method with an action
+or list of actions you want to cache.
+
+Here's an example:
+
+```javascript
+// Controller for the 'zooby' resource
+var Zoobies = function () {
+
+  // Build the index action response once, then serve from cache
+  this.cacheResponse(['index']);
+
+  this.index = function () {
+    var resp = {};
+    // Do some complicated logic here you only want to do once
+    this.respond(resp, {
+      format: 'html'
+    });
+  };
+};
+
+exports.Zoobies = Zoobies;
+
+```
+
+Response-caching is primarily aimed at caching simple content-responses, so it
+has some limitations.
+
+*GET only*: Currently only works for GET reqeusts.
+
+*Doesn't handle multiple formats*: Currently only works for a particular
+controller/action combination, and not per-format.
+
+If you need to serve responses for multiple formats (e.g., both JSON and HTML)
+from the same action, this will not work for you. It will cache the response for
+the first format it gets a request for.
+
+*Caches per-worker*: Responses are cached in the Node process, so workers have
+to cache responses individually.
+
+This means that if you have a response that may change over time, you can end up
+with different workers serving different cached responses for the same action.
 
