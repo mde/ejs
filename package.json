@@ -34,7 +34,7 @@
     "browserify": "1.16.x",
     "socket.io-client": "0.9.x",
     "handlebars": "latest",
-    "jade": "0.35.x",
+    "jade": "latest",
     "swig": "latest",
     "ejs": "latest",
     "request": "latest"
