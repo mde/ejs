@@ -118,6 +118,18 @@ tests = {
     assert.equal(string, "<select><option value=\"1\">Text 1</option><option selected=\"selected\" value=\"2\">Text 2</option></select>"); 
   }
 
+, 'test select tag with selected options in single mode': function() { 
+    var choices = [{value: 1, text: "Text 1"}, {value: 2, text: "Text 2"}]
+      , string = helpers.selectTag(choices, [2,1]);
+    assert.equal(string, "<select><option value=\"1\">Text 1</option><option selected=\"selected\" value=\"2\">Text 2</option></select>"); 
+  }
+
+, 'test select tag with selected options in multiple mode': function() { 
+    var choices = [{value: 1, text: "Text 1"}, {value: 2, text: "Text 2"}]
+      , string = helpers.selectTag(choices, [2,1], { multiple: true });
+    assert.equal(string, "<select multiple=\"multiple\"><option selected=\"selected\" value=\"1\">Text 1</option><option selected=\"selected\" value=\"2\">Text 2</option></select>"); 
+  }
+
 , 'test select tag with html options': function() {
     var choices = [{value: 1, text: "Text 1"}, {value: 2, text: "Text 2"}]
       , string = helpers.selectTag(choices, 2, {class: 'myclass'});
@@ -146,6 +158,12 @@ tests = {
     var choices = [{value: 1, text: "Text 1", attrs: {data: {thing: "avalue"}, selected: true}}, {value: 2, text: "Text 2", attrs: {data: {thing: "avalue"}}}]
       , string = helpers.selectTag(choices, 2);
     assert.equal(string, "<select><option data-thing=\"avalue\" value=\"1\">Text 1</option><option data-thing=\"avalue\" selected=\"selected\" value=\"2\">Text 2</option></select>");
+  }
+
+, 'test select tag in mutiple mode with text/attrs and selected option using a selected in attrs and an outer one too to make sure the outer takes precedence': function() {
+    var choices = [{value: 1, text: "Text 1", attrs: {data: {thing: "avalue"}, selected: true}}, {value: 2, text: "Text 2", attrs: {data: {thing: "avalue"}}}]
+      , string = helpers.selectTag(choices, [1,2], {multiple: true});
+    assert.equal(string, "<select multiple=\"multiple\"><option data-thing=\"avalue\" selected=\"selected\" value=\"1\">Text 1</option><option data-thing=\"avalue\" selected=\"selected\" value=\"2\">Text 2</option></select>");
   }
 
 , 'test single tags in truncateHTML': function () {
