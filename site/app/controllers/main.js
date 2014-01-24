@@ -24,7 +24,9 @@ var fs = require('fs')
 var BRANCH = 'master'
   , URL_PREFIX = 'https://raw.github.com/mde/geddy/' +
         BRANCH + '/docs/'
-  , USE_LOCAL = true;
+  // If set to true, uses the local copy on the filesystem
+  // Use for development work
+  , USE_LOCAL = false;
 
 md.setOptions({
   gfm: true
@@ -37,6 +39,8 @@ md.setOptions({
 var Main = function () {
 
   // Utility methods
+  // =====================
+  // Fetch from either GH or from the local FS inside the repo
   var fetch = function (p, cb) {
         var opts
           , filePath;
@@ -59,12 +63,16 @@ var Main = function () {
         }
       }
 
+    // Get the list of topics either for Ref or Guide
+    // Parse the JSON data and return as JS obj
     , getTopicsForDocType = function (docType, callback) {
         fetch(docType + '/topics.json', function (data) {
           callback(JSON.parse(data));
         });
       }
 
+    // Get the doc content for a particular topic
+    // Convert MD to HTML, return with name and list of subheads
     , getDocForTopic = function (docType, topic, callback) {
         fetch(docType + '/' + topic.path + '.md', function (data) {
           var content = data
@@ -85,7 +93,8 @@ var Main = function () {
         });
       };
 
-  //this.cacheResponse(['reference', 'guide']);
+  // Cache the response for ref and guide in-process
+  this.cacheResponse(['reference', 'guide']);
 
   this.index = function (req, resp, params) {
     this.respond(params, {
