@@ -1,6 +1,6 @@
 Along with flexible template system in Geddy you have access to various built in helpers and custom helpers.
 
-### custom helpers
+#### custom helpers
 When you create your application a `helpers` directory will be added to the `app` directory, all the files in this directory will be required when you start the server up.
 
 The exported helpers, are available in your views and throughout your application.
@@ -355,7 +355,7 @@ scriptLink('/js/script.js', {type: 'text/javascript'})
 
 * * *
 
-####
+#### linkTo
 `linkTo(content<String>, options<String/Object>, htmlOptions<Object>)`
 
 Generates a link from the given `options`, then returns a anchor tag with the `content` and the `htmlOptions` provided

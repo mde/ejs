@@ -63,16 +63,18 @@ app.docs = new (function() {
 
   // make internal anchor links work for sub menu items
   this.giveSubIDs = function() {
-    var section;
-    $('.content div:not(.toc)').children('h3, h4').each(function (i, el) {
+    $('.content .docs').find('h3, h4').each(function (i, el) {
       var $el = $(el);
+      console.log($el);
       if (el.nodeName == "H3") {
         section = $el.attr('id');
         if (!section) {
           section = $el.text()
           $el.attr('id', section);
         }
-      } else {
+      }
+      else {
+        console.log($el.text());
         $el.attr('id', section + $el.text());
       }
     });

@@ -13,7 +13,7 @@
                 each sub in doc.subs
                   li
                     a(href="#"+doc.name+sub)=sub
-    .span6
+    .span6.docs
       each doc in docs
         h3(id=doc.name)=geddy.string.capitalize(doc.name)
         !=doc.content
