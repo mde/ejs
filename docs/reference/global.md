@@ -1,5 +1,19 @@
-Methods that are available directly on the `geddy` global. Can be run as soon as
-the global is defined (e.g., in your app's config/init.js).
+There is one global object created for Geddy apps, the `geddy` object.  There
+are a few namespaces and methods that are available directly on this global.
+Methods can be run as soon as the global is defined (e.g., in your app's
+config/init.js).
+
+The `geddy` global is also an EventEmitter, with a few lifecycle methods.
+
+#### "initialized" (event)
+
+This event is emitted when your app environment has loaded.
+
+#### "started" (event)
+
+This event is emitted when Geddy's HTTP server has started listening for
+requests. This event is useful for knowing when to set up a realtime connection
+with Socket.io.
 
 #### .addFormat
 `addFormat(name, contentType, formatter)`
