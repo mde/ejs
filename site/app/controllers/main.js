@@ -105,13 +105,17 @@ var Main = function () {
   ['reference', 'guide'].forEach(function (docType) {
     self[docType] = function (req, resp, params) {
       var self = this;
+      // Get this list of topics, array of obj in the form of
+      // {name: 'Foo', path: 'foo'}
       getTopicsForDocType(docType, function (topics) {
         var count = topics.length
           , docs = [];
+        // Pull down and format the content for each topic
         topics.forEach(function (t) {
           getDocForTopic(docType, t, function (content) {
             docs.push(content);
             count--;
+            // Render when they're all assembled
             if (count == 0) {
               self.respond({docs: docs}, {
                 format: 'html'

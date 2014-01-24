@@ -139,7 +139,7 @@ contentTag('a', 'hey there', {href: 'http://google.com', data_go_to: 'http://goo
 ```
 
 #### selectTag
-`selectTag(data<Array>, selectedOption, options<Object>)
+`selectTag(data<Array>, selectedOption, options<Object>)`
 
 Creates a HTML select tag using the given `data` array to create HTML option
 elements.
