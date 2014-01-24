@@ -75,7 +75,7 @@ app.docs = new (function() {
       }
       else {
         console.log($el.text());
-        $el.attr('id', section + $el.text());
+        $el.attr('id', encodeURIComponent(section + $el.text()));
       }
     });
   };
