@@ -1,24 +1,18 @@
 var assert = require('assert')
   , utils = require('utilities')
+  , model = require('model')
+  , Zooby = require('../fixtures/zooby').Zooby
   , Responder = require('../../lib/controller/responder').Responder
   , Controller = require('../../lib/controller/base_controller').BaseController
+  , MockRequest
   , tests
   , createModelInstance = function () {
-      return {
-        id: 'mambo-no-5'
-      , type: 'zooby'
-      , toObj: function () {
-          var buf = {};
-          for(var key in this) {
-            if(this.hasOwnProperty(key)
-              && key !== 'toObj'
-              && key !== 'type') {
-              buf[key] = this[key];
-            }
-          }
-          return buf;
-        }
-      }
+      var zooby = Zooby.create({
+        title: 'asdf'
+      , description: 'qwer'
+      });
+      zooby.id = 'mambo-no-5';
+      return zooby;
     }
   , createController = function () {
       var c = new Controller();
@@ -37,12 +31,13 @@ var assert = require('assert')
       return c;
     };
 
-
-var MockRequest = function () {
+MockRequest = function () {
   this.headers = {
     accept: '*/*'
   }
 };
+
+Zooby = model.register('Zooby', Zooby);
 
 // Just to make sure our lowest level method is working
 tests = {
@@ -51,10 +46,10 @@ tests = {
     c.output = function (statusCode, headers, content) {
       assert.equal(200, statusCode);
       assert.equal('text/html', headers['Content-Type']);
-      assert.equal('<div>{"foo":"bar"}</div>', content);
+      assert.equal('<div>{"zooby":"bar"}</div>', content);
       next();
     };
-    c.respond({foo: 'bar'}, {format: 'html'});
+    c.respond({zooby: 'bar'}, {format: 'html'});
   }
 
 , 'respond in html, format in params and supported': function (next) {
@@ -63,10 +58,10 @@ tests = {
     c.output = function (statusCode, headers, content) {
       assert.equal(200, statusCode);
       assert.equal('text/html', headers['Content-Type']);
-      assert.equal('<div>{"foo":"bar"}</div>', content);
+      assert.equal('<div>{"zooby":"bar"}</div>', content);
       next();
     };
-    c.respond({foo: 'bar'});
+    c.respond({zooby: 'bar'});
   }
 
 , 'respond in json, format specified and supported': function (next) {
@@ -74,10 +69,10 @@ tests = {
     c.output = function (statusCode, headers, content) {
       assert.equal(200, statusCode);
       assert.equal('application/json', headers['Content-Type']);
-      assert.equal('{"foo":"bar"}', content);
+      assert.equal('{"zooby":"bar"}', content);
       next();
     };
-    c.respond({foo: 'bar'}, {format: 'json'});
+    c.respond({zooby: 'bar'}, {format: 'json'});
   }
 
 , 'respond in json, format in params and supported': function (next) {
@@ -86,10 +81,10 @@ tests = {
     c.output = function (statusCode, headers, content) {
       assert.equal(200, statusCode);
       assert.equal('application/json', headers['Content-Type']);
-      assert.equal('{"foo":"bar"}', content);
+      assert.equal('{"zooby":"bar"}', content);
       next();
     };
-    c.respond({foo: 'bar'});
+    c.respond({zooby: 'bar'});
   }
 
 , 'respond in js (JSONP), format specified and supported': function (next) {
@@ -98,10 +93,10 @@ tests = {
     c.output = function (statusCode, headers, content) {
       assert.equal(200, statusCode);
       assert.equal('application/javascript', headers['Content-Type']);
-      assert.equal('zoobyasdf({"foo":"bar"});', content);
+      assert.equal('zoobyasdf({"zooby":"bar"});', content);
       next();
     };
-    c.respond({foo: 'bar'}, {format: 'js'});
+    c.respond({zooby: 'bar'}, {format: 'js'});
   }
 
 , 'respond in js (JSONP), format in params and supported': function (next) {
@@ -111,10 +106,10 @@ tests = {
     c.output = function (statusCode, headers, content) {
       assert.equal(200, statusCode);
       assert.equal('application/javascript', headers['Content-Type']);
-      assert.equal('zoobyasdf({"foo":"bar"});', content);
+      assert.equal('zoobyasdf({"zooby":"bar"});', content);
       next();
     };
-    c.respond({foo: 'bar'});
+    c.respond({zooby: 'bar'});
   }
 
 , 'respond with available built-in format even if controller \
@@ -124,10 +119,10 @@ doesn\'t explicitly explicitly support it': function (next) {
       assert.equal(200, statusCode);
       assert.equal('application/xml', headers['Content-Type']);
       assert.equal('<?xml version="1.0" encoding="UTF-8"?>\n' +
-          '<object>\n   <foo>bar</foo>\n</object>\n', content);
+          '<object>\n   <zooby>bar</zooby>\n</object>\n', content);
       next();
     };
-    c.respond({foo: 'bar'}, {format: 'xml'});
+    c.respond({zooby: 'bar'}, {format: 'xml'});
   }
 
 , 'respond with first supported format if no format specified': function (next) {
@@ -135,16 +130,16 @@ doesn\'t explicitly explicitly support it': function (next) {
     c.output = function (statusCode, headers, content) {
       assert.equal(200, statusCode);
       assert.equal('text/html', headers['Content-Type']);
-      assert.equal('<div>{"foo":"bar"}</div>', content);
+      assert.equal('<div>{"zooby":"bar"}</div>', content);
       next();
     };
-    c.respond({foo: 'bar'});
+    c.respond({zooby: 'bar'});
   }
 
 , 'throw when unsupported format requested': function (next) {
     var c = createController();
     assert.throws(function () {
-      c.respond({foo: 'bar'}, {format: 'frang'});
+      c.respond({zooby: 'bar'}, {format: 'frang'});
     });
     next();
   }
@@ -154,10 +149,40 @@ doesn\'t explicitly explicitly support it': function (next) {
     c.output = function (statusCode, headers, content) {
       assert.equal(222, statusCode);
       assert.equal('text/html', headers['Content-Type']);
-      assert.equal('<div>{"foo":"bar"}</div>', content);
+      assert.equal('<div>{"zooby":"bar"}</div>', content);
       next();
     };
-    c.respond({foo: 'bar'}, {statusCode: 222});
+    c.respond({zooby: 'bar'}, {statusCode: 222});
+  }
+
+, 'respond, ad-hoc model properties not preserved': function (next) {
+    var c = createController()
+      , inst = createModelInstance();
+    inst.zerp = 'derp';
+    c.output = function (statusCode, headers, content) {
+      var item = JSON.parse(content);
+      assert.ok(!item.zerp);
+      next();
+    };
+    c.respond(inst, {format: 'json'});
+  }
+
+, 'respond, ad-hoc model properties preserved': function (next) {
+    var c = createController()
+      , inst = createModelInstance()
+      , origToJSON = inst.toJSON;
+    inst.zerp = 'derp';
+    inst.toJSON = function () {
+      var ret = origToJSON.call(this);
+      ret.zerp = this.zerp;
+      return ret;
+    };
+    c.output = function (statusCode, headers, content) {
+      var item = JSON.parse(content);
+      assert.ok(item.zerp);
+      next();
+    };
+    c.respond(inst, {format: 'json'});
   }
 
 // respondTo tests, mid-level API
@@ -217,10 +242,12 @@ but not explicitly supported on controller': function (next) {
     c.params.format = 'json';
     c.params.action = 'create';
     c.output = function (statusCode, headers, content) {
+      var item = JSON.parse(content);
       assert.equal(201, statusCode);
       assert.equal('application/json', headers['Content-Type']);
       assert.equal('/zoobies/mambo-no-5', headers['Location']);
-      assert.equal('{"id":"mambo-no-5","type":"zooby"}', content);
+      assert.equal('mambo-no-5', item.id);
+      assert.equal('Zooby', item.type);
       next();
     };
     c.respondWith(createModelInstance());
@@ -248,10 +275,12 @@ but not explicitly supported on controller': function (next) {
     c.params.format = 'json';
     c.params.action = 'create';
     c.output = function (statusCode, headers, content) {
+      var item = JSON.parse(content);
       assert.equal(400, statusCode);
       assert.equal('application/json', headers['Content-Type']);
-      assert.equal('{"id":"mambo-no-5","errors":{"poop":"asdf"},"type":"zooby"}',
-          content);
+      assert.equal('mambo-no-5', item.id);
+      assert.equal('asdf', item.errors.poop);
+      assert.equal('Zooby', item.type);
       next();
     };
     inst = createModelInstance();
@@ -277,10 +306,11 @@ but not explicitly supported on controller': function (next) {
     c.params.format = 'json';
     c.params.action = 'remove';
     c.output = function (statusCode, headers, content) {
+      var item = JSON.parse(content);
       assert.equal(200, statusCode);
       assert.equal('application/json', headers['Content-Type']);
-      assert.equal('{"id":"mambo-no-5","type":"zooby"}',
-          content);
+      assert.equal('mambo-no-5', item.id);
+      assert.equal('Zooby', item.type);
       next();
     };
     c.respondWith(createModelInstance());
@@ -308,10 +338,12 @@ but not explicitly supported on controller': function (next) {
     c.params.format = 'json';
     c.params.action = 'remove';
     c.output = function (statusCode, headers, content) {
+      var item = JSON.parse(content);
       assert.equal(400, statusCode);
       assert.equal('application/json', headers['Content-Type']);
-      assert.equal('{"id":"mambo-no-5","errors":{"derp":"zerp"},"type":"zooby"}',
-          content);
+      assert.equal('mambo-no-5', item.id);
+      assert.equal('zerp', item.errors.derp);
+      assert.equal('Zooby', item.type);
       next();
     };
     inst = createModelInstance();
@@ -337,10 +369,11 @@ but not explicitly supported on controller': function (next) {
     c.params.format = 'json';
     c.params.action = 'update';
     c.output = function (statusCode, headers, content) {
+      var item = JSON.parse(content);
       assert.equal(200, statusCode);
       assert.equal('application/json', headers['Content-Type']);
-      assert.equal('{"id":"mambo-no-5","type":"zooby"}',
-          content);
+      assert.equal('mambo-no-5', item.id);
+      assert.equal('Zooby', item.type);
       next();
     };
     c.respondWith(createModelInstance());
@@ -368,10 +401,12 @@ but not explicitly supported on controller': function (next) {
     c.params.format = 'json';
     c.params.action = 'update';
     c.output = function (statusCode, headers, content) {
+      var item = JSON.parse(content);
       assert.equal(400, statusCode);
       assert.equal('application/json', headers['Content-Type']);
-      assert.equal('{"id":"mambo-no-5","errors":{"derp":"zerp"},"type":"zooby"}',
-          content);
+      assert.equal('mambo-no-5', item.id);
+      assert.equal('zerp', item.errors.derp);
+      assert.equal('Zooby', item.type);
       next();
     };
     inst = createModelInstance();
@@ -388,8 +423,9 @@ but not explicitly supported on controller': function (next) {
     c.output = function (statusCode, headers, content) {
       assert.equal(200, statusCode);
       assert.equal('text/html', headers['Content-Type']);
-      assert.equal('<div>{"params":{"format":"html","action":"show"},' +
-          '"zooby":{"id":"mambo-no-5"}}</div>', content);
+      assert.ok(content.indexOf('<div>') > -1);
+      assert.ok(content.indexOf('</div>') > -1);
+      assert.ok(content.indexOf('mambo-no-5') > -1);
       next();
     };
     c.respondWith(createModelInstance());
@@ -400,9 +436,11 @@ but not explicitly supported on controller': function (next) {
     c.params.format = 'json';
     c.params.action = 'show';
     c.output = function (statusCode, headers, content) {
+      var item = JSON.parse(content);
       assert.equal(200, statusCode);
       assert.equal('application/json', headers['Content-Type']);
-      assert.equal('{"id":"mambo-no-5","type":"zooby"}', content);
+      assert.equal('mambo-no-5', item.id);
+      assert.equal('Zooby', item.type);
       next();
     };
     c.respondWith(createModelInstance());
