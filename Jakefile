@@ -67,6 +67,7 @@ testTask('Geddy', ['clean'], function () {
   this.testFiles.exclude('test/templates/partial.js');
   this.testFiles.include('test/**/*.js');
   this.testFiles.include('test/templates/partial.js');
+  this.testFiles.exclude('test/fixtures/**/*.js');
 });
 
 desc('Clears the test temp dir');
