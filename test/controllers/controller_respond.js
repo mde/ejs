@@ -446,6 +446,67 @@ but not explicitly supported on controller': function (next) {
     c.respondWith(createModelInstance());
   }
 
+, 'respondWith html index action (array data), format in params': function (next) {
+    var c = createController()
+      , items = [];
+    c.params.format = 'html';
+    c.params.action = 'index';
+    c.output = function (statusCode, headers, content) {
+      var parseable
+        , data
+        , items;
+      assert.equal(200, statusCode);
+      assert.equal('text/html', headers['Content-Type']);
+      // Should be whatever renderTemplate spits out
+      assert.ok(content.indexOf('<div>') > -1);
+      assert.ok(content.indexOf('</div>') > -1);
+      // Strip the token HTML tags, see what content got
+      // passed to renderTemplate
+      parseable = content.replace('<div>', '').replace('</div>', '');
+      data = JSON.parse(parseable);
+      // Should have a params obj
+      assert.ok(data.params);
+      // Should have data items
+      items = data.zoobies;
+      assert.equal(3, items.length);
+      items.forEach(function (item) {
+        assert.ok(item.id);
+        assert.ok(item.createdAt);
+        assert.ok(item.title);
+        assert.ok(item.description);
+      });
+      next();
+    };
+    items.push(createModelInstance());
+    items.push(createModelInstance());
+    items.push(createModelInstance());
+    c.respondWith(items);
+  }
+
+, 'respondWith json index action (array data), format in params': function (next) {
+    var c = createController()
+      , items = [];
+    c.params.format = 'json';
+    c.params.action = 'index';
+    c.output = function (statusCode, headers, content) {
+      var items = JSON.parse(content);
+      assert.equal(200, statusCode);
+      assert.equal('application/json', headers['Content-Type']);
+      assert.equal(3, items.length);
+      items.forEach(function (item) {
+        assert.ok(item.id);
+        assert.ok(item.createdAt);
+        assert.ok(item.title);
+        assert.ok(item.description);
+      });
+      next();
+    };
+    items.push(createModelInstance());
+    items.push(createModelInstance());
+    items.push(createModelInstance());
+    c.respondWith(items);
+  }
+
 };
 
 module.exports = tests;
