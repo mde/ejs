@@ -5,15 +5,100 @@ config/init.js).
 
 The `geddy` global is also an EventEmitter, with a few lifecycle methods.
 
-#### "initialized" (event)
+#### "initialized" (event, worker only)
 
-This event is emitted when your app environment has loaded.
+This event is emitted by a worker process when your application has loaded.
 
-#### "started" (event)
+#### "started" (event, worker only)
 
-This event is emitted when Geddy's HTTP server has started listening for
-requests. This event is useful for knowing when to set up a realtime connection
-with Socket.io.
+This event is emitted by a worker process when Geddy's HTTP server has started
+listening for requests. This event is useful in your application for knowing
+when to set up a realtime connection with Socket.io.
+
+#### "clusterStarted" (event, cluster master only)
+
+This event is emitted by a cluster's master process when the HTTP servers for
+all workers have started listening for requests.
+
+#### .start
+`start(config)`
+
+This command starts an unclustered Geddy application with no worker processes,
+directly in the current process. This assumes you have installed Geddy locally
+instead of globally, and have required the `geddy` object in the current script.
+
+##### config
+- `config [object]`: The configuration object passed to the Geddy application
+for startup. These configuration options correspond to the options passed to the
+CLI startup script.
+
+##### example
+```
+var geddy = require('geddy');
+// Start up an unclustered app in the current process
+geddy.start({
+  port: 4001
+});
+```
+
+#### .startCluster
+`startCluster(config)`
+
+Starts a clustered Geddy application with the load shared across multiple worker
+processes. This assumes you have installed Geddy locally instead of globally,
+and have required the `geddy` object in the current script.
+
+##### config
+- `config [object]`: The configuration object passed to the Geddy application
+for startup. These configuration options correspond to the options passed to the
+CLI startup script.
+
+##### example
+```
+var geddy = require('geddy');
+// Start up a clustered app
+geddy.startCluster({
+  environment: 'production'
+, port: 4002
+, workers: 3
+});
+```
+#### .stop
+`stop`
+
+Used to stop an unclustered Geddy application with no worker processes. This
+command should not be used with a clustered app.
+
+##### example
+```
+var geddy = require('geddy');
+// Start up a server and immediately shut it back down
+geddy.start();
+geddy.on('started', function () {
+  console.log('server started, now shutting down');
+  geddy.stop();
+});
+```
+
+#### .stopCluster
+`stopCluster`
+
+Used to stop an clustered Geddy application. This command should only be used in
+the master process of a clustered server.
+
+##### example
+```
+var geddy = require('geddy');
+// Start up a clustered server and immediately shut it back down
+geddy.startCluster({
+  workers: 3
+});
+geddy.on('clusterStarted', function () {
+  console.log('cluster started, now shutting down');
+  geddy.stopCluster();
+});
+
+```
 
 #### .addFormat
 `addFormat(name, contentType, formatter)`
