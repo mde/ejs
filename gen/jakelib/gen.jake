@@ -133,6 +133,7 @@ namespace('gen', function () {
   // Creates a new Geddy app scaffold
   task('app', function (name, engine, realtime) {
     var basePath = path.join(genDirname, 'base')
+      , envPath
       , mkdirs
       , cps
       , text
@@ -165,7 +166,7 @@ namespace('gen', function () {
     , ['public', '']
     , ['router.js', 'config']
     , ['init.js', 'config']
-    , (realtime) ? ['realtime/environment.js', 'config'] : ['environment.js', 'config']
+    //, (realtime) ? ['realtime/environment.js', 'config'] : ['environment.js', 'config']
     , ['development.js', 'config']
     , ['production.js', 'config']
     , ['secrets.json', 'config']
@@ -181,6 +182,13 @@ namespace('gen', function () {
     cps.forEach(function (cp) {
       jake.cpR(path.join(basePath, cp[0]), path.join(name, cp[1]), {silent: true});
     });
+
+    // Compile base environment.js
+    envPath = realtime ? 'realtime/environment.js.ejs' : 'environment.js.ejs';
+    text = fs.readFileSync(path.join(basePath, envPath), 'utf8').toString();
+    adapter = new Adapter({engine: 'ejs', template: text});
+    fs.writeFileSync(path.join(name, 'config', 'environment.js'),
+        adapter.render({version: geddy.version}), 'utf8');
 
     // Compile Jakefile
     text = fs.readFileSync(path.join(basePath, 'Jakefile.ejs'), 'utf8').toString();
