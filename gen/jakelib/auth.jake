@@ -1,6 +1,6 @@
 var path = require('path')
   , cwd = process.cwd()
-  , geddyPassport = 'geddy-passport@0.0.x'
+  , geddyPassport = 'geddy-passport@0.1.x'
   , helpers = require('./helpers')
   , mixinJSONData = helpers.mixinJSONData
   , getRouterPath = helpers.getRouterPath
