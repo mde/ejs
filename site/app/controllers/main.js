@@ -55,6 +55,7 @@ var Main = function () {
           opts = {
             url: URL_PREFIX + p
           , headers: {'User-Agent': 'GeddyJS documentation site'}
+          , dataType: 'txt'
           };
           geddy.request(opts, function (err, data) {
             if (err) { throw err; }
@@ -67,6 +68,7 @@ var Main = function () {
     // Parse the JSON data and return as JS obj
     , getTopicsForDocType = function (docType, callback) {
         fetch(docType + '/topics.json', function (data) {
+          console.log(data);
           callback(JSON.parse(data));
         });
       }
