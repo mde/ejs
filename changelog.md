@@ -1,4 +1,4 @@
-### 0.12: 2014-01-26
+ ### v0.12: 2014-01-26
 
 + Per-action response caching
 + Mailer integration via Nodemailer (http://www.nodemailer.com/)
@@ -22,7 +22,7 @@
 + Model: numerous MySQL and SQLite adapter fixes
 + Model: throw when attempting to use system property in model definition
 
-### 0.11: 2013-11-05
+ ### v0.11: 2013-11-05
 
 + New Model adapters: MySQL, SQLite, LevelDB, Filesystem
 + Streaming query results from Model
@@ -37,7 +37,7 @@
 + Model test stubs
 + Fixed numeric property 'failbotage'
 
-### 0.10: 2013-09-16
+ ### v0.10: 2013-09-16
 
 + Response API (i.e., `respond`/`respondTo`/`respondWith`)
 + Customizable error pages
@@ -49,7 +49,7 @@
 + Geddy site accessibility
 + Using tlsopts for parsing SSL and SPDY options
 
-### 0.9: 2013-07-08
+ ### v0.9: 2013-07-08
 
 + Migrations for SQL databases
 + Custom validation scenarios
@@ -67,7 +67,7 @@
 + Separated docs into Reference and Guide
 + Proper branch support for Docs site
 
-### 0.8: 2013-04-25
+ ### v0.8: 2013-04-25
 
 + Flash-messages for session
 + Through-associations for models
@@ -87,7 +87,7 @@
 + Fixes for JSON content-type
 + Massive refactor of app-loading code
 
-### 0.7: 2013-03-12
+ ### v0.7: 2013-03-12
 
 + Node v0.10 compatibility
 + Better CLI help
@@ -104,7 +104,7 @@
 + Non-EJS support for `auth` generator
 + Better docs for Heroku and NodeJitsu deploy
 
-### 0.6: 2012-11-05
+ ### v0.6: 2012-11-05
 
 + Models can now be used on the front end
 + Added the `-rt` option for app generation
@@ -117,7 +117,7 @@
 + Removed Templato dependency
 + Fixed a ton more bugs (keep 'em coming!)
 
-### 0.5: 2012-10-11
+ ### v0.5: 2012-10-11
 
 + Brand new Web site with extensive docs
 + Removed models from geddy core, moved into Model project
