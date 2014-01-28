@@ -21,7 +21,7 @@ var fs = require('fs')
   , md = require('marked')
   , hljs = require('highlight.js');
 
-var BRANCH = 'master'
+var BRANCH = 'v0.12'
   , URL_PREFIX = 'https://raw.github.com/mde/geddy/' +
         BRANCH + '/docs/'
   // If set to true, uses the local copy on the filesystem
