@@ -1,3 +1,27 @@
+### 0.12
+2014-01-26
++ Per-action response caching
++ Mailer integration via Nodemailer (http://www.nodemailer.com/)
++ E-mail activation for new users for auth plugin
++ Framework events
++ Programmatic server shutdown
++ Filesystem session-store
++ Rewritten tutorial
++ API for adding new MIME types
++ Expose template engines for use in controllers
++ Update to Jade v1.x in generated apps
++ appName config value
++ Numerous updates to selectTag helper
++ Config options for asset server and URI base path
++ generatedByVersion config value in generated apps
++ Model: reflexive through-associations
++ Model: correct serialization for 'object' datatype
++ Model: simplified query-syntax for multiple comparisons on a single field
++ Model: fixed API for removal of associations
++ Model: eager-fetch of join-model on through-associations
++ Model: numerous MySQL and SQLite adapter fixes
++ Model: throw when attempting to use system property in model definition
+
 ### 0.11
 2013-11-05
 + New Model adapters: MySQL, SQLite, LevelDB, Filesystem
