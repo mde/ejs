@@ -11,18 +11,13 @@ html(lang="en")
     //if lt IE 9
       script(src="http://html5shim.googlecode.com/svn/trunk/html5.js")
 
-    != scriptLink('/js/jquery.min.js', {type:'text/javascript'})
-    != scriptLink('/js/bootstrap.min.js', {type:'text/javascript'})
-    != scriptLink('/js/config/init.js', {type: 'text/javascript'})
+    != scriptLink('jquery.min.js', {type:'text/javascript'})
+    != scriptLink('bootstrap.min.js', {type:'text/javascript'})
+    != scriptLink('config/init.js', {type: 'text/javascript'})
 
-    != styleLink('/css/bootstrap.min.css', {rel:'stylesheet'})
-    != styleLink('/css/style.css', {rel:'stylesheet'})
-    != styleLink('/css/bootstrap.responsive.min.css', {rel:'stylesheet'})
+    != styleLink('bootstrap.min.css', {rel:'stylesheet'})
+    != styleLink('bootstrap.responsive.min.css', {rel:'stylesheet'})
+    != styleLink('style.css', {rel:'stylesheet'})
 
-    // The fav and touch icons
-    link(rel="shortcut icon", href="/images/favicon.ico")
-    link(rel="apple-touch-icon", href="images/apple-touch-icon.png")
-    link(rel="apple-touch-icon", sizes="72x72", href="images/apple-touch-icon-72x72.png")
-    link(rel="apple-touch-icon", sizes="114x114", href="images/apple-touch-icon-114x114.png")
 
 
