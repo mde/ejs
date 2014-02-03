@@ -23,7 +23,17 @@ namespace('env', function () {
   });
 
   task('app', ['config'], {async: true}, function () {
-    require('../../lib/init').init(geddy, function () {
+    var opts = {
+          initItems: [
+            'model'
+          , 'controller'
+          , 'router'
+          , 'i18n'
+          , 'mailer'
+          , 'localAppInit'
+          ]
+        };
+    require('../../lib/init').init(geddy, opts, function () {
       complete();
     });
   });
