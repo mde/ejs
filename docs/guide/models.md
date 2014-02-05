@@ -819,6 +819,7 @@ Postgres as default, with both a Postgres and Riak model
     , password: null
     , host: null
     , port: 5432
+    , ssl: true
     }
   , riak: {
       protocol: 'http'
