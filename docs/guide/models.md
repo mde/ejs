@@ -723,6 +723,74 @@ if (!someTeam.players) {
 }
 ```
 
+#### Adapters
+
+You can specify a different adapter for each model or apply the same adapter to all models.
+
+An adapter is added to a specific model like this:
+
+```javascript
+var adapter = model.createAdapter('postgres', {
+  host: 'localhost',
+  username: 'user',
+  password: 'password',
+  dbname: 'mydb'
+});
+
+model.User.adapter = adapter;
+model.Zerb.adapter = adapter;
+```
+
+You can also define a defaultAdapter which will be used by default.
+Then you can override it on individual models.
+
+```javascript
+model.defaultAdapter = model.createAdapter('memory');
+
+var postgresAdapter = model.createAdapter('postgres', {
+  host: 'localhost',
+  username: 'user',
+  password: 'password',
+  dbname: 'mydb'
+});
+
+// User model gets the defaultAdapter
+model.Zerb.adapter = postgresAdapter;
+```
+
+If using Geddy, the default adapter can be configured by environment in the `/config` folder.  For example, to use the filesystem for development, in `/config/development.js` you might write:
+
+```
+var config = {
+  appName: 'Geddy App (development)'
+, model: {
+    defaultAdapter: 'filesystem'
+  }
+};
+module.exports = config;
+```
+On the other hand, if you wanted to use postgres in production, you might edit `config/production.js` to say:
+```
+var config = {
+  appName: 'Geddy App (development)'
+, model: {
+    defaultAdapter: 'postgres'
+  }
+, db: {
+  postgresql: {
+    port:5432,
+    password:'yourPasswordHere',
+    database:'databaseName',
+    host:'localhost',
+    user:'yourUserName'
+  }
+}
+};
+
+module.exports = config;
+```
+(I've left out non-related configuration fields).
+
 #### Migrations (SQL adapters only)
 
 Migrations are a convenient way to make changes to your SQL database schema over
