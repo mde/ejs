@@ -769,7 +769,9 @@ var config = {
 };
 module.exports = config;
 ```
-On the other hand, if you wanted to use postgres in production, you might edit `config/production.js` to say:
+#### Configurations for other supported database types
+
+Postgresql
 ```
 var config = {
   appName: 'Geddy App (development)'
@@ -788,6 +790,42 @@ var config = {
 };
 
 module.exports = config;
+```
+MySQL
+```javascript
+ // Using MySQL as the default, with only a MySQL DB
+, model: {
+    defaultAdapter: 'mysql'
+  }
+, db: {
+    mysql: {
+      host: 'localhost'
+    , user: process.env.USER
+    , database: process.env.USER
+    , password: null
+    }
+  }
+```
+Postgres as default, with both a Postgres and Riak model
+```javascript
+ // Using Postgres as the default, with both Postgres and Riak
+, model: {
+    defaultAdapter: 'postgres'
+  }
+, db: {
+    postgres: {
+      user: process.env.USER
+    , database: process.env.USER
+    , password: null
+    , host: null
+    , port: 5432
+    }
+  , riak: {
+      protocol: 'http'
+    , host: 'localhost'
+    , port: 8098
+  }
+}
 ```
 (I've left out non-related configuration fields).
 
