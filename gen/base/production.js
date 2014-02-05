@@ -46,6 +46,7 @@ var config = {
     , password: null
     , host: null
     , port: 5432
+    , ssl: true
     }
   }
 */
