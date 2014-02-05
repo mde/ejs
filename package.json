@@ -27,7 +27,7 @@
   "main": "./lib/geddy",
   "repository": {
     "type": "git",
-    "url": "git://github.com/mde/geddy.git"
+    "url": "git://github.com/geddy/geddy.git"
   },
   "preferGlobal": true,
   "devDependencies": {
