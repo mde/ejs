@@ -20,6 +20,18 @@ var config = {
   appName: 'Geddy App (development)'
 , detailedErrors: true
 , debug: true
+, watch: {
+    files : [
+      '/config'
+    , '/lib'
+    , '/app/controllers'
+    , '/app/models'
+    , '/app/views'
+    , '/app/helpers'
+    ]
+  , includePattern: '\\.(js|coffee|css|less|scss)$'
+  , excludePattern: '\\.git|node_modules'
+  }
 , hostname: null
 , port: 4000
 , model: {
