@@ -21,7 +21,7 @@ All the exported helpers are global to the templates, so any of them can be acce
 
 You can also access them from controllers/models and any other part of your application by using `geddy.viewHelpers` here's an example using our upperCase helper:
 ```
-console.log(geddy.viewHelper.upperCase("some string"));
+console.log(geddy.viewHelpers.upperCase("some string"));
 // => "SOME STRING"
 ```
 
