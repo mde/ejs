@@ -22,7 +22,7 @@ var fs = require('fs')
   , hljs = require('highlight.js');
 
 var BRANCH = 'v0.12'
-  , URL_PREFIX = 'https://raw.github.com/mde/geddy/' +
+  , URL_PREFIX = 'https://raw.github.com/geddy/geddy/' +
         BRANCH + '/docs/'
   // If set to true, uses the local copy on the filesystem
   // Use for development work
@@ -169,7 +169,7 @@ var Main = function () {
 
     // get the tutorial markdown file
     geddy.request({
-      url: 'https://raw.github.com/mde/geddy/' + BRANCH + '/tutorial.md'
+      url: 'https://raw.github.com/geddy/geddy/' + BRANCH + '/tutorial.md'
       , headers: {'User-Agent': 'GeddyJS documentation site'}
       }, gotTutorial);
   };
@@ -200,7 +200,7 @@ var Main = function () {
 
     // get the tutorial markdown file
     geddy.request({
-      url: 'https://raw.github.com/mde/geddy/' + BRANCH + '/changelog.md'
+      url: 'https://raw.github.com/geddy/geddy/' + BRANCH + '/changelog.md'
       , headers: {'User-Agent': 'GeddyJS documentation site'}
 
       }, gotTutorial);
@@ -217,7 +217,7 @@ var Main = function () {
 
     // get stargazers
     var opts = {
-      url: 'https://api.github.com/repos/mde/geddy/stargazers?page='+(Math.floor(Math.random()*10)+1)
+      url: 'https://api.github.com/repos/geddy/geddy/stargazers?page='+(Math.floor(Math.random()*10)+1)
     , dataType: 'json'
       , headers: {'User-Agent': 'GeddyJS documentation site'}
     };
