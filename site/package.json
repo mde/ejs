@@ -1,0 +1,12 @@
+{
+  "name": "geddy-site",
+  "description": "Documentation site for the Geddy Web framework",
+  "version": "0.0.0",
+  "author": "Matthew Eernisse <mde@fleegix.org> (http://fleegix.org)",
+  "dependencies": {
+    "highlight.js": "~8.0.0"
+  },
+  "engines": {
+    "node": "*"
+  }
+}
