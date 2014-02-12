@@ -490,7 +490,8 @@ Use the `all` method to find lots of items. Pass it a set of query parameters in
 - `query [object]`: if the query is an object, it will be interpreted as a Query object
 
 ##### options
-- `sort [object]`: each key is a property name, each value can either be `asc` or `desc`
+- `sort [object]`: each key is a property name, each value can either be `asc` or `desc`. 
+- `includes [array]`: Using SQL adapters, you may supply an array of model association names to eager-load.
 
 ##### example
 ```
@@ -501,6 +502,11 @@ User.all({location: 'san francisco'}, function (err, users) {
 
 User.all({location: 'san francisco'}, {sort: {createdAt: 'desc'}}, function (err, users) {
   // do stuff with users
+});
+
+// Eager-load associations of this model. (Only works on SQL adapters.)
+User.all({location: 'san francisco'}, {includes: ['posts']}, function (err, users) {
+  // do stuff with users - each "user" will have a "posts" property eager-loaded from the DB
 });
 ```
 
