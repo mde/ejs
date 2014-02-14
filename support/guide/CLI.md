@@ -104,11 +104,15 @@ See https://github.com/mde/jake for full documentation
 
 *Examples*
 
-```
+```sh
 # Run your app's tests in the app environment
 geddy jake test
 # Initialize the development database for your app
 geddy jake db:init environment=development
+# Migrate the database to the latest schema
+geddy jake db:migrate
+# Migrate the database to a specific timestamp
+geddy jake db:migrate[1392335995]
 # Show all routes
 geddy jake routes
 # Show all routes for the user resource
