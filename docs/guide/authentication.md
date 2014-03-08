@@ -5,12 +5,12 @@ or third-party social services like Facebook and Twitter.
 #### Using the generator
 
 To set up a new Geddy app with built-in authentication, create your application
-like normal, then run the `geddy auth` command inside, like so:
+like normal, then run the `geddy gen auth` command inside, like so:
 
 ```
 $ geddy app by_tor
 $ cd by_tor
-$ geddy auth
+$ geddy gen auth
 ```
 
 This will pull down [Geddy-Passport](https://github.com/mde/geddy-passport)
@@ -20,7 +20,7 @@ User accounts and the login process.
 
 #### Danger, Warning, etc.
 
-The `geddy auth` generator should only be used in a new Geddy app. If you
+The `geddy gen auth` generator should only be used in a new Geddy app. If you
 run it inside an existing app, it may overwrite existing files that you wanted
 to keep.
 
