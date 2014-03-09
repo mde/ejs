@@ -23,10 +23,10 @@ var fs = require('fs')
 
 var BRANCH = 'v0.12'
   , URL_PREFIX = 'https://raw.github.com/geddy/geddy/' +
-        BRANCH + '/docs/'
+        BRANCH + '/'
   // If set to true, uses the local copy on the filesystem
   // Use for development work
-  , USE_LOCAL = false;
+  , USE_LOCAL = true;
 
 md.setOptions({
   gfm: true
@@ -45,7 +45,7 @@ var Main = function () {
         var opts
           , filePath;
         if (USE_LOCAL) {
-          filePath = path.join('../docs', p);
+          filePath = path.join('../', p);
           fs.readFile(filePath, function (err, data) {
             if (err) { throw err; }
             cb(data.toString());
@@ -67,8 +67,7 @@ var Main = function () {
     // Get the list of topics either for Ref or Guide
     // Parse the JSON data and return as JS obj
     , getTopicsForDocType = function (docType, callback) {
-        fetch(docType + '/topics.json', function (data) {
-          console.log(data);
+        fetch('docs/' + docType + '/topics.json', function (data) {
           callback(JSON.parse(data));
         });
       }
@@ -76,7 +75,7 @@ var Main = function () {
     // Get the doc content for a particular topic
     // Convert MD to HTML, return with name and list of subheads
     , getDocForTopic = function (docType, topic, callback) {
-        fetch(docType + '/' + topic.path + '.md', function (data) {
+        fetch('docs/' + docType + '/' + topic.path + '.md', function (data) {
           var content = data
             , name = topic.name
             , subHeads = []
@@ -143,35 +142,20 @@ var Main = function () {
   this.tutorial = function (req, resp, params) {
     var self = this;
 
-    // respond to the request
-    var respond = function (sections, content) {
-      self.respond({sections: sections, content: content}, {
-        format: 'html'
-      , template: 'app/views/main/tutorial'
-      });
-    }
-
-    // find the sections
-    var gotTutorial = function (err, tutorial) {
-      if (err) {
-        throw err;
-      }
-      var content = md(tutorial);
-      var lines = tutorial.split('\n');
-      var sections = [];
+    fetch('tutorial.md', function (data) {
+      var content = md(data)
+        , lines = data.split('\n')
+        , sections = [];
       for (var i in lines) {
         if (lines[i].indexOf('### ') == 0) {
           sections.push(geddy.string.trim(lines[i].replace("###", '')));
         }
       }
-      respond(sections, content);
-    }
-
-    // get the tutorial markdown file
-    geddy.request({
-      url: 'https://raw.github.com/geddy/geddy/' + BRANCH + '/tutorial.md'
-      , headers: {'User-Agent': 'GeddyJS documentation site'}
-      }, gotTutorial);
+      self.respond({sections: sections, content: content}, {
+        format: 'html'
+      , template: 'app/views/main/tutorial'
+      });
+    });
   };
 
   this.changelog = function (req, resp, params) {

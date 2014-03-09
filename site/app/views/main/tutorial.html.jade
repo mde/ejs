@@ -6,6 +6,6 @@
     ul
       each section in sections
         li
-          a(href="#"+section)=section
-  .span8
+          a(href="#"+ encodeURIComponent(section))=section
+  .span8.docs
     !=content
