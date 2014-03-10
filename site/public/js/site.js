@@ -11,7 +11,6 @@ app.docs = new (function() {
   this.init = function() {
     this.$toc = $('.toc');
     this.$content = $('content .span8');
-    this.giveSubIDs();
     this.registerScroll();
     this.registerMenu();
   };
@@ -57,25 +56,6 @@ app.docs = new (function() {
         self.$toc.offset({top: newTop + 20});
       } else {
         self.$toc.css({'top': 0, 'position': 'static'});
-      }
-    });
-  };
-
-  // make internal anchor links work for sub menu items
-  this.giveSubIDs = function() {
-    $('.content .docs').find('h3, h4').each(function (i, el) {
-      var $el = $(el);
-      console.log($el);
-      if (el.nodeName == "H3") {
-        section = $el.attr('id');
-        if (!section) {
-          section = $el.text()
-          $el.attr('id', section);
-        }
-      }
-      else {
-        console.log($el.text());
-        $el.attr('id', encodeURIComponent(section + $el.text()));
       }
     });
   };

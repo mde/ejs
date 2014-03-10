@@ -19,7 +19,16 @@
 var fs = require('fs')
   , path = require('path')
   , md = require('marked')
-  , hljs = require('highlight.js');
+  , hljs = require('highlight.js')
+  , TOC = function (parent, text) {
+      this.parent = parent;
+      this.text = text;
+      this.name = null;
+      this.children = [];
+      if (parent) {
+        parent.children.push(this);
+      };
+    };
 
 var BRANCH = 'v0.12'
   , URL_PREFIX = 'https://raw.github.com/geddy/geddy/' +
@@ -142,16 +151,44 @@ var Main = function () {
   this.tutorial = function (req, resp, params) {
     var self = this;
 
-    fetch('tutorial.md', function (data) {
-      var content = md(data)
-        , lines = data.split('\n')
-        , sections = [];
-      for (var i in lines) {
-        if (lines[i].indexOf('### ') == 0) {
-          sections.push(geddy.string.trim(lines[i].replace("###", '')));
+    fetch('tutorial.md', function (d) {
+      var content
+        , lines = d.split('\n')
+        , sections = []
+        , data = []
+        , currentLength = 0
+        , currentObj = new TOC()
+       , topObj = currentObj;
+
+      lines.forEach(function (line) {
+        var s, t, n, match, pat = /^#+/;;
+        if ((match = pat.exec(line))) {
+          t = geddy.string.trim(line.replace(pat, ''));
+          n = t.toLowerCase().replace(/ /g, '_');
+          // If more pound signs, we're descending into children
+          if (match[0].length > currentLength) {
+            s = new TOC(currentObj, t);
+          }
+          // Fewer pound signs, we're going up to next sibling of parent
+          else if (match[0].length < currentLength) {
+            s = new TOC(currentObj.parent.parent, t);
+          }
+          // Same number, next child
+          else {
+            s = new TOC(currentObj.parent, t);
+          }
+          currentObj = s;
+          n = s.parent.name ? s.parent.name + '_' + n : n;
+          s.name = n;
+          data.push('<a name="' + n + '"></a>');
+          currentLength = match[0].length;
         }
-      }
-      self.respond({sections: sections, content: content}, {
+
+        data.push(line);
+      });
+      content = md(data.join('\n'));
+
+      self.respond({sections: topObj, content: content}, {
         format: 'html'
       , template: 'app/views/main/tutorial'
       });

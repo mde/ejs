@@ -12,7 +12,7 @@
               ul
                 each sub in doc.subs
                   li
-                    a(href="#"+ encodeURIComponent(doc.name+sub))=sub
+                    a(href="#"+ encodeURIComponent(geddy.string.capitalize(doc.name)+sub))=sub
     .span6.docs
       each doc in docs
         h3(id=doc.name)=geddy.string.capitalize(doc.name)
