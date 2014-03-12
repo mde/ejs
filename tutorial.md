@@ -726,6 +726,11 @@ Then start up your app, and navigate to
 [http://localhost/to_dos](http://localhost/to_dos). Verify that things work correctly
 -- create some ToDos, and some Steps, and associate each step with a ToDo.
 
+If you want to rollback (down) to a specific version, provide the version number:
+```bash
+$ geddy jake db:migrate[1392335995]
+```
+
 #### Doing the eager-fetch of Steps
 
 Now we'll add the code that fetches all associated Steps along with the list of
