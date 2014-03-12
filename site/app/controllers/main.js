@@ -98,7 +98,7 @@ var BRANCH = 'v0.12'
         BRANCH + '/'
   // If set to true, uses the local copy on the filesystem
   // Use for development work
-  , USE_LOCAL = true;
+  , USE_LOCAL = false;
 
 md.setOptions({
   gfm: true
