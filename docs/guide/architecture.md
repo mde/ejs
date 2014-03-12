@@ -33,7 +33,7 @@ Geddy is built on the same MVC principles that many popular frameworks are based
 #### config
 `geddy.config`
 
-Geddy has built in configuration management. Global config options should go in your 'config/environments.js` file. Likewise, your production and development config options should go in their respective files
+Geddy has built in configuration management. Global config options should go in your 'config/environments.js' file. Likewise, your production and development config options should go in their respective files
 
 If you want to start up your app in a specific environment, use the `-e` option:
 
