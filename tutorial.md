@@ -466,6 +466,47 @@ this yet, but it will come into play when we begin editing Steps.
 Refresh your 'Create a new Step' page, and you should see a select box at the
 top with all your ToDos in it.
 
+##### Working with Handlebars
+
+Using helpers like selectTag in Handlebars works differently as compared to 
+EJS. Since you cannot pass JSON as an argument, you will have to pass JSON 
+arguments from the controller.
+
+Inside the `all` method on Geddy's ORM, include the selectTag helper options:
+
+```
+  this.add = function (req, resp, params) {
+    var self = this;
+    geddy.model.ToDo.all(function (err, data) {
+      if (err) {
+        throw err;
+      }
+      self.respond({params: params, 
+        toDos: data,
+        selectOpts: 
+          name: 'toDoId', 
+          valueField: 'id', 
+          textField: 'title'
+        }});
+    });
+  };
+```
+
+As opposed to the EJS example above, you need not change the scaffolded code 
+in app/views/steps/add.html.hbs because all the arguments are automatically 
+passed so leave the code like this:
+
+```
+  {{{partial "form" this}}}
+```
+
+And lastly, the selectTag helper in app/views/steps/form.html.hbs would look 
+like this:
+
+```
+  {{#selectTag toDos step.toDoId selectOpts}}{{/selectTag}}
+```
+
 #### Save your Step
 
 Select a ToDo for this step, and save it. If you remembered to add a title and a
