@@ -3,7 +3,7 @@
 In this tutorial we'll learn how to use Geddy by creating a simple To-Do
 Manager applciation.
 
-#### In this tutorial we'll cover:
+In this tutorial we'll cover:
 
 -   Creating a Geddy application
 -   Learning how to use the Geddy executable

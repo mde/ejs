@@ -4,16 +4,6 @@
       h2 API reference
   .row.content
     .span6.toc
-      ul
-        each doc in docs
-          li
-            a(href="#"+doc.name)=geddy.string.capitalize(doc.name)
-            if doc.subs
-              ul
-                each sub in doc.subs
-                  li
-                    a(href="#"+ encodeURIComponent(doc.name+sub))=sub
+      != tocNav(toc)
     .span6.docs
-      each doc in docs
-        h3(id=doc.name)=geddy.string.capitalize(doc.name)
-        !=doc.content
+      !=content

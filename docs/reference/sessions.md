@@ -53,3 +53,15 @@ Returns true if the current session has expired
 ```
 this.session.isExpired
 ```
+
+#### .reset
+```
+reset()
+```
+
+Completely resets the user's session -- wipes all data, sets a new session ID.
+
+##### example
+```
+this.session.reset
+```
