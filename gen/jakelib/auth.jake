@@ -117,7 +117,7 @@ namespace('auth', function () {
         to = path.dirname(path.join(cwd, item));
 
         if (item.match('app/views')) {
-          from = from.replace('app/views', 'app/views_' + engine);
+          from = from.replace('app' + path.sep + 'views', 'app' + path.sep + 'views_' + engine);
           from = from.replace(/\[\.ext\]$/, engineExt[engine]);
           to = to.replace(/\[\.ext\]$/, engineExt[engine]);
         }
