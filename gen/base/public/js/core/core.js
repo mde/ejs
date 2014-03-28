@@ -2518,7 +2518,7 @@ var inflection = new (function () {
     setPlural(/(quiz)$/i, "$1zes");
 
     setSingular(/s$/i, "");
-		setSingular(/ss$/i, "ss");
+    setSingular(/ss$/i, "ss");
     setSingular(/(n)ews$/i, "$1ews");
     setSingular(/([ti])a$/i, "$1um");
     setSingular(/((a)naly|(b)a|(d)iagno|(p)arenthe|(p)rogno|(s)ynop|(t)he)ses$/i, "$1$2sis");
