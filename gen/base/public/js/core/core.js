@@ -376,14 +376,14 @@ process.env = {};
 process.argv = [];
 
 process.binding = function (name) {
-    if (name === 'evals') return (require)('vm')
-    else throw new Error('No such module. (Possibly not yet loaded)')
+    if (name === 'evals') return (require)('vm');
+    else throw new Error('No such module. (Possibly not yet loaded)');
 };
 
 (function () {
     var cwd = '/';
     var path;
-    process.cwd = function () { return cwd };
+    process.cwd = function () { return cwd; };
     process.chdir = function (dir) {
         if (!path) path = require('path');
         cwd = path.resolve(dir, cwd);
@@ -392,7 +392,7 @@ process.binding = function (name) {
 
 });
 
-require.define("/node_modules/model/package.json",function(require,module,exports,__dirname,__filename,process,global){module.exports = {"main":"./lib/index.js"}
+require.define("/node_modules/model/package.json",function(require,module,exports,__dirname,__filename,process,global){module.exports = {"main":"./lib/index.js"};
 });
 
 require.define("/node_modules/model/lib/index.js",function(require,module,exports,__dirname,__filename,process,global){/*
@@ -454,7 +454,7 @@ utils.mixin(model, new (function () {
   this.useUTC = true;
   this.forceCamel = true;
 
-  this.datatypes = null // Lazy-load query; it depends on model/index
+  this.datatypes = null; // Lazy-load query; it depends on model/index
   this.validators = require('./validators');
   this.formatters = require('./formatters');
 
@@ -623,7 +623,7 @@ utils.mixin(model, new (function () {
           query[selfKeyName + 'Id'] = this.id;
         }
 
-        queryName = assnType == 'hasMany' ? 'all' : 'load'
+        queryName = assnType == 'hasMany' ? 'all' : 'load';
         model[modelName][queryName](query, opts, callback);
       };
 
@@ -1014,7 +1014,7 @@ utils.mixin(model, new (function () {
       , skipKeys = {}
       , val;
 
-    item.emit('beforeValidate')
+    item.emit('beforeValidate');
     model[name].emit('beforeValidate', item, passedParams);
 
     // May be revalidating, clear errors
@@ -1079,7 +1079,7 @@ utils.mixin(model, new (function () {
       item.errors = errs;
     }
 
-    item.emit('validate')
+    item.emit('validate');
     model[name].emit('validate', item);
 
     return item;
@@ -1128,7 +1128,7 @@ utils.mixin(model, new (function () {
     var validator;
     var err;
     for (var p in validations) {
-      validator = model.validators[p]
+      validator = model.validators[p];
       if (typeof validator != 'function') {
         throw new Error(p + ' is not a valid validator');
       }
@@ -1185,7 +1185,7 @@ model.ModelDefinitionBase = function (name) {
     for (var property in obj) {
       this.property(property, obj[property].type, obj);
     }
-  }
+  };
 
   this.validates = function (condition, name, qualifier, opts) {
     var rule = utils.mixin({}, opts, true);
@@ -1264,7 +1264,7 @@ var EventEmitter = exports.EventEmitter = process.EventEmitter;
 var isArray = typeof Array.isArray === 'function'
     ? Array.isArray
     : function (xs) {
-        return Object.prototype.toString.call(xs) === '[object Array]'
+        return Object.prototype.toString.call(xs) === '[object Array]';
     }
 ;
 
@@ -1672,7 +1672,7 @@ string = new (function () {
       }
 
       return string;
-    }
+    };
   };
 
   // Builds a method that tests for any escapable
@@ -1691,7 +1691,7 @@ string = new (function () {
       pat = pat.substr(0, pat.length - 1);
       pat = new RegExp(pat, "gm");
       return pat.test(string)
-    }
+    };
   };
 
   // Escape special XMl chars
@@ -1957,7 +1957,7 @@ string = new (function () {
       , returnString;
 
     str = String(str);
-    stringLen = str.length
+    stringLen = str.length;
 
     // If `options` is a number, assume it's the length and
     // create a options object with length
@@ -1983,14 +1983,14 @@ string = new (function () {
         if (opts.seperator.global) {
           opts.seperator = opts.seperator;
         } else {
-          ignoreCase = opts.seperator.ignoreCase ? 'i' : ''
+          ignoreCase = opts.seperator.ignoreCase ? 'i' : '';
           multiLine = opts.seperator.multiLine ? 'm' : '';
           opts.seperator = new RegExp(opts.seperator.source,
               'g' + ignoreCase + multiLine);
         }
-        stringToWorkWith = str.substring(0, stringLenWithOmission + 1)
-        lastIndexOf = -1
-        nextStop = 0
+        stringToWorkWith = str.substring(0, stringLenWithOmission + 1);
+        lastIndexOf = -1;
+        nextStop = 0;
 
         while ((result = opts.seperator.exec(stringToWorkWith))) {
           lastIndexOf = result.index;
@@ -2517,32 +2517,32 @@ var inflection = new (function () {
     setPlural(/^(ox)$/i, "$1en");
     setPlural(/(quiz)$/i, "$1zes");
 
-    setSingular(/s$/i, "")
-		setSingular(/ss$/i, "ss")
-    setSingular(/(n)ews$/i, "$1ews")
-    setSingular(/([ti])a$/i, "$1um")
-    setSingular(/((a)naly|(b)a|(d)iagno|(p)arenthe|(p)rogno|(s)ynop|(t)he)ses$/i, "$1$2sis")
-    setSingular(/(^analy)ses$/i, "$1sis")
-    setSingular(/([^f])ves$/i, "$1fe")
-    setSingular(/(hive)s$/i, "$1")
-    setSingular(/(tive)s$/i, "$1")
-    setSingular(/([lr])ves$/i, "$1f")
-    setSingular(/([^aeiouy]|qu)ies$/i, "$1y")
-    setSingular(/(s)eries$/i, "$1eries")
-    setSingular(/(m)ovies$/i, "$1ovie")
-    setSingular(/(x|ch|ss|sh)es$/i, "$1")
-    setSingular(/([m|l])ice$/i, "$1ouse")
-    setSingular(/(bus)es$/i, "$1")
-    setSingular(/(o)es$/i, "$1")
-    setSingular(/(shoe)s$/i, "$1")
-    setSingular(/(cris|ax|test)es$/i, "$1is")
-    setSingular(/(octop|vir)i$/i, "$1us")
-    setSingular(/(alias|status)es$/i, "$1")
-    setSingular(/^(ox)en/i, "$1")
-    setSingular(/(vert|ind)ices$/i, "$1ex")
-    setSingular(/(matr)ices$/i, "$1ix")
-    setSingular(/(quiz)zes$/i, "$1")
-    setSingular(/(database)s$/i, "$1")
+    setSingular(/s$/i, "");
+    setSingular(/ss$/i, "ss");
+    setSingular(/(n)ews$/i, "$1ews");
+    setSingular(/([ti])a$/i, "$1um");
+    setSingular(/((a)naly|(b)a|(d)iagno|(p)arenthe|(p)rogno|(s)ynop|(t)he)ses$/i, "$1$2sis");
+    setSingular(/(^analy)ses$/i, "$1sis");
+    setSingular(/([^f])ves$/i, "$1fe");
+    setSingular(/(hive)s$/i, "$1");
+    setSingular(/(tive)s$/i, "$1");
+    setSingular(/([lr])ves$/i, "$1f");
+    setSingular(/([^aeiouy]|qu)ies$/i, "$1y");
+    setSingular(/(s)eries$/i, "$1eries");
+    setSingular(/(m)ovies$/i, "$1ovie");
+    setSingular(/(x|ch|ss|sh)es$/i, "$1");
+    setSingular(/([m|l])ice$/i, "$1ouse");
+    setSingular(/(bus)es$/i, "$1");
+    setSingular(/(o)es$/i, "$1");
+    setSingular(/(shoe)s$/i, "$1");
+    setSingular(/(cris|ax|test)es$/i, "$1is");
+    setSingular(/(octop|vir)i$/i, "$1us");
+    setSingular(/(alias|status)es$/i, "$1");
+    setSingular(/^(ox)en/i, "$1");
+    setSingular(/(vert|ind)ices$/i, "$1ex");
+    setSingular(/(matr)ices$/i, "$1ix");
+    setSingular(/(quiz)zes$/i, "$1");
+    setSingular(/(database)s$/i, "$1");
 
     setIrregular("person", "people");
     setIrregular("man", "men");
@@ -6829,7 +6829,7 @@ require.define("/node_modules/utilities/lib/xml.js",function(require,module,expo
  *
 */
 var core = require('./core')
-  , inflection = require('./inflection')
+  , inflection = require('./inflection');
 
 /**
   @name xml
