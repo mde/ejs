@@ -532,7 +532,7 @@ User.remove('abc-123', function (err, data) {
 Remove instances from the database by condition
 
 ##### condition
-- `condition [object]`: the key value condition of instances to be removed
+- `condition [object]`: the query condition of instances to be removed
 
 ##### examples
 ```
