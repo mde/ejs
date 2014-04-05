@@ -138,6 +138,8 @@ namespace('auth', function () {
       }
 
       // Add new routes to router
+      // FIXME: This should be done programmatically
+      // with some sort of enum/loop
       if (routerPath) {
         // CoffeeScript routes
         if (routerPath.match('.coffee')) {
@@ -150,6 +152,8 @@ namespace('auth', function () {
             "router.get('/auth/facebook/callback').to 'Auth.facebookCallback'\n" +
             "router.get('/auth/yammer').to 'Auth.yammer'\n" +
             "router.get('/auth/yammer/callback').to 'Auth.yammerCallback'\n" +
+            "router.get('/auth/google').to 'Auth.google'\n" +
+            "router.get('/auth/google/callback').to 'Auth.googleCallback'\n" +
             "router.resource 'users'";
         } else {
           newRoute = "router.get('/login').to('Main.login');\n" +
@@ -161,6 +165,8 @@ namespace('auth', function () {
             "router.get('/auth/facebook/callback').to('Auth.facebookCallback');\n" +
             "router.get('/auth/yammer').to('Auth.yammer');\n" +
             "router.get('/auth/yammer/callback').to('Auth.yammerCallback');\n" +
+            "router.get('/auth/google').to('Auth.google');\n" +
+            "router.get('/auth/google/callback').to('Auth.googleCallback');\n" +
             "router.resource('users');";
         }
 
