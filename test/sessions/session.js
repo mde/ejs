@@ -1,7 +1,7 @@
 var session = require('../../lib/sessions')
   , assert = require('assert')
   , mockController = {
-      accessTime: 0
+      accessTime: new Date().getTime()
     , cookies: {
         set: function () {}
       , get: function () {return 'cows'}
@@ -16,6 +16,7 @@ tests = {
           sessions: {
             store: 'memory'
           , key: 'test_'
+          , expiry: 14 * 24 * 60 * 60
           }
         , flashes: {}
         };
@@ -57,6 +58,17 @@ tests = {
 , 'session close after reset': function (next) {
     sess.reset();
     sess.close(next);
+  }
+
+, 'session isExpired': function () {
+    sess.set('accessTime', 0);
+    assert.ok(sess.isExpired());
+  }
+
+, 'session isExpired for expiry of null is always false': function (next) {
+    sess.set('accessTime', 0);
+    sess.setExpiry(null);
+    assert.ok(!sess.isExpired());
   }
 
 };
