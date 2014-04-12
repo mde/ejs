@@ -65,7 +65,7 @@ tests = {
     assert.ok(sess.isExpired());
   }
 
-, 'session isExpired for expiry of null is always false': function (next) {
+, 'session isExpired for expiry of null is always false': function () {
     sess.set('accessTime', 0);
     sess.setExpiry(null);
     assert.ok(!sess.isExpired());
