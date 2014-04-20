@@ -50,7 +50,9 @@ namespace('env', function () {
             // Try to disconnect nicely
             if (typeof adapter.disconnect == 'function') {
               // If there's a disconnect error, don't flip out about it
-              adapter.on('error', function () {});
+              if (!adapter.listeners('error').length) {
+                adapter.on('error', function () {});
+              }
               adapter.disconnect(function () {
                 doIt();
               });
