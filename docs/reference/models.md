@@ -197,7 +197,9 @@ Sets up a validation to make sure that the property has been confirmed.
 - `property [string]`: the name of the property to validate
 
 ##### fn
-- `fn [function]`: a function which, when passed the value of the property, will return true or false
+- `fn [function]`: a function which will return true or false. It is passed two 
+arguments: the value of the property, and an object mapping from the model instance's 
+properties to the values for those properties
 
 ##### options
 - `on [string|array]`: specifies when validation happens (defaults to ['create', 'update'])
@@ -205,11 +207,11 @@ Sets up a validation to make sure that the property has been confirmed.
 
 ##### example
 ```
-this.validatesWithFunction('password', function (val) {
+this.validatesWithFunction('password', function (val, params) {
       // Something that returns true or false
       return val.length > 0;
 });
-// uses the function to see if th length of password is greater than 0
+// uses the function to see if the length of password is greater than 0
 ```
 
 * * *
