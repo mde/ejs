@@ -420,7 +420,7 @@ We need to pass this list of ToDos down into the partial. Where you see the call
 to `partial`, make the code look like this:
 
 ```
-<%- partial('form', {step: {}, toDos: toDos}) %>
+<%- partial('form', {step: params, toDos: toDos}) %>
 ```
 
 The params you pass in the object literal that is the second arg will become
@@ -441,12 +441,13 @@ here](http://geddyjs.org/reference#helpers).
 Just inside the container div with the class 'control-group', add this code:
 
 ```
-  <label for="title" class="control-label">To-Do for this step</label>
-  <div>
+  <label for="toDoId" class="control-label">To-Do for this step</label>
+  <div class="controls">
     <%- selectTag(toDos, step.toDoId, {
       name: 'toDoId'
     , valueField: 'id'
     , textField: 'title'
+    , class:'span6'
     }); %>
   </div>
 ```
@@ -816,7 +817,7 @@ that. Replace the entire bottom section of the code with this:
 <% if (toDos) { %>
   <% for (var i = 0, ii = toDos.length; i < ii; i++) { %>
     <div class="row list-item" id="toDo-<%= toDos[i].id; %>">
-      <div class="span8">
+      <div class="span12">
         <h3><%- linkTo(toDos[i].title, toDoPath(toDos[i].id)); %></h3>
         <% var steps = toDos[i].steps || [];
           steps.forEach(function (step) { %>
