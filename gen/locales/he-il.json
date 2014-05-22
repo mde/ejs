@@ -1,0 +1,17 @@
+{
+  "model.validatesPresent": "\"{name}\" הוא חובה."
+, "model.validatesAbsent": "\"{name}\" חייב להישאר ריק."
+, "model.validatesConfirmed": "\"{name}\" וגם \"{qual}\" חייבים להתאים."
+, "model.validatesFormat": "\"{name}\" לא תקין."
+, "model.validatesExactLength": "\"{name}\" חייב להיות בעל {qual} תווים."
+, "model.validatesMinLength": "\"{name}\" חייב לפחות להיות בעל {min} תווים."
+, "model.validatesMaxLength": "\"{name}\" חייב להיות לכל היותר בעל {max} תווים."
+, "model.validatesWithFunction": "\"{name}\" לא תקין."
+, "model.validatesNumber": "\"{name}\" חייב להיות מספר."
+, "model.validatesInteger": "\"{name}\" חייב להיות מספר שלם."
+, "model.validatesObject": "\"{name}\" חייב להיות אובייקט."
+, "model.validatesArray": "\"{name}\" חייב להיות רשימה."
+, "model.validatesDate": "\"{name}\" חייב להיות תאריך תקין."
+, "model.validatesDatetime": "\"{name}\" חייב להיות תאריך וזמן תקין."
+, "model.validatesTime": "\"{name}\" חייב להיות זמן תקין."
+}
