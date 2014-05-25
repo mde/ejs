@@ -34,7 +34,7 @@ router.get('/').to('Main.index');
 // router.resource('hemispheres');
 //
 // Nested Resource-based routes
-// router.resource('hemispheres', function(){
+// router.resource('hemispheres').nest(function(){
 //   this.resource('countries');
 //   this.get('/print(.:format)').to('Hemispheres.print');
 // });
