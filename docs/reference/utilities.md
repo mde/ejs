@@ -895,7 +895,15 @@ Sends requests to the given url sending any data if the method is POST or PUT
 
 #####Examples
 ```
+// 'GET' request
 request({url: 'google.com', method: 'GET'}, function (err, data) {
+  if (err) { throw err; }
+
+  console.log(data)
+})
+
+// 'POST' request
+request({url: 'google.com', data: geddy.uri.paramify({name: 'geddy', key: 'geddykey'}), headers: {'Content-Type': 'application/x-www-form-urlencoded'}, method: 'POST' }, function (err, data) {
   if (err) { throw err; }
 
   console.log(data)
