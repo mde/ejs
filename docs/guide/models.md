@@ -833,7 +833,7 @@ Postgres as default, with both a Postgres and Riak model
 #### Migrations (SQL adapters only)
 
 Migrations are a convenient way to make changes to your SQL database schema over
-time, consistently and easily. They use a simply JavaScript API. This means
+time, consistently and easily. They use a simple JavaScript API. This means
 that you don't have to write SQL by hand, and changes to your schema can be
 database independent.
 
