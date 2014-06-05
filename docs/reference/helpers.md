@@ -355,7 +355,7 @@ styleLink('/css/styles.css')
 // => '<link href="/css/style.css" />'
 
 
-styleLink('/css/styles.css', {type: 'text/javascript'})
+styleLink('/css/styles.css', {rel: 'stylesheet'})
 // => '<link href="/css/style.css" rel="stylesheet" />'
 ```
 
