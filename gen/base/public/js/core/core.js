@@ -448,7 +448,6 @@ utils.mixin(model, new (function () {
 
   this.ModelBase = function () {};
   this.adapters = {};
-  this.loadedAdapters = {};
   this.descriptionRegistry = {};
   this.useTimestamps = true;
   this.useUTC = true;

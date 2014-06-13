@@ -77,7 +77,7 @@ namespace('migration', function () {
         , ctor
         // TODO: API for using a different adapter if using multiple
         // SQL adapters?
-        , adapter = geddy.model.loadedAdapters.Migration;
+        , adapter = geddy.model.Migration.adapter;
 
         // Pull off the date-stamp, get the underscoreized
         // migration-name

@@ -40,7 +40,7 @@ namespace('env', function () {
 
   task('cleanup', {async: true}, function () {
     // Disconnect all the adapters
-    var adapters = geddy.model.loadedAdapters
+    var adapters = geddy.model.adapters
       , adapter
       , keys = Object.keys(adapters)
       , doIt = function () {
