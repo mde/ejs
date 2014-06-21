@@ -7,7 +7,7 @@
  * Module dependencies.
  */
 var EventEmitter = require('events').EventEmitter;
-var color = require('./color');
+var chalk = require('chalk');
 /**
  * Initialize a `Loggeer` with the given log `level` defaulting
  * to __DEBUG__ and `stream` defaulting to _stdout_.
@@ -136,18 +136,18 @@ Log.prototype = {
             }
 
             coloredLevelStr = '';
-            if (levelStr === 'ERROR')   { coloredLevelStr = levelStr.red; }
-            if (levelStr === 'WARNING') { coloredLevelStr = levelStr.magenta; }
-            if (levelStr === 'NOTICE')  { coloredLevelStr = levelStr.green; }
-            if (levelStr === 'INFO')    { coloredLevelStr = levelStr.blue; }
-            if (levelStr === 'DEBUG')   { coloredLevelStr = levelStr.yellow; }
+            if (levelStr === 'ERROR')   { coloredLevelStr = chalk.red(levelStr); }
+            if (levelStr === 'WARNING') { coloredLevelStr = chalk.magenta(levelStr); }
+            if (levelStr === 'NOTICE')  { coloredLevelStr = chalk.green(levelStr); }
+            if (levelStr === 'INFO')    { coloredLevelStr = chalk.blue(levelStr); }
+            if (levelStr === 'DEBUG')   { coloredLevelStr = chalk.yellow(levelStr); }
             // HACK: defer printing in non-developement modes
             if (this.printSync) {
-              console.log(('[' + new Date().toUTCString() + ']').cyan + ' ' + coloredLevelStr + ' ' + msg);
+              console.log(chalk.cyan('[' + new Date().toUTCString() + ']') + ' ' + coloredLevelStr + ' ' + msg);
             }
             else {
               setTimeout(function () {
-                console.log(('[' + new Date().toUTCString() + ']').cyan + ' ' + coloredLevelStr + ' ' + msg);
+                console.log(chalk.cyan('[' + new Date().toUTCString() + ']') + ' ' + coloredLevelStr + ' ' + msg);
               }, 0);
             }
         } else if (levelStr == 'ACCESS') {

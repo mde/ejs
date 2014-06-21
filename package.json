@@ -11,12 +11,13 @@
   "version": "0.12.10",
   "author": "Matthew Eernisse <mde@fleegix.org> (http://fleegix.org)",
   "dependencies": {
-    "jake": "0.7.x",
-    "utilities": "0.0.x",
-    "model": "0.5.x",
     "barista": "0.2.x",
+    "chalk": "^0.4.0",
+    "jake": "0.7.x",
     "mime": "1.2.x",
-    "tlsopts": "0.0.1"
+    "model": "0.5.x",
+    "tlsopts": "0.0.1",
+    "utilities": "0.0.x"
   },
   "bin": {
     "geddy": "./bin/cli.js"
