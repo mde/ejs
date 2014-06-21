@@ -130,12 +130,12 @@ Log.prototype = {
      * @api private
      */
     log: function(levelStr, msg) {
+        var coloredLevelStr = '';
         if (exports[levelStr] <= this.level) {
             if (this.writing) {
               this.stream.write('[' + new Date().toUTCString() + ']' + ' ' + levelStr + ' ' + msg + '\n');
             }
 
-            coloredLevelStr = '';
             if (levelStr === 'ERROR')   { coloredLevelStr = chalk.red(levelStr); }
             if (levelStr === 'WARNING') { coloredLevelStr = chalk.magenta(levelStr); }
             if (levelStr === 'NOTICE')  { coloredLevelStr = chalk.green(levelStr); }
