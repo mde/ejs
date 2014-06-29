@@ -3,6 +3,9 @@ node_js:
   - "0.10"
   - "0.8"
 
+before_install:
+  - npm update -g npm
+
 before_script:
   - rm -R node_modules/model
   - rm -R node_modules/utilities
