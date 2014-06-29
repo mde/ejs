@@ -1,4 +1,7 @@
 
+// HACK, stub out aliased function for geddy-jake env
+geddy.addFormat = function () {};
+
 namespace('env', function () {
   task('init', ['model', 'controller', 'app'], function () {
     jake.addListener('complete', function (e) {
