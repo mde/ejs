@@ -8,14 +8,14 @@
     "MVC",
     "realtime"
   ],
-  "version": "0.12.13",
+  "version": "13.0.0",
   "author": "Matthew Eernisse <mde@fleegix.org> (http://fleegix.org)",
   "dependencies": {
     "barista": "0.2.x",
     "chalk": "^0.4.0",
     "jake": "0.7.x",
     "mime": "1.2.x",
-    "model": "0.5.x",
+    "model": "6.0.x",
     "tlsopts": "0.0.1",
     "utilities": "0.0.x"
   },
