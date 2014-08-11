@@ -1,7 +1,7 @@
 ### Introduction
 
 In this tutorial we'll learn how to use Geddy by creating a simple To-Do
-Manager applciation.
+Manager application.
 
 In this tutorial we'll cover:
 
