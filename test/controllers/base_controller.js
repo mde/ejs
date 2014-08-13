@@ -17,6 +17,8 @@ createController = function () {
   controller.response = {
     setHeaders: function () {}
   , finalize: function () {}
+  , writeBody: function () {}
+  , finish: function () {}
   };
   controller.method = 'GET';
   controller.params = {};
