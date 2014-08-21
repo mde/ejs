@@ -167,7 +167,6 @@ doesn\'t explicitly explicitly support it': function (next) {
     c.respond(inst, {format: 'json'});
   }
 
-  /*
 , 'respond, ad-hoc model properties preserved': function (next) {
     var c = createController()
       , inst = createModelInstance()
@@ -185,7 +184,6 @@ doesn\'t explicitly explicitly support it': function (next) {
     };
     c.respond(inst, {format: 'json'});
   }
- */
 
 // respondTo tests, mid-level API
 , 'respondTo html, format specified and supported': function (next) {
