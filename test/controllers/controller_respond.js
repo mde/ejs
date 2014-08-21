@@ -172,16 +172,12 @@ doesn\'t explicitly explicitly support it': function (next) {
       , inst = createModelInstance()
       , origToJSON = inst.toJSON;
     inst.zerp = 'derp';
-    inst.toJSON = function () {
-      var ret = origToJSON.call(this);
-      ret.zerp = this.zerp;
-      return ret;
-    };
     c.output = function (statusCode, headers, content) {
       var item = JSON.parse(content);
       assert.ok(item.zerp);
       next();
     };
+    inst = inst.toJSON({whitelist: ['zerp']});
     c.respond(inst, {format: 'json'});
   }
 
