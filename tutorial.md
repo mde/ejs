@@ -270,7 +270,7 @@ var ToDo = function () {
 
   this.validatesWithFunction('status', function (status) {
     return status == 'open' || status == 'done';
-  }, {message: "Status must be 'open' or 'done.'"});
+  }, {message: "Status must be 'open' or 'done'."});
 ...
 };
 ToDo = geddy.model.register('ToDo', ToDo);
@@ -325,7 +325,7 @@ var Step = function () {
 
   this.validatesWithFunction('status', function (status) {
     return status == 'open' || status == 'done';
-  }, {message: "Status must be 'open' or 'done.'"});
+  }, {message: "Status must be 'open' or 'done'."});
 ...
 };
 Step = geddy.model.register('Step', Step);
