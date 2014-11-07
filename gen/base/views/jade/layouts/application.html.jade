@@ -1,20 +1,22 @@
 != partial('layout_header')
-  body.application
-    .navbar.navbar-fixed-top
-      .navbar-inner
-        .container
-          a.btn.btn-navbar(data-toggle="collapse", data-target=".nav-collapse")
-            span.i-bar
-              i.icon-chevron-down.icon-white
-          != linkTo('Geddy App', mainsPath, { class: 'brand' })
-          .nav-collapse
-            ul.nav
-              li.active
-                != linkTo('Home', mainsPath)
-              li
-                != linkTo('Tutorial', 'http://geddyjs.org/tutorial')
-              li
-                != linkTo('Docs', 'http://geddyjs.org/documentation')
+  body
+    .navbar.navbar-default(role="navigation")
+      .container
+        .navbar-header
+          button.navbar-toggle.collapsed(type="button", data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar")
+            span.sr-only('Toggle navigation')
+            span.glyphicon.glyphicon-bar
+            span.glyphicon.glyphicon-bar
+            span.glyphicon.glyphicon-bar
+          != linkTo('Geddy App', mainsPath, { class: 'navbar-brand' })
+        .navbar-collapse.collapse
+          ul.nav.navbar-nav
+            li.active
+              != linkTo('Home', mainsPath)
+            li
+              != linkTo('Tutorial', 'http://geddyjs.org/tutorial')
+            li
+              != linkTo('Docs', 'http://geddyjs.org/documentation')
 
     .container
       != displayFlash(flash)

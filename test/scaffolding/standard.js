@@ -242,13 +242,13 @@
           // FIXME: Is there a less stupid way of asserting this?
 
           assert.strictEqual(
-            body.indexOf('input type="text" class="span6" name="foo" value="zerb"') >= 0  // ms
-          ||body.indexOf('input class="span6" name="foo" type="text" value="zerb"') >= 0  // ejs
+            body.indexOf('input type="text" class="form-control" name="foo" value="zerb"') >= 0  // ms
+          ||body.indexOf('input class="form-control" name="foo" type="text" value="zerb"') >= 0  // ejs
           , true , 'Foo was persisted correctly')
 
           assert.strictEqual(
-            body.indexOf('input type="number" class="span2" name="bar" value="2112"') >= 0 // ms
-          ||body.indexOf('input class="span2" name="bar" type="number" value="2112"') >= 0  // ejs
+            body.indexOf('input type="number" class="form-control" name="bar" value="2112"') >= 0 // ms
+          ||body.indexOf('input class="form-control" name="bar" type="number" value="2112"') >= 0  // ejs
           , true , 'Bar was persisted correctly')
 
           next();

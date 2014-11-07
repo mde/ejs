@@ -325,10 +325,10 @@ all the form data for edit and add actions .
 <form id="todo-form" class="form-horizontal" action="<%= action %>" method="POST">
   <fieldset>
     <legend><%= formTitle %></legend>
-    <div class="control-group">
+    <div class="form-group">
       <label for="title" class="control-label">Title</label>
       <div class="controls">
-        <%- contentTag('input', titleValue, {type:'text', class:'span6', placeholder:'enter title', name:'title'}) %>
+        <%- contentTag('input', titleValue, {type:'text', class:'col-md-6', placeholder:'enter title', name:'title'}) %>
         <%  if (errors) { %>
           <p>
           <% for (var p in errors) { %>
@@ -339,17 +339,17 @@ all the form data for edit and add actions .
       </div>
     </div>
     <% if (isUpdate) { %>
-      <div class="control-group">
+      <div class="form-group">
         <label for="status" class="control-label">Status</label>
         <div class="controls">
-          <select name="status" class="span6">
+          <select name="status" class="col-md-6">
             <option <%=openSelectAttributes%>>open</option>
             <option <%=doneSelectAttributes%>>done</option>
           </select>
         </div>
       </div>
     <% } %>
-    <div class="form-actions">
+    <div class="form-actions col-xs-offset-2 col-xs-offset-2">
       <%- contentTag('input', btnText, {type: 'submit', class: 'btn btn-primary'}) %>
       <% if (isUpdate) { %>
         <%- contentTag('button', 'Remove', {type: 'submit', formaction: deleteAction, formmethod: 'POST', class: 'btn btn-danger'}) %>
@@ -370,7 +370,7 @@ them now. They're simple they just use the \_form partial. Add the
 following code to `add.html.ejs`
 
 ```
-<div class="hero-unit">
+<div class="jumbotron">
   <%= partial('_form', {params: params}); %>
 </div>
 ```
@@ -380,7 +380,7 @@ todo object to the partial. Modify `app/views/todos/edit.html.ejs` with
 the following code:
 
 ```
-<div class="hero-unit">
+<div class="jumbotron">
   <%= partial('_form', {params: params, todo: todo}); %>
 </div>
 ```
@@ -390,8 +390,8 @@ Now that we have views that will create todo items let's add a simple
 following code I just loop through the params.
 
 ```
-<div class="hero-unit">
-  <%- linkTo('Edit this todo', editTodoPath(params.id), {class: 'btn pull-right'}); %>
+<div class="jumbotron">
+  <%- linkTo('Edit this todo', editTodoPath(params.id), {class: 'btn btn-default pull-right'}); %>
   <h3>Params</h3>
   <ul>
   <% for (var p in todo) { %>
@@ -404,17 +404,17 @@ following code I just loop through the params.
 Finally we need to create the index action to link everything together.
 
 ```
-<div class="hero-unit">
+<div class="jumbotron">
   <h2>To Do List</h2>
-  <%- linkTo('Create a new To Do', addTodoPath, {class: 'btn pull-right'}) %>
+  <%- linkTo('Create a new To Do', addTodoPath, {class: 'btn btn-default pull-right'}) %>
 </div>
 <% if (todos && todos.length) { %>
   <% for (var i in todos) { %>
   <div class="row todo-item">
-    <div class="span8">
+    <div class="col-md-8">
         <h3><%- linkTo(todos[i].title, todoPath(todos[i].id)) %></h3>
     </div>
-    <div class="span4"><h3><i class="icon-list-alt"></i><%= todos[i].status; %></h3></div>
+    <div class="col-md-4"><h3><i class="glyphicon-list-alt"></i><%= todos[i].status; %></h3></div>
   </div>
   <% } %>
 <% } %>

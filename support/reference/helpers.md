@@ -151,8 +151,8 @@ along with an `attr` object which will include any other html options. (you can 
 selectTag(['geddy', 'alex', 'neil'])
 // => '<select><option value="geddy">geddy</option><option value="alex">alex</option><option value="neil">neil</option></select>'
 
-selectTag(['open', 'close'], todo.status, { class:'span6', name:'status' })
-// => '<select class="span6" name="status"><option selected="selected" value="open">open</option><option value="close">close</option></select>'
+selectTag(['open', 'close'], todo.status, { class:'col-md-6', name:'status' })
+// => '<select class="col-md-6" name="status"><option selected="selected" value="open">open</option><option value="close">close</option></select>'
 
 selectTag([{value: 1, text: "Text 1"}, {value: 2, text: "Text 2"}], 2)
 // => <select><option value="1">Text 1</option><option selected="selected" value="2">Text 2</option></select>
@@ -484,8 +484,8 @@ Creates a HTML select tag using the given `optionsArray` to create HTML option e
 selectTag(['geddy', 'alex', 'neil'])
 // => '<select><option value="geddy">geddy</option><option value="alex">alex</option><option value="neil">neil</option></select>'
 
-selectTag(['open', 'close'], todo.status, { class:'span6', name:'status' })
-// => '<select class="span6" name="status"><option selected="selected" value="open">open</option><option value="close">close</option></select>'
+selectTag(['open', 'close'], todo.status, { class:'col-md-6', name:'status' })
+// => '<select class="col-md-6" name="status"><option selected="selected" value="open">open</option><option value="close">close</option></select>'
 
 selectTag([{value: 1, text: "Text 1"}, {value: 2, text: "Text 2"}], 2)
 // => <select><option value="1">Text 1</option><option selected="selected" value="2">Text 2</option></select>

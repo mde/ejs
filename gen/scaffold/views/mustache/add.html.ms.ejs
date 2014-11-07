@@ -1,8 +1,8 @@
-<div class="hero-unit">
+<div class="jumbotron">
   <form id="<%= names.property.singular %>-form" class="form-horizontal" action="/<%= names.filename.plural %>" method="POST">
     <fieldset>
       <legend>Create a new <%= names.constructor.singular %></legend>
-      <div class="control-group">
+      <div class="form-group">
         <ul>
         {{#params.errors}}
           <li>{{.}}</li>
@@ -12,7 +12,7 @@
       
       {{{partial "form" this}}}
 
-      <div class="form-actions">
+      <div class="form-actions col-xs-offset-2 col-xs-offset-2">
         <input type="submit" class="btn btn-primary" value="Add" />
       </div>
     </fieldset>

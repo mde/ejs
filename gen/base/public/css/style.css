@@ -31,7 +31,7 @@ code {
   margin: 0 auto;
 }
 
-.geddy-welcome-box .btn-large {
+.geddy-welcome-box .btn-lg {
   margin-top: 20px;
 }
 
@@ -42,6 +42,7 @@ code {
 .list-item div {
   background: white;
   border-bottom: 2px solid #ccc;
+  padding-right:20px; border-right: 1px solid #ccc;
 }
 
 .list-item div > * {
@@ -57,9 +58,8 @@ code {
 }
 
 @media (max-width:480px) {
-  .hero-unit .pull-right {
+  .jumbotron .pull-right {
     float: none;
     margin-top: 10px;
   }
 }
-
