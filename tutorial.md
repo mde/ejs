@@ -438,7 +438,7 @@ called `selectTag`, as well as a bunch of other nice helpers.
 You can find the [docs for the helpers
 here](http://geddyjs.org/reference#helpers).
 
-Just inside the container div with the class 'control-group', add this code:
+Just inside the container div with the class 'form-group', add this code:
 
 ```
   <label for="toDoId" class="control-label">To-Do for this step</label>
@@ -447,7 +447,7 @@ Just inside the container div with the class 'control-group', add this code:
       name: 'toDoId'
     , valueField: 'id'
     , textField: 'title'
-    , class:'span6'
+    , class:'col-md-6'
     }); %>
   </div>
 ```
@@ -612,7 +612,7 @@ print them out for each ToDo.
 The built-in code that just iterates over properties on the object is nice to
 verify your item is actually saved, but it's not very practically useful. Remove
 that section in the bottom half of the code in the template (ignore the
-'hero-unit' navigation section at the top), and replace it with this:
+'jumbotron' navigation section at the top), and replace it with this:
 
 ```
 <h3>Status: <%= toDo.status %></h3>
@@ -817,7 +817,7 @@ that. Replace the entire bottom section of the code with this:
 <% if (toDos) { %>
   <% for (var i = 0, ii = toDos.length; i < ii; i++) { %>
     <div class="row list-item" id="toDo-<%= toDos[i].id; %>">
-      <div class="span12">
+      <div class="col-md-12">
         <h3><%- linkTo(toDos[i].title, toDoPath(toDos[i].id)); %></h3>
         <% var steps = toDos[i].steps || [];
           steps.forEach(function (step) { %>

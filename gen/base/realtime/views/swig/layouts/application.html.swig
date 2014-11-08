@@ -19,7 +19,7 @@
 
     {{ styleLink('/css/bootstrap.min.css', {rel:'stylesheet'}) }}
     {{ styleLink('/css/style.css', {rel:'stylesheet'}) }}
-    {{ styleLink('/css/bootstrap.responsive.min.css', {rel:'stylesheet'}) }}
+    {{ styleLink('/css/bootstrap-theme.min.css', {rel:'stylesheet'}) }}
 
     <!-- The fav and touch icons -->
     <link rel="shortcut icon" href="/images/favicon.ico">
@@ -28,21 +28,25 @@
     <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
   </head>
   <body>
-    <div class="navbar navbar-fixed-top">
-      <div class="navbar-inner">
-        <div class="container">
-          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-            <span class="i-bar"><i class="icon-chevron-down icon-white"></i></span>
-          </a>
-          <a class="brand" href="{{mainsPath}}">Geddy App</a>
-          <div class="nav-collapse">
-            <ul class="nav">
+    <div class="navbar navbar-default" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+          <a class="navbar-brand" href="{{mainsPath}}">Geddy App</a>
+        </div>
+
+          <div id="navbar" class="nav-collapse collapse">
+            <ul class="nav navbar-nav">
               <li class="active"><a href="{{mainsPath}}">Home</a></li>
               <li><a href="http://geddyjs.org/tutorial">Tutorial</a></li>
               <li><a href="http://geddyjs.org/documentation">Docs</a></li>
             </ul>
           </div><!--/.nav-collapse -->
-        </div>
       </div>
     </div>
     <div class="container">

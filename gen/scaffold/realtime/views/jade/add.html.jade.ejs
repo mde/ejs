@@ -1,14 +1,14 @@
-.hero-unit
+.jumbotron
   form#<%= names.property.singular %>-form.form-horizontal(action="/<%= names.filename.plural %>", method="POST")
     fieldset
       legend Create a new <%= names.constructor.singular %>
       if params.errors
-        .control-group
+        .form-group
           ul
           for err in params.errors
             li= err
 
       != partial('form', {<%= names.property.singular %>: {}})
 
-      .form-actions
+      .form-actions col-xs-offset-2 col-xs-offset-2
         != contentTag('input', 'Add', {type: 'submit', class: 'btn btn-primary'})

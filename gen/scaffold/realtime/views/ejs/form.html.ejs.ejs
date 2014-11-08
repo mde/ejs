@@ -1,20 +1,20 @@
 <% for(var i in properties) { -%>
 <% if(properties[i].name && properties[i].name !== 'id') { -%>
-<div class="control-group">
-  <label for="<%= properties[i].name %>" class="control-label"><%= properties[i].name %></label>
-  <div class="controls">
+<div class="form-group">
+  <label for="<%= properties[i].name %>" class="control-label col-xs-2"><%= properties[i].name %></label>
+  <div class="controls col-xs-6">
 <% if(properties[i].type === 'string') { -%>
 <% if(properties[i].name === 'password') { -%>
-    <@- contentTag('input', '', {type:'password', class:'span6', name:'<%= properties[i].name %>'}) @>
+    <@- contentTag('input', '', {type:'password', class:'form-control', name:'<%= properties[i].name %>'}) @>
 <% } else { -%>
-    <@- contentTag('input', <%= names.property.singular %>.<%= properties[i].name %>, {type:'text', class:'span6', name:'<%= properties[i].name %>'}) @>
+    <@- contentTag('input', <%= names.property.singular %>.<%= properties[i].name %>, {type:'text', class:'form-control', name:'<%= properties[i].name %>'}) @>
 <% } -%>
 <% } else if(properties[i].type === 'text') { -%>
-    <@- contentTag('textarea', <%= names.property.singular %>.<%= properties[i].name %>, {class: 'span6', name: '<%= properties[i].name %>', rows: 10}) @>
+    <@- contentTag('textarea', <%= names.property.singular %>.<%= properties[i].name %>, {class: 'form-control', name: '<%= properties[i].name %>', rows: 10}) @>
 <% } else if(properties[i].type === 'number' || properties[i].type === 'int') { -%>
-    <@- contentTag('input', <%= names.property.singular %>.<%= properties[i].name %>, {type:'number', class:'span2', name:'<%= properties[i].name %>'}) @>
+    <@- contentTag('input', <%= names.property.singular %>.<%= properties[i].name %>, {type:'number', class:'form-control', name:'<%= properties[i].name %>'}) @>
 <% } else if(properties[i].type === 'boolean') { -%>
-    <select name="<%= properties[i].name %>", class="span1">
+    <select name="<%= properties[i].name %>", class="col-md-1">
       <@ if(<%= names.property.singular %>.<%= properties[i].name %>) { -@>
       <option>false</option>
       <option selected>true</option>
@@ -24,9 +24,9 @@
       <@ } -@>
     </select>
 <% } else if(properties[i].type === 'datetime') {  -%>
-    <@- contentTag('input', <%= names.property.singular %>.<%= properties[i].name %>, {type:'datetime', class:'span3', name:'<%= properties[i].name %>'}) @>
+    <@- contentTag('input', <%= names.property.singular %>.<%= properties[i].name %>, {type:'datetime', class:'col-md-3', name:'<%= properties[i].name %>'}) @>
 <% } else if(properties[i].type === 'date') { -%>
-    <@- contentTag('input', <%= names.property.singular %>.<%= properties[i].name %>, {type:'date', class:'span2', name:'<%= properties[i].name %>'}) @>
+    <@- contentTag('input', <%= names.property.singular %>.<%= properties[i].name %>, {type:'date', class:'col-md-2', name:'<%= properties[i].name %>'}) @>
 <% } else { -%>
     <%= properties[i].type %>
 <% } -%>

@@ -1,17 +1,17 @@
-.hero-unit
+.jumbotron
   h2.<%= properties['default'].name || "id" %>= <%= names.property.singular %>.<%= properties['default'].name || "id" %>
-  != linkTo('Edit this <%= names.property.singular %>', edit<%= names.constructor.singular %>Path(params.id), {class: 'btn pull-right'})
-  != linkTo('Back to list', <%= names.constructor.singular %>Path(''), {class: 'btn pull-right'})
+  != linkTo('Edit this <%= names.property.singular %>', edit<%= names.constructor.singular %>Path(params.id), {class: 'btn btn-default pull-right'})
+  != linkTo('Back to list', <%= names.constructor.singular %>Path(''), {class: 'btn btn-default pull-right'})
 
 h2 <%= names.constructor.singular %> Properties
 each property, key in <%= names.property.singular %>
   if key !== 'saved'
     .row.list-item
-      .span4
+      .col-md-4
         h3= key
-      .span8
+      .col-md-8
         h3
-          i.icon-list-alt
+          i.glyphicon-list-alt
           span(class=key)= property
 
 script(type="text/javascript")

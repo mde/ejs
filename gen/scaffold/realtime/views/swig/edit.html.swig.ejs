@@ -1,9 +1,9 @@
-<div class="hero-unit">
+<div class="jumbotron">
   <form id="<%= names.property.singular %>-form" class="form-horizontal" action="/<%= names.filename.plural %>/{{params.id}}?_method=PUT" method="POST">
     <fieldset>
       <legend>Update this <%= names.constructor.singular %></legend>
       {% if params.errors %}
-      <div class="control-group">
+      <div class="form-group">
         <ul>
         {% for err in params.errors %}
           <li>{{err}}</li>
@@ -14,21 +14,21 @@
 
       <% for(var i in properties) { -%>
       <% if(properties[i].name && properties[i].name !== 'id') { -%>
-      <div class="control-group">
-        <label for="<%= properties[i].name %>" class="control-label"><%= properties[i].name %></label>
-        <div class="controls">
+      <div class="form-group">
+        <label for="<%= properties[i].name %>" class="control-label col-xs-2"><%= properties[i].name %></label>
+        <div class="controls col-xs-6">
       <% if(properties[i].type === 'string') { -%>
       <% if(properties[i].name === 'password') { -%>
-          <input type="password" class="span6" name="<%= properties[i].name %>" value="{{<%= names.property.singular %>.<%= properties[i].name %>}}" />
+          <input type="password" class="form-control" name="<%= properties[i].name %>" value="{{<%= names.property.singular %>.<%= properties[i].name %>}}" />
       <% } else { -%>
-          <input type="text" class="span6" name="<%= properties[i].name %>" value="{{<%= names.property.singular %>.<%= properties[i].name %>}}" />
+          <input type="text" class="form-control" name="<%= properties[i].name %>" value="{{<%= names.property.singular %>.<%= properties[i].name %>}}" />
       <% } -%>
       <% } else if(properties[i].type === 'text') { -%>
-          <textarea rows="10" class="span6" name="<%= properties[i].name %>">{{<%= names.property.singular %>.<%= properties[i].name %>}}</textarea>
+          <textarea rows="10" class="form-control" name="<%= properties[i].name %>">{{<%= names.property.singular %>.<%= properties[i].name %>}}</textarea>
       <% } else if(properties[i].type === 'number' || properties[i].type === 'int') { -%>
-          <input type="number" class="span2" name="<%= properties[i].name %>" value="{{<%= names.property.singular %>.<%= properties[i].name %>}}" />
+          <input type="number" class="form-control" name="<%= properties[i].name %>" value="{{<%= names.property.singular %>.<%= properties[i].name %>}}" />
       <% } else if(properties[i].type === 'boolean') { -%>
-          <select name="<%= properties[i].name %>", class="span1">
+          <select name="<%= properties[i].name %>", class="col-md-1">
             {% if <%= names.property.singular %>.<%= properties[i].name %>  %}
             <option>false</option>
             <option selected>true</option>
@@ -38,9 +38,9 @@
             {% endif %}
           </select>
       <% } else if(properties[i].type === 'datetime') {  -%>
-          <input type="datetime" class="span3" name="<%= properties[i].name %>" value="{{<%= names.property.singular %>.<%= properties[i].name %>}}" />
+          <input type="datetime" class="col-md-3" name="<%= properties[i].name %>" value="{{<%= names.property.singular %>.<%= properties[i].name %>}}" />
       <% } else if(properties[i].type === 'date') { -%>
-          <input type="date" class="span2" name="<%= properties[i].name %>" value="{{<%= names.property.singular %>.<%= properties[i].name %>}}" />
+          <input type="date" class="form-control" name="<%= properties[i].name %>" value="{{<%= names.property.singular %>.<%= properties[i].name %>}}" />
       <% } else { -%>
           <%= properties[i].type %>
       <% } -%>
@@ -49,7 +49,7 @@
       <% } -%>
       <% } -%>
 
-      <div class="form-actions">
+      <div class="form-actions col-xs-offset-2 col-xs-offset-2">
         <input type="submit" class="btn btn-primary" value="Save" />
         <input type="submit" class="btn btn-danger" value="Delete" formaction="/<%= names.filename.plural %>/{{params.id}}?_method=DELETE" />
       </div>

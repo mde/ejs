@@ -1,4 +1,4 @@
-<div class="hero-unit">
+<div class="jumbotron">
   <h3>Params</h3>
   {% for param in params %}
   <p>{{action}} action on {{controller}} controller.</p>

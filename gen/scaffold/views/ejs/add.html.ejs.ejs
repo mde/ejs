@@ -1,9 +1,9 @@
-<div class="hero-unit">
+<div class="jumbotron">
   <form id="<%= names.property.singular %>-form" class="form-horizontal" action="/<%= names.filename.plural %>" method="POST">
     <fieldset>
       <legend>Create a new <%= names.constructor.singular %></legend>
       <@ if(params.errors) { @>
-      <div class="control-group">
+      <div class="form-group">
         <ul>
         <@ for(var err in params.errors) { @>
           <li><@= params.errors[err]; @></li>
@@ -14,7 +14,7 @@
 
       <@- partial('form', {<%= names.property.singular %>: params}) @>
 
-      <div class="form-actions">
+      <div class="form-actions col-xs-offset-2 col-xs-offset-2">
         <@- contentTag('input', 'Add', {type: 'submit', class: 'btn btn-primary'}) @>
       </div>
     </fieldset>
