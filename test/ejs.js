@@ -142,13 +142,20 @@ tests = {
   }
 
 , 'test whitespace': function () {
-    var html = '<p>foo</p>'
-      , str = '<p><%="foo"%></p>';
+    var users, html, str;
+
+    html = '<p>foo</p>'
+    str = '<p><%="foo"%></p>';
     assert.equal(html, render(str));
 
-    var html = '<p>foo</p>'
-      , str = '<p><%=bar%></p>';
+    html = '<p>foo</p>';
+    str = '<p><%=bar%></p>';
     assert.equal(html, render(str, {bar: 'foo'}));
+
+    users = ['geddy', 'neil', 'alex'];
+    html = '<ul><li>geddy</li><li>neil</li><li>alex</li></ul>';
+    str = '<ul><%users.forEach(function(user){%><li><%=user%></li><%})%></ul>';
+    assert.equal(html, render(str, {users: users}));
   }
 
 , 'test iteration': function () {
