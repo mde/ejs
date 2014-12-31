@@ -16,13 +16,11 @@
  *
 */
 
-var adapter = require('../../../lib/template/adapters')
+var ejs = require('../lib/ejs')
   , assert = require('assert')
   , tests
   , render = function (str, data) {
-      data = data || {};
-      var ad = new adapter.EjsAdapter(str);
-      return ad.render(data);
+      return ejs.render(str, data || {});
     };
 
 tests = {
