@@ -19,13 +19,33 @@
 var ejs = require('../lib/ejs')
   , assert = require('assert')
   , tests
-  , render = function (str, data) {
-      return ejs.render(str, data || {});
+  , render = function (str, data, opts) {
+      return ejs.render(str, data || {}, opts);
     };
 
 tests = {
 
-  'test empty template render': function () {
+  'test compiles a function': function () {
+    var str = '<p>howdy</p>'
+      , fn = ejs.compile(str);
+    assert.equal(str, fn());
+  }
+
+, 'test custom delimiter passed to render': function () {
+    var str = "<&= foo; &>"
+      , actual = render(str, {foo: 'FOO'}, {delimiter: '&'});
+    assert.equal('FOO', actual);
+  }
+
+, 'test custom delimiter globally': function () {
+    ejs.delimiter = '$';
+    var str = "<$= foo; $>"
+      , actual = render(str, {foo: 'FOO'});
+    assert.equal('FOO', actual);
+    delete ejs.delimiter;
+  }
+
+, 'test empty template render': function () {
     var actual = render('');
     assert.equal('', actual);
   }
