@@ -165,6 +165,16 @@ tests = {
     assert.equal(html, render(str, {items: ['foo']}));
   }
 
+, 'test syntax error': function () {
+    var str = '<% new Date(1 2); %>';
+    try {
+      render(str, {});
+    }
+    catch(e) {
+      assert.ok(e.message.indexOf('while compiling EJS') > -1);
+    }
+  }
+
 , 'test useful stack traces': function () {
     var str = [
       "A little somethin'",
@@ -176,12 +186,12 @@ tests = {
     ].join("\n");
 
     try {
-      render(str)
+      render(str, {}, {filename: 'asdf.js'})
     }
     catch (err) {
       assert.ok(err.message.indexOf("name is not defined") > -1);
       assert.deepEqual(err.name, "ReferenceError");
-      var lineno = parseInt(err.toString().match(/ejs:(\d+)\n/)[1]);
+      var lineno = parseInt(err.toString().match(/asdf.js:(\d+)\n/)[1]);
       assert.deepEqual(lineno, 3,
           "Error should been thrown on line 3, was thrown on line "+ lineno);
     }
@@ -209,6 +219,16 @@ tests = {
       var lineno = parseInt(err.toString().match(/ejs:(\d+)\n/)[1]);
       assert.deepEqual(lineno, 6,
           "Error should been thrown on line 6, was thrown on line "+ lineno);
+    }
+  }
+
+, 'test no compileDebug': function () {
+    var str = '<% if (foo) {} %>';
+    try {
+      render(str, {}, {compileDebug: false, filename: 'asdf.js'});
+    }
+    catch(e) {
+      assert.ok(!e.path);
     }
   }
 
