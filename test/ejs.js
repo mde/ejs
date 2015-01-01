@@ -19,25 +19,23 @@
 var ejs = require('../lib/ejs')
   , assert = require('assert')
   , tests
-  , render = function (str, data, opts) {
-      return ejs.render(str, data || {}, opts);
-    };
+  , render = ejs.render;
 
 tests = {
 
-  'test compiles a function': function () {
+  'compiles a function': function () {
     var str = '<p>howdy</p>'
       , fn = ejs.compile(str);
     assert.equal(str, fn());
   }
 
-, 'test custom delimiter passed to render': function () {
+, 'custom delimiter passed to render': function () {
     var str = "<&= foo; &>"
       , actual = render(str, {foo: 'FOO'}, {delimiter: '&'});
     assert.equal('FOO', actual);
   }
 
-, 'test custom delimiter globally': function () {
+, 'custom delimiter globally': function () {
     ejs.delimiter = '$';
     var str = "<$= foo; $>"
       , actual = render(str, {foo: 'FOO'});
@@ -45,103 +43,141 @@ tests = {
     delete ejs.delimiter;
   }
 
-, 'test empty template render': function () {
+, 'client produces a standalone function': function () {
+    var fn = ejs.compile('<p><%= foo %></p>', {client: true});
+    var str = fn.toString();
+    eval('var preFn = ' + str);
+    assert.equal('<p>bar</p>', preFn({foo: 'bar'}));
+  }
+
+, 'empty template render': function () {
     var actual = render('');
     assert.equal('', actual);
   }
 
-, 'test rendering a single variable': function () {
+, 'rendering a single variable': function () {
     var str = "<% var foo = 'FOO'; %><%= foo; %>"
       , actual = render(str);
     assert.equal('FOO', actual);
   }
 
-, 'test rendering passed-in data': function () {
+, 'rendering passed-in data': function () {
     var str = "<%= foo; %>"
       , actual = render(str, {foo: 'FOO'});
     assert.equal('FOO', actual);
   }
 
-, 'test literal EJS': function () {
+, 'renderFile renders a template file': function (next) {
+    ejs.renderFile('test/fixtures/file.ejs', function (err, html) {
+      if (err) {
+        throw err;
+      }
+      assert.equal('<p>w00t</p>', html);
+      next();
+    });
+  }
+
+, 'literal EJS': function () {
     var str = "<%% var foo = 'FOO'; %>"
       , actual = render(str);
     assert.equal("<% var foo = 'FOO'; %>", actual);
   }
 
-, 'test comments': function () {
+, 'comments': function () {
     var str = "<%# Blah blah blah %><% var foo = 'FOO'; %><%= foo; %>"
       , actual = render(str);
     assert.equal('FOO', actual);
   }
 
-, 'test escaping': function () {
-    assert.equal('&lt;script&gt;', render('<%= "<script>" %>'));
-    assert.equal('<script>', render('<%- "<script>" %>'));
+, 'escaping': function () {
+    var html;
+    html = ejs.render('<%= name %>', {name: '&nbsp;<script>'});
+    assert.equal('&amp;nbsp;&lt;script&gt;', html);
+    html = ejs.render('<%= name %>', {name: "The Jones's"});
+    assert.equal('The Jones&#39;s', html);
+    html = ejs.render('<%= name %>', {name: "&foo_bar;"});
+    assert.equal('&amp;foo_bar;', html);
   }
 
-, 'test HTML equality': function () {
+, 'no escaping': function () {
+    var val = '&nbsp;<script>'
+      , html = ejs.render('<%- name %>', {name: val});
+    assert.equal(val, html);
+  }
+
+, 'handle no closing tag': function () {
+    try {
+      ejs.render('foo <%= name bar', {name: 'Bytor'});
+    }
+    catch(e) {
+      console.log(e.message);
+      assert.ok(e.message.indexOf('Could not find matching close tag') > -1);
+    }
+  }
+
+, 'HTML equality': function () {
     assert.equal('<p>yay</p>', render('<p>yay</p>'));
   }
 
-, 'test basic conditional': function () {
+, 'basic conditional': function () {
     var str = '<% if (name) { %><p><%= name %></p><% } %>'
       , actual = render(str, {name: 'mde'});
     assert.equal('<p>mde</p>', actual);
   }
 
-, 'test newlines': function () {
+, 'newlines': function () {
     var html = '\n<p>mde</p>\n<p>mde@fleegix.org</p>\n'
       , str = '<% if (name) { %>\n<p><%= name %></p>\n<p><%= email %></p>\n<% } %>'
       , data = { name: 'mde', email: 'mde@fleegix.org' };
     assert.equal(html, render(str, data));
   }
 
-, 'test single quotes': function () {
+, 'single quotes': function () {
     var html = '<p>WAHOO</p>'
       , str = "<p><%= up('wahoo') %></p>"
       , data = {up: function (str) { return str.toUpperCase(); }};
     assert.equal(html, render(str, data));
   }
 
-, 'test single quotes in HTML': function () {
+, 'single quotes in HTML': function () {
     var html = '<p>WAHOO that\'s cool</p>'
       , str = '<p><%= up(\'wahoo\') %> that\'s cool</p>'
       , data = {up: function (str) { return str.toUpperCase(); }};
     assert.equal(html, render(str, data));
   }
 
-, 'test multiple single quotes': function () {
+, 'multiple single quotes': function () {
     var html = "<p>couldn't shouldn't can't</p>"
       , str = "<p>couldn't shouldn't can't</p>";
     assert.equal(html, render(str));
   }
 
-, 'test single quotes inside tags': function () {
+, 'single quotes inside tags': function () {
     var html = '<p>string</p>'
       , str = "<p><%= 'string' %></p>";
     assert.equal(html, render(str));
   }
 
-, 'test back-slashes in the document': function () {
+, 'back-slashes in the document': function () {
     var html = "<p>backslash: '\\'</p>"
       , str = "<p>backslash: '\\'</p>";
     assert.equal(html, render(str));
   }
 
-, 'test double quotes': function () {
+, 'double quotes': function () {
     var html = '<p>WAHOO</p>'
       , str = '<p><%= up("wahoo") %></p>'
       , data = {up: function (str) { return str.toUpperCase(); }};
     assert.equal(html, render(str, data));
   }
 
-, 'test multiple double quotes': function () {
+, 'multiple double quotes': function () {
     var html = '<p>just a "test" wahoo</p>'
       , str = '<p>just a "test" wahoo</p>';
     assert.equal(html, render(str));
   }
 
-, 'test whitespace': function () {
+, 'whitespace': function () {
     var users, html, str;
 
     html = '<p>foo</p>'
@@ -158,7 +194,7 @@ tests = {
     assert.equal(html, render(str, {users: users}));
   }
 
-, 'test iteration': function () {
+, 'iteration': function () {
     var html = '<p>foo</p>',
       str = '<% for (var key in items) { %>'
         + '<p><%= items[key] %></p>'
@@ -172,7 +208,7 @@ tests = {
     assert.equal(html, render(str, {items: ['foo']}));
   }
 
-, 'test syntax error': function () {
+, 'syntax error': function () {
     var str = '<% new Date(1 2); %>';
     try {
       render(str, {});
@@ -182,7 +218,7 @@ tests = {
     }
   }
 
-, 'test useful stack traces': function () {
+, 'useful stack traces': function () {
     var str = [
       "A little somethin'",
       "somethin'",
@@ -204,7 +240,7 @@ tests = {
     }
   }
 
-, 'test useful stack traces multiline': function () {
+, 'useful stack traces multiline': function () {
     var str = [
       "A little somethin'",
       "somethin'",
@@ -229,7 +265,7 @@ tests = {
     }
   }
 
-, 'test no compileDebug': function () {
+, 'no compileDebug': function () {
     var str = '<% if (foo) {} %>';
     try {
       render(str, {}, {compileDebug: false, filename: 'asdf.js'});
@@ -239,7 +275,7 @@ tests = {
     }
   }
 
-, 'test slurp' : function () {
+, 'slurp' : function () {
     var expected = 'me\nhere'
       , str = 'me<% %>\nhere';
     assert.equal(expected, render(str));
