@@ -110,7 +110,6 @@ tests = {
       ejs.render('foo <%= name bar', {name: 'Bytor'});
     }
     catch(e) {
-      console.log(e.message);
       assert.ok(e.message.indexOf('Could not find matching close tag') > -1);
     }
   }
