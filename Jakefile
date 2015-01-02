@@ -22,7 +22,6 @@ task('browserify', {async: true}, function () {
 });
 
 task('minify', {async: true}, function () {
-  console.log('Minifying...');
   jake.exec('./node_modules/uglify-js/bin/uglifyjs ejs.js > ejs.min.js',
       buildOpts, function () {
     console.log('Minification completed.');
