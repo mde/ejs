@@ -118,6 +118,15 @@ including headers and footers, like so:
 
 Include `./ejs.js` or `./ejs.min.js` and `ejs.render(str)`.
 
+## Related projects
+
+There are a number of implementations of EJS:
+
+ * TJ's implementation, the v1 of this library: https://github.com/tj/ejs
+ * Jupiter Consulting's EJS: http://www.embeddedjs.com/
+ * EJS Embedded JavaScript Framework on Google Code: https://code.google.com/p/embeddedjavascript/
+ * Sam Stephenson's Ruby implementation: https://rubygems.org/gems/ejs
+
 ## License
 
 Licensed under the Apache License, Version 2.0
