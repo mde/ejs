@@ -11,14 +11,14 @@ $ npm install ejs
 ## Features
 
   * Control flow with `<% %>`
-  * Output with `<%= %>` (escaped by default)
-  * Unescaped raw HTML outputput with `<%- %>`
+  * Escaped output with `<%= %>` 
+  * Unescaped raw output with `<%- %>`
   * Trim-mode ('newline slurping') with `-%>` ending tag
-  * Custom delimiters (e.g., '?' instead of '%')
+  * Custom delimiters (e.g., use '?' instead of '%')
   * Includes
   * Client-side support
   * Static caching of intermediate JavaScript
-  * Static caching of template
+  * Static caching of templates
   * Complies with the [Express](http://expressjs.com) view system
 
 ## Example
