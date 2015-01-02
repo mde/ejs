@@ -11,7 +11,7 @@ $ npm install ejs
 ## Features
 
   * Control flow with `<% %>`
-  * Escaped output with `<%= %>` 
+  * Escaped output with `<%= %>`
   * Unescaped raw output with `<%- %>`
   * Trim-mode ('newline slurping') with `-%>` ending tag
   * Custom delimiters (e.g., use '?' instead of '%')
