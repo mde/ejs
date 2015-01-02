@@ -12,13 +12,14 @@
   "dependencies": {},
   "devDependencies": {
     "browserify": "8.0.3",
-    "uglify-js": "2.4.16"
+    "uglify-js": "2.4.16",
+    "jake": "8.0.x"
   },
   "engines": {
     "node": "*"
   },
   "scripts": {
-    "test": "jake test"
+    "test": "./node_modules/jake/bin/cli.js test"
   }
 }
 
