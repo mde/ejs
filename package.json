@@ -2,18 +2,23 @@
   "name": "EJS",
   "description": "Embedded JavaScript templates",
   "keywords": ["template", "engine", "ejs"],
-  "version": "1.0.0",
+  "version": "2.0.0",
   "author": "Matthew Eernisse <mde@fleegix.org> (http://fleegix.org)",
   "main": "./lib/ejs.js",
   "repository": {
     "type": "git",
     "url": "git://github.com/mde/ejs.git"
   },
-  "dependencies": {
-    "utilities": "1.0.x"
+  "dependencies": {},
+  "devDependencies": {
+    "browserify": "8.0.3",
+    "uglify-js": "2.4.16"
   },
   "engines": {
     "node": "*"
+  },
+  "scripts": {
+    "test": "jake test"
   }
 }
 
