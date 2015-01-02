@@ -10,16 +10,16 @@ $ npm install ejs
 
 ## Features
 
-  * Static caching of intermediate JavaScript
-  * Static caching of template
-  * Complies with the [Express](http://expressjs.com) view system
-  * 'Scriptlets' for control flow with `<% %>`
-  * Expressions for output with `<%= %>` (escaped by default)
+  * Control flow with `<% %>`
+  * Output with `<%= %>` (escaped by default)
   * Unescaped raw HTML outputput with `<%- %>`
   * Trim-mode ('newline slurping') with `-%>` ending tag
   * Custom delimiters (e.g., '?' instead of '%')
   * Includes
   * Client-side support
+  * Static caching of intermediate JavaScript
+  * Static caching of template
+  * Complies with the [Express](http://expressjs.com) view system
 
 ## Example
 
@@ -30,7 +30,6 @@ $ npm install ejs
 ```
 
 ## Usage
-
 
 ```javascript
 var template = ejs.compile(str, options);
@@ -49,6 +48,16 @@ ejs.render(str, data, options);
   - `compileDebug`    When `false` no debug instrumentation is compiled
   - `client`          Returns standalone compiled function
   - `delimiter`       Character to use with angle brackets for open/close
+
+## Tags
+
+  - `<%`              'Scriptlet' tag, for control-flow, no output
+  - `<%=`             Outputs the value into the template (HTML escaped)
+  - `<%-`             Outputs the unescaped value into the template
+  - `<%#`             Comment tag, no execution, no output
+  - `<%%`             Outputs a literal '<%'
+  - `%>`              Plain ending tag
+  - `-%>`             Trim-mode ('newline slurp') tag, trims following newline
 
 ## Includes
 
