@@ -313,6 +313,18 @@ tests = {
     assert.equal(expected, render(str));
   }
 
+, 'test include': function () {
+    var tmpl = '<% include fixtures/include %>'
+      , html = render(tmpl, {foo: true}, {filename: './test/ejs.js'});
+    assert.equal('foo: true', html);
+  }
+
+, 'test nested include': function () {
+    var tmpl = '<% include fixtures/include_a %>'
+      , html = render(tmpl, {bar: true}, {filename: './test/ejs.js'});
+    assert.equal('Howdy bar: true', html);
+  }
+
 };
 
 module.exports = tests;
