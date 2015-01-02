@@ -313,16 +313,29 @@ tests = {
     assert.equal(expected, render(str));
   }
 
-, 'test include': function () {
+, 'test include directive': function () {
     var tmpl = '<% include fixtures/include %>'
       , html = render(tmpl, {foo: true}, {filename: './test/ejs.js'});
     assert.equal('foo: true', html);
   }
 
-, 'test nested include': function () {
+, 'test nested include directive': function () {
     var tmpl = '<% include fixtures/include_a %>'
       , html = render(tmpl, {bar: true}, {filename: './test/ejs.js'});
     assert.equal('Howdy bar: true', html);
+  }
+
+, 'test include function': function () {
+    var tmpl = '<%= include("fixtures/include"); %>'
+      , html = render(tmpl, {foo: true}, {filename: './test/ejs.js'});
+    assert.equal('foo: true', html);
+  }
+
+, 'test include function variable path': function () {
+    var tmpl = '<%= include(includePath); %>'
+      , html = render(tmpl, {foo: true, includePath: "fixtures/include"},
+            {filename: './test/ejs.js'});
+    assert.equal('foo: true', html);
   }
 
 };
