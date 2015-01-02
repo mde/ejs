@@ -7,16 +7,27 @@ task('build', ['browserify', 'minify'], function () {
   console.log('Build completed.');
 });
 
+desc('Cleans browerified/minified files and package files');
+task('clean', ['clobber'], function () {
+  jake.rmRf('./ejs.js');
+  jake.rmRf('./ejs.min.js');
+});
+
 task('browserify', {async: true}, function () {
-  console.log('Browserifying...');
   jake.exec('./node_modules/browserify/bin/cmd.js lib/ejs.js > ejs.js',
-      buildOpts, complete());
+      buildOpts, function () {
+    console.log('Browserification completed.');
+    setTimeout(complete, 0);
+  });
 });
 
 task('minify', {async: true}, function () {
   console.log('Minifying...');
   jake.exec('./node_modules/uglify-js/bin/uglifyjs ejs.js > ejs.min.js',
-      buildOpts, complete());
+      buildOpts, function () {
+    console.log('Minification completed.');
+    setTimeout(complete, 0);
+  });
 });
 
 testTask('ejs', function () {
