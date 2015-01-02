@@ -338,6 +338,12 @@ tests = {
     assert.equal('foo: true', html);
   }
 
+, 'require support': function () {
+      var file = 'test/fixtures/include.ejs'
+        , template = require('./fixtures/include.ejs');
+      assert.equal('foo: true', template({foo: true}));
+  }
+
 };
 
 module.exports = tests;
