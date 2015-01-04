@@ -19,7 +19,7 @@
     "node": "*"
   },
   "scripts": {
-    "test": "./node_modules/jake/bin/cli.js test"
+    "test": "./node_modules/mocha/bin/mocha --ui tdd --reporter spec"
   }
 }
 

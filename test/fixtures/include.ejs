@@ -1,1 +1,5 @@
-foo: <%= foo; %>
+<ul>
+  <@ pets.forEach(function(pet){ @>
+    <@ include pet @>
+  <@ }) @>
+</ul>
