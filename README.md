@@ -14,7 +14,7 @@ $ npm install ejs
   * Escaped output with `<%= %>`
   * Unescaped raw output with `<%- %>`
   * Trim-mode ('newline slurping') with `-%>` ending tag
-  * Custom delimiters (e.g., use '?' instead of '%')
+  * Custom delimiters (e.g., use '<? ?>' instead of '<% %>')
   * Includes
   * Client-side support
   * Static caching of intermediate JavaScript
@@ -71,17 +71,18 @@ double-escaping the HTML output.
 ```javascript
 <ul>
   <% users.forEach(function(user){ %>
-    <%- include('user/show'); %>
+    <%- include('user/show', {user: user}); %>
   <% }); %>
 </ul>
 ```
 
 Includes are inserted at runtime, so you can use variables for the path in the
-`include` call (for example `<%- include(somePath); %>`). Local variables are
-available to all your includes.
+`include` call (for example `<%- include(somePath); %>`). Variables in your
+top-level data object are available to all your includes, but local variables
+need to be passed down.
 
 NOTE: Include preprocessor directives (`<% include user/show  %>`) are
-transparently converted to `include` function calls.
+still supported.
 
 ## Custom delimiters
 
