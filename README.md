@@ -136,6 +136,7 @@ There are a number of implementations of EJS:
  * Jupiter Consulting's EJS: http://www.embeddedjs.com/
  * EJS Embedded JavaScript Framework on Google Code: https://code.google.com/p/embeddedjavascript/
  * Sam Stephenson's Ruby implementation: https://rubygems.org/gems/ejs
+ * Erubis, an ERB implementation which also runs JavaScript: http://www.kuwata-lab.com/erubis/users-guide.04.html#lang-javascript
 
 ## License
 
