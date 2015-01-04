@@ -73,7 +73,7 @@ requires the 'filename' option.) For example if you have "./views/users.ejs" and
 You'll likely want to use the raw output tag (`<%-`) with your include to avoid
 double-escaping the HTML output.
 
-```javascript
+```html
 <ul>
   <% users.forEach(function(user){ %>
     <%- include('user/show', {user: user}); %>
@@ -98,13 +98,13 @@ var ejs = require('ejs'),
     users = ['geddy', 'neil', 'alex'];
 
 // Just one template
-ejs.render('<?= users.join(' + '); ?>, {users: users}, {delimiter: '?'});
-// => 'geddy + neil + alex'
+ejs.render('<?= users.join(" | "); ?>', {users: users}, {delimiter: '?'});
+// => 'geddy | neil | alex'
 
 // Or globally
 ejs.delimiter = '$';
-ejs.render('<$= users.join(' + '); $>, {users: users});
-// => 'geddy + neil + alex'
+ejs.render('<$= users.join(" | "); $>', {users: users});
+// => 'geddy | neil | alex'
 ```
 
 ## Layouts
@@ -115,8 +115,12 @@ including headers and footers, like so:
 
 ```html
 <%- include('header'); -%>
-<h1>Title</h1>
-<p>My page</p>
+<h1>
+  Title
+</h1>
+<p>
+  My page
+</p>
 <%- include('footer'); -%>
 ```
 
