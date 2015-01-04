@@ -128,7 +128,10 @@ including headers and footers, like so:
 
 ## Client-side support
 
-Include `./ejs.js` or `./ejs.min.js` and `ejs.render(str)`.
+Go to the [Latest Release](https://github.com/mde/ejs/releases/latest), download
+`./ejs.js` or `./ejs.min.js`.
+
+Include one of these on your page, and `ejs.render(str)`.
 
 ## Related projects
 
