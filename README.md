@@ -61,7 +61,7 @@ ejs.render(str, data, options);
 
 ## Includes
 
-Includes are relative to the template with the `include` statement. (This
+Includes are relative to the template with the `include` call. (This
 requires the 'filename' option.) For example if you have "./views/users.ejs" and
 "./views/user/show.ejs" you would use `<%- include('user/show'); %>`.
 
