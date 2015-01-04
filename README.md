@@ -40,6 +40,10 @@ ejs.render(str, data, options);
 // => Renderded HTML string
 ```
 
+You can also use the shortcut `ejs.render(dataAndOptions);` where you pass
+everything in a single object. In that case, you'll end up with local variables
+for all the passed options.
+
 ## Options
 
   - `cache`           Compiled functions are cached, requires `filename`
@@ -48,6 +52,7 @@ ejs.render(str, data, options);
   - `compileDebug`    When `false` no debug instrumentation is compiled
   - `client`          Returns standalone compiled function
   - `delimiter`       Character to use with angle brackets for open/close
+  - `debug`           Output generated function body
 
 ## Tags
 
