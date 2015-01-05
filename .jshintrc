@@ -8,6 +8,8 @@
   "undef": true,
   "node": true,
   "globals": {
-    "window": false
+    "window": false,
+    "suite": false,
+    "test": false
   }
 }
