@@ -1,0 +1,15 @@
+{
+  "evil": true,
+  "laxcomma": true,
+  "laxbreak": true,
+  "supernew": true,
+  "curly": true,
+  "immed": true,
+  "undef": true,
+  "node": true,
+  "globals": {
+    "window": false,
+    "suite": false,
+    "test": false
+  }
+}
