@@ -1,11 +1,15 @@
-<% var url = '/foo' -%>
-<% var title = 'Foo' -%>
-<% include includes/menu-item -%>
+<%- include('includes/menu-item', {
+  url: '/foo'
+, title: 'Foo'
+}); -%>
 
-<% var url = '/bar' -%>
-<% var title = 'Bar' -%>
-<% include includes/menu-item -%>
+<%- include('includes/menu-item', {
+  url: '/bar'
+, title: 'Bar'
+}); -%>
 
-<% var url = '/baz' -%>
-<% var title = 'Baz' -%>
-<% include includes/menu-item -%>
+<%- include('includes/menu-item', {
+  url: '/baz'
+, title: 'Baz'
+}); -%>
+

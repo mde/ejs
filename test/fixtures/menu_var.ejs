@@ -1,12 +1,15 @@
-<% var url = '/foo' -%>
-<% var title = 'Foo' -%>
-<% include varPath -%>
+<%- include(varPath, {
+  url: '/foo'
+, title: 'Foo'
+}); -%>
 
-<% var url = '/bar' -%>
-<% var title = 'Bar' -%>
-<% include varPath -%>
+<%- include(varPath, {
+  url: '/bar'
+, title: 'Bar'
+}); -%>
 
-<% var url = '/baz' -%>
-<% var title = 'Baz' -%>
-<% include varPath -%>
+<%- include(varPath, {
+  url: '/baz'
+, title: 'Baz'
+}); -%>
 

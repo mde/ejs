@@ -41,7 +41,6 @@ suite('ejs.compile(str, options)', function () {
         ejs.compile(fixture('fail.ejs'), {filename: 'fail.ejs'});
       }
       catch (err) {
-        console.log(err);
         assert.ok(err.message.indexOf('fail.ejs') > -1);
         return;
       }
@@ -284,14 +283,53 @@ suite('includes', function () {
       filename: file
     , delimiter: '@'
     , compileDebug: false
-    , client: true
     });
-    str = fn.toString();
-    eval('preFn = ' + str);
-    assert.ok(!str.match(/__filename/));
-    assert.doesNotThrow(function () {
-      preFn({pets: users});
+    try {
+      // Render without a required variable reference
+      fn({foo: 'asdf'});
+    }
+    catch(e) {
+      assert.equal(e.message, 'pets is not defined');
+      assert.ok(!e.path);
+    }
+  });
+
+  test('preprocessor include ejs', function () {
+    var file = 'test/fixtures/include_preprocessor.ejs';
+    assert.equal(ejs.render(fixture('include_preprocessor.ejs'), {pets: users}, {filename: file, delimiter: '@'}),
+        fixture('include_preprocessor.html'));
+  });
+
+  test('preprocessor work when nested', function () {
+    var file = 'test/fixtures/menu_preprocessor.ejs';
+    assert.equal(ejs.render(fixture('menu_preprocessor.ejs'), {pets: users}, {filename: file}),
+        fixture('menu_preprocessor.html'));
+  });
+
+  test('preprocessor include arbitrary files as-is', function () {
+    var file = 'test/fixtures/include_preprocessor.css.ejs';
+    assert.equal(ejs.render(fixture('include_preprocessor.css.ejs'), {pets: users}, {filename: file}),
+        fixture('include_preprocessor.css.html'));
+  });
+
+  test('preprocessor pass compileDebug to include', function () {
+    var file = 'test/fixtures/include_preprocessor.ejs'
+      , fn
+      , str
+      , preFn;
+    fn = ejs.compile(fixture('include_preprocessor.ejs'), {
+      filename: file
+    , delimiter: '@'
+    , compileDebug: false
     });
+    try {
+      // Render without a required variable reference
+      fn({foo: 'asdf'});
+    }
+    catch(e) {
+      assert.equal(e.message, 'pets is not defined');
+      assert.ok(!e.path);
+    }
   });
 });
 
@@ -303,11 +341,13 @@ suite('comments', function () {
 });
 
 suite('require', function () {
+
+  // Only works with inline/preprocessor includes
   test('allow ejs templates to be required as node modules', function () {
-      var file = 'test/fixtures/include.ejs'
-        , template = require(__dirname + '/fixtures/menu.ejs');
+      var file = 'test/fixtures/include_preprocessor.ejs'
+        , template = require(__dirname + '/fixtures/menu_preprocessor.ejs');
       assert.equal(template({filename: file, pets: users}),
-        fixture('menu.html'));
+        fixture('menu_preprocessor.html'));
   });
 });
 
