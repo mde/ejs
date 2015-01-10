@@ -79,6 +79,16 @@ suite('ejs.compile(str, options)', function () {
     eval('var preFn = ' + str);
     assert.equal(preFn({foo: 'bar'}), '<p>bar</p>');
   });
+
+  test('support client mode without locals', function () {
+    var fn
+      , str
+      , preFn;
+    fn = ejs.compile('<p><%= "foo" %></p>', {client: true});
+    str = fn.toString();
+    eval('var preFn = ' + str);
+    assert.equal(preFn(), '<p>foo</p>');
+  });
 });
 
 suite('ejs.render(str, data)', function () {
