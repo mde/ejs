@@ -105,6 +105,10 @@ suite('ejs.render(str, data)', function () {
     assert.equal(ejs.render('<p><%= locals.name %></p>', {name: 'geddy'},
                             {_with: false}),
         '<p>geddy</p>');
+    assert.throws(function() {
+      ejs.render('<p><%= name %></p>', {name: 'geddy'},
+                 {_with: false})
+    }, /name is not defined/);
   });
 });
 
@@ -133,14 +137,28 @@ suite('ejs.renderFile(path, options, fn)', function () {
 
   test('accept locals without using with() {}', function(done) {
     var data =  {name: 'fonebone'}
-      , options = {delimiter: '$', _with: false};
-    ejs.renderFile('test/fixtures/user.ejs', data, options, function(err, html) {
+      , options = {delimiter: '$', _with: false}
+      , doneCount = 0;
+    ejs.renderFile('test/fixtures/user-no-with.ejs', data, options,
+                   function(err, html) {
       if (err) {
+        if (doneCount === 2) return;
+        doneCount = 2;
         return done(err);
       }
       assert.equal(html, '<h1>fonebone</h1>');
-      done();
+      doneCount++;
+      if (doneCount === 2) done();
     });
+    ejs.renderFile('test/fixtures/user.ejs', data, options, function(err, html) {
+      if (!err) {
+        if (doneCount === 2) return;
+        doneCount = 2;
+        return done(new Error('error not thrown'));
+      }
+      doneCount++;
+      if (doneCount === 2) done();
+    })
   });
 
   test('not catch err thrown by callback', function(done) {
