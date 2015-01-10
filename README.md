@@ -2,7 +2,7 @@
 
 Embedded JavaScript templates
 
-[![Build Status](https://img.shields.org/mde/ejs/master.svg?style=flat)](https://travis-ci.org/mde/ejs)
+[![Build Status](https://img.shields.io/travis/mde/ejs/master.svg?style=flat)](https://travis-ci.org/mde/ejs)
 [![Developing Dependencies](https://img.shields.io/david/dev/mde/ejs.svg?style=flat)](https://david-dm.org/mde/ejs#info=devDependencies)
 
 ## Installation
