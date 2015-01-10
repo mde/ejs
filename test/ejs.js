@@ -90,6 +90,12 @@ suite('ejs.render(str, data)', function () {
     assert.equal(ejs.render('<p><%= name %></p>', {name: 'geddy'}),
         '<p>geddy</p>');
   });
+
+  test('accept locals without using with() {}', function () {
+    assert.equal(ejs.render('<p><%= locals.name %></p>', {name: 'geddy'},
+                            {_with: false}),
+        '<p>geddy</p>');
+  });
 });
 
 suite('ejs.renderFile(path, options, fn)', function () {
@@ -106,6 +112,18 @@ suite('ejs.renderFile(path, options, fn)', function () {
   test('accept locals', function(done) {
     var data =  {name: 'fonebone'}
       , options = {delimiter: '$'};
+    ejs.renderFile('test/fixtures/user.ejs', data, options, function(err, html) {
+      if (err) {
+        return done(err);
+      }
+      assert.equal(html, '<h1>fonebone</h1>');
+      done();
+    });
+  });
+
+  test('accept locals without using with() {}', function(done) {
+    var data =  {name: 'fonebone'}
+      , options = {delimiter: '$', _with: false};
     ejs.renderFile('test/fixtures/user.ejs', data, options, function(err, html) {
       if (err) {
         return done(err);
