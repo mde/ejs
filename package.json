@@ -15,13 +15,13 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "browserify": "8.0.3",
-    "uglify-js": "2.4.16",
-    "mocha": "2.1.0",
-    "jake": "8.0.x"
+    "browserify": "^8.0.3",
+    "uglify-js": "^2.4.16",
+    "mocha": "^2.1.0",
+    "jake": "^8.0.0"
   },
   "engines": {
-    "node": "*"
+    "node": ">=0.10.0"
   },
   "scripts": {
     "test": "./node_modules/mocha/bin/mocha"
