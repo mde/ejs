@@ -24,6 +24,6 @@
     "node": ">=0.10.0"
   },
   "scripts": {
-    "test": "./node_modules/mocha/bin/mocha --ui tdd --reporter spec"
+    "test": "./node_modules/mocha/bin/mocha"
   }
 }
