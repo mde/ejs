@@ -8,6 +8,21 @@ var ejs = require('..')
   , assert = require('assert')
   , path = require('path');
 
+// From https://gist.github.com/pguillory/729616
+function hook_stdout(callback) {
+  var old_write = process.stdout.write;
+
+  process.stdout.write = (function(write) {
+    return function(string, encoding, fd) {
+      callback(string, encoding, fd);
+    };
+  })(process.stdout.write);
+
+  return function() {
+    process.stdout.write = old_write;
+  };
+}
+
 /**
  * Load fixture `name`.
  */
@@ -305,6 +320,30 @@ suite('exceptions', function () {
       return;
     }
     throw new Error('no error reported when there should be');
+  });
+
+  var unhook = null;
+  test('log JS source when debug is set', function (done) {
+    var out = ''
+      , needToExit = false;
+    unhook = hook_stdout(function (str, encoding, fd) {
+      out += str;
+      if (needToExit) {
+        return;
+      }
+      if (out.indexOf('__output')) {
+        needToExit = true;
+        unhook();
+        unhook = null;
+        return done();
+      }
+    });
+    ejs.render(fixture('hello-world.ejs'), {}, {debug: true});
+  });
+  teardown(function() {
+    if (!unhook) return;
+    unhook();
+    unhook = null;
   });
 });
 
