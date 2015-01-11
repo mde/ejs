@@ -13,6 +13,7 @@
 + Improve test coverage (@mde & @TimothyGu)
 + Add `"use strict";` to all JS files (@TimothyGu)
 + Add a few more metadata fields to `package.json` (@TimothyGu)
++ Fix absolute path inclusion (@TimothyGu) (#11)
 
 ## v2.0.8: 2015-01-06
 
