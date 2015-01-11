@@ -2,6 +2,7 @@
 
 + Add `_with` option to control whether or not to use `with() {}` constructs
   (@TimothyGu)
++ Revert hack for Etherpad Lite (@TimothyGu)
 
 ## v2.0.8: UNRELEASED
 
