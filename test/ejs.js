@@ -306,6 +306,24 @@ suite('exceptions', function () {
 
 suite('includes', function () {
   test('include ejs', function () {
+    var file = 'test/fixtures/include-simple.ejs';
+    assert.equal(ejs.render(fixture('include-simple.ejs'), {}, {filename: file}),
+        fixture('include-simple.html'));
+  })
+
+  test('include ejs fails without `filename`', function () {
+    var file = 'test/fixtures/include_preprocessor.ejs';
+    try {
+      ejs.render(fixture('include-simple.ejs'));
+    }
+    catch (err) {
+      assert.ok(err.message.indexOf('requires the \'filename\' option') > -1);
+      return;
+    }
+    throw new Error('expected inclusion error');
+  });;
+
+  test('include ejs with locals', function () {
     var file = 'test/fixtures/include.ejs';
     assert.equal(ejs.render(fixture('include.ejs'), {pets: users}, {filename: file, delimiter: '@'}),
         fixture('include.html'));
@@ -364,6 +382,18 @@ suite('includes', function () {
     var file = 'test/fixtures/include_preprocessor.ejs';
     assert.equal(ejs.render(fixture('include_preprocessor.ejs'), {pets: users}, {filename: file, delimiter: '@'}),
         fixture('include_preprocessor.html'));
+  });
+
+  test('preprocessor include ejs fails without `filename`', function () {
+    var file = 'test/fixtures/include_preprocessor.ejs';
+    try {
+      ejs.render(fixture('include_preprocessor.ejs'), {pets: users}, {delimiter: '@'});
+    }
+    catch (err) {
+      assert.ok(err.message.indexOf('requires the \'filename\' option') > -1);
+      return;
+    }
+    throw new Error('expected inclusion error');
   });
 
   test('preprocessor work when nested', function () {
