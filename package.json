@@ -11,11 +11,14 @@
   "contributors": [
     "Timothy Gu <timothygu99@gmail.com> (https://timothygu.github.io)"
   ],
+  "license": "Apache-2.0",
   "main": "./lib/ejs.js",
   "repository": {
     "type": "git",
     "url": "git://github.com/mde/ejs.git"
   },
+  "bugs": "https://github.com/mde/ejs/issues",
+  "homepage": "https://github.com/mde/ejs",
   "dependencies": {},
   "devDependencies": {
     "browserify": "^8.0.3",
