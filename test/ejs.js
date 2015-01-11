@@ -46,6 +46,7 @@ suite('ejs.compile(str, options)', function () {
         return;
       }
     }
+    throw new Error('no error reported when there should be');
   });
 
   test('allow customizing delimiter local var', function () {
@@ -282,7 +283,9 @@ suite('exceptions', function () {
     catch (err) {
       assert.equal(err.path, 'error.ejs');
       assert.equal(err.stack.split('\n').slice(0, 8).join('\n'), fixture('error.out'));
+      return;
     }
+    throw new Error('no error reported when there should be');
   });
 
   test('not include fancy stack info if compileDebug is false', function () {
@@ -295,7 +298,9 @@ suite('exceptions', function () {
     catch (err) {
       assert.ok(!err.path);
       assert.notEqual(err.stack.split('\n').slice(0, 8).join('\n'), fixture('error.out'));
+      return;
     }
+    throw new Error('no error reported when there should be');
   });
 });
 
@@ -350,7 +355,9 @@ suite('includes', function () {
     catch(e) {
       assert.equal(e.message, 'pets is not defined');
       assert.ok(!e.path);
+      return;
     }
+    throw new Error('no error reported when there should be');
   });
 
   test('preprocessor include ejs', function () {
@@ -388,7 +395,9 @@ suite('includes', function () {
     catch(e) {
       assert.equal(e.message, 'pets is not defined');
       assert.ok(!e.path);
+      return;
     }
+    throw new Error('no error reported when there should be');
   });
 });
 
