@@ -4,7 +4,7 @@
   (@TimothyGu)
 + Revert hack for Etherpad Lite (@TimothyGu)
 
-## v2.0.8: UNRELEASED
+## v2.0.9: UNRELEASED
 
 + Do not claim node < 0.10.0 support (@TimothyGu)
 + Pin dependencies more loosely (@TimothyGu)
