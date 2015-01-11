@@ -5,7 +5,8 @@
 var ejs = require('..')
   , fs = require('fs')
   , read = fs.readFileSync
-  , assert = require('assert');
+  , assert = require('assert')
+  , path = require('path');
 
 /**
  * Load fixture `name`.
@@ -302,6 +303,14 @@ suite('includes', function () {
   test('include ejs', function () {
     var file = 'test/fixtures/include.ejs';
     assert.equal(ejs.render(fixture('include.ejs'), {pets: users}, {filename: file, delimiter: '@'}),
+        fixture('include.html'));
+  });
+
+  test('include ejs with absolute path and locals', function () {
+    var file = 'test/fixtures/include-abspath.ejs';
+    assert.equal(ejs.render(fixture('include-abspath.ejs'),
+      {dir: path.join(__dirname, 'fixtures'), pets: users, path: path},
+      {filename: file, delimiter: '@'}),
         fixture('include.html'));
   });
 
