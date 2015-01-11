@@ -76,8 +76,10 @@ suite('ejs.compile(str, options)', function () {
       , preFn;
     fn = ejs.compile('<p><%= foo %></p>', {client: true});
     str = fn.toString();
-    eval('var preFn = ' + str);
-    assert.equal(preFn({foo: 'bar'}), '<p>bar</p>');
+    if (!process.env.running_under_istanbul) {
+      eval('var preFn = ' + str);
+      assert.equal(preFn({foo: 'bar'}), '<p>bar</p>');
+    }
   });
 
   test('support client mode without locals', function () {
@@ -86,8 +88,10 @@ suite('ejs.compile(str, options)', function () {
       , preFn;
     fn = ejs.compile('<p><%= "foo" %></p>', {client: true});
     str = fn.toString();
-    eval('var preFn = ' + str);
-    assert.equal(preFn(), '<p>foo</p>');
+    if (!process.env.running_under_istanbul) {
+      eval('var preFn = ' + str);
+      assert.equal(preFn(), '<p>foo</p>');
+    }
   });
 });
 
@@ -392,8 +396,10 @@ suite('require', function () {
   test('allow ejs templates to be required as node modules', function () {
       var file = 'test/fixtures/include_preprocessor.ejs'
         , template = require(__dirname + '/fixtures/menu_preprocessor.ejs');
-      assert.equal(template({filename: file, pets: users}),
-        fixture('menu_preprocessor.html'));
+      if (!process.env.running_under_istanbul) {
+        assert.equal(template({filename: file, pets: users}),
+          fixture('menu_preprocessor.html'));
+      }
   });
 });
 
