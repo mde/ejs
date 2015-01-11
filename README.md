@@ -37,10 +37,10 @@ $ npm install ejs
 ```javascript
 var template = ejs.compile(str, options);
 template(data);
-// => Renderded HTML string
+// => Rendered HTML string
 
 ejs.render(str, data, options);
-// => Renderded HTML string
+// => Rendered HTML string
 ```
 
 You can also use the shortcut `ejs.render(dataAndOptions);` where you pass
