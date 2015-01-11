@@ -8,6 +8,9 @@
   ],
   "version": "2.0.8",
   "author": "Matthew Eernisse <mde@fleegix.org> (http://fleegix.org)",
+  "contributors": [
+    "Timothy Gu <timothygu99@gmail.com> (https://timothygu.github.io)"
+  ],
   "main": "./lib/ejs.js",
   "repository": {
     "type": "git",
