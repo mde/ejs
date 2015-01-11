@@ -1,10 +1,14 @@
-## v2.0.8: UNRELEASED
+## v2.1.0: UNRELEASED
 
 + Add `_with` option to control whether or not to use `with() {}` constructs
   (@TimothyGu)
+
+## v2.0.8: UNRELEASED
+
 + Do not claim node < 0.10.0 support (@TimothyGu)
 + Pin dependencies more loosely (@TimothyGu)
 + Fix client function generation without using locals (@TimothyGu)
++ Fix error case where the callback be called twice (@TimothyGu)
 + Improve test coverage (@mde & @TimothyGu)
 + Add `"use strict";` to all JS files (@TimothyGu)
 + Add a few more metadata fields to `package.json` (@TimothyGu)
