@@ -231,6 +231,10 @@ suite('%>', function () {
     assert.equal(ejs.render(fixture('newlines.ejs'), {users: users}),
       fixture('newlines.html'));
   });
+  test('consecutive tags work', function () {
+    assert.equal(ejs.render(fixture('consecutive-tags.ejs')),
+      fixture('consecutive-tags.html'));
+  })
 });
 
 suite('-%>', function () {
