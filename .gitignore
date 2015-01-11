@@ -16,3 +16,4 @@ site/log/*
 npm-debug.log
 doc/
 test/tmp
+coverage/
