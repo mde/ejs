@@ -1,3 +1,13 @@
+## v2.1.3: UNRELEASED
+
++ Fix `debug` option (@TimothyGu)
++ Fix two consecutive tags together (@TimothyGu)
+
+## v2.1.2: 2015-01-11
+
++ Fix `scope` option handling
++ Improve testing coverage (@TimothyGu)
+
 ## v2.1.1: 2015-01-11
 
 + Add `_with` option to control whether or not to use `with() {}` constructs
