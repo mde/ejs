@@ -2,6 +2,8 @@
  * Module dependencies.
  */
 
+"use strict";
+
 var ejs = require('..')
   , fs = require('fs')
   , read = fs.readFileSync
