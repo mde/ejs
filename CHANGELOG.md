@@ -1,11 +1,8 @@
-## v2.1.0: UNRELEASED
+## v2.1.1: 2015-01-11
 
 + Add `_with` option to control whether or not to use `with() {}` constructs
   (@TimothyGu)
 + Revert hack for Etherpad Lite (@TimothyGu)
-
-## v2.0.9: UNRELEASED
-
 + Do not claim node < 0.10.0 support (@TimothyGu)
 + Pin dependencies more loosely (@TimothyGu)
 + Fix client function generation without using locals (@TimothyGu)
