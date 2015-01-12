@@ -1,3 +1,7 @@
+## v2.1.4: 2015-01-12
+
++ Fix harmony mode (@mde)
+
 ## v2.1.3: 2015-01-11
 
 + Fix `debug` option (@TimothyGu)
