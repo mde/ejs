@@ -1,4 +1,4 @@
-## v2.1.3: UNRELEASED
+## v2.1.3: 2015-01-11
 
 + Fix `debug` option (@TimothyGu)
 + Fix two consecutive tags together (@TimothyGu)
