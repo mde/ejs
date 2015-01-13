@@ -29,10 +29,6 @@ task('minify', {async: true}, function () {
   });
 });
 
-testTask('ejs', function () {
-  this.testFiles.include('test/**/*.js');
-});
-
 publishTask('ejs', ['build'], function () {
   this.packageFiles.include([
     'Jakefile'
