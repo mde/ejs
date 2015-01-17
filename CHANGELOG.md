@@ -1,3 +1,8 @@
+## v2.2.0: UNRELEASED
+
++ 4x faster HTML escaping function, especially beneficial if you use lots
+  of escaped locals (@TimothyGu)
+
 ## v2.1.4: 2015-01-12
 
 + Fix harmony mode (@mde)
