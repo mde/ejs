@@ -2,6 +2,7 @@
 
 + 4x faster HTML escaping function, especially beneficial if you use lots
   of escaped locals (@TimothyGu)
++ Up to 4x faster compiled functions in addition to above (@TimothyGu)
 
 ## v2.1.4: 2015-01-12
 
