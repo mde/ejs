@@ -13,13 +13,19 @@
   ],
   "license": "Apache-2.0",
   "main": "./lib/ejs.js",
+  "bin": {
+    "ejs": "./bin/ejs.js"
+  },
   "repository": {
     "type": "git",
     "url": "git://github.com/mde/ejs.git"
   },
   "bugs": "https://github.com/mde/ejs/issues",
   "homepage": "https://github.com/mde/ejs",
-  "dependencies": {},
+  "dependencies": {
+    "commander": "^2.6.0",
+    "mkdirp": "^0.5.0"
+  },
   "devDependencies": {
     "browserify": "^8.0.3",
     "uglify-js": "^2.4.16",
