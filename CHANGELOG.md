@@ -3,35 +3,35 @@
 + 4x faster HTML escaping function, especially beneficial if you use lots
   of escaped locals (@TimothyGu)
 + Up to 4x faster compiled functions in addition to above (@TimothyGu)
-+ Fix `//` in an expanded string (@TimothyGu)
+* Fix `//` in an expanded string (@TimothyGu)
 
 ## v2.1.4: 2015-01-12
 
-+ Fix harmony mode (@mde)
+* Fix harmony mode (@mde)
 
 ## v2.1.3: 2015-01-11
 
-+ Fix `debug` option (@TimothyGu)
-+ Fix two consecutive tags together (@TimothyGu)
+* Fix `debug` option (@TimothyGu)
+* Fix two consecutive tags together (@TimothyGu)
 
 ## v2.1.2: 2015-01-11
 
-+ Fix `scope` option handling
+* Fix `scope` option handling
 + Improve testing coverage (@TimothyGu)
 
 ## v2.1.1: 2015-01-11
 
 + Add `_with` option to control whether or not to use `with() {}` constructs
   (@TimothyGu)
-+ Revert hack for Etherpad Lite (@TimothyGu)
-+ Do not claim node < 0.10.0 support (@TimothyGu)
-+ Pin dependencies more loosely (@TimothyGu)
-+ Fix client function generation without using locals (@TimothyGu)
-+ Fix error case where the callback be called twice (@TimothyGu)
 + Improve test coverage (@mde & @TimothyGu)
-+ Add `"use strict";` to all JS files (@TimothyGu)
 + Add a few more metadata fields to `package.json` (@TimothyGu)
-+ Fix absolute path inclusion (@TimothyGu) (#11)
+- Revert hack for Etherpad Lite (@TimothyGu)
+* Do not claim node < 0.10.0 support (@TimothyGu)
+* Pin dependencies more loosely (@TimothyGu)
+* Fix client function generation without using locals (@TimothyGu)
+* Fix error case where the callback be called twice (@TimothyGu)
+* Add `"use strict";` to all JS files (@TimothyGu)
+* Fix absolute path inclusion (@TimothyGu) (#11)
 
 ## v2.0.8: 2015-01-06
 
