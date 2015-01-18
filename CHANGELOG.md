@@ -35,44 +35,44 @@
 
 ## v2.0.8: 2015-01-06
 
-+ Fix crash on missing file
+* Fix crash on missing file
 
 ## v2.0.7: 2015-01-05
 
-+ Linting and cosmetics
+* Linting and cosmetics
 
 ## v2.0.6: 2015-01-04
 
-+ Temporary hack for Etherpad Lite. It will be removed soon.
+* Temporary hack for Etherpad Lite. It will be removed soon.
 
 ## v2.0.5: 2015-01-04
 
-+ Fix leaking global `fn`
+* Fix leaking global `fn`
 
 ## v2.0.4: 2015-01-04
 
-+ Fix leaking global `includeSource`
-+ Update client-side instructions
+* Fix leaking global `includeSource`
+* Update client-side instructions
 
 ## v2.0.3: 2015-01-04
 
 + Add Travis CI support
 + Add LICENSE file
 + Better compatibility with EJS v1 for options
-+ Fix typos in examples in README
 + Add `debug` option
+* Fix typos in examples in README
 
 ## v2.0.2: 2015-01-03
 
-+ Use lowercase package name in `package.json`
+* Use lowercase package name in `package.json`
 
-## v2.0.0: 2015-01-02
+## v2.0.1: 2015-01-02
 
 + Completely rewritten
-+ Removed support for filters
 + Single custom delimiter (e.g., `?`) with `delimiter` option instead of
   `open`/`close` options
-+ Data and options now separate params (i.e., `render(str, data, options);`)
 + `include` now runtime function call instead of preprocessor directive
 + Variable-based includes now possible
-+ Comment tag support (<%%)
++ Comment tag support (`<%#`)
+* Data and options now separate params (i.e., `render(str, data, options);`)
+- Removed support for filters
