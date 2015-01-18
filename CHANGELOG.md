@@ -4,7 +4,7 @@
   of escaped locals (@TimothyGu)
 + Up to 4x faster compiled functions in addition to above (@TimothyGu)
 * Fix `//` in an expanded string (@TimothyGu)
-+ Fix literal mode without an end tag (@TimothyGu)
+* Fix literal mode without an end tag (@TimothyGu)
 
 ## v2.1.4: 2015-01-12
 
