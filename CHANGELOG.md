@@ -1,3 +1,9 @@
+## v3.0.0-beta.0: UNRELEASED
+
+* `.compile()` now returns a string on client mode (@TimothyGu)
+* Use `options.name` to control the name of the client function (@TimothyGu)
+* The default client function name is now 'template' (@TimothyGu)
+
 ## v2.2.0: UNRELEASED
 
 + 4x faster HTML escaping function, especially beneficial if you use lots
