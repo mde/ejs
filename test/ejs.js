@@ -46,6 +46,11 @@ suite('ejs.compile(str, options)', function () {
     assert.equal(fn(), '<p>yay</p>');
   });
 
+  test('empty input works', function () {
+    var fn = ejs.compile('');
+    assert.equal(fn(), '');
+  });
+
   test('throw if there are syntax errors', function () {
     try {
       ejs.compile(fixture('fail.ejs'));
@@ -115,6 +120,10 @@ suite('ejs.compile(str, options)', function () {
 suite('ejs.render(str, data)', function () {
   test('render the template', function () {
     assert.equal(ejs.render('<p>yay</p>'), '<p>yay</p>');
+  });
+
+  test('empty input works', function () {
+    assert.equal(ejs.render(''), '');
   });
 
   test('accept locals', function () {
