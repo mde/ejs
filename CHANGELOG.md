@@ -3,6 +3,7 @@
 * `.compile()` now returns a string on client mode (@TimothyGu)
 * Use `options.name` to control the name of the client function (@TimothyGu)
 * The default client function name is now 'template' (@TimothyGu)
+- Remove support for `scope` option
 
 ## v2.2.0: UNRELEASED
 
