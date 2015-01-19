@@ -277,6 +277,11 @@ suite('<%%', function () {
     assert.equal(ejs.render('<%%- "foo" %>'),
       '<%- "foo" %>');
   });
+  test('work without an end tag', function () {
+    assert.equal(ejs.render('<%%'), '<%');
+    assert.equal(ejs.render(fixture('literal.ejs'), {delimiter: ' '}),
+      fixture('literal.html'));
+  });
 });
 
 suite('single quotes', function () {
