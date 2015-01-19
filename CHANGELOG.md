@@ -5,6 +5,8 @@
 + Up to 4x faster compiled functions in addition to above (@TimothyGu)
 * Fix `//` in an expanded string (@TimothyGu)
 * Fix literal mode without an end tag (@TimothyGu)
+* Fix setting options to renderFile() through the legacy 3-argument interface
+  (as is the case for Express.js) (@TimothyGu)
 
 ## v2.1.4: 2015-01-12
 
