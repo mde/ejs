@@ -293,7 +293,7 @@ suite('<%%', function () {
   });
   test('work without an end tag', function () {
     assert.equal(ejs.render('<%%'), '<%');
-    assert.equal(ejs.render(fixture('literal.ejs'), {delimiter: ' '}),
+    assert.equal(ejs.render(fixture('literal.ejs'), {}, {delimiter: ' '}),
       fixture('literal.html'));
   });
 });
@@ -329,7 +329,7 @@ suite('messed up whitespace', function () {
 suite('exceptions', function () {
   test('produce useful stack traces', function () {
     try {
-      ejs.render(fixture('error.ejs'), {filename: 'error.ejs'});
+      ejs.render(fixture('error.ejs'), {}, {filename: 'error.ejs'});
     }
     catch (err) {
       assert.equal(err.path, 'error.ejs');
