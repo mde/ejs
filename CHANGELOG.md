@@ -2,6 +2,7 @@
 
 * Fix handling of variable output containing semicolons (@TimothyGu)
 * Fix included files caching (@TimothyGu)
+* Simplified caching routine (@TimothyGu)
 
 ## v2.2.1: 2015-01-19
 
