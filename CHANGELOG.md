@@ -7,6 +7,7 @@
 * Fix `//` in an expanded string (@TimothyGu)
 * Fix literal mode without an end tag (@TimothyGu)
 * Fix included files caching (@TimothyGu)
+* Simplified caching routine (@TimothyGu)
 
 ## v2.1.4: 2015-01-12
 
