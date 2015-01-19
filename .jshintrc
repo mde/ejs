@@ -10,6 +10,7 @@
   "globals": {
     "window": false,
     "suite": false,
-    "test": false
+    "test": false,
+    "teardown": false
   }
 }
