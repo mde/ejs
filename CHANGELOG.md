@@ -3,10 +3,12 @@
 + 4x faster HTML escaping function, especially beneficial if you use lots
   of escaped locals (@TimothyGu)
 + Up to 4x faster compiled functions in addition to above (@TimothyGu)
++ Caching mode regression test coverage (@TimothyGu)
 * Fix `//` in an expanded string (@TimothyGu)
 * Fix literal mode without an end tag (@TimothyGu)
 * Fix setting options to renderFile() through the legacy 3-argument interface
   (as is the case for Express.js) (@TimothyGu)
+* Fix included files caching (@TimothyGu)
 
 ## v2.1.4: 2015-01-12
 
