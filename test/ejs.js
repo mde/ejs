@@ -381,7 +381,7 @@ suite('exceptions', function () {
   });
 });
 
-suite('includes', function () {
+suite('include()', function () {
   test('include ejs', function () {
     var file = 'test/fixtures/include-simple.ejs';
     assert.equal(ejs.render(fixture('include-simple.ejs'), {}, {filename: file}),
@@ -452,13 +452,16 @@ suite('includes', function () {
     throw new Error('no error reported when there should be');
   });
 
-  test('preprocessor include ejs', function () {
+});
+
+suite('preprocessor include', function () {
+  test('work', function () {
     var file = 'test/fixtures/include_preprocessor.ejs';
     assert.equal(ejs.render(fixture('include_preprocessor.ejs'), {pets: users}, {filename: file, delimiter: '@'}),
         fixture('include_preprocessor.html'));
   });
 
-  test('preprocessor include ejs fails without `filename`', function () {
+  test('fails without `filename`', function () {
     try {
       ejs.render(fixture('include_preprocessor.ejs'), {pets: users}, {delimiter: '@'});
     }
@@ -469,19 +472,19 @@ suite('includes', function () {
     throw new Error('expected inclusion error');
   });
 
-  test('preprocessor work when nested', function () {
+  test('work when nested', function () {
     var file = 'test/fixtures/menu_preprocessor.ejs';
     assert.equal(ejs.render(fixture('menu_preprocessor.ejs'), {pets: users}, {filename: file}),
         fixture('menu_preprocessor.html'));
   });
 
-  test('preprocessor include arbitrary files as-is', function () {
+  test('include arbitrary files as-is', function () {
     var file = 'test/fixtures/include_preprocessor.css.ejs';
     assert.equal(ejs.render(fixture('include_preprocessor.css.ejs'), {pets: users}, {filename: file}),
         fixture('include_preprocessor.css.html'));
   });
 
-  test('preprocessor pass compileDebug to include', function () {
+  test('pass compileDebug to include', function () {
     var file = 'test/fixtures/include_preprocessor.ejs'
       , fn;
     fn = ejs.compile(fixture('include_preprocessor.ejs'), {
