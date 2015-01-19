@@ -1,3 +1,5 @@
+/* jshint mocha: true */
+
 /**
  * Module dependencies.
  */

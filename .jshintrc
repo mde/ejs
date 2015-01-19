@@ -8,9 +8,6 @@
   "undef": true,
   "node": true,
   "globals": {
-    "window": false,
-    "suite": false,
-    "test": false,
-    "teardown": false
+    "window": false
   }
 }
