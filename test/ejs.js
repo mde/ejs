@@ -245,13 +245,21 @@ suite('ejs.renderFile(path, options, fn)', function () {
       done();
     });
     d.run(function () {
-      ejs.renderFile('test/fixtures/user.ejs', data, options, function(err) {
-        counter++;
-        if (err) {
-          assert.notEqual(err.message, 'Exception in callback');
-          return done(err);
-        }
-        throw new Error('Exception in callback');
+      // process.nextTick() needed to work around mochajs/mocha#513
+      //
+      // tl;dr: mocha doesn't support synchronous exception throwing in
+      // domains. Have to make it async. Ticket closed because: "domains are
+      // deprecated :D"
+      process.nextTick(function () {
+        ejs.renderFile('test/fixtures/user.ejs', data, options,
+                       function(err) {
+          counter++;
+          if (err) {
+            assert.notEqual(err.message, 'Exception in callback');
+            return done(err);
+          }
+          throw new Error('Exception in callback');
+        });
       });
     });
   });
@@ -304,7 +312,6 @@ suite('ejs.clearCache()', function () {
 });
 
 suite('<%=', function () {
-
   test('escape &amp;<script>', function () {
     assert.equal(ejs.render('<%= name %>', {name: '&nbsp;<script>'}),
         '&amp;nbsp;&lt;script&gt;');
