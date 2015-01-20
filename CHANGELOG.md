@@ -3,6 +3,7 @@
 + 4x faster HTML escaping function, especially beneficial if you use lots
   of escaped locals (@TimothyGu)
 + Up to 4x faster compiled functions in addition to above (@TimothyGu)
++ Add a CLI app (@TimothyGu)
 * Fix `//` in an expanded string (@TimothyGu)
 * Fix literal mode without an end tag (@TimothyGu)
 * Fix setting options to renderFile() through the legacy 3-argument interface
