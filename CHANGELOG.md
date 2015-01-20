@@ -7,6 +7,7 @@
 * Fix literal mode without an end tag (@TimothyGu)
 * Fix setting options to renderFile() through the legacy 3-argument interface
   (as is the case for Express.js) (@TimothyGu)
++ Added version string to exported object for use in browsers (@mde)
 
 ## v2.1.4: 2015-01-12
 
