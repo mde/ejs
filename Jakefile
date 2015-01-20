@@ -42,10 +42,4 @@ publishTask('ejs', ['build'], function () {
   ]);
 });
 
-jake.Task['publish:updateVersionFiles'].on('complete', function (version) {
-  var code = fs.readFileSync('./lib/ejs.js').toString();
-  code = code.replace(/exports.VERSION = '.+'/m,
-      "exports.VERSION = '" + version  + "'");
-  fs.writeFileSync('./lib/ejs.js', code);
-});
 
