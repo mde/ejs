@@ -1,4 +1,4 @@
-## v2.2.0: UNRELEASED
+## v2.2.1: 2015-01-19
 
 + 4x faster HTML escaping function, especially beneficial if you use lots
   of escaped locals (@TimothyGu)
