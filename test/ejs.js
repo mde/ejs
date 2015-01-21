@@ -128,6 +128,14 @@ suite('ejs.render(str, data)', function () {
     assert.equal(ejs.render(''), '');
   });
 
+  test('empty data object renders nothing escaped', function () {
+    assert.equal(ejs.render('<%= data.fonebone %>', {data: {}}), '');
+  });
+
+  test('empty data object renders nothing raw', function () {
+    assert.equal(ejs.render('<%- data.fonebone %>', {data: {}}), '');
+  });
+
   test('accept locals', function () {
     assert.equal(ejs.render('<p><%= name %></p>', {name: 'geddy'}),
         '<p>geddy</p>');
