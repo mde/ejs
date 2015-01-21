@@ -1,8 +1,10 @@
-## v2.2.2: UNRELEASED
+## v2.2.2: 2015-01-21
 
 * Fix handling of variable output containing semicolons (@TimothyGu)
 * Fix included files caching (@TimothyGu)
 * Simplified caching routine (@TimothyGu)
+* Filter out deprecation warning for `renderFile` when called from
+  Express (@mde)
 
 ## v2.2.1: 2015-01-19
 
