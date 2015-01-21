@@ -311,22 +311,6 @@ suite('ejs.clearCache()', function () {
   });
 });
 
-suite('ejs.clearCache()', function () {
-  test('work properly', function () {
-    var expected = '<p>Old</p>'
-      , file = __dirname + '/tmp/clearCache.ejs'
-      , options = {cache: true, filename: file}
-      , out = ejs.render('<p>Old</p>', {}, options);
-    assert.equal(out, expected);
-
-    ejs.clearCache();
-
-    expected = '<p>New</p>';
-    out = ejs.render('<p>New</p>', {}, options);
-    assert.equal(out, expected);
-  });
-});
-
 suite('<%=', function () {
   test('escape &amp;<script>', function () {
     assert.equal(ejs.render('<%= name %>', {name: '&nbsp;<script>'}),
