@@ -136,12 +136,28 @@ suite('ejs.render(str, data)', function () {
     assert.equal(ejs.render(''), '');
   });
 
-  test('empty data object renders nothing escaped', function () {
-    assert.equal(ejs.render('<%= data.fonebone %>', {data: {}}), '');
+  test('undefined renders nothing escaped', function () {
+    assert.equal(ejs.render('<%= undefined %>'), '');
   });
 
-  test('empty data object renders nothing raw', function () {
-    assert.equal(ejs.render('<%- data.fonebone %>', {data: {}}), '');
+  test('undefined renders nothing raw', function () {
+    assert.equal(ejs.render('<%- undefined %>'), '');
+  });
+
+  test('null renders nothing escaped', function () {
+    assert.equal(ejs.render('<%= null %>'), '');
+  });
+
+  test('null renders nothing raw', function () {
+    assert.equal(ejs.render('<%- null %>'), '');
+  });
+
+  test('zero-value data item renders something escaped', function () {
+    assert.equal(ejs.render('<%= 0 %>'), '0');
+  });
+
+  test('zero-value data object renders something raw', function () {
+    assert.equal(ejs.render('<%- 0 %>'), '0');
   });
 
   test('accept locals', function () {
