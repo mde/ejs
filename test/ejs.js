@@ -192,7 +192,7 @@ suite('ejs.render(str, data)', function () {
   });
 });
 
-suite('ejs.renderFile(path, options, fn)', function () {
+suite('ejs.renderFile(path, [data], [options], fn)', function () {
   test('render a file', function(done) {
     ejs.renderFile('test/fixtures/para.ejs', function(err, html) {
       if (err) {
@@ -211,6 +211,51 @@ suite('ejs.renderFile(path, options, fn)', function () {
         return done(err);
       }
       assert.equal(html, '<h1>fonebone</h1>');
+      done();
+    });
+  });
+
+  test('deprecation warning for data-in-opts', function(done) {
+    var data =  {name: 'fonebone', delimiter: '$'}
+      , options = {delimiter: '$'}
+      , warn = console.warn
+      , incr = 0;
+
+    console.warn = function (msg) {
+      assert.ok(msg.indexOf('options found in locals object') > -1);
+      incr++;
+    }
+
+    ejs.renderFile('test/fixtures/user.ejs', data, function(err, html) {
+      if (err) {
+        return done(err);
+      }
+      assert.equal(html, '<h1>fonebone</h1>');
+      assert.equal(incr, 1);
+      console.warn = warn;
+
+      done();
+    });
+  });
+
+  test('no deprecation warning for data-in-opts via Express', function(done) {
+    var data =  {name: 'fonebone', delimiter: '$'}
+      , options = {delimiter: '$'}
+      , warn = console.warn
+      , incr = 0;
+
+    console.warn = function (msg) {
+      incr++;
+    }
+
+    ejs.__express('test/fixtures/user.ejs', data, function(err, html) {
+      if (err) {
+        return done(err);
+      }
+      assert.equal(html, '<h1>fonebone</h1>');
+      assert.equal(incr, 0);
+      console.warn = warn;
+
       done();
     });
   });
