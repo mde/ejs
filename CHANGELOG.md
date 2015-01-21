@@ -1,3 +1,7 @@
+## v2.2.2: UNRELEASED
+
+* Fix handling of variable output containing semicolons (@TimothyGu)
+
 ## v2.2.1: 2015-01-19
 
 + 4x faster HTML escaping function, especially beneficial if you use lots
