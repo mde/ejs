@@ -1,3 +1,7 @@
+## v2.2.3: 2015-01-23
+
+* Better filtering for deprecation notice when called from Express (@mde)
+
 ## v2.2.2: 2015-01-21
 
 * Fix handling of variable output containing semicolons (@TimothyGu)
