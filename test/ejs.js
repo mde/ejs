@@ -425,7 +425,7 @@ suite('-%>', function () {
       ejs.render(fixture('no.newlines.error.ejs'));
     }
     catch (e) {
-      if (e.message.indexOf('>> 4| <%= qdata %>' > -1)) {
+      if (e.message.indexOf('>> 4| <%= qdata %>') > -1) {
         return;
       }
       throw e;
