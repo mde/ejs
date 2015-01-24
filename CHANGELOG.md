@@ -1,3 +1,7 @@
+## v2.2.4: UNRELEASED
+
+* Only bundle rethrow() in client scripts when compileDebug is enabled
+
 ## v2.2.3: 2015-01-23
 
 * Better filtering for deprecation notice when called from Express (@mde)
