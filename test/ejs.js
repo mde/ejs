@@ -103,25 +103,22 @@ suite('ejs.compile(str, options)', function () {
   });
 
   test('have a working client option', function () {
-    var fn
-      , str
-      , preFn;
-    fn = ejs.compile('<p><%= foo %></p>', {client: true});
-    str = fn.toString();
+    var str = ejs.compile('<p><%= foo %></p>', {
+      client: true
+    , name: 'myTemp'
+    });
     if (!process.env.running_under_istanbul) {
-      eval('var preFn = ' + str);
-      assert.equal(preFn({foo: 'bar'}), '<p>bar</p>');
+      /* global myTemp: false */
+      eval(str);
+      assert.equal(myTemp({foo: 'bar'}), '<p>bar</p>');
     }
   });
 
   test('support client mode without locals', function () {
-    var fn
-      , str
-      , preFn;
-    fn = ejs.compile('<p><%= "foo" %></p>', {client: true});
-    str = fn.toString();
+    var preFn
+      , str = ejs.compile('<p><%= "foo" %></p>', {client: true});
     if (!process.env.running_under_istanbul) {
-      eval('var preFn = ' + str);
+      eval('preFn = ' + str);
       assert.equal(preFn(), '<p>foo</p>');
     }
   });

@@ -1,3 +1,10 @@
+## v3.0.0-beta.0: UNRELEASED
+
+* `.compile()` now returns a string on client mode (@TimothyGu)
+* Use `options.name` to control the name of the client function (@TimothyGu)
+* The default client function name is now 'template' (@TimothyGu)
+- Remove support for `scope` option
+
 ## v2.2.3: 2015-01-23
 
 * Better filtering for deprecation notice when called from Express (@mde)
