@@ -380,7 +380,7 @@ suite('<%=', function () {
     assert.equal(ejs.render('<%= name %>', {name: 'The Jones\'s'}),
       'The Jones&#39;s');
   });
-  
+
   test('should escape &foo_bar;', function () {
     assert.equal(ejs.render('<%= name %>', {name: '&foo_bar;'}),
       '&amp;foo_bar;');
