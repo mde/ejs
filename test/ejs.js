@@ -108,6 +108,7 @@ suite('ejs.compile(str, options)', function () {
     , name: 'myTemp'
     });
     if (!process.env.running_under_istanbul) {
+      /* global myTemp: false */
       eval(str);
       assert.equal(myTemp({foo: 'bar'}), '<p>bar</p>');
     }
