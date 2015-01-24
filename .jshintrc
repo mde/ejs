@@ -7,9 +7,8 @@
   "immed": true,
   "undef": true,
   "node": true,
+  "unused": true,
   "globals": {
-    "window": false,
-    "suite": false,
-    "test": false
+    "window": false
   }
 }

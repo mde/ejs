@@ -5,13 +5,29 @@
 * The default client function name is now 'template' (@TimothyGu)
 - Remove support for `scope` option
 
-## v2.2.0: UNRELEASED
+## v2.2.3: 2015-01-23
+
+* Better filtering for deprecation notice when called from Express (@mde)
+
+## v2.2.2: 2015-01-21
+
+* Fix handling of variable output containing semicolons (@TimothyGu)
+* Fix included files caching (@TimothyGu)
+* Simplified caching routine (@TimothyGu)
+* Filter out deprecation warning for `renderFile` when called from
+  Express (@mde)
+
+## v2.2.1: 2015-01-19
 
 + 4x faster HTML escaping function, especially beneficial if you use lots
   of escaped locals (@TimothyGu)
 + Up to 4x faster compiled functions in addition to above (@TimothyGu)
++ Caching mode regression test coverage (@TimothyGu)
 * Fix `//` in an expanded string (@TimothyGu)
 * Fix literal mode without an end tag (@TimothyGu)
+* Fix setting options to renderFile() through the legacy 3-argument interface
+  (as is the case for Express.js) (@TimothyGu)
++ Added version string to exported object for use in browsers (@mde)
 
 ## v2.1.4: 2015-01-12
 
