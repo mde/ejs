@@ -19,17 +19,17 @@ try {
 }
 
 // From https://gist.github.com/pguillory/729616
-function hook_stdout(callback) {
-  var old_write = process.stdout.write;
+function hook_stdio(stream, callback) {
+  var old_write = stream.write;
 
-  process.stdout.write = (function() {
+  stream.write = (function() {
     return function(string, encoding, fd) {
       callback(string, encoding, fd);
     };
-  })(process.stdout.write);
+  })(stream.write);
 
   return function() {
-    process.stdout.write = old_write;
+    stream.write = old_write;
   };
 }
 
@@ -506,7 +506,7 @@ suite('exceptions', function () {
   test('log JS source when debug is set', function (done) {
     var out = ''
       , needToExit = false;
-    unhook = hook_stdout(function (str) {
+    unhook = hook_stdio(process.stdout, function (str) {
       out += str;
       if (needToExit) {
         return;
@@ -744,3 +744,27 @@ suite('require', function () {
   });
 });
 
+suite('examples', function () {
+  function noop () {}
+  fs.readdirSync('examples').forEach(function (f) {
+    if (!/\.js$/.test(f)) {
+      return;
+    }
+    suite(f, function () {
+      test('doesn\'t throw any errors', function () {
+        var stderr = hook_stdio(process.stderr, noop)
+          , stdout = hook_stdio(process.stdout, noop);
+        try {
+          require('../examples/' + f);
+        }
+        catch (ex) {
+          stdout();
+          stderr();
+          throw ex;
+        }
+        stdout();
+        stderr();
+      });
+    });
+  });
+});
