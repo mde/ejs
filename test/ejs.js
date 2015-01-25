@@ -289,6 +289,26 @@ suite('ejs.renderFile(path, [data], [options], fn)', function () {
     });
   });
 
+  test('accept it without using with() {}', function(done) {
+    var data =  {name: 'fonebone'}
+    , options = {delimiter: '$', _with: false};
+    ejs.renderFile('test/fixtures/user-it.ejs', data, options,
+                   function(err, html) {
+      assert.equal(html, '<h1>fonebone</h1>');
+      done(err);
+    });
+  });
+
+  test('accept it using with() {}', function(done) {
+    var data =  {name: 'fonebone'}
+    , options = {delimiter: '$', _with: true};
+    ejs.renderFile('test/fixtures/user-it.ejs', data, options,
+                   function(err, html) {
+      assert.equal(html, '<h1>fonebone</h1>');
+      done(err);
+    });
+  });
+
   test('not catch err thrown by callback', function(done) {
     var data =  {name: 'fonebone'}
       , options = {delimiter: '$'}
@@ -714,4 +734,3 @@ suite('require', function () {
       }
   });
 });
-
