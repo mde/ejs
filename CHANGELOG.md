@@ -1,6 +1,8 @@
 ## v2.2.4: UNRELEASED
 
 * Only bundle rethrow() in client scripts when compileDebug is enabled
+  (@TimothyGu)
+* Copy `_with` from locals object to options object (@TimothyGu)
 
 ## v2.2.3: 2015-01-23
 
