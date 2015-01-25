@@ -1,0 +1,15 @@
+{
+  "_comment": "Configuration file for JSDoc."
+, "tags": {
+    "allowUnknownTags": true
+  }
+, "source": {
+      "includePattern": ".+\\.js(doc)?$"
+    , "excludePattern": "(^|\\/|\\\\)_"
+  }
+, "plugins": [ "plugins/markdown" ]
+, "templates": {
+    "cleverLinks": true
+  , "monospaceLinks": false
+  }
+}
