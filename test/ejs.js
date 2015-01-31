@@ -175,6 +175,18 @@ suite('ejs.render(str, data)', function () {
     }, /name is not defined/);
   });
 
+  test('accept custom name for locals', function () {
+    ejs.localsName = 'it';
+    assert.equal(ejs.render('<p><%= it.name %></p>', {name: 'geddy'},
+                            {_with: false}),
+        '<p>geddy</p>');
+    assert.throws(function() {
+      ejs.render('<p><%= name %></p>', {name: 'geddy'},
+                 {_with: false});
+    }, /name is not defined/);
+    ejs.localsName = 'locals';
+  });
+
   test('support caching (pass 1)', function () {
     var file = __dirname + '/tmp/render.ejs'
       , options = {cache: true, filename: file}
