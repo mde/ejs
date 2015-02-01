@@ -1,10 +1,13 @@
-## v2.2.4: UNRELEASED
+## v2.2.4: 2015-02-01
 
-+ Ability to change name of the locals object with `ejs.localsName` (@mde)
++ Ability to customize name of the locals object with `ejs.localsName` (@mde)
 * Only bundle rethrow() in client scripts when compileDebug is enabled
   (@TimothyGu)
 * Copy `_with` from locals object to options object (@TimothyGu)
 * Removed deprecation warnings (@mde)
++ Ability to override `resolveInclude` for include-path lookup (@olivierkaisin)
+* Significantly increased performance (@TimothyGu)
+* Defer execution for `renderFile` callback, ensure async (@TimothyGu)
 
 ## v2.2.3: 2015-01-23
 
