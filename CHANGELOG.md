@@ -1,8 +1,10 @@
 ## v2.2.4: UNRELEASED
 
++ Ability to change name of the locals object with `ejs.localsName` (@mde)
 * Only bundle rethrow() in client scripts when compileDebug is enabled
   (@TimothyGu)
 * Copy `_with` from locals object to options object (@TimothyGu)
+* Removed deprecation warnings (@mde)
 
 ## v2.2.3: 2015-01-23
 
