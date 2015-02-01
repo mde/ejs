@@ -396,6 +396,10 @@ suite('%>', function () {
     assert.equal(ejs.render(fixture('newlines.ejs'), {users: users}),
       fixture('newlines.html'));
   });
+  test('works with `-%>` interspersed', function () {
+    assert.equal(ejs.render(fixture('newlines.mixed.ejs'), {users: users}),
+      fixture('newlines.mixed.html'));
+  });
   test('consecutive tags work', function () {
     assert.equal(ejs.render(fixture('consecutive-tags.ejs')),
       fixture('consecutive-tags.html'));
