@@ -350,6 +350,13 @@ suite('ejs.clearCache()', function () {
   });
 });
 
+suite('<%', function () {
+  test('without semicolons', function () {
+    assert.equal(ejs.render(fixture('no.semicolons.ejs')),
+        fixture('no.semicolons.html'));
+  });
+});
+
 suite('<%=', function () {
   test('escape &amp;<script>', function () {
     assert.equal(ejs.render('<%= name %>', {name: '&nbsp;<script>'}),
