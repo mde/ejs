@@ -1,11 +1,17 @@
+## v2.2.5: UNRELEASED
+
+* Fix running on Node.js v0.8. Note that we still do not support 0.8
+  officially, but if you found something that can be fixed easily please
+  point it out. (#57) (@TimothyGu)
+
 ## v2.2.4: 2015-02-01
 
 + Ability to customize name of the locals object with `ejs.localsName` (@mde)
++ Ability to override `resolveInclude` for include-path lookup (@olivierkaisin)
 * Only bundle rethrow() in client scripts when compileDebug is enabled
   (@TimothyGu)
 * Copy `_with` from locals object to options object (@TimothyGu)
 * Removed deprecation warnings (@mde)
-+ Ability to override `resolveInclude` for include-path lookup (@olivierkaisin)
 * Significantly increased performance (@TimothyGu)
 * Defer execution for `renderFile` callback, ensure async (@TimothyGu)
 
