@@ -1,0 +1,15 @@
+{
+  "name": "ejs-site",
+  "version": "1.0.0",
+  "description": "Free Bootstrap Theme for developers",
+  "main": "index.js",
+  "dependencies": {},
+  "devDependencies": {
+    "less": "^2.3.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "mde@fleegix.org",
+  "license": "ISC"
+}
