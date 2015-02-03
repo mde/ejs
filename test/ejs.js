@@ -233,7 +233,7 @@ suite('ejs.renderFile(path, [data], [options], fn)', function () {
       if (err) {
         return done(err);
       }
-      assert.equal(html, '<h1>fonebone</h1>');
+      assert.equal(html, '<h1>fonebone</h1>\n');
       done();
     });
   });
@@ -251,7 +251,7 @@ suite('ejs.renderFile(path, [data], [options], fn)', function () {
         doneCount = 2;
         return done(err);
       }
-      assert.equal(html, '<h1>fonebone</h1>');
+      assert.equal(html, '<h1>fonebone</h1>\n');
       doneCount++;
       if (doneCount === 2) {
         done();
@@ -542,7 +542,7 @@ suite('include()', function () {
     assert.equal(
       ejs.render('<%- include("fixtures/includes/bom.ejs") %>',
         {}, {filename: path.join(__dirname, 'f.ejs')}),
-      '<p>This is a file with BOM.</p>');
+      '<p>This is a file with BOM.</p>\n');
   });
 
   test('include ejs with locals', function () {
@@ -650,7 +650,7 @@ suite('preprocessor include', function () {
     assert.equal(
       ejs.render('<% include fixtures/includes/bom.ejs %>',
         {}, {filename: path.join(__dirname, 'f.ejs')}),
-      '<p>This is a file with BOM.</p>');
+      '<p>This is a file with BOM.</p>\n');
   });
 
   test('work when nested', function () {
