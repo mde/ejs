@@ -2,5 +2,15 @@ language: node_js
 node_js:
   - "0.10"
   - "0.11"
+
+env:
+  - NO_LRU=true
+  - NO_LRU=
+
 before_install:
   - npm update -g npm
+
+install:
+  - npm install
+  # Can't simply `npm uninstall lru-cache` as mocha uses it too.
+  - if [ -n "$NO_LRU" ]; then awk '/require.*lru-cache/{print "throw new Error();"}1' lib/ejs.js > tmp && mv tmp lib/ejs.js; fi
