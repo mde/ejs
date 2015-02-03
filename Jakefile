@@ -15,7 +15,7 @@ task('clean', ['clobber'], function () {
 });
 
 task('browserify', {async: true}, function () {
-  jake.exec('./node_modules/browserify/bin/cmd.js lib/ejs.js > ejs.js',
+  jake.exec('./node_modules/browserify/bin/cmd.js --exclude lru-cache lib/ejs.js > ejs.js',
       buildOpts, function () {
     console.log('Browserification completed.');
     setTimeout(complete, 0);

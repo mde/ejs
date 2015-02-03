@@ -202,6 +202,40 @@ suite('ejs.render(str, data)', function () {
       , expected = '<p>Old</p>';
     assert.equal(out, expected);
   });
+
+  var cacheSizeTest = ejs.lruAvailable ? test : test.skip;
+  cacheSizeTest('support changing cache size (pass 1)', function () {
+    ejs.cacheSize = 1;
+    ejs.clearCache();
+    var file = __dirname + '/tmp/render1.ejs'
+      , options = {cache: true, filename: file}
+      , out = ejs.render('<p>File1</p>', {}, options)
+      , expected = '<p>File1</p>';
+    assert.equal(out, expected);
+    var file = __dirname + '/tmp/render1.ejs'
+      , options = {cache: true, filename: file}
+      , out = ejs.render('<p>ChangedFile1</p>', {}, options)
+      , expected = '<p>File1</p>';
+    assert.equal(out, expected);
+    var file = __dirname + '/tmp/render2.ejs'
+      , options = {cache: true, filename: file}
+      , out = ejs.render('<p>File2</p>', {}, options)
+      , expected = '<p>File2</p>';
+    assert.equal(out, expected);
+  });
+
+  cacheSizeTest('support changing cache size (pass 2)', function () {
+    var file = __dirname + '/tmp/render1.ejs'
+      , options = {cache: true, filename: file}
+      , out = ejs.render('<p>ChangedFile1</p>', {}, options)
+      , expected = '<p>ChangedFile1</p>';
+    assert.equal(out, expected);
+  });
+
+  suiteTeardown(function () {
+    ejs.cacheSize = Infinity;
+    ejs.clearCache();
+  });
 });
 
 suite('ejs.renderFile(path, [data], [options], fn)', function () {
