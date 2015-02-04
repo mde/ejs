@@ -125,6 +125,19 @@ suite('ejs.compile(str, options)', function () {
       assert.equal(preFn(), '<p>foo</p>');
     }
   });
+
+  test('not include rethrow() in client mode if compileDebug is false', function () {
+    var fn
+      , str
+      , preFn;
+    fn = ejs.compile('<p><%= "foo" %></p>', {
+      client: true
+    , compileDebug: false
+    });
+    console.log(fn.toString())
+    // There could be a `rethrow` in the function declaration
+    assert((fn.toString().match(/rethrow/g) || []).length <= 1);
+  });
 });
 
 suite('ejs.render(str, data)', function () {
