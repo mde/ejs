@@ -14,18 +14,6 @@ var ejs = require('../')
       ]
     };
 
-if (true) {
-  var ret = ejs.compile(read(path, 'utf8'), {filename: path})(data);
+var ret = ejs.compile(read(path, 'utf8'), {filename: path})(data);
 
-  console.log(ret);
-}
-else {
-  // Alternatively, you can use the renderFile() function. They should produce
-  // the same result.
-  ejs.renderFile(path, data, function (err, html) {
-    if (err) {
-      throw err;
-    }
-    console.log(html);
-  });
-}
+console.log(ret);
