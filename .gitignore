@@ -19,3 +19,4 @@ test/tmp
 coverage/
 /ejs.js
 /ejs.min.js
+out/
