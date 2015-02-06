@@ -19,7 +19,7 @@ Table of contents
   - `-%>`: Whitespace-trimming ending tag
 - Literal tag
 - Including other files
-  - "Preprocessor" directive
+  - “Preprocessor” directive
   - JavaScript `include()` function
 - Copyright
 
@@ -27,7 +27,7 @@ Table of contents
 Basic format
 ------------
 
-An EJS "tag" is the primary functioning unit in an EJS template. With the
+An EJS “tag” is the primary functioning unit in an EJS template. With the
 exception of the literal tag, all tags are formed by the following format:
 
 <pre>&lt;<em>starting</em> <em>content</em> <em>closing</em>&gt;</pre>
@@ -376,10 +376,10 @@ escape `<`.
 EJS offer two ways of including other files. You can even include files that
 are not EJS templates, as the case is for CSS stylesheets.
 
-### "Preprocessor" directive
+### “Preprocessor” directive
 
 As a compatibility layer with EJS version 1, it is possible to use the
-`include` directive in an unescaped output tag to directly "yank" the
+`include` directive in an unescaped output tag to directly “yank” the
 text from another file, just like including a C header. However, as it is done
 as a simple inclusion, you cannot pass arguments to the included template. You
 can however make variables available in the parent template, that will be
@@ -392,7 +392,7 @@ if you changed the file after compilation, the changes are not reflected.
 If the file specified has an extension and is an absolute path, that file is
 included. If it does not have an extension, `.ejs` is automatically appended.
 If the file is not an absolute path, the file is searched in the same
-directory as the parent template's.
+directory as the parent template’s.
 
 #### Whitespace control
 
@@ -435,7 +435,7 @@ directive, as it trims the whitespace after the included file.
 }
 ```
 
-##### "Preprocessor" output
+##### “Preprocessor" output
 
 ```js
 <ul>
@@ -471,7 +471,7 @@ explicitly declared in the `locals` object, or is passed as a local to the
 parent template.
 
 Also, the included file is compiled upon execution of the script, which means
-performance might be theoretically lower than the "preprocessor" flavor. In
+performance might be theoretically lower than the “preprocessor” flavor. In
 practice however, caching can make this difference negligible.
 
 #### Example
@@ -528,16 +528,16 @@ This has the exact same effect as the example for the `include` directive.
 
 This document is under the following license:
 
-Copyright © 2015 Tiancheng "Timothy" Gu
+Copyright © 2015 Tiancheng “Timothy” Gu
 
-Licensed under the Apache License, Version 2.0 (the "License"); you may not
+Licensed under the Apache License, Version 2.0 (the “License”); you may not
 use this file except in compliance with the License. You may obtain a copy of
 the License at
 
 http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+distributed under the License is distributed on an “AS IS” BASIS, WITHOUT
 WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 License for the specific language governing permissions and limitations under
 the License.
