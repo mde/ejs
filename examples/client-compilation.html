@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<!--
+  This example demonstrates how to compile EJS templates in the browser
+  from a <textarea>.
+
+  To use this example, first run `jake build` in the EJS root directory to
+  produce the client-side ejs.js and ejs.min.js. Alternatively, you can
+  download the prebuilt client scripts (both minified and not) in GitHub
+  releases.
+  -->
+<html>
+  <head>
+    <title>EJS compilation demo</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      /* Preformatted <textarea> */
+      textarea.pre {
+        font-family: monospace;
+        font-size: 1em;
+        height: auto;
+        width: 100%;
+      }
+      pre {
+        border: 2px solid gray;
+        border-radius: 2px;
+        padding: 8px;
+        max-height: 600px;
+        min-height: 120px;
+        overflow: auto;
+        width: auto;
+      }
+      /* Prettier button stolen from Bootstrap */
+      button {
+        padding: 8px 16px;
+        font-size: 19px;
+        border: 1px solid transparent;
+        border-radius: 5px;
+        background-color: #fff;
+        border-color: #ccc;
+        cursor: pointer;
+      }
+      button:hover,
+      button:focus,
+      button:active {
+        color: #333;
+        background-color: #e6e6e6;
+        border-color: #adadad;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>
+      <button type="submit" onclick="comp()">
+        Submit
+      </button>
+    </h1>
+
+    <h2>Input template</h2>
+    <textarea rows="8" class="pre" id="input"></textarea>
+
+    <h2>Compilation options (JSON)</h2>
+    <textarea rows="8" class="pre" id="options"></textarea>
+
+    <h2>Locals (JSON)</h2>
+    <textarea rows="8" class="pre" id="locals"></textarea>
+
+    <h2 id="output-title">Output</h2>
+    <pre id="output"></pre>
+
+    <script src="../ejs.js"></script>
+    <script>
+      function comp() {
+        // Get the elements
+        var // input EJS template
+            templ = document.getElementById('input')
+            // JSON locals
+          , locals = document.getElementById('locals')
+            // JSON options
+          , options = document.getElementById('options')
+            // output text area
+          , output = document.getElementById('output')
+            // for dynamic output heading
+          , outputTitle = document.getElementById('output-title')
+          , fn;
+
+        // Handle errors by catching it, print the message to the output HTML
+        // box, and throwing it again so that it's visible on the JS console.
+
+        // `stage` sets the corresponding error context.
+        function handleError(func, stage) {
+          try {
+            // Try executing callback
+            func();
+          } catch (e) {
+            // If there is an exception:
+            // 1. Change output heading to "Error when ..."
+            outputTitle.innerHTML = 'Error ' + stage;
+            // 2. Put the stack trace into the output text area
+            output.textContent = e.stack || e.message || e.toString();
+            // 3. Rethrow it
+            throw e;
+          }
+        }
+
+        // Parse options as JSON
+        handleError(function () {
+          options = JSON.parse(options.value || '{}');
+        }, 'when parsing options');
+
+        // Parse locals as JSON
+        handleError(function () {
+          locals = JSON.parse(locals.value || '{}');
+        }, 'when parsing locals');
+
+        // Compile template with specified template and options
+        handleError(function () {
+          fn = ejs.compile(templ.value, options);
+        }, 'when compiling');
+
+        // Put HTML/client JavaScript into the output textarea
+        if (options.client) {
+          // Put generated JavaScript function into the text area
+
+          // In EJS v3 the returned function will be in string form, so that
+          // you don't need to `.toString()` anymore.
+          output.textContent = fn.toString();
+          outputTitle.innerHTML = 'Output JS';
+        }
+        else {
+          // Put the rendered HTML into the text area
+          handleError(function () {
+            output.textContent = fn(locals);
+            outputTitle.innerHTML = 'Output HTML';
+          }, 'when executing template function');
+        }
+      }
+    </script>
+  </body>
+</html>
