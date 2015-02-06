@@ -127,14 +127,12 @@ suite('ejs.compile(str, options)', function () {
   });
 
   test('not include rethrow() in client mode if compileDebug is false', function () {
-    var fn
-      , str
-      , preFn;
+    var fn;
     fn = ejs.compile('<p><%= "foo" %></p>', {
       client: true
     , compileDebug: false
     });
-    console.log(fn.toString())
+    console.log(fn.toString());
     // There could be a `rethrow` in the function declaration
     assert((fn.toString().match(/rethrow/g) || []).length <= 1);
   });
@@ -230,7 +228,7 @@ suite('ejs.renderFile(path, [data], [options], fn)', function () {
 
   test('callback is async', function(done) {
     var async = false;
-    ejs.renderFile('test/fixtures/para.ejs', function(err, html) {
+    ejs.renderFile('test/fixtures/para.ejs', function() {
       if (async) {
         return done();
       }
