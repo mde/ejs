@@ -127,12 +127,10 @@ suite('ejs.compile(str, options)', function () {
   });
 
   test('not include rethrow() in client mode if compileDebug is false', function () {
-    var fn;
-    fn = ejs.compile('<p><%= "foo" %></p>', {
-      client: true
-    , compileDebug: false
-    });
-    console.log(fn.toString());
+    var fn = ejs.compile('<p><%= "foo" %></p>', {
+               client: true
+             , compileDebug: false
+             });
     // There could be a `rethrow` in the function declaration
     assert((fn.toString().match(/rethrow/g) || []).length <= 1);
   });
