@@ -38,7 +38,7 @@ function hook_stdio(stream, callback) {
  */
 
 function fixture(name) {
-  return read('test/fixtures/' + name, 'utf8').replace(/\r/g, '').trim();
+  return read('test/fixtures/' + name, 'utf8');
 }
 
 /**
@@ -221,7 +221,7 @@ suite('ejs.renderFile(path, [data], [options], fn)', function () {
       if (err) {
         return done(err);
       }
-      assert.equal(html, '<p>hey</p>');
+      assert.equal(html, '<p>hey</p>\n');
       done();
     });
   });
@@ -614,10 +614,10 @@ suite('include()', function () {
     var file = 'test/fixtures/include_cache.ejs'
       , options = {filename: file}
       , out = ejs.compile(fixture('include_cache.ejs'), options);
-    assert.equal(out(), '<p>Old</p>');
+    assert.equal(out(), '<p>Old</p>\n');
 
     fs.writeFileSync(__dirname + '/tmp/include.ejs', '<p>New</p>');
-    assert.equal(out(), '<p>New</p>');
+    assert.equal(out(), '<p>New</p>\n');
   });
 
   test('support caching (pass 1)', function () {
@@ -701,10 +701,10 @@ suite('preprocessor include', function () {
     var file = 'test/fixtures/include_preprocessor_cache.ejs'
       , options = {filename: file}
       , out = ejs.compile(fixture('include_preprocessor_cache.ejs'), options);
-    assert.equal(out(), '<p>Old</p>');
+    assert.equal(out(), '<p>Old</p>\n');
 
     fs.writeFileSync(__dirname + '/tmp/include_preprocessor.ejs', '<p>New</p>');
-    assert.equal(out(), '<p>Old</p>');
+    assert.equal(out(), '<p>Old</p>\n');
   });
 
   test('support caching (pass 1)', function () {
