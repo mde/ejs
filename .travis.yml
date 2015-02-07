@@ -4,3 +4,4 @@ node_js:
   - "iojs-1.1"
 before_install:
   - npm update -g npm
+  - npm --version
