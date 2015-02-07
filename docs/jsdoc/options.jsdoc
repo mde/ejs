@@ -17,6 +17,12 @@
  * whose name is specified by {@link module:ejs.localsName} (default to
  * `locals`).
  *
+ * @property {Boolean} [rmWhitespace=false]
+ * Remove all safe-to-remove whitespace, including leading and trailing
+ * whitespace. It also enables a safer version of `-%>` line slurping for all
+ * scriptlet tags (it does not strip new lines of tags in the middle of a
+ * line).
+ *
  * @property {Boolean} [client=false]
  * Whether or not to compile functions that are to be included in the browser.
  *
