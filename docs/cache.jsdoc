@@ -1,0 +1,37 @@
+/**
+ * A JavaScript function cache. This is implemented by the lru-cache module
+ * on NPM, so you can simply do `ejs.cache = LRU(10)` to get a
+ * least-recently-used cache.
+ *
+ * @interface Cache
+ * @global
+ */
+
+/**
+ * Cache the intermediate JavaScript function for a template.
+ *
+ * @function
+ * @name Cache#set
+ * @param {String}   key key for caching
+ * @param {Function} val cached function
+ */
+
+/**
+ * Get the cached intermediate JavaScript function for a template.
+ *
+ * If the cache does not contain the specified key, `null` shall be returned.
+ *
+ * @function
+ * @name Cache#get
+ * @param {String}   key key for caching
+ * @return {null|Function}
+ */
+
+/**
+ * Reset the entire cache.
+ *
+ * Erases the entire cache. Called by {@link module:ejs.clearCache}
+ *
+ * @function
+ * @name Cache#reset
+ */

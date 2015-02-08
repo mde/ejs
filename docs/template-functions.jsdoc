@@ -1,0 +1,59 @@
+/**
+ * This type of function is returned from {@link module:ejs.compile}, when
+ * {@link Options}`.client` is false.
+ *
+ * @callback TemplateFunction
+ * @param {Object}          [locals={}]
+ * an object of data to be passed into the template.
+ * @static
+ * @global
+ */
+
+/**
+ * This type of function is returned from {@link module:ejs.compile}, when
+ * {@link Options}`.client` is true.
+ *
+ * This is also used internally to generate a
+ * {@link TemplateFunction}.
+ *
+ * @callback ClientFunction
+ * @param {Object}          [locals={}]
+ * an object of data to be passed into the template. The name of this variable
+ * is adjustable through {@link module:ejs.localsName}.
+ *
+ * @param {EscapeCallback}  [escape={@link Options}.escape]
+ * callback used to escape variables
+ *
+ * @param {IncludeCallback} [include]
+ * callback used to include files at runtime with `include()`
+ *
+ * @param {RethrowCallback} [rethrow={@link module:ejs-internal.rethrow}]
+ * callback used to handle and rethrow errors
+ *
+ * @static
+ * @global
+ */
+
+/**
+ * This type of callback is used when {@link Options}`.compileDebug`
+ * is true, and an error in the template is thrown. By default it is used to
+ * rethrow an error in a better-formatted way.
+ *
+ * @callback RethrowCallback
+ * @param {Error}  err      Error object
+ * @param {String} str      full EJS source
+ * @param {String} filename file name of the EJS file
+ * @param {String} lineno   line number of the error
+ * @static
+ * @global
+ */
+
+/**
+ * Escapes a string using HTML/XML escaping rules.
+ *
+ * @callback EscapeCallback
+ * @param  {String} markup Input string
+ * @return {String}        Escaped string
+ * @static
+ * @global
+ */

@@ -1,0 +1,9 @@
+/**
+ * Callback for receiving data from {@link module:ejs.renderFile}.
+ *
+ * @callback RenderFileCallback
+ * @param {?Error}  err error, if any resulted from the rendering process
+ * @param {?String} str output string, is `null` if there is an error
+ * @static
+ * @global
+ */
