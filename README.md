@@ -56,7 +56,7 @@ for all the passed options.
   - `client`          Returns standalone compiled function
   - `delimiter`       Character to use with angle brackets for open/close
   - `debug`           Output generated function body
-  - `_with`           Whether or not to use `with() {}` constructs. If `false` then the locals will be stored in the `locals` object.
+  - `with`           Whether or not to use `with() {}` constructs. If `false` then the locals will be stored in the `locals` object.
 
 ## Tags
 
@@ -110,6 +110,22 @@ ejs.delimiter = '$';
 ejs.render('<$= users.join(" | "); $>', {users: users});
 // => 'geddy | neil | alex'
 ```
+
+## Caching
+
+EJS ships with a basic in-process cache for caching the intermediate JavaScript
+functions used to render templates. It's easy to plug in LRU caching using
+Node's `lru-cache` library:
+
+```javascript
+var ejs = require('ejs')
+  , LRU = require('lru-cache');
+ejs.cache = LRU(100); // LRU cache with 100-item limit
+```
+
+If you want to clear the EJS cache, call `ejs.clearCache`. If you're using the
+LRU cache and need a different limit, simple reset `ejs.cache` to a new instance
+of the LRU.
 
 ## Layouts
 

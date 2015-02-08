@@ -25,6 +25,7 @@
     "istanbul": "~0.3.5",
     "jake": "^8.0.0",
     "jsdoc": "^3.3.0-beta1",
+    "lru-cache": "^2.5.0",
     "mocha": "^2.1.0",
     "rimraf": "^2.2.8",
     "uglify-js": "^2.4.16"
