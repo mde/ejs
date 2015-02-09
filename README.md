@@ -56,7 +56,7 @@ for all the passed options.
   - `client`          Returns standalone compiled function
   - `delimiter`       Character to use with angle brackets for open/close
   - `debug`           Output generated function body
-  - `with`           Whether or not to use `with() {}` constructs. If `false` then the locals will be stored in the `locals` object.
+  - `_with`           Whether or not to use `with() {}` constructs. If `false` then the locals will be stored in the `locals` object.
 
 ## Tags
 
