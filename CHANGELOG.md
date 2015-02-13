@@ -19,7 +19,8 @@
 ## v2.2.4: 2015-02-01
 
 + Ability to customize name of the locals object with `ejs.localsName` (@mde)
-+ Ability to override `resolveInclude` for include-path lookup (@olivierkaisin)
++ Ability to override `resolveInclude` for include-path lookup
+  (@olivierkaisin)
 * Only bundle rethrow() in client scripts when compileDebug is enabled
   (@TimothyGu)
 * Copy `_with` from locals object to options object (@TimothyGu)
