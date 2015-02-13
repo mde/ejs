@@ -204,7 +204,7 @@ suite('ejs.render(str, data)', function () {
       , expected = '<p>Old</p>';
     assert.equal(out, expected);
     // Assert no change, still in cache
-    out = ejs.render('<p>New</p>', {}, options)
+    out = ejs.render('<p>New</p>', {}, options);
     assert.equal(out, expected);
   });
 
@@ -218,10 +218,10 @@ suite('ejs.render(str, data)', function () {
     // Switch to LRU
     ejs.cache = LRU();
 
-    out = ejs.render('<p>Old</p>', {}, options)
+    out = ejs.render('<p>Old</p>', {}, options);
     assert.equal(out, expected);
     // Assert no change, still in cache
-    out = ejs.render('<p>New</p>', {}, options)
+    out = ejs.render('<p>New</p>', {}, options);
     assert.equal(out, expected);
 
     // Restore system cache
@@ -336,9 +336,6 @@ suite('ejs.renderFile(path, [data], [options], fn)', function () {
     fs.writeFileSync(file, '<p>Old</p>');
 
     ejs.renderFile(file, {}, options, function (err, out) {
-      var expected = '<p>Old</p>'
-        , file = __dirname + '/tmp/renderFile.ejs'
-        , options = {cache: true};
       if (err) {
         done(err);
       }
@@ -396,7 +393,8 @@ suite('cache specific', function () {
     var oldCache = ejs.cache
       , options
       , out
-      , expected;
+      , expected
+      , file;
 
     ejs.cache = LRU(1);
 
@@ -700,11 +698,11 @@ suite('include()', function () {
       , out = ejs.render(fixture('include_cache.ejs'), {}, options)
       , expected = fixture('include_cache.html');
     assert.equal(out, expected);
-    out = ejs.render(fixture('include_cache.ejs'), {}, options)
+    out = ejs.render(fixture('include_cache.ejs'), {}, options);
     // No change, still in cache
     assert.equal(out, expected);
     fs.writeFileSync(__dirname + '/tmp/include.ejs', '<p>New</p>');
-    out = ejs.render(fixture('include_cache.ejs'), {}, options)
+    out = ejs.render(fixture('include_cache.ejs'), {}, options);
     assert.equal(out, expected);
   });
 
@@ -786,7 +784,7 @@ suite('preprocessor include', function () {
       , expected = fixture('include_preprocessor_cache.html');
     assert.equal(out, expected);
     fs.writeFileSync(__dirname + '/tmp/include_preprocessor.ejs', '<p>New</p>');
-    out = ejs.render(fixture('include_preprocessor_cache.ejs'), {}, options)
+    out = ejs.render(fixture('include_preprocessor_cache.ejs'), {}, options);
     assert.equal(out, expected);
   });
 
