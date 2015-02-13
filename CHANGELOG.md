@@ -1,4 +1,4 @@
-## v2.2.5: UNRELEASED
+## v2.3.0: UNRELEASED
 
 + Generated template functions are now prettier (@whitneyit)
 + Add official documentation for EJS syntax (#9) (@TimothyGu)
