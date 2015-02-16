@@ -602,6 +602,13 @@ suite('exceptions', function () {
   });
 });
 
+suite('rmWhitespace', function () {
+  test('works', function () {
+    assert.equal(ejs.render(fixture('rmWhitespace.ejs'), {}, {rmWhitespace: true}),
+        fixture('rmWhitespace.html'));
+  });
+});
+
 suite('include()', function () {
   test('include ejs', function () {
     var file = 'test/fixtures/include-simple.ejs';
