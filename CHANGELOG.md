@@ -1,5 +1,7 @@
-## v2.3.0: UNRELEASED
+## v2.3.1: UNRELEASED
 
+* Stop deferring execution of `renderFile` callback, revert to sync
+  execution (@mde)
 + Generated template functions are now prettier (@whitneyit)
 + Add official documentation for EJS syntax (#9) (@TimothyGu)
 + Add inline JSDoc-style documentation for public functions (#9) (@TimothyGu)
