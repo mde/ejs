@@ -241,17 +241,6 @@ suite('ejs.renderFile(path, [data], [options], fn)', function () {
     });
   });
 
-  test('callback is async', function(done) {
-    var async = false;
-    ejs.renderFile('test/fixtures/para.ejs', function() {
-      if (async) {
-        return done();
-      }
-      throw new Error('not async');
-    });
-    async = true;
-  });
-
   test('accept locals', function(done) {
     var data =  {name: 'fonebone'}
       , options = {delimiter: '$'};
