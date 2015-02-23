@@ -735,6 +735,12 @@ suite('preprocessor include', function () {
         fixture('menu_preprocessor.html'));
   });
 
+  test('tracks dependency correctly', function () {
+    var file = 'test/fixtures/menu_preprocessor.ejs'
+      , fn = ejs.compile(fixture('menu_preprocessor.ejs'), {filename: file});
+    assert(fn.dependencies.length);
+  });
+
   test('include arbitrary files as-is', function () {
     var file = 'test/fixtures/include_preprocessor.css.ejs';
     assert.equal(ejs.render(fixture('include_preprocessor.css.ejs'), {pets: users}, {filename: file}),
