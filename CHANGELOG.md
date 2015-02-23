@@ -1,4 +1,4 @@
-## v2.3.1: UNRELEASED
+## v2.3.1: 2015-02-22
 
 * Stop deferring execution of `renderFile` callback, revert to sync
   execution (@mde)
