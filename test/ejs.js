@@ -426,7 +426,7 @@ suite('cache specific', function () {
     ejs.cache = LRU(3);
     var fakeName = process.cwd()+'/included.ejs';
 
-    var t1 = ejs.compile('<%- include("included");%>', {cache:true,filename:'top'});
+    var t1 = ejs.compile('<%- include("included") %>', {cache:true,filename:'top'});
     ejs.compile('included', {cache:true,filename:fakeName});
     assert.equal(t1().trim(), "included");
     ejs.compile('included-changed', {cache:true,filename:fakeName});
