@@ -77,7 +77,7 @@ for all the passed options.
 Includes either have to be an absolute path, or, if not, are assumed as
 relative to the template with the `include` call. (This requires the
 `filename` option.) For example if you are including `./views/user/show.ejs`
-from `./views/users.ejs` you would use `<%- include('user/show'); %>`.
+from `./views/users.ejs` you would use `<%- include('user/show') %>`.
 
 You'll likely want to use the raw output tag (`<%-`) with your include to avoid
 double-escaping the HTML output.
@@ -85,17 +85,17 @@ double-escaping the HTML output.
 ```html
 <ul>
   <% users.forEach(function(user){ %>
-    <%- include('user/show', {user: user}); %>
+    <%- include('user/show', {user: user}) %>
   <% }); %>
 </ul>
 ```
 
 Includes are inserted at runtime, so you can use variables for the path in the
-`include` call (for example `<%- include(somePath); %>`). Variables in your
+`include` call (for example `<%- include(somePath) %>`). Variables in your
 top-level data object are available to all your includes, but local variables
 need to be passed down.
 
-NOTE: Include preprocessor directives (`<% include user/show  %>`) are
+NOTE: Include preprocessor directives (`<% include user/show %>`) are
 still supported.
 
 ## Custom delimiters
@@ -139,14 +139,14 @@ including headers and footers, like so:
 
 
 ```html
-<%- include('header'); -%>
+<%- include('header') -%>
 <h1>
   Title
 </h1>
 <p>
   My page
 </p>
-<%- include('footer'); -%>
+<%- include('footer') -%>
 ```
 
 ## Client-side support
