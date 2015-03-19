@@ -376,6 +376,14 @@ escape `<`.
 EJS offer two ways of including other files. You can even include files that
 are not EJS templates, as the case is for CSS stylesheets.
 
+For both flavors, if the file specified does not have an extension, `.ejs` is
+automatically appended. If it is an absolute path, that file is included.
+Otherwise, the file is assumed to be in the same directory as the parent
+template.
+
+The behavior of resolving included file path can be overridden using the
+`ejs.resolveInclude` function.
+
 ### “Preprocessor” directive
 
 As a compatibility layer with EJS version 1, it is possible to use the
@@ -388,11 +396,6 @@ visible to the child template as well.
 This flavor of `include` is **static**, which means that the resulting
 function contains the copy of the included file as when it was compiled, so
 if you changed the file after compilation, the changes are not reflected.
-
-If the file specified has an extension and is an absolute path, that file is
-included. If it does not have an extension, `.ejs` is automatically appended.
-If the file is not an absolute path, the file is searched in the same
-directory as the parent template’s.
 
 #### Whitespace control
 
@@ -473,6 +476,10 @@ parent template.
 Also, the included file is compiled upon execution of the script, which means
 performance might be theoretically lower than the “preprocessor” flavor. In
 practice however, caching can make this difference negligible.
+
+Some cautions **MUST** to be taken if the included filename is fetched from a
+user during rendering time, as one could easily use private files as the file
+name, like `/etc/passwd` or `../api-keys`.
 
 #### Example
 
