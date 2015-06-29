@@ -1,3 +1,10 @@
+## v2.3.2: 2015-06-28
+
+* Do not require semicolons in `<%- %>` (@TimothyGu)
+* Use `__append` instead of `pushToOutput` (@dominykas)
+* Cache the character-encoding function (@alubbe)
+* Correctly specify execution context with opts.context (@mde)
+
 ## v2.3.1: 2015-02-22
 
 * Stop deferring execution of `renderFile` callback, revert to sync
