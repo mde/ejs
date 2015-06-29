@@ -137,7 +137,7 @@ suite('ejs.compile(str, options)', function () {
   });
 });
 
-suite('ejs.render(str, data)', function () {
+suite('ejs.render(str, data, opts)', function () {
   test('render the template', function () {
     assert.equal(ejs.render('<p>yay</p>'), '<p>yay</p>');
   });
@@ -228,6 +228,11 @@ suite('ejs.render(str, data)', function () {
     ejs.cache = oldCache;
   });
 
+  test('opts.context', function () {
+    var ctxt = {foo: 'FOO'}
+      , out = ejs.render('<%= this.foo %>', {}, {context: ctxt});
+    assert.equal(out, ctxt.foo);
+  });
 });
 
 suite('ejs.renderFile(path, [data], [options], fn)', function () {
@@ -342,6 +347,18 @@ suite('ejs.renderFile(path, [data], [options], fn)', function () {
     });
   });
 
+  test('opts.context', function (done) {
+    var ctxt = {foo: 'FOO'};
+    ejs.renderFile('test/fixtures/with-context.ejs', {},
+          {context: ctxt}, function(err, html) {
+      if (err) {
+        return done(err);
+      }
+      assert.equal(html, ctxt.foo + '\n');
+      done();
+    });
+
+  });
 });
 
 suite('cache specific', function () {
