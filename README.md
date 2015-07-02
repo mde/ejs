@@ -51,6 +51,7 @@ for all the passed options.
 
   - `cache`           Compiled functions are cached, requires `filename`
   - `filename`        Used by `cache` to key caches, and for includes
+  - `views`           Views base path, replace in `~/` path starting
   - `context`         Function execution context
   - `compileDebug`    When `false` no debug instrumentation is compiled
   - `client`          Returns standalone compiled function
