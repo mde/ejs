@@ -728,6 +728,10 @@ suite('preprocessor include', function () {
         fixture('include_preprocessor.html'));
   });
 
+  test('no false positives', function () {
+    assert.equal(ejs.render('<% %> include foo <% %>'), ' include foo ');
+  });
+
   test('fails without `filename`', function () {
     try {
       ejs.render(fixture('include_preprocessor.ejs'), {pets: users}, {delimiter: '@'});
