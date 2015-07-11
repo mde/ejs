@@ -1,3 +1,7 @@
+## v2.3.3: 2015-07-11
+
+* Fixed false positives for old `include` preprocessor directive (@mde)
+
 ## v2.3.2: 2015-06-28
 
 * Do not require semicolons in `<%- %>` (@TimothyGu)
