@@ -525,6 +525,13 @@ suite('<%%', function () {
   });
 });
 
+suite('<%_ and _%>', function () {
+  test('slurps spaces and tabs', function () {
+    assert.equal(ejs.render(fixture('space-and-tab-slurp.ejs'), {users: users}),
+      fixture('space-and-tab-slurp.html'));
+  });
+});
+
 suite('single quotes', function () {
   test('not mess up the constructed function', function () {
     assert.equal(ejs.render(fixture('single-quote.ejs')),
