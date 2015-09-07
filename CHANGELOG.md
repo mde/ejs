@@ -1,3 +1,7 @@
+## v2.3.4: 2015-09-04
+
++ Whitespace slurp tag syntax -- `<%_  _%>` (@andidev)
+
 ## v2.3.3: 2015-07-11
 
 * Fixed false positives for old `include` preprocessor directive (@mde)
