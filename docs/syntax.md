@@ -13,10 +13,12 @@ Table of contents
   - `<%=`: Escaped output
   - `<%-`: Unescaped output
   - `<%#`: Comments
-  - `<%`: Scriptlets
+  - `<%`: Scriptlet
+  - `<%_`: Scriptlet, removes all preceeding whitespace
 - Ending tags
   - `%>`: Regular ending tag
-  - `-%>`: Whitespace-trimming ending tag
+  - `-%>`: Removes trailing newline
+  - `_%>`: Removes all trailing whitespace
 - Literal tag
 - Including other files
   - “Preprocessor” directive
