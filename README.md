@@ -14,7 +14,7 @@ $ npm install ejs
 ## Features
 
   * Control flow with `<% %>`
-  * Escaped output with `<%= %>`
+  * Escaped output with `<%= %>` (escape function configurable)
   * Unescaped raw output with `<%- %>`
   * Newline-trim mode ('newline slurping') with `-%>` ending tag
   * Whitespace-trim mode (slurp all whitespace) for control flow with `<%_ _%>`
@@ -62,11 +62,13 @@ for all the passed options.
     and trailing whitespace. It also enables a safer version of `-%>` line
     slurping for all scriptlet tags (it does not strip new lines of tags in
     the middle of a line).
+  - `escape`          The escaping function used with `<%=` construct. It is
+    used in rendering and is `.toString()`ed in the generation of client functions. (By default escapes XML).
 
 ## Tags
 
   - `<%`              'Scriptlet' tag, for control-flow, no output
-  - `<%=`             Outputs the value into the template (HTML escaped)
+  - `<%=`             Outputs the value into the template (escaped)
   - `<%-`             Outputs the unescaped value into the template
   - `<%#`             Comment tag, no execution, no output
   - `<%%`             Outputs a literal '<%'
