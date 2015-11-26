@@ -519,7 +519,7 @@ suite('-%>', function () {
     + "<% }) -%>\n"
     + "</ul><% -%>\n";
 
-    var expectedResult = "<ul><li>geddy</li><li>neil</li><li>alex</li></ul>";
+    var expectedResult = "<ul><li>geddy</li>\n<li>neil</li>\n<li>alex</li>\n</ul>";
     var fn;
     fn = ejs.compile(content);
     assert.equal(fn({users: users}),
@@ -533,7 +533,7 @@ suite('-%>', function () {
     + "<% }) -%>\r\n"
     + "</ul><% -%>\r\n";
 
-    var expectedResult = "<ul><li>geddy</li><li>neil</li><li>alex</li></ul>";
+    var expectedResult = "<ul><li>geddy</li>\r\n<li>neil</li>\r\n<li>alex</li>\r\n</ul>";
     var fn;
     fn = ejs.compile(content);
     assert.equal(fn({users: users}),
