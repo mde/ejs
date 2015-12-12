@@ -689,6 +689,13 @@ suite('include()', function () {
         fixture('include.html'));
   });
 
+  test('include ejs with relative path for views', function () {
+    var file = 'test/fixtures/menu-views.ejs',
+        viewsPath = path.join(__dirname, 'fixtures');
+    assert.equal(ejs.render(fixture('menu-views.ejs'), {pets: users}, {filename: file, views: viewsPath}),
+      fixture('menu.html'));
+  });
+
   test('work when nested', function () {
     var file = 'test/fixtures/menu.ejs';
     assert.equal(ejs.render(fixture('menu.ejs'), {pets: users}, {filename: file}),
