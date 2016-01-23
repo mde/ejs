@@ -511,6 +511,34 @@ suite('-%>', function () {
     }
     throw new Error('Expected ReferenceError');
   });
+
+  test('works with unix style', function () {
+    var content = "<ul><% -%>\n"
+    + "<% users.forEach(function(user){ -%>\n"
+    + "<li><%= user.name -%></li>\n"
+    + "<% }) -%>\n"
+    + "</ul><% -%>\n";
+
+    var expectedResult = "<ul><li>geddy</li>\n<li>neil</li>\n<li>alex</li>\n</ul>";
+    var fn;
+    fn = ejs.compile(content);
+    assert.equal(fn({users: users}),
+      expectedResult);
+  });
+
+  test('works with windows style', function () {
+    var content = "<ul><% -%>\r\n"
+    + "<% users.forEach(function(user){ -%>\r\n"
+    + "<li><%= user.name -%></li>\r\n"
+    + "<% }) -%>\r\n"
+    + "</ul><% -%>\r\n";
+
+    var expectedResult = "<ul><li>geddy</li>\r\n<li>neil</li>\r\n<li>alex</li>\r\n</ul>";
+    var fn;
+    fn = ejs.compile(content);
+    assert.equal(fn({users: users}),
+      expectedResult);
+  });
 });
 
 suite('<%%', function () {
