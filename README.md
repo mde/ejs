@@ -57,7 +57,9 @@ for all the passed options.
   - `client`          Returns standalone compiled function
   - `delimiter`       Character to use with angle brackets for open/close
   - `debug`           Output generated function body
-  - `_with`           Whether or not to use `with() {}` constructs. If `false` then the locals will be stored in the `locals` object.
+  - `strict`          When set to `true`, generated function is in strict mode
+  - `_with`           Whether or not to use `with() {}` constructs. If `false` then the locals will be stored in the `locals` object. Set to `false` in strict mode.
+  - `localsName`      Name to use for the object storing local variables when not using `with` Defaults to `locals`
   - `rmWhitespace`    Remove all safe-to-remove whitespace, including leading
     and trailing whitespace. It also enables a safer version of `-%>` line
     slurping for all scriptlet tags (it does not strip new lines of tags in
