@@ -6,7 +6,7 @@
     "engine",
     "ejs"
   ],
-  "version": "2.4.0",
+  "version": "2.4.1",
   "author": "Matthew Eernisse <mde@fleegix.org> (http://fleegix.org)",
   "contributors": [
     "Timothy Gu <timothygu99@gmail.com> (https://timothygu.github.io)"
