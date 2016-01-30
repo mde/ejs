@@ -984,6 +984,25 @@ suite('require', function () {
   });
 });
 
+suite('test fileloader', function () {
+
+  var myFileLoad = function (filePath) {
+    return 'myFileLoad: ' + fs.readFileSync(filePath);
+  };
+
+  test('test custom fileload', function (done) {
+    ejs.fileLoader = myFileLoad;
+    ejs.renderFile('test/fixtures/para.ejs', function(err, html) {
+      if (err) {
+        return done(err);
+      }
+      assert.equal(html, 'myFileLoad: <p>hey</p>\n');
+      done();
+    });
+
+  });
+});
+
 suite('examples', function () {
   function noop () {}
   fs.readdirSync('examples').forEach(function (f) {
