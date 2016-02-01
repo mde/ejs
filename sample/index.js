@@ -1,5 +1,5 @@
 var express = require('express'),
-    ejs = require('../../lib/ejs.js');
+    ejs = require('../lib/ejs.js');
 var app = express();
 app.engine('.html', ejs.__express);
 app.set('view engine', 'ejs');
