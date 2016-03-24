@@ -42,6 +42,10 @@ template(data);
 
 ejs.render(str, data, options);
 // => Rendered HTML string
+
+ejs.renderFile(fileName, data, options, function(err, str){
+    // str => Rendered HTML string
+});
 ```
 
 You can also use the shortcut `ejs.render(dataAndOptions);` where you pass
@@ -51,7 +55,8 @@ for all the passed options.
 ## Options
 
   - `cache`           Compiled functions are cached, requires `filename`
-  - `filename`        Used by `cache` to key caches, and for includes
+  - `filename`        The name of the file being rendered. Not required if you 
+  are using `renderFile()`. Used by `cache` to key caches, and for includes.
   - `context`         Function execution context
   - `compileDebug`    When `false` no debug instrumentation is compiled
   - `client`          Returns standalone compiled function
@@ -78,9 +83,12 @@ for all the passed options.
 ## Includes
 
 Includes either have to be an absolute path, or, if not, are assumed as
-relative to the template with the `include` call. (This requires the
-`filename` option.) For example if you are including `./views/user/show.ejs`
-from `./views/users.ejs` you would use `<%- include('user/show') %>`.
+relative to the template with the `include` call. For example if you are 
+including `./views/user/show.ejs` from `./views/users.ejs` you would 
+use `<%- include('user/show') %>`.
+
+You must specify the `filename` option for the template with the `include` 
+call unless you are using `renderFile()`.
 
 You'll likely want to use the raw output tag (`<%-`) with your include to avoid
 double-escaping the HTML output.
