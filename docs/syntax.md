@@ -138,13 +138,24 @@ example below. You can trim it using the `-%>` ending tag.
 ##### EJS
 
 ```html
-<p><%# comment %></p>
+<div>
+<%# comment %>
+</div>
+
+<div>
+<%# comment -%>
+</div>
 ```
 
 ##### HTML
 
 ```html
-<p></p>
+<div>
+
+</div>
+
+<div>
+</div>
 ```
 
 ### `<%`: Scriptlets
@@ -236,7 +247,7 @@ The use of scriptlets might cause some useless whitespace, as illustrated by
 the example below. You can trim it by
 
 1. using the `-%>` ending tag, and
-2. always starting the tag in the beginning of a line.
+2. using the `<%_` starting tag or starting the tag in the beginning of a line.
 
 #### Example
 
@@ -294,53 +305,92 @@ It does *not* mean that we recommend mixing coding styles in your own project.
 </dl>
 ```
 
+### `<%_` "Whitespace Slurping" Scriptlet
+
+This tag is the same as a Scriptlet, except that it removes all whitespace before it.
+
+#### Example
+
+##### EJS
+
+```html
+<ul>
+  <% users.forEach(function(user, i, arr){ -%>
+    <li><%= user %></li>
+  <% }); -%>
+</ul>
+
+<ul>
+  <%_ users.forEach(function(user, i, arr){ -%>
+    <li><%= user %></li>
+  <%_ }); -%>
+</ul>
+```
+
+##### HTML
+
+```html
+<ul>
+      <li>Anne</li>
+      <li>Bob</li>
+  </ul>
+
+<ul>
+    <li>Anne</li>
+    <li>Bob</li>
+</ul>
+```
+
 Ending tags
 -----------
 
-There are two flavors of ending tags: the regular one and the
-whitespace-trimming one.
+There are three flavors of ending tags: the regular one, the
+newline-trimming one, and the whitespace-slurping one.
 
 ### `%>`: Regular ending tag
 
 As used in all of the examples above, `%>` is the standard tag used to end an
 EJS expression.
 
-### `-%>`: Whitespace-trimming ending tag
+### `-%>`: Newline-trimming ending tag
 
-`-%>` trims all extra whitespace a scriptlet or a comment might cause. It does
+`-%>` trims all extra newlines a scriptlet or a comment might cause. It does
 not have any effect on output tags.
 
 #### Example
 
-This is the exact example from `<%` starting tag above, but with `%>`
-substituted by `-%>`.
-
 ##### EJS
 
-```js
+```html
 Beginning of template
 <%  'this is a statement'
  + ' that is long'
  + ' and long'
  + ' and long' %>
-This is indented so some spaces will still be left:
-  <% 'statement' -%>
-See?
-This is the proper way:
-<%   'statement' -%>
+End of template
+---
+Beginning of template
+<%  'this is a statement'
+ + ' that is long'
+ + ' and long'
+ + ' and long' -%>
 End of template
 ```
 
 ##### Output
 
-```
+```html
 Beginning of template
 
-This is indented so some spaces will still be left:
-  See?
-This is the proper way:
+End of template
+---
+Beginning of template
 End of template
 ```
+
+### `_%>`: Whitespace-slurping ending tag
+
+`_%>` removes all whitespace after it.
 
 Literal tag
 -----------
