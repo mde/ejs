@@ -35,6 +35,16 @@
  */
 
 /**
+ * Escapes a string using HTML/XML escaping rules.
+ *
+ * @callback EscapeCallback
+ * @param  {String} markup Input string
+ * @return {String}        Escaped string
+ * @static
+ * @global
+ */
+
+/**
  * This type of callback is used when {@link Options}`.compileDebug`
  * is true, and an error in the template is thrown. By default it is used to
  * rethrow an error in a better-formatted way.
@@ -49,11 +59,12 @@
  */
 
 /**
- * Escapes a string using HTML/XML escaping rules.
+ * The callback called by ClientFunction to include files at runtime with `include()`
  *
- * @callback EscapeCallback
- * @param  {String} markup Input string
- * @return {String}        Escaped string
+ * @callback IncludeCallback
+ * @param  {String} path      path to be included
+ * @param  {Object} [data]    data passed to the template
+ * @return {String}           Contents of the file requested
  * @static
  * @global
  */
