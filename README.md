@@ -164,9 +164,33 @@ including headers and footers, like so:
 ## Client-side support
 
 Go to the [Latest Release](https://github.com/mde/ejs/releases/latest), download
-`./ejs.js` or `./ejs.min.js`.
+`./ejs.js` or `./ejs.min.js`. Alternately, you can compile it yourself by cloning 
+the repository and running `jake build` (or `$(npm bin)/jake build` if jake is 
+not installed globally).
 
-Include one of these on your page, and `ejs.render(str)`.
+Include one of these files on your page, and `ejs` should be available globally.
+
+### Example
+
+```html
+<div id="output"></div>
+<script src="ejs.min.js"></script>
+<script>
+  var people = ['geddy', 'neil', 'alex'],
+      html = ejs.render('<%= people.join(", "); %>', {people: people});
+      // With JQuery:
+      $('#output').html(html);
+      // Vanilla JS:
+      document.getElementById('output').innerHTML = html;
+</script>
+```
+
+### Caveats
+
+Most of EJS will work as expected; however, there are a few things to note:
+
+1. Obviously, since you do not have access to the filesystem, `ejs.renderFile()` won't work.
+2. For the same reason, `include`s do not work.
 
 ## Related projects
 
