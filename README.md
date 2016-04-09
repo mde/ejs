@@ -59,7 +59,8 @@ for all the passed options.
   are using `renderFile()`. Used by `cache` to key caches, and for includes.
   - `context`         Function execution context
   - `compileDebug`    When `false` no debug instrumentation is compiled
-  - `client`          Returns standalone compiled function
+  - `client`          When `true`, compiles a function that can be rendered 
+    in the browser without depending on ejs.js.
   - `delimiter`       Character to use with angle brackets for open/close
   - `debug`           Output generated function body
   - `strict`          When set to `true`, generated function is in strict mode

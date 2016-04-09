@@ -24,8 +24,10 @@
  * line).
  *
  * @property {Boolean} [client=false]
- * Whether or not to compile functions that are to be included in the browser.
- *
+ * Whether or not to compile a {@link ClientFunction} that can be rendered 
+ * in the browser without depending on ejs.js. Otherwise, a {@link TemplateFunction} 
+ * will be compiled.
+ * 
  * @property {EscapeCallback} [escape={@link module:utils.escapeXML}]
  * The escaping function used with `<%=` construct. It is used in rendering
  * and is `.toString()`ed in the generation of client functions.
