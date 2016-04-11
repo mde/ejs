@@ -59,11 +59,11 @@
  */
 
 /**
- * The callback called by ClientFunction to include files at runtime with `include()`
+ * The callback called by {@link ClientFunction} to include files at runtime with `include()`
  *
  * @callback IncludeCallback
- * @param  {String} path      path to be included
- * @param  {Object} [data]    data passed to the template
+ * @param  {String} path      Path to be included
+ * @param  {Object} [data]    Data passed to the template
  * @return {String}           Contents of the file requested
  * @static
  * @global
