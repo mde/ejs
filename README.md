@@ -43,7 +43,7 @@ template(data);
 ejs.render(str, data, options);
 // => Rendered HTML string
 
-ejs.renderFile(fileName, data, options, function(err, str){
+ejs.renderFile(filename, data, options, function(err, str){
     // str => Rendered HTML string
 });
 ```
@@ -56,11 +56,12 @@ for all the passed options.
 
   - `cache`           Compiled functions are cached, requires `filename`
   - `filename`        The name of the file being rendered. Not required if you 
-  are using `renderFile()`. Used by `cache` to key caches, and for includes.
+    are using `renderFile()`. Used by `cache` to key caches, and for includes.
   - `context`         Function execution context
   - `compileDebug`    When `false` no debug instrumentation is compiled
   - `client`          When `true`, compiles a function that can be rendered 
-    in the browser without depending on ejs.js.
+    in the browser without needing to load the EJS Runtime 
+    ([ejs.min.js](https://github.com/mde/ejs/releases/latest)).
   - `delimiter`       Character to use with angle brackets for open/close
   - `debug`           Output generated function body
   - `strict`          When set to `true`, generated function is in strict mode
@@ -178,10 +179,10 @@ Include one of these files on your page, and `ejs` should be available globally.
 <script>
   var people = ['geddy', 'neil', 'alex'],
       html = ejs.render('<%= people.join(", "); %>', {people: people});
-      // With JQuery:
-      $('#output').html(html);
-      // Vanilla JS:
-      document.getElementById('output').innerHTML = html;
+  // With jQuery:
+  $('#output').html(html);
+  // Vanilla JS:
+  document.getElementById('output').innerHTML = html;
 </script>
 ```
 
@@ -190,7 +191,20 @@ Include one of these files on your page, and `ejs` should be available globally.
 Most of EJS will work as expected; however, there are a few things to note:
 
 1. Obviously, since you do not have access to the filesystem, `ejs.renderFile()` won't work.
-2. For the same reason, `include`s do not work.
+2. For the same reason, `include`s do not work unless you use an `IncludeCallback`. 
+Here is an example:
+
+```javascript
+var str = '<% include('person.ejs', {person: 'John'}); %>Hello <%= firstName %>!';
+    fn = ejs.compile(str, {client: true});
+
+fn(data, null, function(path, data){ // IncludeCallback
+  // path -> 'person.ejs'
+  // data -> {person: 'John'}
+  // Put your code here 
+  // Return the contents of person.ejs as a string
+}); // returns rendered string
+```
 
 ## Related projects
 
