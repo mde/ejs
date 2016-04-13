@@ -33,8 +33,9 @@
  * and is `.toString()`ed in the generation of client functions.
  *
  * @property {String}  [filename='undefined']
- * The filename of the template. Used in inclusion, caching, and error
- * reporting.
+ * The filename of the template. Required for inclusion and caching unless 
+ * you are using {@link module:ejs.renderFile}. Also used for error reporting.
+ * 
  * @property {String}  [delimiter='%']
  * The delimiter used in template compilation.
  *
