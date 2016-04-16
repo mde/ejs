@@ -72,6 +72,11 @@ for all the passed options.
     slurping for all scriptlet tags (it does not strip new lines of tags in
     the middle of a line).
 
+This project uses [JSDoc](http://usejsdoc.org/). For the full public API 
+documentation, clone the repository and run `npm run doc`. This will run JSDoc 
+with the proper options and output the documentation to `out/`. If you want 
+the both the public & private API docs, run `npm run devdoc` instead.
+
 ## Tags
 
   - `<%`              'Scriptlet' tag, for control-flow, no output
