@@ -44,9 +44,11 @@ ejs.render(str, data, options);
 // => Rendered HTML string
 ```
 
-You can also use the shortcut `ejs.render(dataAndOptions);` where you pass
+It is also possible to use `ejs.render(dataAndOptions);` where you pass
 everything in a single object. In that case, you'll end up with local variables
-for all the passed options.
+for all the passed options. However, be aware that your code could break if we 
+add an option with the same name as one of your data object's properties.
+Therefore, we do not recommend using this shortcut.
 
 ## Options
 
