@@ -196,20 +196,18 @@ Include one of these files on your page, and `ejs` should be available globally.
 Most of EJS will work as expected; however, there are a few things to note:
 
 1. Obviously, since you do not have access to the filesystem, `ejs.renderFile()` won't work.
-2. For the same reason, `include`s do not work unless you use an `IncludeCallback`. 
-Here is an example:
-
-```javascript
-var str = '<% include('person.ejs', {person: 'John'}); %>Hello <%= firstName %>!';
-    fn = ejs.compile(str, {client: true});
-
-fn(data, null, function(path, data){ // IncludeCallback
-  // path -> 'person.ejs'
-  // data -> {person: 'John'}
-  // Put your code here 
-  // Return the contents of person.ejs as a string
-}); // returns rendered string
-```
+2. For the same reason, `include`s do not work unless you use an `IncludeCallback`. Here is an example:
+  ```javascript
+  var str = "Hello <%= include('file', {person: 'John'}); %>";
+      fn = ejs.compile(str, {client: true});
+  
+  fn(data, null, function(path, data){ // IncludeCallback
+    // path -> 'file'
+    // data -> {person: 'John'}
+    // Put your code here 
+    // Return the contents of file as a string
+  }); // returns rendered string
+  ```
 
 ## Related projects
 
