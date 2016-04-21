@@ -89,6 +89,7 @@ the both the public & private API docs, run `npm run devdoc` instead.
   - `<%-`             Outputs the unescaped value into the template
   - `<%#`             Comment tag, no execution, no output
   - `<%%`             Outputs a literal '<%'
+  - `%%>`             Outputs a literal '%>'
   - `%>`              Plain ending tag
   - `-%>`             Trim-mode ('newline slurp') tag, trims following newline
   - `_%>`             'Whitespace Slurping' ending tag, removes all whitespace after it

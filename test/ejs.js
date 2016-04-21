@@ -591,6 +591,15 @@ suite('<%%', function () {
   });
 });
 
+suite('%%>', function () {
+  test('produce literal', function () {
+    assert.equal(ejs.render('%%>'),
+        '%>');
+    assert.equal(ejs.render('  >', {}, {delimiter: ' '}),
+        ' >');
+  });
+});
+
 suite('<%_ and _%>', function () {
   test('slurps spaces and tabs', function () {
     assert.equal(ejs.render(fixture('space-and-tab-slurp.ejs'), {users: users}),

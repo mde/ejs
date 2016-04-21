@@ -19,7 +19,7 @@ Table of contents
   - `%>`: Regular ending tag
   - `-%>`: Removes trailing newline
   - `_%>`: Removes all trailing whitespace
-- Literal tag
+- Literal tags
 - Including other files
   - “Preprocessor” directive
   - JavaScript `include()` function
@@ -30,7 +30,7 @@ Basic format
 ------------
 
 An EJS “tag” is the primary functioning unit in an EJS template. With the
-exception of the literal tag, all tags are formed by the following format:
+exception of the literal tags, all tags are formed by the following format:
 
 <pre>&lt;<em>starting</em> <em>content</em> <em>closing</em>&gt;</pre>
 
@@ -393,28 +393,29 @@ End of template
 
 `_%>` removes all whitespace after it.
 
-Literal tag
------------
+Literal tags
+------------
 
-To output a literal `<%`, use `<%%`. If a customized delimiter is used, use
+To output literal `<%` or `%>`, use `<%%` or `%%>`, respectively. If a customized delimiter is used, use
 the same syntax. E.g. use `<$$` to get `<$` if the delimiter is `$`.
 
-In regards to all the other tags, the literal tag is special as it does not
+In regards to all the other tags, the literal tags are special as they do not
 need a closing tag to function.
 
-However, think twice before you use this tag because the `<` character might
-need to be escaped as `&lt;`.
+However, think twice before you use these tags because `<` and `>` characters might
+need to be escaped as `&lt;` and `&gt;`, respectively.
 
 #### Example
 
-The following example wrap `<%` in a `<pre>`, where it is not necessary to
-escape `<`.
+The following example wrap `<%` and `%>` in a `<pre>`, where it is not necessary to
+escape `<` or `>` at all.
 
 ##### EJS
 
 ```html
 <pre>This is literal: <%%</pre>
 <pre>This is literal too: <%% %></pre>
+<pre>This is literal as well: %%></pre>
 ```
 
 ##### HTML
@@ -422,6 +423,7 @@ escape `<`.
 ```html
 <pre>This is literal: <%</pre>
 <pre>This is literal too: <% %></pre>
+<pre>This is literal as well: %></pre>
 ```
 
 ## Including other files
