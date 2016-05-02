@@ -24,15 +24,18 @@
  * line).
  *
  * @property {Boolean} [client=false]
- * Whether or not to compile functions that are to be included in the browser.
- *
+ * Whether or not to compile a {@link ClientFunction} that can be rendered 
+ * in the browser without depending on ejs.js. Otherwise, a {@link TemplateFunction} 
+ * will be compiled.
+ * 
  * @property {EscapeCallback} [escape={@link module:utils.escapeXML}]
  * The escaping function used with `<%=` construct. It is used in rendering
  * and is `.toString()`ed in the generation of client functions.
  *
  * @property {String}  [filename='undefined']
- * The filename of the template. Used in inclusion, caching, and error
- * reporting.
+ * The filename of the template. Required for inclusion and caching unless 
+ * you are using {@link module:ejs.renderFile}. Also used for error reporting.
+ * 
  * @property {String}  [delimiter='%']
  * The delimiter used in template compilation.
  *

@@ -42,6 +42,10 @@ template(data);
 
 ejs.render(str, data, options);
 // => Rendered HTML string
+
+ejs.renderFile(filename, data, options, function(err, str){
+    // str => Rendered HTML string
+});
 ```
 
 It is also possible to use `ejs.render(dataAndOptions);` where you pass
@@ -53,10 +57,13 @@ Therefore, we do not recommend using this shortcut.
 ## Options
 
   - `cache`           Compiled functions are cached, requires `filename`
-  - `filename`        Used by `cache` to key caches, and for includes
+  - `filename`        The name of the file being rendered. Not required if you 
+    are using `renderFile()`. Used by `cache` to key caches, and for includes.
   - `context`         Function execution context
   - `compileDebug`    When `false` no debug instrumentation is compiled
-  - `client`          Returns standalone compiled function
+  - `client`          When `true`, compiles a function that can be rendered 
+    in the browser without needing to load the EJS Runtime 
+    ([ejs.min.js](https://github.com/mde/ejs/releases/latest)).
   - `delimiter`       Character to use with angle brackets for open/close
   - `debug`           Output generated function body
   - `strict`          When set to `true`, generated function is in strict mode
@@ -66,6 +73,11 @@ Therefore, we do not recommend using this shortcut.
     and trailing whitespace. It also enables a safer version of `-%>` line
     slurping for all scriptlet tags (it does not strip new lines of tags in
     the middle of a line).
+
+This project uses [JSDoc](http://usejsdoc.org/). For the full public API 
+documentation, clone the repository and run `npm run doc`. This will run JSDoc 
+with the proper options and output the documentation to `out/`. If you want 
+the both the public & private API docs, run `npm run devdoc` instead.
 
 ## Tags
 
@@ -80,9 +92,12 @@ Therefore, we do not recommend using this shortcut.
 ## Includes
 
 Includes either have to be an absolute path, or, if not, are assumed as
-relative to the template with the `include` call. (This requires the
-`filename` option.) For example if you are including `./views/user/show.ejs`
-from `./views/users.ejs` you would use `<%- include('user/show') %>`.
+relative to the template with the `include` call. For example if you are 
+including `./views/user/show.ejs` from `./views/users.ejs` you would 
+use `<%- include('user/show') %>`.
+
+You must specify the `filename` option for the template with the `include` 
+call unless you are using `renderFile()`.
 
 You'll likely want to use the raw output tag (`<%-`) with your include to avoid
 double-escaping the HTML output.
@@ -157,9 +172,44 @@ including headers and footers, like so:
 ## Client-side support
 
 Go to the [Latest Release](https://github.com/mde/ejs/releases/latest), download
-`./ejs.js` or `./ejs.min.js`.
+`./ejs.js` or `./ejs.min.js`. Alternately, you can compile it yourself by cloning 
+the repository and running `jake build` (or `$(npm bin)/jake build` if jake is 
+not installed globally).
 
-Include one of these on your page, and `ejs.render(str)`.
+Include one of these files on your page, and `ejs` should be available globally.
+
+### Example
+
+```html
+<div id="output"></div>
+<script src="ejs.min.js"></script>
+<script>
+  var people = ['geddy', 'neil', 'alex'],
+      html = ejs.render('<%= people.join(", "); %>', {people: people});
+  // With jQuery:
+  $('#output').html(html);
+  // Vanilla JS:
+  document.getElementById('output').innerHTML = html;
+</script>
+```
+
+### Caveats
+
+Most of EJS will work as expected; however, there are a few things to note:
+
+1. Obviously, since you do not have access to the filesystem, `ejs.renderFile()` won't work.
+2. For the same reason, `include`s do not work unless you use an `IncludeCallback`. Here is an example:
+  ```javascript
+  var str = "Hello <%= include('file', {person: 'John'}); %>",
+      fn = ejs.compile(str, {client: true});
+  
+  fn(data, null, function(path, d){ // IncludeCallback
+    // path -> 'file'
+    // d -> {person: 'John'}
+    // Put your code here 
+    // Return the contents of file as a string
+  }); // returns rendered string
+  ```
 
 ## Related projects
 
