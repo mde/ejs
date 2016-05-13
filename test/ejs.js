@@ -135,6 +135,32 @@ suite('ejs.compile(str, options)', function () {
     // There could be a `rethrow` in the function declaration
     assert((fn.toString().match(/rethrow/g) || []).length <= 1);
   });
+
+  test('support custom escape function', function () {
+    var customEscape
+      , fn;
+    customEscape = function customEscape(str) {
+      return !str ? '' : str.toUpperCase();
+    };
+    fn = ejs.compile('HELLO <%= name %>', {escape: customEscape});
+    assert.equal(fn({name: 'world'}), 'HELLO WORLD');
+  });
+
+  test('support custom escape function in client mode', function () {
+    var customEscape
+      , fn
+      , str;
+    customEscape = function customEscape(str) {
+      return !str ? '' : str.toUpperCase();
+    };
+    fn = ejs.compile('HELLO <%= name %>', {escape: customEscape, client: true});
+    str = fn.toString();
+    if (!process.env.running_under_istanbul) {
+      eval('var preFn = ' + str);
+      assert.equal(preFn({name: 'world'}), 'HELLO WORLD');
+    }
+  });
+
 });
 
 suite('ejs.render(str, data, opts)', function () {
@@ -459,6 +485,18 @@ suite('<%=', function () {
   test('should escape &foo_bar;', function () {
     assert.equal(ejs.render('<%= name %>', {name: '&foo_bar;'}),
       '&amp;foo_bar;');
+  });
+
+  test('should accept custom function', function() {
+
+    var customEscape = function customEscape(str) {
+      return !str ? '' : str.toUpperCase();
+    };
+
+    assert.equal(
+      ejs.render('<%= name %>', {name: 'The Jones\'s'}, {escape: customEscape}),
+      'THE JONES\'S'
+    );
   });
 });
 
