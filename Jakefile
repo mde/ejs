@@ -34,6 +34,7 @@ publishTask('ejs', ['build'], function () {
   this.packageFiles.include([
     'Jakefile'
   , 'README.md'
+  , 'LICENSE'
   , 'package.json'
   , 'ejs.js'
   , 'ejs.min.js'
