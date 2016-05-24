@@ -1,6 +1,6 @@
 ## v2.4.1: 2016-05-24
 
-+ Added LICENCSE file to release package
++ Added LICENSE file to release package
 * Various documentation improvements (@RyanZim)
 * Better line-numbers in errors (@dgofman)
 
