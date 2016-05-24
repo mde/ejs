@@ -1,3 +1,9 @@
+## v2.4.1: 2016-05-24
+
++ Added LICENCSE file to release package
+* Various documentation improvements (@RyanZim)
+* Better line-numbers in errors (@dgofman)
+
 ## v2.4.1: 2016-01-23
 
 + Strict-mode support (@mde)
