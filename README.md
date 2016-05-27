@@ -59,6 +59,7 @@ Therefore, we do not recommend using this shortcut.
   - `cache`           Compiled functions are cached, requires `filename`
   - `filename`        The name of the file being rendered. Not required if you 
     are using `renderFile()`. Used by `cache` to key caches, and for includes.
+  - `root`            Set project root for includes with an absolute path (/file.ejs).
   - `context`         Function execution context
   - `compileDebug`    When `false` no debug instrumentation is compiled
   - `client`          When `true`, compiles a function that can be rendered 
