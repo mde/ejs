@@ -18,7 +18,7 @@ $ npm install ejs
   * Unescaped raw output with `<%- %>`
   * Newline-trim mode ('newline slurping') with `-%>` ending tag
   * Whitespace-trim mode (slurp all whitespace) for control flow with `<%_ _%>`
-  * Custom delimiters (e.g., use '<? ?>' instead of '<% %>')
+  * Custom delimiters (e.g., use `<? ?>` instead of `<% %>`)
   * Includes
   * Client-side support
   * Static caching of intermediate JavaScript
