@@ -892,7 +892,16 @@ suite('preprocessor include', function () {
     out = ejs.render(fixture('include_preprocessor_cache.ejs'), {}, options);
     assert.equal(out, expected);
   });
-
+  
+  test('whitespace slurp and rmWhitespace work', function() {
+    var file = 'test/fixtures/include_preprocessor_line_slurp.ejs'
+      , template = fixture('include_preprocessor_line_slurp.ejs')
+      , expected = fixture('include_preprocessor_line_slurp.html')
+      , options = {rmWhitespace: true, filename: file};
+    assert.equal(ejs.render(template, options),
+        expected);
+  })
+  
 });
 
 suite('comments', function () {
