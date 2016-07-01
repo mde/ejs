@@ -36,6 +36,10 @@
  * The filename of the template. Required for inclusion and caching unless 
  * you are using {@link module:ejs.renderFile}. Also used for error reporting.
  * 
+ * @property {String}  [root=undefined]
+ * The path to the project root. When this is set, absolute paths for includes 
+ * (/filename.ejs) will be relative to the project root.
+ * 
  * @property {String}  [delimiter='%']
  * The delimiter used in template compilation.
  *
