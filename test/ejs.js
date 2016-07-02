@@ -161,6 +161,11 @@ suite('ejs.compile(str, options)', function () {
     }
   });
 
+  test('strict mode works', function () {
+    var fn = ejs.compile('Hello <%= name %>!', {strict: true, client: true});
+    assert.notEqual(fn.toString().indexOf('"use strict";'), -1);
+  });
+
 });
 
 suite('ejs.render(str, data, opts)', function () {
@@ -900,7 +905,7 @@ suite('preprocessor include', function () {
     out = ejs.render(fixture('include_preprocessor_cache.ejs'), {}, options);
     assert.equal(out, expected);
   });
-  
+
   test('whitespace slurp and rmWhitespace work', function() {
     var file = 'test/fixtures/include_preprocessor_line_slurp.ejs'
       , template = fixture('include_preprocessor_line_slurp.ejs')
@@ -909,7 +914,7 @@ suite('preprocessor include', function () {
     assert.equal(ejs.render(template, options),
         expected);
   })
-  
+
 });
 
 suite('comments', function () {
