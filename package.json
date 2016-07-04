@@ -22,6 +22,7 @@
   "dependencies": {},
   "devDependencies": {
     "browserify": "^13.0.1",
+    "eslint": "^3.0.0",
     "istanbul": "~0.4.3",
     "jake": "^8.0.0",
     "jsdoc": "^3.4.0",
