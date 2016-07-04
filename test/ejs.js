@@ -162,8 +162,7 @@ suite('ejs.compile(str, options)', function () {
   });
 
   test('strict mode works', function () {
-    var fn = ejs.compile('Hello <%= name %>!', {strict: true, client: true});
-    assert.notEqual(fn.toString().indexOf('"use strict";'), -1);
+    assert.equal(ejs.render(fixture('strict.ejs'), {}, {strict: true}), 'true');
   });
 
 });
