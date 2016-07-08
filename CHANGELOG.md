@@ -1,4 +1,4 @@
-## v2.4.1: 2016-05-24
+## v2.4.2: 2016-05-24
 
 + Added LICENSE file to release package
 * Various documentation improvements (@RyanZim)
