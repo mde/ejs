@@ -1,3 +1,15 @@
+## v2.5.1: 2016-07-25
+
++ Output literal `%>` with `%%>` (Roy Miloh)
++ Allow setting project root for includes (@cnwhy)
++ UMD support for the browser (@RyanZim)
++ Exported `escapeXML` method to allow manual escaping of output
++ Tests for strict mode (@RyanZim, @mde)
++ Added ESLint for project source code (@mde)
+* Whitespace slurp in preprocessor include (@mmis1000)
+* Improved line-number handling in errors (@Spikef)
+* Various doc improvements (@RyanZim, Ionică Bizău)
+
 ## v2.4.2: 2016-05-24
 
 + Added LICENSE file to release package
