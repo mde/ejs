@@ -3,7 +3,7 @@
 + Output literal `%>` with `%%>` (Roy Miloh)
 + Allow setting project root for includes (@cnwhy)
 + UMD support for the browser (@RyanZim)
-+ Exported `escapeXML` method to allow manual escaping of output
++ Exported `escapeXML` method to allow manual escaping of output (@mde)
 + Tests for strict mode (@RyanZim, @mde)
 + Added ESLint for project source code (@mde)
 * Whitespace slurp in preprocessor include (@mmis1000)
