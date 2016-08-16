@@ -3,7 +3,7 @@
 Embedded JavaScript templates
 
 [![Build Status](https://img.shields.io/travis/mde/ejs/master.svg?style=flat)](https://travis-ci.org/mde/ejs)
-[![Developing Dependencies](https://img.shields.io/david/dev/mde/ejs.svg?style=flat)](https://david-dm.org/mde/ejs#info=devDependencies)
+[![Developing Dependencies](https://img.shields.io/david/dev/mde/ejs.svg?style=flat)](https://david-dm.org/mde/ejs?type=dev)
 
 ## Installation
 
@@ -50,20 +50,20 @@ ejs.renderFile(filename, data, options, function(err, str){
 
 It is also possible to use `ejs.render(dataAndOptions);` where you pass
 everything in a single object. In that case, you'll end up with local variables
-for all the passed options. However, be aware that your code could break if we 
+for all the passed options. However, be aware that your code could break if we
 add an option with the same name as one of your data object's properties.
 Therefore, we do not recommend using this shortcut.
 
 ## Options
 
   - `cache`           Compiled functions are cached, requires `filename`
-  - `filename`        The name of the file being rendered. Not required if you 
+  - `filename`        The name of the file being rendered. Not required if you
     are using `renderFile()`. Used by `cache` to key caches, and for includes.
   - `root`            Set project root for includes with an absolute path (/file.ejs).
   - `context`         Function execution context
   - `compileDebug`    When `false` no debug instrumentation is compiled
-  - `client`          When `true`, compiles a function that can be rendered 
-    in the browser without needing to load the EJS Runtime 
+  - `client`          When `true`, compiles a function that can be rendered
+    in the browser without needing to load the EJS Runtime
     ([ejs.min.js](https://github.com/mde/ejs/releases/latest)).
   - `delimiter`       Character to use with angle brackets for open/close
   - `debug`           Output generated function body
@@ -77,9 +77,9 @@ Therefore, we do not recommend using this shortcut.
   - `escape`          The escaping function used with `<%=` construct. It is
     used in rendering and is `.toString()`ed in the generation of client functions. (By default escapes XML).
 
-This project uses [JSDoc](http://usejsdoc.org/). For the full public API 
-documentation, clone the repository and run `npm run doc`. This will run JSDoc 
-with the proper options and output the documentation to `out/`. If you want 
+This project uses [JSDoc](http://usejsdoc.org/). For the full public API
+documentation, clone the repository and run `npm run doc`. This will run JSDoc
+with the proper options and output the documentation to `out/`. If you want
 the both the public & private API docs, run `npm run devdoc` instead.
 
 ## Tags
@@ -100,11 +100,11 @@ For the full syntax documentation, please see [docs/syntax.md](https://github.co
 ## Includes
 
 Includes either have to be an absolute path, or, if not, are assumed as
-relative to the template with the `include` call. For example if you are 
-including `./views/user/show.ejs` from `./views/users.ejs` you would 
+relative to the template with the `include` call. For example if you are
+including `./views/user/show.ejs` from `./views/users.ejs` you would
 use `<%- include('user/show') %>`.
 
-You must specify the `filename` option for the template with the `include` 
+You must specify the `filename` option for the template with the `include`
 call unless you are using `renderFile()`.
 
 You'll likely want to use the raw output tag (`<%-`) with your include to avoid
@@ -180,8 +180,8 @@ including headers and footers, like so:
 ## Client-side support
 
 Go to the [Latest Release](https://github.com/mde/ejs/releases/latest), download
-`./ejs.js` or `./ejs.min.js`. Alternately, you can compile it yourself by cloning 
-the repository and running `jake build` (or `$(npm bin)/jake build` if jake is 
+`./ejs.js` or `./ejs.min.js`. Alternately, you can compile it yourself by cloning
+the repository and running `jake build` (or `$(npm bin)/jake build` if jake is
 not installed globally).
 
 Include one of these files on your page, and `ejs` should be available globally.
@@ -210,11 +210,11 @@ Most of EJS will work as expected; however, there are a few things to note:
   ```javascript
   var str = "Hello <%= include('file', {person: 'John'}); %>",
       fn = ejs.compile(str, {client: true});
-  
+
   fn(data, null, function(path, d){ // IncludeCallback
     // path -> 'file'
     // d -> {person: 'John'}
-    // Put your code here 
+    // Put your code here
     // Return the contents of file as a string
   }); // returns rendered string
   ```
@@ -237,5 +237,3 @@ Licensed under the Apache License, Version 2.0
 - - -
 EJS Embedded JavaScript templates copyright 2112
 mde@fleegix.org.
-
-
