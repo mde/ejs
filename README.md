@@ -33,6 +33,8 @@ $ npm install ejs
 <% } %>
 ```
 
+Try EJS online at: https://ionicabizau.github.io/ejs-playground/.
+
 ## Usage
 
 ```javascript
