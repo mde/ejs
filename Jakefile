@@ -1,10 +1,11 @@
-/* global jake, task, complete, desc, publishTask */
-var buildOpts = {
-  printStdout: true,
-  printStderr: true
+var execSync = require('child_process').execSync;
+var exec = function (cmd) {
+  execSync(cmd, {stdio: 'inherit'});
 };
 
-task('build', ['browserify', 'minify'], function () {
+/* global jake, task, desc, publishTask */
+
+task('build', ['lint', 'clean', 'browserify', 'minify'], function () {
   console.log('Build completed.');
 });
 
@@ -12,22 +13,22 @@ desc('Cleans browerified/minified files and package files');
 task('clean', ['clobber'], function () {
   jake.rmRf('./ejs.js');
   jake.rmRf('./ejs.min.js');
+  console.log('Cleaned up compiled files.');
 });
 
-task('browserify', {async: true}, function () {
-  jake.exec('./node_modules/browserify/bin/cmd.js --standalone ejs lib/ejs.js > ejs.js',
-      buildOpts, function () {
-        console.log('Browserification completed.');
-        setTimeout(complete, 0);
-      });
+task('lint', function () {
+  exec('./node_modules/.bin/eslint \"**/*.js\" Jakefile');
+  console.log('Browserification completed.');
 });
 
-task('minify', {async: true}, function () {
-  jake.exec('./node_modules/uglify-js/bin/uglifyjs ejs.js > ejs.min.js',
-      buildOpts, function () {
-        console.log('Minification completed.');
-        setTimeout(complete, 0);
-      });
+task('browserify', function () {
+  exec('./node_modules/browserify/bin/cmd.js --standalone ejs lib/ejs.js > ejs.js');
+  console.log('Browserification completed.');
+});
+
+task('minify', function () {
+  exec('./node_modules/uglify-js/bin/uglifyjs ejs.js > ejs.min.js');
+  console.log('Minification completed.');
 });
 
 publishTask('ejs', ['build'], function () {
