@@ -18,7 +18,7 @@ task('clean', ['clobber'], function () {
 
 task('lint', function () {
   exec('./node_modules/.bin/eslint \"**/*.js\" Jakefile');
-  console.log('Browserification completed.');
+  console.log('Linting completed.');
 });
 
 task('browserify', function () {
