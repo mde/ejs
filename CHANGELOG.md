@@ -1,3 +1,8 @@
+## v2.5.2: 2016-07-25
+
++ Added link to EJS Playground (@RyanZim)
+- Revert express auto 'root' option (@RyanZim)
+
 ## v2.5.1: 2016-07-25
 
 + Output literal `%>` with `%%>` (Roy Miloh)
