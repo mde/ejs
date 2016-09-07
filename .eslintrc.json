@@ -10,9 +10,16 @@
             "error",
             "unix"
         ],
+        "indent": [
+          "error",
+          2
+        ],
         "quotes": [
             "error",
-            "single"
+            "single",
+            {
+              "avoidEscape": true
+            }
         ],
         "semi": [
             "error",

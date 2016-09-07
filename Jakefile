@@ -1,8 +1,8 @@
-var fs = require('fs')
-  , buildOpts = {
-      printStdout: true
-    , printStderr: true
-    };
+/* global jake, task, complete, desc, publishTask */
+var buildOpts = {
+  printStdout: true,
+  printStderr: true
+};
 
 task('build', ['browserify', 'minify'], function () {
   console.log('Build completed.');
@@ -17,28 +17,28 @@ task('clean', ['clobber'], function () {
 task('browserify', {async: true}, function () {
   jake.exec('./node_modules/browserify/bin/cmd.js --standalone ejs lib/ejs.js > ejs.js',
       buildOpts, function () {
-    console.log('Browserification completed.');
-    setTimeout(complete, 0);
-  });
+        console.log('Browserification completed.');
+        setTimeout(complete, 0);
+      });
 });
 
 task('minify', {async: true}, function () {
   jake.exec('./node_modules/uglify-js/bin/uglifyjs ejs.js > ejs.min.js',
       buildOpts, function () {
-    console.log('Minification completed.');
-    setTimeout(complete, 0);
-  });
+        console.log('Minification completed.');
+        setTimeout(complete, 0);
+      });
 });
 
 publishTask('ejs', ['build'], function () {
   this.packageFiles.include([
-    'Jakefile'
-  , 'README.md'
-  , 'LICENSE'
-  , 'package.json'
-  , 'ejs.js'
-  , 'ejs.min.js'
-  , 'lib/**'
-  , 'test/**'
+    'Jakefile',
+    'README.md',
+    'LICENSE',
+    'package.json',
+    'ejs.js',
+    'ejs.min.js',
+    'lib/**',
+    'test/**'
   ]);
 });
