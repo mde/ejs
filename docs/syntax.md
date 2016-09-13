@@ -42,8 +42,8 @@ Delimiters
 
 The *starting* and *closing* tags contain a special string called the
 delimiter. In this document, all tags are shown using the `%` delimiter, which
-is the default. You can, however, change that to your liking. See 
-https://github.com/mde/ejs#custom-delimiters for more information on how to 
+is the default. You can, however, change that to your liking. See
+https://github.com/mde/ejs#custom-delimiters for more information on how to
 change it.
 
 Starting tags
