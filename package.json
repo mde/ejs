@@ -23,12 +23,12 @@
   "devDependencies": {
     "browserify": "^13.0.1",
     "eslint": "^3.0.0",
+    "git-directory-deploy": "^1.5.1",
     "istanbul": "~0.4.3",
     "jake": "^8.0.0",
     "jsdoc": "^3.4.0",
     "lru-cache": "^4.0.1",
     "mocha": "3.0.2",
-    "rimraf": "^2.2.8",
     "uglify-js": "^2.6.2"
   },
   "engines": {
@@ -38,7 +38,7 @@
     "test": "mocha",
     "lint": "eslint \"**/*.js\" Jakefile",
     "coverage": "istanbul cover node_modules/mocha/bin/_mocha",
-    "doc": "rimraf out && jsdoc -c jsdoc.json lib/* docs/jsdoc/*",
-    "devdoc": "rimraf out && jsdoc -p -c jsdoc.json lib/* docs/jsdoc/*"
+    "doc": "jake doc",
+    "devdoc": "jake doc[dev]"
   }
 }
