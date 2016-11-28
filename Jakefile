@@ -37,7 +37,7 @@ task('doc', function (dev) {
   var p = dev ? '-p' : '';
   exec('./node_modules/.bin/jsdoc ' + p + ' -c jsdoc.json lib/* docs/jsdoc/*');
   console.log('Documentation generated.');
-})
+});
 
 task('docPublish', ['doc'], function () {
   console.log('Pushing docs to gh-pages...');
