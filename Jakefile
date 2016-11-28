@@ -32,6 +32,19 @@ task('minify', function () {
   console.log('Minification completed.');
 });
 
+task('doc', function (dev) {
+  jake.rmRf('out');
+  var p = dev ? '-p' : '';
+  exec('./node_modules/.bin/jsdoc ' + p + ' -c jsdoc.json lib/* docs/jsdoc/*');
+  console.log('Documentation generated.');
+})
+
+task('docPublish', ['doc'], function () {
+  console.log('Pushing docs to gh-pages...');
+  exec('./node_modules/.bin/git-directory-deploy --directory out/');
+  console.log('Docs published to gh-pages.');
+});
+
 publishTask('ejs', ['build'], function () {
   this.packageFiles.include([
     'Jakefile',
@@ -43,4 +56,10 @@ publishTask('ejs', ['build'], function () {
     'lib/**',
     'test/**'
   ]);
+});
+
+jake.Task.publish.on('complete', function () {
+  console.log('Updating hosted docs...');
+  console.log('If this fails, run jake docPublish to re-try.');
+  jake.Task.docPublish.invoke();
 });

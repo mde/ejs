@@ -10,6 +10,7 @@
             "error",
             "unix"
         ],
+        "no-trailing-spaces": 2,
         "indent": [
           "error",
           2
