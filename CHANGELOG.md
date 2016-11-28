@@ -1,3 +1,7 @@
+## v2.5.3: 2016-11-28
+
+* Blackist 'root' option from opts-in-data (@mde)
+
 ## v2.5.2: 2016-07-25
 
 + Added link to EJS Playground (@RyanZim)
