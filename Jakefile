@@ -45,6 +45,10 @@ task('docPublish', ['doc'], function () {
   console.log('Docs published to gh-pages.');
 });
 
+task('test', function () {
+  exec('./node_modules/.bin/mocha');
+});
+
 publishTask('ejs', ['build'], function () {
   this.packageFiles.include([
     'Jakefile',
