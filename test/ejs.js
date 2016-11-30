@@ -474,6 +474,11 @@ suite('<%', function () {
 });
 
 suite('<%=', function () {
+  test('should not throw an error with a // comment on the final line', function () {
+    assert.equal(ejs.render('<%=\n// a comment\nname\n// another comment %>', {name: '&nbsp;<script>'}),
+      '&amp;nbsp;&lt;script&gt;');
+  });
+
   test('escape &amp;<script>', function () {
     assert.equal(ejs.render('<%= name %>', {name: '&nbsp;<script>'}),
         '&amp;nbsp;&lt;script&gt;');
@@ -503,6 +508,11 @@ suite('<%=', function () {
 });
 
 suite('<%-', function () {
+  test('should not throw an error with a // comment on the final line', function () {
+    assert.equal(ejs.render('<%-\n// a comment\nname\n// another comment %>', {name: '&nbsp;<script>'}),
+        '&nbsp;<script>');
+  });
+
   test('not escape', function () {
     assert.equal(ejs.render('<%- name %>', {name: '<script>'}),
         '<script>');
