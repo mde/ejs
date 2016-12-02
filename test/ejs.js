@@ -168,6 +168,21 @@ suite('ejs.compile(str, options)', function () {
 
 });
 
+/* Old API -- remove when this shim goes away */
+suite('ejs.render(str, dataAndOpts)', function () {
+  test('render the template with data/opts passed together', function () {
+    assert.equal(ejs.render('<p><?= foo ?></p>', {foo: 'yay', delimiter: '?'}),
+        '<p>yay</p>');
+  });
+
+  test('disallow unsafe opts passed along in data', function () {
+    assert.equal(ejs.render('<p><?= locals.foo ?></p>',
+        // localsName should not get reset because it's blacklisted
+        {_with: false, foo: 'yay', delimiter: '?', localsName: '_'}),
+        '<p>yay</p>');
+  });
+});
+
 suite('ejs.render(str, data, opts)', function () {
   test('render the template', function () {
     assert.equal(ejs.render('<p>yay</p>'), '<p>yay</p>');
@@ -753,7 +768,6 @@ suite('include()', function () {
     var viewsPath = path.join(__dirname, 'fixtures');
     assert.equal(ejs.render(fixture('include-root.ejs'), {pets: users}, {filename: file, delimiter: '@',root:viewsPath}),
       fixture('include.html'));
-
   });
 
   test('work when nested', function () {
@@ -918,7 +932,7 @@ suite('preprocessor include', function () {
     var template = fixture('include_preprocessor_line_slurp.ejs');
     var expected = fixture('include_preprocessor_line_slurp.html');
     var options = {rmWhitespace: true, filename: file};
-    assert.equal(ejs.render(template, options),
+    assert.equal(ejs.render(template, {}, options),
         expected);
   });
 
