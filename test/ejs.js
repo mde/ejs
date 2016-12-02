@@ -982,3 +982,13 @@ suite('examples', function () {
     });
   });
 });
+
+suite('meta information', function () {
+  test('has a version', function () {
+    assert.strictEqual(ejs.VERSION, require('../package.json').version);
+  });
+
+  test('had a name', function () {
+    assert.strictEqual(ejs.name, 'ejs');
+  });
+});
