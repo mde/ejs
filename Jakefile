@@ -45,7 +45,7 @@ task('docPublish', ['doc'], function () {
   console.log('Docs published to gh-pages.');
 });
 
-task('test', function () {
+task('test', ['lint'], function () {
   exec('./node_modules/.bin/mocha');
 });
 
