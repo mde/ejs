@@ -1,3 +1,9 @@
+## v2.5.4: 2016-12-05
+
+* Blackist more options from opts-in-data (@mde)
+* Allow trailing comments in output modes (@mde)
++ Added 'name' attribute for easy identification (@designfrontier)
+
 ## v2.5.3: 2016-11-28
 
 * Blackist 'root' option from opts-in-data (@mde)
