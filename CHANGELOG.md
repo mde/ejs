@@ -1,3 +1,7 @@
+## v2.5.4: 2016-12-06
+
+* Allow 'filename' for opts-in-data, but sanitize when rendered (@mde)
+
 ## v2.5.4: 2016-12-05
 
 * Blackist more options from opts-in-data (@mde)
