@@ -104,6 +104,24 @@ suite('ejs.compile(str, options)', function () {
     delete ejs.delimiter;
   });
 
+  test('support custom escape function', function () {
+    var customEscape;
+    var fn;
+    customEscape = function customEscape(str) {
+      return !str ? '' : str.toUpperCase();
+    };
+    fn = ejs.compile('HELLO <%= name %>', {escape: customEscape});
+    assert.equal(fn({name: 'world'}), 'HELLO WORLD');
+  });
+
+  test('strict mode works', function () {
+    assert.equal(ejs.render(fixture('strict.ejs'), {}, {strict: true}), 'true');
+  });
+
+});
+
+suite('client mode', function () {
+
   test('have a working client option', function () {
     var fn;
     var str;
@@ -137,16 +155,6 @@ suite('ejs.compile(str, options)', function () {
     assert((fn.toString().match(/rethrow/g) || []).length <= 1);
   });
 
-  test('support custom escape function', function () {
-    var customEscape;
-    var fn;
-    customEscape = function customEscape(str) {
-      return !str ? '' : str.toUpperCase();
-    };
-    fn = ejs.compile('HELLO <%= name %>', {escape: customEscape});
-    assert.equal(fn({name: 'world'}), 'HELLO WORLD');
-  });
-
   test('support custom escape function in client mode', function () {
     var customEscape;
     var fn;
@@ -162,10 +170,12 @@ suite('ejs.compile(str, options)', function () {
     }
   });
 
-  test('strict mode works', function () {
-    assert.equal(ejs.render(fixture('strict.ejs'), {}, {strict: true}), 'true');
+  test('escape filename in errors in client mode', function () {
+    assert.throws(function () {
+      var fn = ejs.compile('<% throw new Error("whoops"); %>', {client: true, filename: '<script>'});
+      fn();
+    }, /Error: &lt;script&gt;/);
   });
-
 });
 
 /* Old API -- remove when this shim goes away */
@@ -708,6 +718,22 @@ suite('exceptions', function () {
     });
     ejs.render(fixture('hello-world.ejs'), {}, {debug: true});
   });
+
+  test('escape filename in errors', function () {
+    assert.throws(function () {
+      ejs.render('<% throw new Error("whoops"); %>', {}, {filename: '<script>'});
+    }, /Error: &lt;script&gt;/);
+  });
+
+  test('filename in errors uses custom escape', function () {
+    assert.throws(function () {
+      ejs.render('<% throw new Error("whoops"); %>', {}, {
+        filename: '<script>',
+        escape: function () { return 'zooby'; }
+      });
+    }, /Error: zooby/);
+  });
+
   teardown(function() {
     if (!unhook) {
       return;
