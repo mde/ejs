@@ -1,0 +1,10 @@
+/**
+ * A file read function, similar to fs.readFileSync, this function
+ * can be read a file by path, return a string after processing
+ *
+ * @function
+ * @name fileLoader
+ * @param {String}   path the path of the file to be read
+ * @return {String|Object} the contents of the file as a string or objects that implement the toString() method
+ * @global
+ */

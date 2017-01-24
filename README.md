@@ -164,7 +164,7 @@ of the LRU.
 
 ## Custom FileLoader
 
-The default file loader is `fs.readFileSync`, if you want to customize, You can override the fileLoader method.
+The default file loader is `fs.readFileSync`, if you want to customize it, you can set ejs.fileLoader.
 
 ```javascript
 var ejs = require('ejs');
