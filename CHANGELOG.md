@@ -1,4 +1,10 @@
-## v2.5.4: 2016-12-06
+## v2.5.6: 2016-02-16
+
+ * Use configured escape function for filenames in errors (@mde)
+ + Make file-loader configurable to allow template pre-processing (@hacke2)
+ * Improved `renderFile` performance (@nwoltman)
+
+## v2.5.5: 2016-12-06
 
 * Allow 'filename' for opts-in-data, but sanitize when rendered (@mde)
 
