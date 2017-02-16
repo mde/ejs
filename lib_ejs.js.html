@@ -47,7 +47,7 @@
 'use strict';
 
 /**
- * @file Embedded JavaScript templating engine.
+ * @file Embedded JavaScript templating engine. {@link http://ejs.co}
  * @author Matthew Eernisse &lt;mde@fleegix.org>
  * @author Tiancheng "Timothy" Gu &lt;timothygu99@gmail.com>
  * @project EJS
@@ -84,6 +84,10 @@ var _NAME = 'ejs';
 var _REGEX_STRING = '(&lt;%%|%%>|&lt;%=|&lt;%-|&lt;%_|&lt;%#|&lt;%|%>|-%>|_%>)';
 var _OPTS = ['delimiter', 'scope', 'context', 'debug', 'compileDebug',
   'client', '_with', 'rmWhitespace', 'strict', 'filename'];
+// We don't allow 'cache' option to be passed in the data obj
+// for the normal `render` call, but this is where Express puts it
+// so we make an exception for `renderFile`
+var _OPTS_EXPRESS = _OPTS.concat('cache');
 var _BOM = /^\uFEFF/;
 
 /**
@@ -95,6 +99,15 @@ var _BOM = /^\uFEFF/;
  */
 
 exports.cache = utils.cache;
+
+/**
+ * Custom file loader. Useful for template preprocessing or restricting access
+ * to a certain part of the filesystem.
+ *
+ * @type {fileLoader}
+ */
+
+exports.fileLoader = fs.readFileSync;
 
 /**
  * Name of the object containing the locals.
@@ -182,7 +195,7 @@ function handleCache(options, template) {
       return func;
     }
     if (!hasTemplate) {
-      template = fs.readFileSync(filename).toString().replace(_BOM, '');
+      template = fileLoader(filename).toString().replace(_BOM, '');
     }
   }
   else if (!hasTemplate) {
@@ -191,13 +204,48 @@ function handleCache(options, template) {
       throw new Error('Internal EJS error: no file name or template '
                     + 'provided');
     }
-    template = fs.readFileSync(filename).toString().replace(_BOM, '');
+    template = fileLoader(filename).toString().replace(_BOM, '');
   }
   func = exports.compile(template, options);
   if (options.cache) {
     exports.cache.set(filename, func);
   }
   return func;
+}
+
+/**
+ * Try calling handleCache with the given options and data and call the
+ * callback with the result. If an error occurs, call the callback with
+ * the error. Used by renderFile().
+ *
+ * @memberof module:ejs-internal
+ * @param {Options} options    compilation options
+ * @param {Object} data        template data
+ * @param {RenderFileCallback} cb callback
+ * @static
+ */
+
+function tryHandleCache(options, data, cb) {
+  var result;
+  try {
+    result = handleCache(options)(data);
+  }
+  catch (err) {
+    return cb(err);
+  }
+  return cb(null, result);
+}
+
+/**
+ * fileLoader is independent
+ *
+ * @param {String} filePath ejs file path.
+ * @return {String} The contents of the specified file.
+ * @static
+ */
+
+function fileLoader(filePath){
+  return exports.fileLoader(filePath);
 }
 
 /**
@@ -233,8 +281,8 @@ function includeSource(path, options) {
   var opts = utils.shallowCopy({}, options);
   var includePath;
   var template;
-  includePath = getIncludePath(path,opts);
-  template = fs.readFileSync(includePath).toString().replace(_BOM, '');
+  includePath = getIncludePath(path, opts);
+  template = fileLoader(includePath).toString().replace(_BOM, '');
   opts.filename = includePath;
   var templ = new Template(template, opts);
   templ.generateSource();
@@ -258,11 +306,11 @@ function includeSource(path, options) {
  * @static
  */
 
-function rethrow(err, str, flnm, lineno){
+function rethrow(err, str, flnm, lineno, esc){
   var lines = str.split('\n');
   var start = Math.max(lineno - 3, 0);
   var end = Math.min(lines.length, lineno + 3);
-  var filename = utils.escapeXML(flnm);
+  var filename = esc(flnm); // eslint-disable-line
   // Error context
   var context = lines.slice(start, end).map(function (line, i){
     var curr = i + start + 1;
@@ -282,7 +330,7 @@ function rethrow(err, str, flnm, lineno){
   throw err;
 }
 
-function stripSemi(str) {
+function stripSemi(str){
   return str.replace(/;(\s*$)/, '$1');
 }
 
@@ -358,43 +406,38 @@ exports.render = function (template, d, o) {
  */
 
 exports.renderFile = function () {
-  var args = Array.prototype.slice.call(arguments);
-  var filename = args.shift();
-  var cb = args.pop();
-  var data = args.shift() || {};
-  var opts = args.pop() || {};
-  var optsKeys =_OPTS.slice();
-  var result;
+  var filename = arguments[0];
+  var cb = arguments[arguments.length - 1];
+  var opts = {filename: filename};
+  var data;
 
-  // Don't pollute passed in opts obj with new vals
-  opts = utils.shallowCopy({}, opts);
+  if (arguments.length > 2) {
+    data = arguments[1];
 
-  // We don't allow 'cache' option to be passed in the data obj
-  // for the normal `render` call, but this is where Expres puts it
-  // so we make an exception for `renderFile`
-  optsKeys.push('cache');
-
-  // No options object -- if there are optiony names
-  // in the data, copy them to options
-  if (arguments.length == 3) {
-    // Express 4
-    if (data.settings &amp;&amp; data.settings['view options']) {
-      utils.shallowCopyFromList(opts, data.settings['view options'], optsKeys);
+    // No options object -- if there are optiony names
+    // in the data, copy them to options
+    if (arguments.length === 3) {
+      // Express 4
+      if (data.settings &amp;&amp; data.settings['view options']) {
+        utils.shallowCopyFromList(opts, data.settings['view options'], _OPTS_EXPRESS);
+      }
+      // Express 3 and lower
+      else {
+        utils.shallowCopyFromList(opts, data, _OPTS_EXPRESS);
+      }
     }
-    // Express 3 and lower
     else {
-      utils.shallowCopyFromList(opts, data, optsKeys);
+      // Use shallowCopy so we don't pollute passed in opts obj with new vals
+      utils.shallowCopy(opts, arguments[2]);
     }
-  }
-  opts.filename = filename;
 
-  try {
-    result = handleCache(opts)(data);
+    opts.filename = filename;
   }
-  catch(err) {
-    return cb(err);
+  else {
+    data = {};
   }
-  return cb(null, result);
+
+  return tryHandleCache(opts, data, cb);
 };
 
 /**
@@ -462,7 +505,7 @@ Template.prototype = {
     var opts = this.opts;
     var prepended = '';
     var appended = '';
-    var escape = opts.escapeFunction;
+    var escapeFn = opts.escapeFunction;
 
     if (!this.source) {
       this.generateSource();
@@ -483,7 +526,7 @@ Template.prototype = {
           + 'try {' + '\n'
           + this.source
           + '} catch (e) {' + '\n'
-          + '  rethrow(e, __lines, __filename, __line);' + '\n'
+          + '  rethrow(e, __lines, __filename, __line, escapeFn);' + '\n'
           + '}' + '\n';
     }
     else {
@@ -495,7 +538,7 @@ Template.prototype = {
     }
 
     if (opts.client) {
-      src = 'escape = escape || ' + escape.toString() + ';' + '\n' + src;
+      src = 'escapeFn = escapeFn || ' + escapeFn.toString() + ';' + '\n' + src;
       if (opts.compileDebug) {
         src = 'rethrow = rethrow || ' + rethrow.toString() + ';' + '\n' + src;
       }
@@ -506,7 +549,7 @@ Template.prototype = {
     }
 
     try {
-      fn = new Function(opts.localsName + ', escape, include, rethrow', src);
+      fn = new Function(opts.localsName + ', escapeFn, include, rethrow', src);
     }
     catch(e) {
       // istanbul ignore else
@@ -537,7 +580,7 @@ Template.prototype = {
         }
         return includeFile(path, opts)(d);
       };
-      return fn.apply(opts.context, [data || {}, escape, include, rethrow]);
+      return fn.apply(opts.context, [data || {}, escapeFn, include, rethrow]);
     };
     returnedFn.dependencies = this.dependencies;
     return returnedFn;
@@ -732,7 +775,7 @@ Template.prototype = {
           break;
             // Exec, esc, and output
         case Template.modes.ESCAPED:
-          this.source += '    ; __append(escape(' + stripSemi(line) + '))' + '\n';
+          this.source += '    ; __append(escapeFn(' + stripSemi(line) + '))' + '\n';
           break;
             // Exec and output
         case Template.modes.RAW:
@@ -794,7 +837,7 @@ if (require.extensions) {
       filename: filename,
       client: true
     };
-    var template = fs.readFileSync(filename).toString();
+    var template = fileLoader(filename).toString();
     var fn = exports.compile(template, options);
     module._compile('module.exports = ' + fn.toString() + ';', filename);
   };
@@ -834,13 +877,13 @@ if (typeof window != 'undefined') {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-ejs.html">ejs</a></li></ul><h3>Interfaces</h3><ul><li><a href="Cache.html">Cache</a></li></ul><h3><a href="global.html">Global</a></h3>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-ejs.html">ejs</a></li></ul><h3>Interfaces</h3><ul><li><a href="Cache.html">Cache</a></li></ul><h3>Global</h3><ul><li><a href="global.html#fileLoader">fileLoader</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Tue Dec 06 2016 00:05:39 GMT-0800 (PST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Thu Feb 16 2017 12:43:07 GMT-0800 (PST)
 </footer>
 
 <script> prettyPrint(); </script>
