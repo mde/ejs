@@ -21,3 +21,4 @@ coverage/
 /ejs.js
 /ejs.min.js
 out/
+pkg/
