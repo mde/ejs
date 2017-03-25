@@ -1,4 +1,6 @@
-# If you add anything here, consider also adding to .npmignore
+test/
+
+# Copied from .gitignore
 v8.log
 *.swp
 *.swo
@@ -8,7 +10,6 @@ dist
 tags
 nbproject/
 spec/browser/autogen_suite.js
-node_modules
 tmtags
 *.DS_Store
 examples/*/log/*
@@ -16,9 +17,6 @@ site/log/*
 .log
 npm-debug.log
 doc/
-test/tmp
 coverage/
-/ejs.js
-/ejs.min.js
 out/
 pkg/
