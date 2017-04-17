@@ -1021,12 +1021,10 @@ suite('test blocks', function () {
   });
 
   test('test blocks with strict mode', function (done) {
-    ejs.renderFile('test/fixtures/layout-strict3.ejs', 
-    {
+    ejs.renderFile('test/fixtures/layout-strict3.ejs', {
       opinion: 'good',
-    },
-    {
-      strict: true, 
+    }, {
+      strict: true,
       blocks: true
     },
     function(err, html) {
@@ -1039,16 +1037,16 @@ suite('test blocks', function () {
   });
 
   test('test blocks for client', function () {
-    
+
     var filename = path.join(__dirname, 'fixtures', 'layout.ejs');
-    
+
     var include = function(p, d){
       var fn = ejs.compile(
         fs.readFileSync(
-          fs.existsSync(path.join(__dirname, 'fixtures', p + '.ejs')) ? 
+          fs.existsSync(path.join(__dirname, 'fixtures', p + '.ejs')) ?
             path.join(__dirname, 'fixtures', p + '.ejs'):
             path.join(__dirname, 'fixtures', p),
-          'utf-8'), 
+          'utf-8'),
         {
           client: true,
           blocks: true,
