@@ -1,0 +1,10 @@
+<% var header = block(function() { %>
+<title>Hello <%= name.toUpperCase() %></title>
+<% }) -%>
+<% var body = block(function() { %>
+<%- include('./include.css') %>
+<div>
+  it's a small <%= name.toLowerCase() %>
+</div>
+<% }) -%>
+<%- include('./layout', {body, header}) %>

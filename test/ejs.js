@@ -1006,6 +1006,34 @@ suite('require', function () {
   });
 });
 
+
+suite('test layout', function () {
+
+  test('test layout for client', function () {
+    var file = 'test/fixtures/include.css.ejs';
+    
+
+    var fn = ejs.compile(fs.readFileSync('test/fixtures/layout-usage.ejs', 'utf-8'), {client: true, filename: file});
+    
+    var html = fn({name: 'World'}, null, function(p, d){
+      return ejs.render(fs.readFileSync(path.join(__dirname, 'fixtures', p + '.ejs'), 'utf-8'), d, {filename: file});
+    });
+    assert.equal(html, fs.readFileSync('test/fixtures/layout-usage.html', 'utf-8'));
+  });
+
+  test('test layout with defaults', function (done) {
+    ejs.renderFile('test/fixtures/layout-usage-default.ejs', function(err, html) {
+      if (err) {
+        return done(err);
+      }
+      assert.equal(html, fs.readFileSync('test/fixtures/layout-usage-default.html', 'utf-8'));
+      done();
+    });
+  });
+
+});
+
+
 suite('test fileloader', function () {
 
   var myFileLoad = function (filePath) {
