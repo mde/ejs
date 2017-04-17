@@ -1007,11 +1007,11 @@ suite('require', function () {
 });
 
 
-suite('test layout', function () {
+suite('test blocks', function () {
 
 
-  test('test layout with defaults', function (done) {
-    ejs.renderFile('test/fixtures/layout-usage-default.ejs', function(err, html) {
+  test('test blocks with defaults', function (done) {
+    ejs.renderFile('test/fixtures/layout-usage-default.ejs', {}, {blocks: true}, function(err, html) {
       if (err) {
         return done(err);
       }
@@ -1020,14 +1020,14 @@ suite('test layout', function () {
     });
   });
 
-  test('test layout with strict mode', function (done) {
+  test('test blocks with strict mode', function (done) {
     ejs.renderFile('test/fixtures/layout-strict3.ejs', 
     {
       opinion: 'good',
     },
     {
       strict: true, 
-      _with: false
+      blocks: true
     },
     function(err, html) {
       if (err) {
@@ -1038,7 +1038,7 @@ suite('test layout', function () {
     });
   });
 
-  test('test layout for client', function () {
+  test('test blocks for client', function () {
     
     var filename = path.join(__dirname, 'fixtures', 'layout.ejs');
     
@@ -1051,6 +1051,7 @@ suite('test layout', function () {
           'utf-8'), 
         {
           client: true,
+          blocks: true,
           filename: filename
         });
       return fn(d, null, include);
