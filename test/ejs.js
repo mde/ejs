@@ -1009,17 +1009,6 @@ suite('require', function () {
 
 suite('test layout', function () {
 
-  test('test layout for client', function () {
-    var file = 'test/fixtures/include.css.ejs';
-    
-
-    var fn = ejs.compile(fs.readFileSync('test/fixtures/layout-usage.ejs', 'utf-8'), {client: true, filename: file});
-    
-    var html = fn({name: 'World'}, null, function(p, d){
-      return ejs.render(fs.readFileSync(path.join(__dirname, 'fixtures', p + '.ejs'), 'utf-8'), d, {filename: file});
-    });
-    assert.equal(html, fs.readFileSync('test/fixtures/layout-usage.html', 'utf-8'));
-  });
 
   test('test layout with defaults', function (done) {
     ejs.renderFile('test/fixtures/layout-usage-default.ejs', function(err, html) {
@@ -1031,6 +1020,45 @@ suite('test layout', function () {
     });
   });
 
+  test('test layout with strict mode', function (done) {
+    ejs.renderFile('test/fixtures/layout-strict3.ejs', 
+    {
+      opinion: 'good',
+    },
+    {
+      strict: true, 
+      _with: false
+    },
+    function(err, html) {
+      if (err) {
+        return done(err);
+      }
+      assert.equal(html, fs.readFileSync(path.join(__dirname, 'fixtures/layout-strict3.html'), 'utf-8'));
+      done();
+    });
+  });
+
+  test('test layout for client', function () {
+    
+    var filename = path.join(__dirname, 'fixtures', 'layout.ejs');
+    
+    var include = function(p, d){
+      var fn = ejs.compile(
+        fs.readFileSync(
+          fs.existsSync(path.join(__dirname, 'fixtures', p + '.ejs')) ? 
+            path.join(__dirname, 'fixtures', p + '.ejs'):
+            path.join(__dirname, 'fixtures', p),
+          'utf-8'), 
+        {
+          client: true,
+          filename: filename
+        });
+      return fn(d, null, include);
+    };
+
+    var html = include('./layout-usage', {name: 'World'});
+    assert.equal(html, fs.readFileSync('test/fixtures/layout-usage.html', 'utf-8'));
+  });
 });
 
 

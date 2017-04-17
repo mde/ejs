@@ -1,0 +1,11 @@
+<html>
+    <head>
+        <% if (!blocks(locals.header)) { %>
+            <title>default title</title>
+        <% } %>
+    </head>
+    <body>
+        <h1>This is a layout</h1>
+        <% if (!blocks(locals.body)){ throw new Error('body block is required'); } %>
+    </body>
+</html>

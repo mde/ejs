@@ -1,0 +1,8 @@
+<% var header = block(function() { %>
+<title><%= locals.title%></title>
+<% }) -%>
+<% var body = block(function() { %>
+<h2><%= locals.title %></h2>
+<div><%- locals.body %></div>
+<% }) -%>
+<%- include('./layout-strict1', {"body": body, "header": header}) %>
