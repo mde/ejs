@@ -14,9 +14,6 @@ var data = {
   ]
 };
 
-var ret = ejs.compile(read(path, 'utf8'), {
-    filename: path,
-    outputFunctionName: 'echo'
-})(data);
+var ret = ejs.compile(read(path, 'utf8'), {filename: path})(data);
 
 console.log(ret);
