@@ -1,3 +1,10 @@
-<p>
-  <strong><%= echo(name) %></strong> is a <%= echo(age) %> year old <% echo(species) %>.
-</p>
+<ul>
+<%
+    users.forEach(function (user) {
+        echo('<li>');
+            echo('<strong>' + user.name + '</strong>');
+            echo('is a ' + user.age + ' year old ' + user.species);
+        echo('</li>\n');
+    });
+-%>
+</ul>
