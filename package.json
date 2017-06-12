@@ -27,7 +27,7 @@
     "istanbul": "~0.4.3",
     "jake": "^8.0.0",
     "jsdoc": "^3.4.0",
-    "lru-cache": "^4.0.1",
+    "lru-cache": "^4.1.0",
     "mocha": "^3.0.2",
     "uglify-js": "^2.6.2"
   },
