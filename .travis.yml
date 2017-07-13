@@ -5,6 +5,4 @@ node_js:
   - "0.12"
   - "4"
   - "6"
-before_install:
-  - npm update -g npm
-  - npm --version
+  - "8"
