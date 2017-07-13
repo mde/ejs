@@ -1,0 +1,9 @@
+<ul>
+  <%* define foo.mix %>
+     got foo
+  <%* /define %>
+  <%- include('includes/mixin-inc'); %>
+  <%- include('/foo.mix'); %>
+  <%- include('/foo.mix'); %>
+  <%- include('/bar.mix'); %>
+</ul>
