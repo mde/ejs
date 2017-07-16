@@ -289,6 +289,61 @@ suite('ejs.render(str, data, opts)', function () {
     var out = ejs.render('<%= this.foo %>', {}, {context: ctxt});
     assert.equal(out, ctxt.foo);
   });
+
+  test('support express multiple views folders, falls back to second if first is not available', function (done) {
+    var data = {
+      viewsText: 'test',
+      settings: {
+        views: [
+          path.join(__dirname, 'fixtures/nonexistent-folder'),
+          path.join(__dirname, 'fixtures')
+        ]
+      }
+    };
+    ejs.renderFile(path.join(__dirname, 'fixtures/views.ejs'), data, {}, function(error, data){
+      assert.ifError(error);
+      assert.equal('<div><p>global test</p>\n</div>\n', data);
+      done();
+    });
+
+  });
+
+  test('support express multiple views folders, also in old format', function (done) {
+    var data = {
+      viewsText: 'test',
+      settings: {
+        views: [
+          path.join(__dirname, 'fixtures/views'),
+          path.join(__dirname, 'fixtures')
+        ]
+      }
+    };
+    ejs.renderFile(path.join(__dirname, 'fixtures/views-old.ejs'), data, {}, function(error, data){
+      assert.ifError(error);
+      assert.equal('<div><p>custom test</p>\n</div>\n', data);
+      done();
+    });
+
+  });
+
+  test('support express multiple views folders, uses fallback also in old format', function (done) {
+    var data = {
+      viewsText: 'test',
+      settings: {
+        views: [
+          path.join(__dirname, 'fixtures/nonexistent-folder'),
+          path.join(__dirname, 'fixtures')
+        ]
+      }
+    };
+    ejs.renderFile(path.join(__dirname, 'fixtures/views-old.ejs'), data, {}, function(error, data){
+      assert.ifError(error);
+      assert.equal('<div><p>global test</p>\n</div>\n', data);
+      done();
+    });
+
+  });
+
 });
 
 suite('ejs.renderFile(path, [data], [options], fn)', function () {
@@ -762,7 +817,7 @@ suite('include()', function () {
       ejs.render(fixture('include-simple.ejs'));
     }
     catch (err) {
-      assert.ok(err.message.indexOf('requires the \'filename\' option') > -1);
+      assert.ok(err.message.indexOf('a valid \'filename\'') > -1);
       return;
     }
     throw new Error('expected inclusion error');
@@ -890,7 +945,7 @@ suite('preprocessor include', function () {
       ejs.render(fixture('include_preprocessor.ejs'), {pets: users}, {delimiter: '@'});
     }
     catch (err) {
-      assert.ok(err.message.indexOf('requires the \'filename\' option') > -1);
+      assert.ok(err.message.indexOf('a valid \'filename\'') > -1);
       return;
     }
     throw new Error('expected inclusion error');
