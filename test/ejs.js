@@ -734,6 +734,10 @@ suite('%%>', function () {
     assert.equal(ejs.render('  >', {}, {delimiter: ' '}),
         ' >');
   });
+  test('produce literal even with extra %> closing tag', function () {
+    assert.equal(ejs.render('%%> %>'),
+        '%> %>');
+  });
 });
 
 suite('<%_ and _%>', function () {
