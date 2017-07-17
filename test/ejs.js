@@ -630,6 +630,29 @@ suite('<%-', function () {
   });
 });
 
+suite('ignore additional closing tags', function () {
+  test('only %>', function () {
+    assert.equal(ejs.render('foo %>'),
+      'foo ');
+  });
+  test('only -%> (slurps newline)', function () {
+    assert.equal(ejs.render('foo -%>\n\n'),
+      'foo \n');
+  });
+  test('only -%> (slurps newline)', function () {
+    assert.equal(ejs.render('foo -%>\n\n'),
+      'foo \n');
+  });
+  test('only _%> (slurps spaces)', function () {
+    assert.equal(ejs.render('foo _%>  '),
+      'foo ');
+  });
+  test('mixed %>', function () {
+    assert.equal(ejs.render('foo %> <%= "bar" %> %>%>_%>'),
+      'foo  bar ');
+  });
+});
+
 suite('%>', function () {
   test('produce newlines', function () {
     assert.equal(ejs.render(fixture('newlines.ejs'), {users: users}),
