@@ -8,3 +8,11 @@
     });
 -%>
 </ul>
+
+<ul>
+<%
+    users.forEach(function (user) {
+        echo(include('./partial.ejs', {user: user}));
+    });
+%>
+</ul>
