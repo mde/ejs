@@ -6,7 +6,7 @@
  */
 
 var ejs = require('..');
-ejs.enableMixin();
+ejs.enableSnippets();
 var fs = require('fs');
 var read = fs.readFileSync;
 var assert = require('assert');
@@ -53,11 +53,11 @@ users.push({name: 'geddy'});
 users.push({name: 'neil'});
 users.push({name: 'alex'});
 
-suite('ejs.mixin', function () {
+suite('ejs.snippet', function () {
 
   test('work when nested', function () {
-    var file = 'test/fixtures/mixin.ejs';
-    ejs.render(fixture('mixin.ejs'), {pets: users}, {filename: file, cache:true,}),        fixture('mixin.html');
+    var file = 'test/fixtures/snippet.ejs';
+    assert.equal(ejs.render(fixture('snippet.ejs'), {pets: users}, {filename: file, cache:true,}),        fixture('snippet.html'));
   });
   
 });
