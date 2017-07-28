@@ -16,7 +16,9 @@ $ npm install ejs
 
   * Control flow with `<% %>`
   * Escaped output with `<%= %>` (escape function configurable)
+  * Escaped output, stripping all whitespace before it with `<%=_ %>` (escape function configurable)
   * Unescaped raw output with `<%- %>`
+  * Unescaped raw output, stripping all whitespace before it with`<%-_ %>`
   * Newline-trim mode ('newline slurping') with `-%>` ending tag
   * Whitespace-trim mode (slurp all whitespace) for control flow with `<%_ _%>`
   * Custom delimiters (e.g., use `<? ?>` instead of `<% %>`)
@@ -90,7 +92,9 @@ the both the public & private API docs, run `npm run devdoc` instead.
   - `<%`              'Scriptlet' tag, for control-flow, no output
   - `<%_`             'Whitespace Slurping' Scriptlet tag, strips all whitespace before it
   - `<%=`             Outputs the value into the template (escaped)
+  - `<%=_`            Outputs the value into the template (escaped), strips all whitespace before it
   - `<%-`             Outputs the unescaped value into the template
+  - `<%-_`            Outputs the unescaped value into the template, strips all whitespace before it
   - `<%#`             Comment tag, no execution, no output
   - `<%%`             Outputs a literal '<%'
   - `%%>`             Outputs a literal '%>'
