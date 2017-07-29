@@ -97,7 +97,7 @@ function fill(s, l) { s=String(s); return s + sp.slice(0,l-s.length); }
 function fillR(s, l) { s=String(s); return sp.slice(0,l-s.length)+s; }
 
 function log(name, runTimes, totalLoops) {
-  runTimes = runTimes.sort();
+  runTimes = runTimes.sort(function(a,b) { return a-b; });
   var m  = Math.trunc(runs/2);
   var m2 = (runs % 2 == 0) ? m-1 : m;
   var med1 = Math.round((runTimes[m]+runTimes[m2])/2);
