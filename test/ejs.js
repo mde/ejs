@@ -628,7 +628,7 @@ suite('<%-', function () {
       assert.ok(err.message.indexOf('Could not find matching close tag for') > -1);
     }
   });
-  
+
   test('terminate gracefully if no close tag is found (double open)', function () {
     try {
       ejs.compile('<h1>oops</h1><%- <%= name -%>');
