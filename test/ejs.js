@@ -628,6 +628,50 @@ suite('<%-', function () {
       assert.ok(err.message.indexOf('Could not find matching close tag for') > -1);
     }
   });
+
+  test('terminate gracefully if no close tag is found (double open)', function () {
+    try {
+      ejs.compile('<h1>oops</h1><%- <%= name -%>');
+      throw new Error('Expected parse failure');
+    }
+    catch (err) {
+      assert.ok(err.message.indexOf('Could not find matching close tag for "<%-') > -1);
+    }
+  });
+
+  test('terminate gracefully if no close tag is found (incorrect nesting)', function () {
+    try {
+      ejs.compile('<h1>oops</h1><%- <%= name -%> %>');
+      throw new Error('Expected parse failure');
+    }
+    catch (err) {
+      assert.ok(err.message.indexOf('Could not find matching close tag for "<%-') > -1);
+    }
+  });
+
+});
+
+suite('ignore additional closing tags', function () {
+  test('only %>', function () {
+    assert.equal(ejs.render('foo %>'),
+      'foo ');
+  });
+  test('only -%> (slurps newline)', function () {
+    assert.equal(ejs.render('foo -%>\n\n'),
+      'foo \n');
+  });
+  test('only -%> (slurps newline)', function () {
+    assert.equal(ejs.render('foo -%>\n\n'),
+      'foo \n');
+  });
+  test('only _%> (slurps spaces)', function () {
+    assert.equal(ejs.render('foo _%>  '),
+      'foo ');
+  });
+  test('mixed %>', function () {
+    assert.equal(ejs.render('foo %> <%= "bar" %> %>%>_%>'),
+      'foo  bar ');
+  });
 });
 
 suite('%>', function () {
@@ -710,6 +754,10 @@ suite('%%>', function () {
         '%>');
     assert.equal(ejs.render('  >', {}, {delimiter: ' '}),
         ' >');
+  });
+  test('produce literal even with extra %> closing tag', function () {
+    assert.equal(ejs.render('%%> %>'),
+        '%> %>');
   });
 });
 
