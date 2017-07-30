@@ -35,7 +35,7 @@
     "node": ">=0.10.0"
   },
   "scripts": {
-    "test": "mocha",
+    "test": "jake test",
     "lint": "eslint \"**/*.js\" Jakefile",
     "coverage": "istanbul cover node_modules/mocha/bin/_mocha",
     "doc": "jake doc",
