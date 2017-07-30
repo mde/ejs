@@ -833,6 +833,18 @@ suite('include()', function () {
         fixture('include-simple.html'));
   });
 
+  test('include and escape ejs', function () {
+    var file = 'test/fixtures/include-escaped.ejs';
+    assert.equal(ejs.render(fixture('include-escaped.ejs'), {}, {filename: file}),
+        fixture('include-escaped.html'));
+  });
+
+  test('include in expression ejs', function () {
+    var file = 'test/fixtures/include-expression.ejs';
+    assert.equal(ejs.render(fixture('include-expression.ejs'), {}, {filename: file}),
+        fixture('include-expression.html'));
+  });
+
   test('include ejs fails without `filename`', function () {
     try {
       ejs.render(fixture('include-simple.ejs'));
