@@ -618,16 +618,6 @@ suite('<%-', function () {
     assert.equal(ejs.render('<%- name %>', {name: '<script>'}),
         '<script>');
   });
-
-  test('terminate gracefully if no close tag is found', function () {
-    try {
-      ejs.compile('<h1>oops</h1><%- name ->');
-      throw new Error('Expected parse failure');
-    }
-    catch (err) {
-      assert.ok(err.message.indexOf('Could not find matching close tag for') > -1);
-    }
-  });
 });
 
 suite('%>', function () {
@@ -694,7 +684,7 @@ suite('-%>', function () {
 
 suite('<%%', function () {
   test('produce literals', function () {
-    assert.equal(ejs.render('<%%- "foo" %>'),
+    assert.equal(ejs.render('<%%- "foo" %%>'),
       '<%- "foo" %>');
   });
   test('work without an end tag', function () {
@@ -717,6 +707,58 @@ suite('<%_ and _%>', function () {
   test('slurps spaces and tabs', function () {
     assert.equal(ejs.render(fixture('space-and-tab-slurp.ejs'), {users: users}),
       fixture('space-and-tab-slurp.html'));
+  });
+});
+
+suite('<% %> must be in pairs', function () {
+  test('throws if no open tag is found', function () {
+    try {
+      ejs.compile('<h1>oops</h1><- name -%>');
+      throw new Error('Expected parse failure');
+    }
+    catch (err) {
+      assert.ok(err.message.indexOf('Found close tag "-%>" without matching opening tag.') > -1);
+    }
+  });
+
+  test('throws if no open tag is found (literal open tag does not affect this)', function () {
+    try {
+      ejs.compile('<h1>oops</h1><%% name -%>');
+      throw new Error('Expected parse failure');
+    }
+    catch (err) {
+      assert.ok(err.message.indexOf('Found close tag "-%>" without matching opening tag.') > -1);
+    }
+  });
+
+  test('throws if no close tag is found', function () {
+    try {
+      ejs.compile('<h1>oops</h1><%- name ->');
+      throw new Error('Expected parse failure');
+    }
+    catch (err) {
+      assert.ok(err.message.indexOf('Could not find matching close tag for "<%-"') > -1);
+    }
+  });
+
+  test('throws if no close tag is found (literal close has no effect)', function () {
+    try {
+      ejs.compile('<h1>oops</h1><%- name %%>');
+      throw new Error('Expected parse failure');
+    }
+    catch (err) {
+      assert.ok(err.message.indexOf('Could not find matching close tag for "<%-"') > -1);
+    }
+  });
+
+  test('throws if no close tag is found (literal before the unmatched open does not affect this)', function () {
+    try {
+      ejs.compile('<h1>oops</h1><%% <%- name %%>');
+      throw new Error('Expected parse failure');
+    }
+    catch (err) {
+      assert.ok(err.message.indexOf('Could not find matching close tag for "<%-"') > -1);
+    }
   });
 });
 
