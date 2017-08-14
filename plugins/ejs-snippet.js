@@ -6,7 +6,7 @@ var EjsTemplate = ejs.Template;
 
 function SnippetTemplate(text, opts) {
   EjsTemplate.call(this, text, opts);
-  this.__snippetsKnown = {};
+  this.__pluginSnippetsKnown = {};
 }
 
 SnippetTemplate.prototype = Object.create(EjsTemplate.prototype);
@@ -23,11 +23,11 @@ SnippetTemplate.prototype.getModeMap = function () {
 };
 
 SnippetTemplate.prototype.scanTextLine = function (line) {
-  if (! this.__snippetParsingDefine) {
+  if (! this.__pluginSnippetParsingDefine) {
     // not in snippet parsing mode
     return EjsTemplate.prototype.scanTextLine.apply(this, arguments);
   }
-  this.__snippetParsingSource += line;
+  this.__pluginSnippetParsingSource += line;
 };
 
 SnippetTemplate.prototype.scanTagLine = function (openTag, line, closeTag) {
@@ -35,38 +35,38 @@ SnippetTemplate.prototype.scanTagLine = function (openTag, line, closeTag) {
   var mode = this.modeMap[openTag];
   if(mode == ejs.modes.CONTROL && (name = line.match(/^\s*snippet\s+(\S+)\s*$/))) {
     // found a new "<%* snippet" section
-    this.__snippetParsingDefine = true;
+    this.__pluginSnippetParsingDefine = true;
     name = name [1];
-    this.__snippetParsingName = name;
-    this.__snippetParsingSource = '';
+    this.__pluginSnippetParsingName = name;
+    this.__pluginSnippetParsingSource = '';
     return;
   }
-  if (! this.__snippetParsingDefine) {
+  if (! this.__pluginSnippetParsingDefine) {
     // not in snippet parsing mode
     return EjsTemplate.prototype.scanTagLine.apply(this, arguments);
   }
 
   if(mode == ejs.modes.CONTROL && line.match(/^\s*\/snippet\s*$/)) {
     // found closing "<% /snippet"
-    this.__snippetParsingDefine = undefined;
+    this.__pluginSnippetParsingDefine = undefined;
 
     // source contains the "<%" of the section closing tag
-//    var func = ejs.compile(this.__snippetParsingSource.replace(/<.$/, ''), this.opts);
-    var func = ejs.compile(this.__snippetParsingSource, this.opts);
-    this.__snippetsKnown[this.__snippetParsingName] = func;
+//    var func = ejs.compile(this.__pluginSnippetParsingSource.replace(/<.$/, ''), this.opts);
+    var func = ejs.compile(this.__pluginSnippetParsingSource, this.opts);
+    this.__pluginSnippetsKnown[this.__pluginSnippetParsingName] = func;
     return;
   }
 
   // add to snippet source
-  this.__snippetParsingSource += '<'+this.opts.delimiter+openTag + line + closeTag+this.opts.delimiter+'>';
+  this.__pluginSnippetParsingSource += '<'+this.opts.delimiter+openTag + line + closeTag+this.opts.delimiter+'>';
 };
 
-/* __snippetReplace
+/* __pluginSnippetReplace
   will be called from inside the template "<%- snippet('foo') %>", to insert code from a snippet
   - this and snippet are bound
   - name and data are supplied by the code in the template
 */
-SnippetTemplate.prototype.__snippetReplace = function (snippets, name, data) {
+SnippetTemplate.prototype.__pluginSnippetReplace = function (snippets, name, data) {
   var opts = this.opts;
   var sn = snippets[name];
   if (! sn) {
@@ -81,10 +81,10 @@ SnippetTemplate.prototype.__snippetReplace = function (snippets, name, data) {
   return sn.code.call(opts.context, data, sn.callerFnArgs);
 };
 
-/* __snippetPrepare
+/* __pluginSnippetPrepare
  * create snippets, associated with data from current call to template
  */
-SnippetTemplate.prototype.__snippetPrepare = function (snippets, data, callerFnArgs) {
+SnippetTemplate.prototype.__pluginSnippetPrepare = function (snippets, data, callerFnArgs) {
   var r = {};
   Object.keys(snippets).map(function(k) {
     var s = snippets[k];
@@ -104,7 +104,7 @@ SnippetTemplate.prototype.compile = function () {
   var newFn = function (data, callerFnArgs) {
     if (callerFnArgs && callerFnArgs.snippet) {
       var d = utils.shallowCopy({}, data);
-      var snippedData = self.__snippetPrepare(self.__snippetsKnown, d, callerFnArgs);
+      var snippedData = self.__pluginSnippetPrepare(self.__pluginSnippetsKnown, d, callerFnArgs);
       // add snippets to existing data
       utils.shallowCopy(callerFnArgs.snippet.snippedData, snippedData);
     }
@@ -132,8 +132,8 @@ SnippetTemplate.prototype.generateArguments = function (data, opts, ejsArgs, cal
   if (! snippetFn) {
     // top level template, create "snippet" function
     var d = utils.shallowCopy({}, data);
-    var snippedData = this.__snippetPrepare(this.__snippetsKnown, d, callerFnArgs);
-    snippetFn = this.__snippetReplace.bind(this, snippedData);
+    var snippedData = this.__pluginSnippetPrepare(this.__pluginSnippetsKnown, d, callerFnArgs);
+    snippetFn = this.__pluginSnippetReplace.bind(this, snippedData);
     snippetFn.snippedData = snippedData;
     callerFnArgs.snippet = snippetFn;
   }
