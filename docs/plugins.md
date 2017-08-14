@@ -31,11 +31,11 @@ to handle includes.
 
 A plug-in will create an inherited class, and replace the original.
 
-```var ejs = require('ejs');
+```
+var ejs = require('ejs');
 function SnippetClass(text, opts) { /* ... */ }
 SnippetClass.prototype = Object.create(ejs.Template.prototype);
 ejs.Template = SnippetClass;
-
 ```
 
 A plug-in must not assume that ejs.Template will keep the new value.
@@ -83,7 +83,8 @@ any method.
 
 Plug-in must obey `opts.client`
 
-```var ejs = require('ejs');
+```
+var ejs = require('ejs');
 var EjsTemplate = ejs.Template;
 //....
 function XXX () {
@@ -138,7 +139,8 @@ A plug-in can use this to pass additinal data to the wrapper function
 (and generateArguments) of an included template (or any template somehow
 used by the main template).
 
-```function compile() {
+```
+function compile() {
   // get the wrapper
   var fn = EjsTemplate.prototype.compile.apply(this, arguments);
   
@@ -164,7 +166,8 @@ then the closure will see any modifications made by generateArguments.
 
 This way a wrapper can define its own extended include
 
-```var newFn = function (data, callerFnArgs) {
+```
+var newFn = function (data, callerFnArgs) {
     // if this is the main template callerFnArgs is not defined yet
     callerFnArgs = callerFnArgs || {}; 
     callerFnArgs.myInclude = function(...) {
@@ -194,7 +197,8 @@ javascript in the template, the add the name here.
 
 To make a value/function named FOO available:
 
-```var r = EjsTemplate.prototype.generateArgumentNames.apply(this, arguments);
+```
+var r = EjsTemplate.prototype.generateArgumentNames.apply(this, arguments);
 return r.concat(['FOO']);
 ```
 
@@ -209,7 +213,8 @@ Returns an object, with a key for each argument (See generateArgumentNames).
 
 A typicall value would be:
 
-```{
+```
+{
   locals: {},        // name of the key may change according to opts.localsName
   include: function, // function for the include argument
   escapeFn: function, // html escape
@@ -294,7 +299,8 @@ Modifiers can not be equal to the delimiter.
 
 The default is:
 
-```{
+```
+{
       '':  exports.modes.EVAL,
       '=': exports.modes.ESCAPED,
       '-': exports.modes.RAW,
@@ -306,7 +312,8 @@ The default is:
 If a plug-in wants to add a value, it must check that it does not yet exists.
 It must also add a key to `exports.modes`
 
-```exports.modes = {
+```
+exports.modes = {
   EVAL: 'eval',
   ESCAPED: 'escaped',
   RAW: 'raw',

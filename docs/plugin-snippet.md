@@ -57,7 +57,8 @@ are at the start of the template. That is any changes made to locals by
 scriptlets in the template will not be seen by the snippet. (Except where 
 a shallow copy does not preserve the data).
 
-```<% foo = 'replacement' %>
+```
+<% foo = 'replacement' %>
 <%* snippet name %> <%=foo%> <%* /snippet %>
 ```
 
@@ -73,7 +74,8 @@ Calling Snippets
 Snippets are called using the `snippet()` function (similar to "include" templates).
 The function takes one or two arguments.
 
-```<%- snippet("name") %>
+```
+<%- snippet("name") %>
 <%- snippet("name", { foo: 5 }) %>
 ```
 
@@ -117,7 +119,8 @@ template.
 
 If the template "include-me" defines a snippet called "foo"
 
-```<% for(a=1; i<9; i++) { %>
+```
+<% for(a=1; i<9; i++) { %>
   <% if(i > 0) { %>
     <% snippet('foo') %>
   <% } %>
