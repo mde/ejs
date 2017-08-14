@@ -6,7 +6,7 @@
  */
 
 var ejs = require('..');
-ejs.enableSnippets();
+require('../plugins/ejs-snippet');
 var fs = require('fs');
 var read = fs.readFileSync;
 var assert = require('assert');

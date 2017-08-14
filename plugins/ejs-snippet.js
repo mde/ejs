@@ -1,6 +1,6 @@
 'use strict';
-var ejs = require('./ejs');
-var utils = require('./utils');
+var ejs = require('../lib/ejs');
+var utils = require('../lib/utils');
 
 var EjsTemplate = ejs.Template;
 
