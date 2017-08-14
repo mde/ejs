@@ -132,10 +132,9 @@ SnippetTemplate.prototype.generateArguments = function (data, opts, ejsArgs, cal
   if (! snippetFn) {
     // top level template, create "snippet" function
     var d = utils.shallowCopy({}, data);
-    var snippedData = this.__pluginSnippetPrepare(this.__pluginSnippetsKnown, d, callerFnArgs);
+    var snippedData = this.__pluginSnippetPrepare(this.__pluginSnippetsKnown, d, r);
     snippetFn = this.__pluginSnippetReplace.bind(this, snippedData);
     snippetFn.snippedData = snippedData;
-    callerFnArgs.snippet = snippetFn;
   }
 
   r.snippet = snippetFn;
