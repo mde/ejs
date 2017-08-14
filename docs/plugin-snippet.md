@@ -4,6 +4,8 @@ EJS Snippet (plug-in) Reference
 The Snippet plug-in lets you define snippets (aka Blocks) and use them
 anywhere in your template. This works across include boundaries.
 
+Snippets are not available if opts.client is used.
+
 Table of contents
 -----------------
 
