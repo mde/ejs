@@ -6,7 +6,7 @@
  */
 
 var ejs = require('..');
-require('../plugins/ejs-snippet');
+var ejstest = require('./ejs');
 var fs = require('fs');
 var read = fs.readFileSync;
 var assert = require('assert');
@@ -28,8 +28,39 @@ function fixture(name) {
   return read('test/fixtures/' + name, 'utf8');
 }
 
+/**
+ * Load plugin
+ * Since this is global, this will install the plugin,
+ * before any test in any test/*.js file is executed
+ * So the origClass will be restored
+ */
+var origClass = ejs.Template;
+require('../plugins/ejs-snippet');
+var snippetClass = ejs.Template;
+ejs.Template = origClass; // do not affect test/ejs.js
+
+suite('ejs.snippet original tests with plugin', function () {
+
+  suiteSetup(function () {
+    ejs.Template = snippetClass;
+  });
+
+  suiteTeardown(function () {
+    ejs.Template = origClass;
+  });
+
+  ejstest.ejstests();
+});
 
 suite('ejs.snippet', function () {
+
+  suiteSetup(function () {
+    ejs.Template = snippetClass;
+  });
+
+  suiteTeardown(function () {
+    ejs.Template = origClass;
+  });
 
   test('snippet', function () {
     var fn = ejs.compile('<%*snippet hello%>world<%*/snippet%>123 <%-snippet("hello")%> 456');
