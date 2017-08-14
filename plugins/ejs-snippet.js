@@ -82,8 +82,8 @@ SnippetTemplate.prototype.__snippetReplace = function (snippets, name, data) {
 };
 
 /* __snippetPrepare
-  create snippets, associated with data from current call to template
-*/
+ * create snippets, associated with data from current call to template
+ */
 SnippetTemplate.prototype.__snippetPrepare = function (snippets, data, callerFnArgs) {
   var r = {};
   Object.keys(snippets).map(function(k) {
@@ -115,13 +115,18 @@ SnippetTemplate.prototype.compile = function () {
 };
 
 SnippetTemplate.prototype.generateArgumentNames = function () {
-  // if (opts.client) return ...
-  return EjsTemplate.prototype.generateArgumentNames.apply(this, arguments).concat(['snippet']);
+  var r = EjsTemplate.prototype.generateArgumentNames.apply(this, arguments);
+  if (this.opts.client) {
+    return r;
+  }
+  return r.concat(['snippet']);
 };
 
 SnippetTemplate.prototype.generateArguments = function (data, opts, ejsArgs, callerFnArgs) {
-  // if (opts.client) return ...
   var r = EjsTemplate.prototype.generateArguments.apply(this, arguments);
+  if (this.opts.client) {
+    return r;
+  }
 
   var snippetFn = callerFnArgs.snippet;
   if (! snippetFn) {
