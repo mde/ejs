@@ -403,6 +403,37 @@ function ejstests() {
       });
     });
 
+    test('support caching for fileExists', function (done) {
+      var file = __dirname + '/fixtures/foo.ejs';
+      //var options = {cache: true};
+      var called;
+      var myFileExists = function () {
+        called = true;
+        return true;
+      };
+      var fl = ejs.fileExists;
+      ejs.fileExists = myFileExists;
+      ejs.cacheFileExist.reset();
+
+      ejs.render('<% include("./hello-world") %>', {}, {filename: file});
+      assert.equal(called, true, 'called firstime');
+
+      called = false;
+      ejs.render('<% include("./hello-world") %>', {}, {filename: file});
+      assert.equal(called, true, 'called again');
+
+      called = false;
+      ejs.render('<% include("./hello-world") %>', {}, {filename: file, cache: true});
+      assert.equal(called, true, 'called, first time cache');
+
+      called = false;
+      ejs.render('<% include("./hello-world") %>', {}, {filename: file, cache: true});
+      assert.equal(called, false, 'not called, 2nd time cache');
+
+      ejs.fileExists = fl;
+      done();
+    });
+
     test('opts.context', function (done) {
       var ctxt = {foo: 'FOO'};
       ejs.renderFile('test/fixtures/with-context.ejs', {}, {context: ctxt}, function(err, html) {
