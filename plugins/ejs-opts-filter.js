@@ -3,6 +3,7 @@ var ejs = require('../lib/ejs');
 //var utils = require('../lib/utils');
 
 var EjsTemplate = ejs.Template;
+var utils = require('../lib/utils');
 
 module.exports.keepOnlyOpts; // [list of opts]
 
@@ -11,7 +12,7 @@ module.exports.removeOpts = [];
 module.exports.optsDefaults = {};
 
 function OptsFilterTemplate(text, opts) {
-  opts = opts || {};
+  opts = utils.shallowCopy({}, opts || {});
   if (Array.isArray(module.exports.keepOnlyOpts)) {
     Object.keys(opts).forEach(function(k) {
       if (module.exports.keepOnlyOpts.indexOf(k) < 0) {
