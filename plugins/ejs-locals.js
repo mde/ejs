@@ -32,13 +32,13 @@ function LocalsTemplate(text, opts) {
 LocalsTemplate.prototype = Object.create(EjsTemplate.prototype);
 
 LocalsTemplate.prototype.compile = function () {
+  var self = this;
   var opts = this.opts;
   var fn = EjsTemplate.prototype.compile.apply(this, arguments);
   if (opts.client) {
     return fn;
   }
 
-  var self = this;
   var newFn = function (data, callerFnArgs) {
     callerFnArgs = callerFnArgs || {};
 
