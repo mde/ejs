@@ -51,7 +51,6 @@ SnippetTemplate.prototype.scanTagLine = function (openTag, line, closeTag) {
     this.__pluginSnippetParsingDefine = undefined;
 
     // source contains the "<%" of the section closing tag
-//    var func = ejs.compile(this.__pluginSnippetParsingSource.replace(/<.$/, ''), this.opts);
     var func = ejs.compile(this.__pluginSnippetParsingSource, this.opts);
     this.__pluginSnippetsKnown[this.__pluginSnippetParsingName] = func;
     return;
