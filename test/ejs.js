@@ -93,6 +93,12 @@ suite('ejs.compile(str, options)', function () {
     assert.equal(fn({name: 'geddy'}), '<p>geddy</p>');
   });
 
+  test('allow customizing open and close delimiters', function() {
+    var fn;
+    fn = ejs.compile('<p>[#= name #]</p>', {delimiter: '#', openDelimiter: '[', closeDelimiter: ']'});
+    assert.equal(fn({name: 'geddy'}), '<p>geddy</p>');
+  });
+
   test('default to using ejs.delimiter', function () {
     var fn;
     ejs.delimiter = '&';
