@@ -856,6 +856,17 @@ suite('include()', function () {
     throw new Error('expected inclusion error');
   });
 
+  test('show filename when including nonexistent file', function () {
+    try {
+      ejs.render(fixture('include-nonexistent.ejs'));
+    }
+    catch (err) {
+      assert.ok(err.message.indexOf('nonexistent-file') > -1);
+      return;
+    }
+    throw new Error('expected inclusion error containing file name');
+  });
+
   test('strips BOM', function () {
     assert.equal(
       ejs.render('<%- include("fixtures/includes/bom.ejs") %>',
