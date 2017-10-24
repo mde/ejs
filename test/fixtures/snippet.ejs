@@ -1,0 +1,9 @@
+<ul>
+  <%* snippet foo %>
+     got foo
+  <%* /snippet %>
+  <%- include('includes/snippet-inc'); %>
+  <%- snippet('foo'); %>
+  <%- snippet('foo'); %>
+  <%- snippet('bar'); %>
+</ul>
