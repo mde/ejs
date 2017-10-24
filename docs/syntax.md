@@ -20,6 +20,8 @@ Table of contents
   - `-%>`: Removes trailing newline
   - `_%>`: Removes all trailing whitespace
 - Literal tags
+  - `<%%`: Insert `<%`
+  - `%%>`: Insert `%>`
 - Including other files
   - “Preprocessor” directive
   - JavaScript `include()` function
@@ -400,7 +402,7 @@ To output literal `<%` or `%>`, use `<%%` or `%%>`, respectively. If a customize
 the same syntax. E.g. use `<$$` to get `<$` if the delimiter is `$`.
 
 In regards to all the other tags, the literal tags are special as they do not
-need a closing tag to function.
+have a closing tag.
 
 However, think twice before you use these tags because `<` and `>` characters might
 need to be escaped as `&lt;` and `&gt;`, respectively.
@@ -414,16 +416,14 @@ escape `<` or `>` at all.
 
 ```html
 <pre>This is literal: <%%</pre>
-<pre>This is literal too: <%% %></pre>
-<pre>This is literal as well: %%></pre>
+<pre>This is literal too: %%></pre>
 ```
 
 ##### HTML
 
 ```html
 <pre>This is literal: <%</pre>
-<pre>This is literal too: <% %></pre>
-<pre>This is literal as well: %></pre>
+<pre>This is literal too: %></pre>
 ```
 
 ## Including other files
