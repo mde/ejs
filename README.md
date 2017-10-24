@@ -154,8 +154,8 @@ functions used to render templates. It's easy to plug in LRU caching using
 Node's `lru-cache` library:
 
 ```javascript
-var ejs = require('ejs')
-  , LRU = require('lru-cache');
+var ejs = require('ejs'),
+    LRU = require('lru-cache');
 ejs.cache = LRU(100); // LRU cache with 100-item limit
 ```
 
