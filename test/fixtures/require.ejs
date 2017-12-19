@@ -1,0 +1,7 @@
+<% exports.list = function () { _%>
+<ul>
+<% [].forEach.call(arguments, function (item) { _%>
+	<li><%= item %></li>
+<% }); _%>
+</ul>
+<% } %>

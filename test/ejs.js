@@ -960,6 +960,11 @@ suite('include()', function () {
     throw new Error('expected inclusion error');
   });
 
+  test('require-style include', function () {
+    var file = 'test/fixtures/require-simple.ejs';
+    assert.equal(ejs.render(fixture('require-simple.ejs'), {}, {filename: file}),
+      fixture('require-simple.html'));
+  });
 });
 
 suite('preprocessor include', function () {
