@@ -22,7 +22,7 @@
   "dependencies": {},
   "devDependencies": {
     "browserify": "^13.0.1",
-    "eslint": "^4.13.1",
+    "eslint": "^4.14.0",
     "git-directory-deploy": "^1.5.1",
     "istanbul": "~0.4.3",
     "jake": "^8.0.0",
