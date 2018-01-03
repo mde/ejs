@@ -1111,7 +1111,18 @@ suite('test fileloader', function () {
     return 'myFileLoad: ' + fs.readFileSync(filePath);
   };
 
-  test('test custom fileload', function (done) {
+  test('test custom fileload via options', function (done) {
+    ejs.renderFile('test/fixtures/para.ejs', null, { fileLoader: myFileLoad }, function(err, html) {
+      if (err) {
+        return done(err);
+      }
+      assert.equal(html, 'myFileLoad: <p>hey</p>\n');
+      done();
+    });
+
+  });
+
+  test('test custom fileload via global ejs object', function (done) {
     ejs.fileLoader = myFileLoad;
     ejs.renderFile('test/fixtures/para.ejs', function(err, html) {
       if (err) {
