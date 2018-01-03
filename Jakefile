@@ -19,7 +19,7 @@ task('clean', ['clobber'], function () {
 
 desc('Lints the source code');
 task('lint', function () {
-  exec('./node_modules/.bin/eslint \"**/*.js\" Jakefile');
+  exec('./node_modules/.bin/eslint "**/*.js" Jakefile');
   console.log('Linting completed.');
 });
 

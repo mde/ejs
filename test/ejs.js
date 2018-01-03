@@ -182,14 +182,14 @@ suite('client mode', function () {
 suite('ejs.render(str, dataAndOpts)', function () {
   test('render the template with data/opts passed together', function () {
     assert.equal(ejs.render('<p><?= foo ?></p>', {foo: 'yay', delimiter: '?'}),
-        '<p>yay</p>');
+      '<p>yay</p>');
   });
 
   test('disallow unsafe opts passed along in data', function () {
     assert.equal(ejs.render('<p><?= locals.foo ?></p>',
-        // localsName should not get reset because it's blacklisted
-        {_with: false, foo: 'yay', delimiter: '?', localsName: '_'}),
-        '<p>yay</p>');
+      // localsName should not get reset because it's blacklisted
+      {_with: false, foo: 'yay', delimiter: '?', localsName: '_'}),
+    '<p>yay</p>');
   });
 });
 
@@ -228,27 +228,27 @@ suite('ejs.render(str, data, opts)', function () {
 
   test('accept locals', function () {
     assert.equal(ejs.render('<p><%= name %></p>', {name: 'geddy'}),
-        '<p>geddy</p>');
+      '<p>geddy</p>');
   });
 
   test('accept locals without using with() {}', function () {
     assert.equal(ejs.render('<p><%= locals.name %></p>', {name: 'geddy'},
-                            {_with: false}),
-        '<p>geddy</p>');
+      {_with: false}),
+    '<p>geddy</p>');
     assert.throws(function() {
       ejs.render('<p><%= name %></p>', {name: 'geddy'},
-                 {_with: false});
+        {_with: false});
     }, /name is not defined/);
   });
 
   test('accept custom name for locals', function () {
     ejs.localsName = 'it';
     assert.equal(ejs.render('<p><%= it.name %></p>', {name: 'geddy'},
-                            {_with: false}),
-        '<p>geddy</p>');
+      {_with: false}),
+    '<p>geddy</p>');
     assert.throws(function() {
       ejs.render('<p><%= name %></p>', {name: 'geddy'},
-                 {_with: false});
+        {_with: false});
     }, /name is not defined/);
     ejs.localsName = 'locals';
   });
@@ -570,7 +570,7 @@ suite('cache specific', function () {
 suite('<%', function () {
   test('without semicolons', function () {
     assert.equal(ejs.render(fixture('no.semicolons.ejs')),
-        fixture('no.semicolons.html'));
+      fixture('no.semicolons.html'));
   });
 });
 
@@ -582,7 +582,7 @@ suite('<%=', function () {
 
   test('escape &amp;<script>', function () {
     assert.equal(ejs.render('<%= name %>', {name: '&nbsp;<script>'}),
-        '&amp;nbsp;&lt;script&gt;');
+      '&amp;nbsp;&lt;script&gt;');
   });
 
   test('should escape \'', function () {
@@ -611,12 +611,12 @@ suite('<%=', function () {
 suite('<%-', function () {
   test('should not throw an error with a // comment on the final line', function () {
     assert.equal(ejs.render('<%-\n// a comment\nname\n// another comment %>', {name: '&nbsp;<script>'}),
-        '&nbsp;<script>');
+      '&nbsp;<script>');
   });
 
   test('not escape', function () {
     assert.equal(ejs.render('<%- name %>', {name: '<script>'}),
-        '<script>');
+      '<script>');
   });
 
   test('terminate gracefully if no close tag is found', function () {
@@ -707,9 +707,9 @@ suite('<%%', function () {
 suite('%%>', function () {
   test('produce literal', function () {
     assert.equal(ejs.render('%%>'),
-        '%>');
+      '%>');
     assert.equal(ejs.render('  >', {}, {delimiter: ' '}),
-        ' >');
+      ' >');
   });
 });
 
@@ -822,7 +822,7 @@ suite('exceptions', function () {
 suite('rmWhitespace', function () {
   test('works', function () {
     assert.equal(ejs.render(fixture('rmWhitespace.ejs'), {}, {rmWhitespace: true}),
-        fixture('rmWhitespace.html'));
+      fixture('rmWhitespace.html'));
   });
 });
 
@@ -830,19 +830,19 @@ suite('include()', function () {
   test('include ejs', function () {
     var file = 'test/fixtures/include-simple.ejs';
     assert.equal(ejs.render(fixture('include-simple.ejs'), {}, {filename: file}),
-        fixture('include-simple.html'));
+      fixture('include-simple.html'));
   });
 
   test('include and escape ejs', function () {
     var file = 'test/fixtures/include-escaped.ejs';
     assert.equal(ejs.render(fixture('include-escaped.ejs'), {}, {filename: file}),
-        fixture('include-escaped.html'));
+      fixture('include-escaped.html'));
   });
 
   test('include in expression ejs', function () {
     var file = 'test/fixtures/include-expression.ejs';
     assert.equal(ejs.render(fixture('include-expression.ejs'), {}, {filename: file}),
-        fixture('include-expression.html'));
+      fixture('include-expression.html'));
   });
 
   test('include ejs fails without `filename`', function () {
@@ -877,7 +877,7 @@ suite('include()', function () {
   test('include ejs with locals', function () {
     var file = 'test/fixtures/include.ejs';
     assert.equal(ejs.render(fixture('include.ejs'), {pets: users}, {filename: file, delimiter: '@'}),
-        fixture('include.html'));
+      fixture('include.html'));
   });
 
   test('include ejs with absolute path and locals', function () {
@@ -885,7 +885,7 @@ suite('include()', function () {
     assert.equal(ejs.render(fixture('include-abspath.ejs'),
       {dir: path.join(__dirname, 'fixtures'), pets: users, path: path},
       {filename: file, delimiter: '@'}),
-        fixture('include.html'));
+    fixture('include.html'));
   });
 
   test('include ejs with set root path', function () {
@@ -898,7 +898,7 @@ suite('include()', function () {
   test('work when nested', function () {
     var file = 'test/fixtures/menu.ejs';
     assert.equal(ejs.render(fixture('menu.ejs'), {pets: users}, {filename: file}),
-        fixture('menu.html'));
+      fixture('menu.html'));
   });
 
   test('work with a variable path', function () {
@@ -911,7 +911,7 @@ suite('include()', function () {
   test('include arbitrary files as-is', function () {
     var file = 'test/fixtures/include.css.ejs';
     assert.equal(ejs.render(fixture('include.css.ejs'), {pets: users}, {filename: file}),
-        fixture('include.css.html'));
+      fixture('include.css.html'));
   });
 
   test('pass compileDebug to include', function () {
@@ -977,7 +977,7 @@ suite('preprocessor include', function () {
   test('work', function () {
     var file = 'test/fixtures/include_preprocessor.ejs';
     assert.equal(ejs.render(fixture('include_preprocessor.ejs'), {pets: users}, {filename: file, delimiter: '@'}),
-        fixture('include_preprocessor.html'));
+      fixture('include_preprocessor.html'));
   });
 
   test('no false positives', function () {
@@ -1005,7 +1005,7 @@ suite('preprocessor include', function () {
   test('work when nested', function () {
     var file = 'test/fixtures/menu_preprocessor.ejs';
     assert.equal(ejs.render(fixture('menu_preprocessor.ejs'), {pets: users}, {filename: file}),
-        fixture('menu_preprocessor.html'));
+      fixture('menu_preprocessor.html'));
   });
 
   test('tracks dependency correctly', function () {
@@ -1017,7 +1017,7 @@ suite('preprocessor include', function () {
   test('include arbitrary files as-is', function () {
     var file = 'test/fixtures/include_preprocessor.css.ejs';
     assert.equal(ejs.render(fixture('include_preprocessor.css.ejs'), {pets: users}, {filename: file}),
-        fixture('include_preprocessor.css.html'));
+      fixture('include_preprocessor.css.html'));
   });
 
   test('pass compileDebug to include', function () {
@@ -1069,7 +1069,7 @@ suite('preprocessor include', function () {
     var expected = fixture('include_preprocessor_line_slurp.html');
     var options = {rmWhitespace: true, filename: file};
     assert.equal(ejs.render(template, {}, options),
-        expected);
+      expected);
   });
 
   test('handles errors in included file', function() {
@@ -1088,7 +1088,7 @@ suite('preprocessor include', function () {
 suite('comments', function () {
   test('fully render with comments removed', function () {
     assert.equal(ejs.render(fixture('comments.ejs')),
-        fixture('comments.html'));
+      fixture('comments.html'));
   });
 });
 
@@ -1100,7 +1100,7 @@ suite('require', function () {
     var template = require(__dirname + '/fixtures/menu_preprocessor.ejs');
     if (!process.env.running_under_istanbul) {
       assert.equal(template({filename: file, pets: users}),
-          fixture('menu_preprocessor.html'));
+        fixture('menu_preprocessor.html'));
     }
   });
 });
