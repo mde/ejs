@@ -6,7 +6,7 @@
     "engine",
     "ejs"
   ],
-  "version": "2.5.6",
+  "version": "2.5.7",
   "author": "Matthew Eernisse <mde@fleegix.org> (http://fleegix.org)",
   "contributors": [
     "Timothy Gu <timothygu99@gmail.com> (https://timothygu.github.io)"
@@ -22,7 +22,7 @@
   "dependencies": {},
   "devDependencies": {
     "browserify": "^13.0.1",
-    "eslint": "^3.0.0",
+    "eslint": "^4.14.0",
     "git-directory-deploy": "^1.5.1",
     "istanbul": "~0.4.3",
     "jake": "^8.0.0",
@@ -35,7 +35,7 @@
     "node": ">=0.10.0"
   },
   "scripts": {
-    "test": "mocha",
+    "test": "jake test",
     "lint": "eslint \"**/*.js\" Jakefile",
     "coverage": "istanbul cover node_modules/mocha/bin/_mocha",
     "doc": "jake doc",

@@ -1,4 +1,12 @@
-## v2.5.6: 2016-02-16
+## v2.5.7: 2017-07-29
+
+ * Pass configured escape function to `rethrow` (@straker)
+ + Added vulnerabilities info into README (@mde)
+ * Avoid creating function object in hot execution path (@User4martin)
+ + Added benchmark (@User4martin)
+ + Tests for looped includes (@User4martin)
+
+## v2.5.6: 2017-02-16
 
  * Use configured escape function for filenames in errors (@mde)
  + Make file-loader configurable to allow template pre-processing (@hacke2)
