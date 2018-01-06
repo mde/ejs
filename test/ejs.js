@@ -292,7 +292,7 @@ suite('ejs.render(str, data, opts)', function () {
 
 });
 
-suite('ejs.renderFile(path, [data], [options], fn)', function () {
+suite('ejs.renderFile(path, [data], [options], [fn])', function () {
   test('render a file', function(done) {
     ejs.renderFile('test/fixtures/para.ejs', function(err, html) {
       if (err) {
@@ -301,6 +301,51 @@ suite('ejs.renderFile(path, [data], [options], fn)', function () {
       assert.equal(html, '<p>hey</p>\n');
       done();
     });
+  });
+
+  test('Promise support', function(done) {
+    var AsyncCtor;
+    var func;
+    function checkResult(html) {
+      assert.equal(html, '<p>hey</p>\n');
+    }
+    // Environments without Promise support -- should throw
+    // when no callback provided
+    function checkNoPromise() {
+      delete ejs.promiseImpl;
+      assert.throws(function () {
+        ejs.renderFile('test/fixtures/para.ejs');
+      });
+      ejs.promiseImpl = global.Promise;
+      done();
+    }
+
+    // Check for async/await support -- have to use eval for check because
+    // envs without async will break at parsing step
+    try {
+      eval('AsyncCtor = (async function () {}).constructor;');
+    }
+    catch (e) {
+      // No-op
+    }
+
+    // Both async and Promise -- in both cases, also check the call
+    // correctly throws in non-Promise envs if no callback provided
+    // -------------------
+    // Async support -- have to use eval for constructing async func for
+    // same reasons as above
+    if (AsyncCtor) {
+      func = new AsyncCtor('ejs', 'checkResult', 'checkNoPromise',
+        "let res = await ejs.renderFile('test/fixtures/para.ejs'); checkResult(res); checkNoPromise();");
+      func(ejs, checkResult, checkNoPromise);
+    }
+    // Ordinary Promise support
+    else {
+      ejs.renderFile('test/fixtures/para.ejs').then(function (res) {
+        checkResult(res);
+        checkNoPromise();
+      });
+    }
   });
 
   test('accept locals', function(done) {
