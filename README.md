@@ -236,6 +236,10 @@ Most of EJS will work as expected; however, there are a few things to note:
     // Return the contents of file as a string
   }); // returns rendered string
   ```
+  
+  ### IDE Integrations with Syntax Highlighting
+  
+  + VSCode:Javascript EJS by *DigitalBrainstem* 
 
 ## Related projects
 
@@ -246,6 +250,7 @@ There are a number of implementations of EJS:
  * EJS Embedded JavaScript Framework on Google Code: https://code.google.com/p/embeddedjavascript/
  * Sam Stephenson's Ruby implementation: https://rubygems.org/gems/ejs
  * Erubis, an ERB implementation which also runs JavaScript: http://www.kuwata-lab.com/erubis/users-guide.04.html#lang-javascript
+ * DigitalBrainstem EJS Language support: https://github.com/Digitalbrainstem/ejs-grammar
 
 ## License
 
