@@ -118,6 +118,28 @@ suite('ejs.compile(str, options)', function () {
     assert.equal(ejs.render(fixture('strict.ejs'), {}, {strict: true}), 'true');
   });
 
+  test('can compile to an async function', function (done) {
+    try {
+      eval('(async function() {})');
+    } catch (e) {
+      if (e instanceof SyntaxError) {
+        return;
+      } else {
+        throw e;
+      }
+    }
+
+    ejs.compile('<%= await "Hi" %>', {async: true})().then(function (value) {
+      try {
+        assert.equal(value, 'Hi');
+      } catch (e) {
+        done(e);
+        return;
+      }
+
+      done();
+    });
+  });
 });
 
 suite('client mode', function () {
