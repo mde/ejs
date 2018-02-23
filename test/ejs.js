@@ -123,7 +123,7 @@ suite('ejs.compile(str, options)', function () {
       eval('(async function() {})');
     } catch (e) {
       if (e instanceof SyntaxError) {
-        return;
+        done();
       } else {
         throw e;
       }
