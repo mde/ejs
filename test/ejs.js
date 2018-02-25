@@ -326,7 +326,7 @@ suite('ejs.renderFile(path, [data], [options], [fn])', function () {
     });
   });
 
-  test('Promise support', function(done) {
+  test('Promise support for reading files', function(done) {
     var AsyncCtor;
     var func;
     function checkResult(html) {
