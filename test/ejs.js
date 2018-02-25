@@ -124,6 +124,7 @@ suite('ejs.compile(str, options)', function () {
     } catch (e) {
       if (e instanceof SyntaxError) {
         done();
+        return;
       } else {
         throw e;
       }
