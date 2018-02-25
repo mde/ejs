@@ -5,6 +5,8 @@
  * @callback TemplateFunction
  * @param {Object}          [locals={}]
  * an object of data to be passed into the template.
+ * @return {(String|Promise<String>)}
+ * Return type depends on {@link Options}`.async`.
  * @static
  * @global
  */
@@ -29,6 +31,9 @@
  *
  * @param {RethrowCallback} [rethrow={@link module:ejs-internal.rethrow}]
  * callback used to handle and rethrow errors
+ *
+ * @return {(String|Promise<String>)}
+ * Return type depends on {@link Options}`.async`.
  *
  * @static
  * @global
