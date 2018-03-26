@@ -4,6 +4,7 @@
  + Node v9 in CI (@Thomas)
  * Fixed special case for Express caching (@mde)
  + Added Promise/async-await support to `renderFile` (@mde)
+ + Added notes on IDE support to README (@Betanu701)
 
 ## v2.5.7: 2017-07-29
 
