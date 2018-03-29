@@ -39,7 +39,7 @@ while (i < process.argv.length) {
 if (! (runCompile || runNoCache || runCache)) {
   runCompile = true;
   runNoCache = true;
-  runCache = true;    
+  runCache = true;
 }
 
 var files = {
@@ -51,7 +51,7 @@ var files = {
     <%# comment #%>
     <%% literal <$= name $> %%>
   `,
-  
+
   bench2: `<h1><$= name $></h1>
     <div><%- num+1 -%></div>
     <% if(num > 10) { %>
@@ -60,11 +60,11 @@ var files = {
     <%# comment #%>
     <%% literal <$= name $> %%>
   `.repeat(100),
-  
+
   simple1: `<h1><$= name $></h1>
     <div><%- num+1 -%></div>
   `,
-  
+
   locals1: `<h1><$= locals.name $></h1>
     <div><%- locals.num+1 -%></div>
     <% if(locals.num > 10) { %>
@@ -73,13 +73,13 @@ var files = {
     <%# comment #%>
     <%% literal <$= locals.name $> %%>
   `.repeat(10),
-  
+
   include1: `<h1><$= name $></h1>
     <div><% include('/simple1') %></div>
     <div><% include('/simple1') %></div>
     <div><% include('/simple1') %></div>
   `,
-  
+
   include2: `<h1><$= name $></h1>
     <div><% include /include1 %></div>
     <div><% include /simple1 %></div>
@@ -120,7 +120,7 @@ function benchRender(name, file, data, opts, benchOpts) {
   var tmpl = files[file];
   for (var r = 0; r < runs; r++) {
     ejs.render(tmpl, data, opts); // one run in advance
-  
+
     var t = Date.now();
     for (var i = 0; i < totalLoops; i++) {
       ejs.render(tmpl, data, opts);
@@ -141,7 +141,7 @@ function benchCompile(name, file, opts, benchOpts) {
   var tmpl = files[file];
   for (var r = 0; r < runs; r++) {
     ejs.compile(tmpl, opts); // one run in advance
-  
+
     var t = Date.now();
     for (var i = 0; i < totalLoops; i++) {
       ejs.compile(tmpl, opts);
@@ -155,12 +155,12 @@ function benchCompile(name, file, opts, benchOpts) {
 if (runCompile) {
   console.log('Running avg accross: ', runs);
   console.log(fill('name: ',30), fill('avg',10), fill('med',10), fill('med/avg',10), fill('min',10), fill('max',10), fillR('loops',15));
-  
+
   benchCompile('single tmpl compile',         'bench1', {compileDebug: false}, { loopFactor: 2 });
   benchCompile('single tmpl compile (debug)', 'bench1', {compileDebug: true}, { loopFactor: 2 });
-  
+
   benchCompile('large tmpl compile',         'bench2', {compileDebug: false}, { loopFactor: 0.1 });
-  
+
   benchCompile('include-1 compile',  'include1', {compileDebug: false}, { loopFactor: 2 });
   console.log('-');
 };
@@ -170,15 +170,15 @@ if (runCompile) {
 if (runCache) {
   benchRender('single tmpl cached',           'bench1', data, {cache:true, compileDebug: false}, { loopFactor: 5 });
   benchRender('single tmpl cached (debug)',   'bench1', data, {cache:true, compileDebug: true}, { loopFactor: 5 });
-  
+
   benchRender('large tmpl cached',           'bench2', data, {cache:true, compileDebug: false}, { loopFactor: 0.4 });
   benchRender('include-1 cached',    'include1', data, {cache:true, compileDebug: false}, { loopFactor: 2 });
   benchRender('include-2 cached',    'include2', data, {cache:true, compileDebug: false}, { loopFactor: 2 });
-  
-  
+
+
   benchRender('locals tmpl cached "with"',    'locals1', data, {cache:true, compileDebug: false, _with: true}, { loopFactor: 3 });
   benchRender('locals tmpl cached NO-"with"', 'locals1', data, {cache:true, compileDebug: false, _with: false}, { loopFactor: 3 });
-  
+
   console.log('-');
 }
 
@@ -186,9 +186,9 @@ if (runCache) {
 if (runNoCache) {
   benchRender('single tmpl NO-cache',         'bench1', data, {cache:false, compileDebug: false});
   benchRender('single tmpl NO-cache (debug)', 'bench1', data, {cache:false, compileDebug: true});
-  
+
   benchRender('large tmpl NO-cache',         'bench2', data, {cache:false, compileDebug: false}, { loopFactor: 0.1 });
-  
+
   benchRender('include-1 NO-cache',  'include1', data, {cache:false, compileDebug: false});
   benchRender('include-2 NO-cache',  'include2', data, {cache:false, compileDebug: false});
 }
