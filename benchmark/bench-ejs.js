@@ -18,21 +18,21 @@ while (i < process.argv.length) {
   var b;
   if (i < process.argv.length) b = process.argv[i];
   switch (a) {
-    case '-r': if(b) runs = b;
-      i++;
-      break;
-    case '-l': if(b) loops = b;
-      i++;
-      break;
-    case '--compile':
-      runCompile = true;
-      break;
-    case '--nocache':
-      runNoCache = true;
-      break;
-    case '--cache':
-      runCache = true;
-      break;
+  case '-r': if(b) runs = b;
+    i++;
+    break;
+  case '-l': if(b) loops = b;
+    i++;
+    break;
+  case '--compile':
+    runCompile = true;
+    break;
+  case '--nocache':
+    runNoCache = true;
+    break;
+  case '--cache':
+    runCache = true;
+    break;
   }
 }
 
@@ -116,7 +116,7 @@ function benchRender(name, file, data, opts, benchOpts) {
   opts = opts || {};
   benchOpts = benchOpts || {};
   opts.filename = file;
-  var totalLoops = Math.round(loops * (benchOpts.loopFactor || 1))
+  var totalLoops = Math.round(loops * (benchOpts.loopFactor || 1));
   var tmpl = files[file];
   for (var r = 0; r < runs; r++) {
     ejs.render(tmpl, data, opts); // one run in advance
@@ -137,7 +137,7 @@ function benchCompile(name, file, opts, benchOpts) {
   opts = opts || {};
   benchOpts = benchOpts || {};
   opts.filename = file;
-  var totalLoops = Math.round(loops * (benchOpts.loopFactor || 1))
+  var totalLoops = Math.round(loops * (benchOpts.loopFactor || 1));
   var tmpl = files[file];
   for (var r = 0; r < runs; r++) {
     ejs.compile(tmpl, opts); // one run in advance
@@ -163,7 +163,7 @@ if (runCompile) {
 
   benchCompile('include-1 compile',  'include1', {compileDebug: false}, { loopFactor: 2 });
   console.log('-');
-};
+}
 
 
 
