@@ -1,0 +1,7 @@
+<% var title = block(function() { %>
+It is stickt mode
+<% }) -%>
+<% var body = block(function() { %>
+<code>Stict mode is <%= locals.opinion %></code>
+<% }) -%>
+<%- include('./layout-strict2', {"body": body, "title": title}) %>

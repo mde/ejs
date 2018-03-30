@@ -1150,6 +1150,61 @@ suite('require', function () {
   });
 });
 
+
+suite('test blocks', function () {
+
+
+  test('test blocks with defaults', function (done) {
+    ejs.renderFile('test/fixtures/layout-usage-default.ejs', {}, {blocks: true}, function(err, html) {
+      if (err) {
+        return done(err);
+      }
+      assert.equal(html, fs.readFileSync('test/fixtures/layout-usage-default.html', 'utf-8'));
+      done();
+    });
+  });
+
+  test('test blocks with strict mode', function (done) {
+    ejs.renderFile('test/fixtures/layout-strict3.ejs', {
+      opinion: 'good',
+    }, {
+      strict: true,
+      blocks: true
+    },
+    function(err, html) {
+      if (err) {
+        return done(err);
+      }
+      assert.equal(html, fs.readFileSync(path.join(__dirname, 'fixtures/layout-strict3.html'), 'utf-8'));
+      done();
+    });
+  });
+
+  test('test blocks for client', function () {
+
+    var filename = path.join(__dirname, 'fixtures', 'layout.ejs');
+
+    var include = function(p, d){
+      var fn = ejs.compile(
+        fs.readFileSync(
+          fs.existsSync(path.join(__dirname, 'fixtures', p + '.ejs')) ?
+            path.join(__dirname, 'fixtures', p + '.ejs'):
+            path.join(__dirname, 'fixtures', p),
+          'utf-8'),
+        {
+          client: true,
+          blocks: true,
+          filename: filename
+        });
+      return fn(d, null, include);
+    };
+
+    var html = include('./layout-usage', {name: 'World'});
+    assert.equal(html, fs.readFileSync('test/fixtures/layout-usage.html', 'utf-8'));
+  });
+});
+
+
 suite('test fileloader', function () {
 
   var myFileLoad = function (filePath) {
