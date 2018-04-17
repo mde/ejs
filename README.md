@@ -195,6 +195,18 @@ including headers and footers, like so:
 <%- include('footer') -%>
 ```
 
+## Express Integration
+
+There are times where you want to pass options to EJS when using with Express. To do that, simply define `view options` property on the Express app settings table, then pass in the option as an object.
+
+For example, to enable `rmWhitespace`:
+
+```javascript
+app.set('view options', { rmWhitespace: true });
+```
+
+__Note__ not all EJS options are available due to security reasons. The list of available options can be found in `_OPTS_EXPRESS` array.
+
 ## Client-side support
 
 Go to the [Latest Release](https://github.com/mde/ejs/releases/latest), download
