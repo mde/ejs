@@ -39,7 +39,7 @@ Try EJS online at: https://ionicabizau.github.io/ejs-playground/.
 ## Usage
 
 ```javascript
-var template = ejs.compile(str, options);
+let template = ejs.compile(str, options);
 template(data);
 // => Rendered HTML string
 
@@ -134,7 +134,7 @@ still supported.
 Custom delimiters can be applied on a per-template basis, or globally:
 
 ```javascript
-var ejs = require('ejs'),
+let ejs = require('ejs'),
     users = ['geddy', 'neil', 'alex'];
 
 // Just one template
@@ -154,7 +154,7 @@ functions used to render templates. It's easy to plug in LRU caching using
 Node's `lru-cache` library:
 
 ```javascript
-var ejs = require('ejs'),
+let ejs = require('ejs'),
     LRU = require('lru-cache');
 ejs.cache = LRU(100); // LRU cache with 100-item limit
 ```
@@ -163,13 +163,13 @@ If you want to clear the EJS cache, call `ejs.clearCache`. If you're using the
 LRU cache and need a different limit, simple reset `ejs.cache` to a new instance
 of the LRU.
 
-## Custom FileLoader
+## Custom file loader
 
 The default file loader is `fs.readFileSync`, if you want to customize it, you can set ejs.fileLoader.
 
 ```javascript
-var ejs = require('ejs');
-var myFileLoad = function (filePath) {
+let ejs = require('ejs');
+let myFileLoad = function (filePath) {
   return 'myFileLoad: ' + fs.readFileSync(filePath);
 };
 
@@ -210,7 +210,7 @@ Include one of these files on your page, and `ejs` should be available globally.
 <div id="output"></div>
 <script src="ejs.min.js"></script>
 <script>
-  var people = ['geddy', 'neil', 'alex'],
+  let people = ['geddy', 'neil', 'alex'],
       html = ejs.render('<%= people.join(", "); %>', {people: people});
   // With jQuery:
   $('#output').html(html);
@@ -224,22 +224,22 @@ Include one of these files on your page, and `ejs` should be available globally.
 Most of EJS will work as expected; however, there are a few things to note:
 
 1. Obviously, since you do not have access to the filesystem, `ejs.renderFile()` won't work.
-2. For the same reason, `include`s do not work unless you use an `IncludeCallback`. Here is an example:
+2. For the same reason, `include`s do not work unless you use an `include callback`. Here is an example:
   ```javascript
-  var str = "Hello <%= include('file', {person: 'John'}); %>",
+  let str = "Hello <%= include('file', {person: 'John'}); %>",
       fn = ejs.compile(str, {client: true});
 
-  fn(data, null, function(path, d){ // IncludeCallback
+  fn(data, null, function(path, d){ // include callback
     // path -> 'file'
     // d -> {person: 'John'}
     // Put your code here
     // Return the contents of file as a string
   }); // returns rendered string
   ```
-  
-  ### IDE Integrations with Syntax Highlighting
-  
-  + VSCode:Javascript EJS by *DigitalBrainstem* 
+
+### IDE Integration with Syntax Highlighting
+
+VSCode:Javascript EJS by *DigitalBrainstem*
 
 ## Related projects
 
