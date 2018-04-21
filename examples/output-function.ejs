@@ -1,0 +1,18 @@
+<ul>
+<%
+    users.forEach(function (user) {
+        echo('<li>');
+            echo('<strong>' + user.name + '</strong>');
+            echo('is a ' + user.age + ' year old ' + user.species);
+        echo('</li>\n');
+    });
+-%>
+</ul>
+
+<ul>
+<%
+    users.forEach(function (user) {
+        echo(include('./partial.ejs', {user: user}));
+    });
+%>
+</ul>
