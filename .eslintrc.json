@@ -4,6 +4,9 @@
         "commonjs": true,
         "node": true
     },
+    "parserOptions": {
+        "ecmaVersion": 6
+    },
     "extends": "eslint:recommended",
     "rules": {
         "linebreak-style": [
@@ -19,7 +22,8 @@
             "error",
             "single",
             {
-              "avoidEscape": true
+              "avoidEscape": true,
+              "allowTemplateLiterals": true
             }
         ],
         "semi": [

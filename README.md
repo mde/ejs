@@ -39,7 +39,7 @@ Try EJS online at: https://ionicabizau.github.io/ejs-playground/.
 ## Usage
 
 ```javascript
-var template = ejs.compile(str, options);
+let template = ejs.compile(str, options);
 template(data);
 // => Rendered HTML string
 
@@ -59,26 +59,27 @@ Therefore, we do not recommend using this shortcut.
 
 ## Options
 
-  - `cache`           Compiled functions are cached, requires `filename`
-  - `filename`        The name of the file being rendered. Not required if you
+  - `cache`                 Compiled functions are cached, requires `filename`
+  - `filename`              The name of the file being rendered. Not required if you
     are using `renderFile()`. Used by `cache` to key caches, and for includes.
-  - `root`            Set project root for includes with an absolute path (/file.ejs).
-  - `context`         Function execution context
-  - `compileDebug`    When `false` no debug instrumentation is compiled
-  - `client`          When `true`, compiles a function that can be rendered
+  - `root`                  Set project root for includes with an absolute path (/file.ejs).
+  - `context`               Function execution context
+  - `compileDebug`          When `false` no debug instrumentation is compiled
+  - `client`                When `true`, compiles a function that can be rendered
     in the browser without needing to load the EJS Runtime
     ([ejs.min.js](https://github.com/mde/ejs/releases/latest)).
-  - `delimiter`       Character to use with angle brackets for open/close
-  - `debug`           Output generated function body
-  - `strict`          When set to `true`, generated function is in strict mode
-  - `_with`           Whether or not to use `with() {}` constructs. If `false` then the locals will be stored in the `locals` object. Set to `false` in strict mode.
-  - `localsName`      Name to use for the object storing local variables when not using `with` Defaults to `locals`
-  - `rmWhitespace`    Remove all safe-to-remove whitespace, including leading
+  - `delimiter`             Character to use with angle brackets for open/close
+  - `debug`                 Output generated function body
+  - `strict`                When set to `true`, generated function is in strict mode
+  - `_with`                 Whether or not to use `with() {}` constructs. If `false` then the locals will be stored in the `locals` object. Set to `false` in strict mode.
+  - `localsName`            Name to use for the object storing local variables when not using `with` Defaults to `locals`
+  - `rmWhitespace`          Remove all safe-to-remove whitespace, including leading
     and trailing whitespace. It also enables a safer version of `-%>` line
     slurping for all scriptlet tags (it does not strip new lines of tags in
     the middle of a line).
-  - `escape`          The escaping function used with `<%=` construct. It is
+  - `escape`                The escaping function used with `<%=` construct. It is
     used in rendering and is `.toString()`ed in the generation of client functions. (By default escapes XML).
+  - `outputFunctionName`    Set to a string (e.g., 'echo' or 'print') for a function to print output inside scriptlet tags.
 
 This project uses [JSDoc](http://usejsdoc.org/). For the full public API
 documentation, clone the repository and run `npm run doc`. This will run JSDoc
@@ -134,7 +135,7 @@ still supported.
 Custom delimiters can be applied on a per-template basis, or globally:
 
 ```javascript
-var ejs = require('ejs'),
+let ejs = require('ejs'),
     users = ['geddy', 'neil', 'alex'];
 
 // Just one template
@@ -154,7 +155,7 @@ functions used to render templates. It's easy to plug in LRU caching using
 Node's `lru-cache` library:
 
 ```javascript
-var ejs = require('ejs'),
+let ejs = require('ejs'),
     LRU = require('lru-cache');
 ejs.cache = LRU(100); // LRU cache with 100-item limit
 ```
@@ -163,13 +164,13 @@ If you want to clear the EJS cache, call `ejs.clearCache`. If you're using the
 LRU cache and need a different limit, simple reset `ejs.cache` to a new instance
 of the LRU.
 
-## Custom FileLoader
+## Custom file loader
 
 The default file loader is `fs.readFileSync`, if you want to customize it, you can set ejs.fileLoader.
 
 ```javascript
-var ejs = require('ejs');
-var myFileLoad = function (filePath) {
+let ejs = require('ejs');
+let myFileLoad = function (filePath) {
   return 'myFileLoad: ' + fs.readFileSync(filePath);
 };
 
@@ -210,7 +211,7 @@ Include one of these files on your page, and `ejs` should be available globally.
 <div id="output"></div>
 <script src="ejs.min.js"></script>
 <script>
-  var people = ['geddy', 'neil', 'alex'],
+  let people = ['geddy', 'neil', 'alex'],
       html = ejs.render('<%= people.join(", "); %>', {people: people});
   // With jQuery:
   $('#output').html(html);
@@ -224,22 +225,22 @@ Include one of these files on your page, and `ejs` should be available globally.
 Most of EJS will work as expected; however, there are a few things to note:
 
 1. Obviously, since you do not have access to the filesystem, `ejs.renderFile()` won't work.
-2. For the same reason, `include`s do not work unless you use an `IncludeCallback`. Here is an example:
+2. For the same reason, `include`s do not work unless you use an `include callback`. Here is an example:
   ```javascript
-  var str = "Hello <%= include('file', {person: 'John'}); %>",
+  let str = "Hello <%= include('file', {person: 'John'}); %>",
       fn = ejs.compile(str, {client: true});
 
-  fn(data, null, function(path, d){ // IncludeCallback
+  fn(data, null, function(path, d){ // include callback
     // path -> 'file'
     // d -> {person: 'John'}
     // Put your code here
     // Return the contents of file as a string
   }); // returns rendered string
   ```
-  
-  ### IDE Integrations with Syntax Highlighting
-  
-  + VSCode:Javascript EJS by *DigitalBrainstem* 
+
+### IDE Integration with Syntax Highlighting
+
+VSCode:Javascript EJS by *DigitalBrainstem*
 
 ## Related projects
 

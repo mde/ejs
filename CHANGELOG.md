@@ -1,3 +1,11 @@
+## v2.5.8: 2018-03-25
+
+ + Add filename to error when include file cannot be found (@Leon)
+ + Node v9 in CI (@Thomas)
+ * Fixed special case for Express caching (@mde)
+ + Added Promise/async-await support to `renderFile` (@mde)
+ + Added notes on IDE support to README (@Betanu701)
+
 ## v2.5.7: 2017-07-29
 
  * Pass configured escape function to `rethrow` (@straker)
