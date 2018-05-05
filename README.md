@@ -71,15 +71,21 @@ Therefore, we do not recommend using this shortcut.
   - `delimiter`             Character to use with angle brackets for open/close
   - `debug`                 Output generated function body
   - `strict`                When set to `true`, generated function is in strict mode
-  - `_with`                 Whether or not to use `with() {}` constructs. If `false` then the locals will be stored in the `locals` object. Set to `false` in strict mode.
-  - `localsName`            Name to use for the object storing local variables when not using `with` Defaults to `locals`
+  - `_with`                 Whether or not to use `with() {}` constructs. If `false`
+    then the locals will be stored in the `locals` object. Set to `false` in strict mode.
+  - `localsName`            Name to use for the object storing local variables when not using
+    `with` Defaults to `locals`
   - `rmWhitespace`          Remove all safe-to-remove whitespace, including leading
     and trailing whitespace. It also enables a safer version of `-%>` line
     slurping for all scriptlet tags (it does not strip new lines of tags in
     the middle of a line).
   - `escape`                The escaping function used with `<%=` construct. It is
-    used in rendering and is `.toString()`ed in the generation of client functions. (By default escapes XML).
-  - `outputFunctionName`    Set to a string (e.g., 'echo' or 'print') for a function to print output inside scriptlet tags.
+    used in rendering and is `.toString()`ed in the generation of client functions.
+    (By default escapes XML).
+  - `outputFunctionName`    Set to a string (e.g., 'echo' or 'print') for a function to print
+    output inside scriptlet tags.
+  - `async`                 When `true`, EJS will use an async function for rendering. (Depends
+    on async/await support in the JS runtime.
 
 This project uses [JSDoc](http://usejsdoc.org/). For the full public API
 documentation, clone the repository and run `npm run doc`. This will run JSDoc
