@@ -1,3 +1,10 @@
+## v2.6.1: 2018-04-18
+  * Async rendering (@Viko)
+
+## v2.5.9: 2018-04-18
+  * Fixed options-passing for Express (@mde)
+  * Re-enabled performance tests (@mde)
+
 ## v2.5.8: 2018-03-25
 
  + Add filename to error when include file cannot be found (@Leon)
