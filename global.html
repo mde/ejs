@@ -271,7 +271,7 @@ can be read a file by path, return a string after processing</p>
     
 
     
-    <h4 class="name" id="ClientFunction"><span class="type-signature"></span>ClientFunction<span class="signature">(locals<span class="signature-attributes">opt</span>, escape<span class="signature-attributes">opt</span>, include<span class="signature-attributes">opt</span>, rethrow<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="ClientFunction"><span class="type-signature"></span>ClientFunction<span class="signature">(locals<span class="signature-attributes">opt</span>, escape<span class="signature-attributes">opt</span>, include<span class="signature-attributes">opt</span>, rethrow<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {String|Promise.&lt;String>}</span></h4>
     
 
     
@@ -511,7 +511,7 @@ is adjustable through <a href="module-ejs.html#.localsName"><code>module:ejs.loc
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="docs_jsdoc_template-functions.jsdoc.html">docs/jsdoc/template-functions.jsdoc</a>, <a href="docs_jsdoc_template-functions.jsdoc.html#line12">line 12</a>
+        <a href="docs_jsdoc_template-functions.jsdoc.html">docs/jsdoc/template-functions.jsdoc</a>, <a href="docs_jsdoc_template-functions.jsdoc.html#line14">line 14</a>
     </li></ul></dd>
     
 
@@ -534,6 +534,31 @@ is adjustable through <a href="module-ejs.html#.localsName"><code>module:ejs.loc
 
 
 
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>Return type depends on <a href="global.html#Options"><code>Options</code></a><code>.async</code>.</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">String</span>
+|
+
+<span class="param-type">Promise.&lt;String></span>
+
+
+    </dd>
+</dl>
+
+    
 
 
 
@@ -646,7 +671,7 @@ is adjustable through <a href="module-ejs.html#.localsName"><code>module:ejs.loc
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="docs_jsdoc_template-functions.jsdoc.html">docs/jsdoc/template-functions.jsdoc</a>, <a href="docs_jsdoc_template-functions.jsdoc.html#line37">line 37</a>
+        <a href="docs_jsdoc_template-functions.jsdoc.html">docs/jsdoc/template-functions.jsdoc</a>, <a href="docs_jsdoc_template-functions.jsdoc.html#line42">line 42</a>
     </li></ul></dd>
     
 
@@ -846,7 +871,7 @@ is adjustable through <a href="module-ejs.html#.localsName"><code>module:ejs.loc
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="docs_jsdoc_template-functions.jsdoc.html">docs/jsdoc/template-functions.jsdoc</a>, <a href="docs_jsdoc_template-functions.jsdoc.html#line61">line 61</a>
+        <a href="docs_jsdoc_template-functions.jsdoc.html">docs/jsdoc/template-functions.jsdoc</a>, <a href="docs_jsdoc_template-functions.jsdoc.html#line66">line 66</a>
     </li></ul></dd>
     
 
@@ -1406,6 +1431,44 @@ and regular functions of the same file.</p>
         </tr>
 
     
+
+        <tr>
+            
+                <td class="name"><code>async</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last"><p>Whether or not to create an async function instead of a regular function.
+This requires language support.</p></td>
+        </tr>
+
+    
     </tbody>
 </table>
 
@@ -1815,7 +1878,7 @@ rethrow an error in a better-formatted way.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="docs_jsdoc_template-functions.jsdoc.html">docs/jsdoc/template-functions.jsdoc</a>, <a href="docs_jsdoc_template-functions.jsdoc.html#line47">line 47</a>
+        <a href="docs_jsdoc_template-functions.jsdoc.html">docs/jsdoc/template-functions.jsdoc</a>, <a href="docs_jsdoc_template-functions.jsdoc.html#line52">line 52</a>
     </li></ul></dd>
     
 
@@ -1849,7 +1912,7 @@ rethrow an error in a better-formatted way.</p>
     
 
     
-    <h4 class="name" id="TemplateFunction"><span class="type-signature"></span>TemplateFunction<span class="signature">(locals<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="TemplateFunction"><span class="type-signature"></span>TemplateFunction<span class="signature">(locals<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {String|Promise.&lt;String>}</span></h4>
     
 
     
@@ -1994,6 +2057,31 @@ rethrow an error in a better-formatted way.</p>
 
 
 
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>Return type depends on <a href="global.html#Options"><code>Options</code></a><code>.async</code>.</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">String</span>
+|
+
+<span class="param-type">Promise.&lt;String></span>
+
+
+    </dd>
+</dl>
+
+    
 
 
 
@@ -2019,7 +2107,7 @@ rethrow an error in a better-formatted way.</p>
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Wed Apr 18 2018 20:13:45 GMT-0700 (PDT)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sat May 05 2018 11:52:32 GMT-0700 (PDT)
 </footer>
 
 <script> prettyPrint(); </script>
