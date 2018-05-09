@@ -907,6 +907,16 @@ suite('include()', function () {
       fixture('include-escaped.html'));
   });
 
+  test('include and escape within included ejs', function () {
+    var escape = function (s) {
+      return s.toUpperCase();
+    };
+
+    var file = 'test/fixtures/include-nested-escape.ejs';
+    assert.equal(ejs.render(fixture('include-nested-escape.ejs'), {}, {filename: file, escape: escape}),
+      fixture('include-nested-escape.html'));
+  });
+
   test('include in expression ejs', function () {
     var file = 'test/fixtures/include-expression.ejs';
     assert.equal(ejs.render(fixture('include-expression.ejs'), {}, {filename: file}),
