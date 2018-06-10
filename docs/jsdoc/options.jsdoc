@@ -40,6 +40,16 @@
  * The path to the project root. When this is set, absolute paths for includes
  * (/filename.ejs) will be relative to the project root.
  *
+ * @property {String}  [openDelimiter='<']
+ * The opening delimiter for all statements. This allows you to clearly delinate
+ * the difference between template code and existing delimiters. (It is recommended
+ * to synchronize this with the closeDelimiter property.)
+ *
+ * @property {String}  [closeDelimiter='>']
+ * The closing delimiter for all statements. This allows to to clearly delinate
+ * the difference between template code and existing delimiters. (It is recommended
+ * to synchronize this with the openDelimiter property.)
+ *
  * @property {String}  [delimiter='%']
  * The delimiter used in template compilation.
  *
