@@ -39,7 +39,7 @@ Try EJS online at: https://ionicabizau.github.io/ejs-playground/.
 ## Usage
 
 ```javascript
-let template = ejs.compile(str, options);
+const template = ejs.compile(str, options);
 template(data);
 // => Rendered HTML string
 
@@ -141,7 +141,7 @@ still supported.
 Custom delimiters can be applied on a per-template basis, or globally:
 
 ```javascript
-let ejs = require('ejs'),
+const ejs = require('ejs'),
     users = ['geddy', 'neil', 'alex'];
 
 // Just one template
@@ -161,7 +161,7 @@ functions used to render templates. It's easy to plug in LRU caching using
 Node's `lru-cache` library:
 
 ```javascript
-let ejs = require('ejs'),
+const ejs = require('ejs'),
     LRU = require('lru-cache');
 ejs.cache = LRU(100); // LRU cache with 100-item limit
 ```
@@ -175,8 +175,8 @@ of the LRU.
 The default file loader is `fs.readFileSync`, if you want to customize it, you can set ejs.fileLoader.
 
 ```javascript
-let ejs = require('ejs');
-let myFileLoad = function (filePath) {
+const ejs = require('ejs');
+const myFileLoad = function (filePath) {
   return 'myFileLoad: ' + fs.readFileSync(filePath);
 };
 
@@ -217,7 +217,7 @@ Include one of these files on your page, and `ejs` should be available globally.
 <div id="output"></div>
 <script src="ejs.min.js"></script>
 <script>
-  let people = ['geddy', 'neil', 'alex'],
+  const people = ['geddy', 'neil', 'alex'],
       html = ejs.render('<%= people.join(", "); %>', {people: people});
   // With jQuery:
   $('#output').html(html);
@@ -233,7 +233,7 @@ Most of EJS will work as expected; however, there are a few things to note:
 1. Obviously, since you do not have access to the filesystem, `ejs.renderFile()` won't work.
 2. For the same reason, `include`s do not work unless you use an `include callback`. Here is an example:
   ```javascript
-  let str = "Hello <%= include('file', {person: 'John'}); %>",
+  const str = "Hello <%= include('file', {person: 'John'}); %>",
       fn = ejs.compile(str, {client: true});
 
   fn(data, null, function(path, d){ // include callback
