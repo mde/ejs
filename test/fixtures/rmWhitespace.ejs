@@ -8,7 +8,16 @@ adsffadsfadsfad<%= f %>
 piece of text.
 <% var a = 'a' %>  
 Text again.
+<% var aa = a + 'a' %>
+Raw output:
+<%- aa %>
+Blank
+
+Line
 <% var b = 'b' %>
 <% var c = 'c'
 var d = 'd' %>
-Another text. <%= c %>  
+Another text. <%= c %>
+After escaped
+<% /* newline slurp */ -%>
+Last line
