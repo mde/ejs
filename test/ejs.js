@@ -1167,6 +1167,10 @@ suite('preprocessor include', function () {
     throw new Error('expected inclusion error');
   });
 
+  test('supports including an function instead of a file path (blocks feature)', function () {
+    assert.equal(ejs.render(fixture('blocks_implementation.ejs'), {}, {filename: path.join(__dirname, 'blocks_implementation.ejs')}),
+      fixture('blocks_result.html'));
+  });
 });
 
 suite('comments', function () {

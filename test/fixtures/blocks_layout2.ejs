@@ -1,0 +1,7 @@
+<% let layout2Content = () => { -%>
+    <h2><%= title%></h2>
+    <main>
+        <%- include(content)%>
+    </main>
+<% } -%>
+<%- include('blocks_layout1', { content: layout2Content, title }) %>
