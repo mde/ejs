@@ -1,0 +1,11 @@
+{
+  "description": "client side ejs compiled with express middleware",
+  "main": "app.js",
+  "scripts": {
+    "start": "node ./app.js"
+  },
+  "dependencies": {
+    "ejs": "^2.6.1",
+    "express": "~4.16.0"
+  }
+}
