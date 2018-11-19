@@ -15,12 +15,12 @@ function compileEjsTemplate(name, template) {
     res.locals.compiledEjsTemplates = res.locals.compiledEjsTemplates || {};
     res.locals.compiledEjsTemplates[name] = compiledTemplate.toString();
     return next();
-  }
+  };
 }
 
-app.use(compileEjsTemplate('helloTemplate', "Hello <%= include('messageTemplate', { person: 'John' }); %>"));
-app.use(compileEjsTemplate('messageTemplate', "<%= person %> now you know <%= fact %>."));
-app.use('/', function(req, res, next) {
+app.use(compileEjsTemplate('helloTemplate', 'Hello <%= include(\'messageTemplate\', { person: \'John\' }); %>'));
+app.use(compileEjsTemplate('messageTemplate', '<%= person %> now you know <%= fact %>.'));
+app.use('/', function(req, res) {
   return res.render('index', {});
 });
 
