@@ -1156,12 +1156,9 @@ suite('preprocessor include', function () {
     var file = 'test/fixtures/track-dependencies-without-duplicates.ejs';
     var fn = ejs.compile(fixture('track-dependencies-without-duplicates.ejs'), { filename: file });
     // only 2 dependencies : simple.ejs and simple-with-parenthesis.ejs
-    // TODO should we remove duplicate from dependencies list ?
-    // in that case, fn.dependencies.length should be 2 instead of 6
-    assert.equal(fn.dependencies.length, 6);
-    // assert.equal(fn.dependencies.length, 2);
-    // assert.ok(fn.dependencies.indexOf(__dirname + '/fixtures/includes/simple.ejs') > -1);
-    // assert.ok(fn.dependencies.indexOf(__dirname + '/fixtures/includes/simple-with-parenthesis.ejs') > -1);
+    assert.equal(fn.dependencies.length, 2);
+    assert.ok(fn.dependencies.indexOf(__dirname + '/fixtures/includes/simple.ejs') > -1);
+    assert.ok(fn.dependencies.indexOf(__dirname + '/fixtures/includes/simple-with-parenthesis.ejs') > -1);
   });
 
   test('include arbitrary files as-is', function () {
