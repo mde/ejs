@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>client side ejs compiled with express middleware</title>
+  </head>
+  <body>
+    <div id="greeting"></div>
+    <script>
+      const helloTemplateFn = <%- compiledEjsTemplates.helloTemplate %>;
+      const messageTemplateFn = <%- compiledEjsTemplates.messageTemplate %>;
+
+      (function() {
+        const includeFn = function(path, data) {
+          if (path === 'messageTemplate') {
+            return messageTemplateFn({
+              fact: 'how to render a page with compiled ejs templates',
+              person: data.person
+            });
+          }
+        };
+
+        const html = helloTemplateFn({}, null, includeFn, null);
+        const $greeting = document.getElementById('greeting');
+        $greeting.innerHTML = html;
+      })();
+    </script>
+  </body>
+</html>

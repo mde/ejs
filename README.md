@@ -244,6 +244,8 @@ Most of EJS will work as expected; however, there are a few things to note:
   }); // returns rendered string
   ```
 
+See the [examples folder](https://github.com/mde/ejs/tree/master/examples) for more details.
+
 ### IDE Integration with Syntax Highlighting
 
 VSCode:Javascript EJS by *DigitalBrainstem*
