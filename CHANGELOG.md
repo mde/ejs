@@ -1,3 +1,11 @@
+## v2.6.2: 2019-06-19
+  * Correctly pass custom escape function to includes (@alecgibson)
+  * Fixes for rmWhitespace (@nwoltman)
+  + Examples for client-side EJS compiled with Express middleware (@mjgs)
+  + Make Template constructor public (@ThisNameWasTaken)
+  + Added `remove` function to cache (@S2-)
+  * Recognize both 'Nix and Windows absolute paths (@mde)
+
 ## v2.6.1: 2018-04-18
   * Async rendering (@Viko)
 
