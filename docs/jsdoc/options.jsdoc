@@ -17,6 +17,28 @@
  * whose name is specified by {@link module:ejs.localsName} (default to
  * `locals`).
  *
+ * @property {Boolean} [strict=false]
+ * Whether to run in strict mode or not.
+ * Enforces `_with=false` unless `allowStrictWith` is set to `true`.
+ *
+ * @property {Boolean} [allowStrictWith=false]
+ * Uses a hack to use the `with () {}` construct alongside strict mode
+ * by embedding a strict function inside `with` statement, which keeps
+ * access to the runtime-augmented scope variables from the `locals` object:
+ * ```js
+ * var locals = {
+ *   foo: 'bar'
+ * }
+ *
+ * with (locals) {
+ *   (function () {
+ *     'use strict';
+ *     console.assert(typeof foo === 'string');
+ *     console.assert(foo === locals.foo);
+ *   })();
+ * }
+ * ```
+ *
  * @property {Boolean} [rmWhitespace=false]
  * Remove all safe-to-remove whitespace, including leading and trailing
  * whitespace. It also enables a safer version of `-%>` line slurping for all

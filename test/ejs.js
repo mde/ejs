@@ -124,6 +124,12 @@ suite('ejs.compile(str, options)', function () {
     assert.equal(ejs.render(fixture('strict.ejs'), {}, {strict: true}), 'true');
   });
 
+  test('strict mode `with` statement hack also works', function () {
+    var locals = Object.create(null);
+    locals.foo = 'bar';
+    assert.equal(ejs.render(fixture('strict-with.ejs'), locals, {strict: true, allowStrictWith: true, _with: true}), locals.foo);
+  });
+
   test('can compile to an async function', function (done) {
     try {
       eval('(async function() {})');
