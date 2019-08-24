@@ -124,6 +124,42 @@ suite('ejs.compile(str, options)', function () {
     assert.equal(ejs.render(fixture('strict.ejs'), {}, {strict: true}), 'true');
   });
 
+  test('destructuring works in strict mode as an alternative to `with`', function () {
+    var locals = Object.create(null);
+    locals.foo = 'bar';
+    assert.equal(ejs.render(fixture('strict-destructuring.ejs'), locals, {
+      strict: true,
+      destructuredLocals: Object.keys(locals),
+      _with: true
+    }), locals.foo);
+  });
+
+  test('destructuring works in strict and async mode', function (done) {
+    try {
+      eval('(async function() {})');
+    } catch (e) {
+      if (e instanceof SyntaxError) {
+        done();
+        return;
+      } else {
+        throw e;
+      }
+    }
+
+    var locals = Object.create(null);
+    locals.foo = 'bar';
+    ejs.render(fixture('strict-destructuring.ejs'), locals, {
+      strict: true,
+      async: true,
+      destructuredLocals: Object.keys(locals),
+    }).then(function (value) {
+      assert.equal(value, locals.foo);
+    }).then(
+      () => done(),
+      e => done(e)
+    );
+  });
+
   test('can compile to an async function', function (done) {
     try {
       eval('(async function() {})');
