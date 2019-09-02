@@ -1,3 +1,6 @@
+## v2.7.1: 2019-09-02
+  * Added deprecation notice for use of require.extensions (@mde)
+
 ## v2.6.2: 2019-06-19
   * Correctly pass custom escape function to includes (@alecgibson)
   * Fixes for rmWhitespace (@nwoltman)
