@@ -71,6 +71,14 @@
  * Whether or not to create an async function instead of a regular function.
  * This requires language support.
  *
+ * @property {boolean} [legacyInclude=true]
+ * Whether to enable legacy preprocessor include directives.
+ *
+ * **Example:**
+ * ```ejs
+ * <%- include foo %>
+ * ```
+ *
  * @static
  * @global
  */
