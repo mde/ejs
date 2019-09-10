@@ -1167,6 +1167,16 @@ suite('preprocessor include', function () {
     throw new Error('expected inclusion error');
   });
 
+  test('legacy includes are a syntax error when disabled', function() {
+    try {
+      ejs.render('<%- include is-syntax-error %>', null, {legacyInclude: false});
+    }
+    catch (err) {
+      assert.ok(err.message.indexOf('missing ) after argument list') > -1);
+      return;
+    }
+    throw new Error('expected SyntaxError from legacy include being disabled');
+  });
 });
 
 suite('comments', function () {
