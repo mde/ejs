@@ -73,6 +73,8 @@ Therefore, we do not recommend using this shortcut.
   - `strict`                When set to `true`, generated function is in strict mode
   - `_with`                 Whether or not to use `with() {}` constructs. If `false`
     then the locals will be stored in the `locals` object. Set to `false` in strict mode.
+  - `destructuredLocals`    An array of local variables that are always destructured from
+    the locals object, available even in strict mode.
   - `localsName`            Name to use for the object storing local variables when not using
     `with` Defaults to `locals`
   - `rmWhitespace`          Remove all safe-to-remove whitespace, including leading
