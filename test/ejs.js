@@ -183,6 +183,32 @@ suite('ejs.compile(str, options)', function () {
       done();
     });
   });
+
+  test('Non-async error message mentions `async: true`', function (done) {
+    try {
+      eval('(async function() {})');
+    } catch (e) {
+      if (e instanceof SyntaxError) {
+        done();
+        return;
+      } else {
+        throw e;
+      }
+    }
+
+    try {
+      ejs.compile('<%= await "Hi" %>');
+    }
+    catch (err) {
+      if (err instanceof SyntaxError) {
+        assert.ok(err.message.indexOf('async: true') > -1);
+        return done();
+      } else {
+        throw err;
+      }
+    }
+    throw new Error('no error reported when there should be');
+  });
 });
 
 suite('client mode', function () {
