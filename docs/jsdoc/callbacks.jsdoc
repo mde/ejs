@@ -3,7 +3,7 @@
  *
  * @callback RenderFileCallback
  * @param {?Error}  err error, if any resulted from the rendering process
- * @param {?String} str output string, is `null` if there is an error
+ * @param {?String} [str] output string, is `null` or `undefined` if there is an error
  * @static
  * @global
  */
