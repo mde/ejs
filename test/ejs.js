@@ -209,6 +209,24 @@ suite('ejs.compile(str, options)', function () {
     }
     throw new Error('no error reported when there should be');
   });
+
+  var testFuncName = typeof Object.defineProperty === 'function' ? test : test.skip;
+
+  testFuncName('Compiled function name matches `filename` without the extension', function (done) {
+    var func = ejs.compile('<%= "Foo" %>', {
+      filename: 'foo.ejs'
+    });
+
+    assert.ok(func.name === 'foo');
+    return done();
+  });
+
+  testFuncName('Compiled function name defaults to "anonymous" when `filename` is unspecified', function (done) {
+    var func = ejs.compile('<%= "Foo" %>');
+
+    assert.ok(func.name === 'anonymous');
+    return done();
+  });
 });
 
 suite('client mode', function () {
