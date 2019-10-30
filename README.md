@@ -122,7 +122,7 @@ call unless you are using `renderFile()`.
 You'll likely want to use the raw output tag (`<%-`) with your include to avoid
 double-escaping the HTML output.
 
-```html
+```ejs
 <ul>
   <% users.forEach(function(user){ %>
     <%- include('user/show', {user: user}) %>
@@ -193,7 +193,7 @@ EJS does not specifically support blocks, but layouts can be implemented by
 including headers and footers, like so:
 
 
-```html
+```ejs
 <%- include('header') -%>
 <h1>
   Title
