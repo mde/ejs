@@ -1,8 +1,9 @@
 'use strict';
 
 var ejs = require('..');
+var path = require('path');
 
-ejs.fileLoader = function(n) { return files[n.replace(/^\//, '').replace(/\.ejs$/, '')]; };
+ejs.fileLoader = function(n) { return files[path.basename(n, '.ejs')]; };
 
 var loops = 10000;
 var runs = 9;  // min 4 for median
