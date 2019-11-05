@@ -52,6 +52,15 @@ users.push({name: 'geddy'});
 users.push({name: 'neil'});
 users.push({name: 'alex'});
 
+/** Used to test code that depends on async functions being supported. */
+var testAsync = test.skip;
+try {
+  eval('(async function() {})');
+  testAsync = test;
+} catch (e) {
+  // ignore
+}
+
 suite('ejs.compile(str, options)', function () {
   test('compile to a function', function () {
     var fn = ejs.compile('<p>yay</p>');
@@ -134,18 +143,7 @@ suite('ejs.compile(str, options)', function () {
     }), locals.foo);
   });
 
-  test('destructuring works in strict and async mode', function (done) {
-    try {
-      eval('(async function() {})');
-    } catch (e) {
-      if (e instanceof SyntaxError) {
-        done();
-        return;
-      } else {
-        throw e;
-      }
-    }
-
+  testAsync('destructuring works in strict and async mode', function (done) {
     var locals = Object.create(null);
     locals.foo = 'bar';
     ejs.render(fixture('strict-destructuring.ejs'), locals, {
@@ -160,18 +158,7 @@ suite('ejs.compile(str, options)', function () {
     );
   });
 
-  test('can compile to an async function', function (done) {
-    try {
-      eval('(async function() {})');
-    } catch (e) {
-      if (e instanceof SyntaxError) {
-        done();
-        return;
-      } else {
-        throw e;
-      }
-    }
-
+  testAsync('can compile to an async function', function (done) {
     ejs.compile('<%= await "Hi" %>', {async: true})().then(function (value) {
       try {
         assert.equal(value, 'Hi');
@@ -184,18 +171,7 @@ suite('ejs.compile(str, options)', function () {
     });
   });
 
-  test('Non-async error message mentions `async: true`', function (done) {
-    try {
-      eval('(async function() {})');
-    } catch (e) {
-      if (e instanceof SyntaxError) {
-        done();
-        return;
-      } else {
-        throw e;
-      }
-    }
-
+  testAsync('Non-async error message mentions `async: true`', function (done) {
     try {
       ejs.compile('<%= await "Hi" %>');
     }
