@@ -4,7 +4,7 @@ Embedded JavaScript templates
 
 [![Build Status](https://img.shields.io/travis/mde/ejs/master.svg?style=flat)](https://travis-ci.org/mde/ejs)
 [![Developing Dependencies](https://img.shields.io/david/dev/mde/ejs.svg?style=flat)](https://david-dm.org/mde/ejs?type=dev)
-[![Known Vulnerabilities](https://snyk.io/test/npm/ejs/badge.svg?style=flat-square)](https://snyk.io/test/npm/ejs)
+[![Known Vulnerabilities](https://snyk.io/test/npm/ejs/badge.svg?style=flat)](https://snyk.io/test/npm/ejs)
 
 ## Installation
 
@@ -28,7 +28,7 @@ $ npm install ejs
 
 ## Example
 
-```html
+```ejs
 <% if (user) { %>
   <h2><%= user.name %></h2>
 <% } %>
