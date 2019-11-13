@@ -8,9 +8,6 @@
   ],
   "version": "2.7.1",
   "author": "Matthew Eernisse <mde@fleegix.org> (http://fleegix.org)",
-  "contributors": [
-    "Timothy Gu <timothygu99@gmail.com> (https://timothygu.github.io)"
-  ],
   "license": "Apache-2.0",
   "main": "./lib/ejs.js",
   "repository": {
