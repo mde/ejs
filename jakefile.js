@@ -56,7 +56,7 @@ task('test', ['lint'], function () {
 
 publishTask('ejs', ['build'], function () {
   this.packageFiles.include([
-    'Jakefile',
+    'jakefile.js',
     'README.md',
     'LICENSE',
     'package.json',
