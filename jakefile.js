@@ -18,7 +18,7 @@ task('clean', ['clobber'], function () {
 });
 
 desc('Lints the source code');
-task('lint', function () {
+task('lint', ['clean'], function () {
   exec('./node_modules/.bin/eslint "**/*.js"');
   console.log('Linting completed.');
 });
