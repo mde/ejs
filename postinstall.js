@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+'use strict';
+
 function isTrue(value) {
   return !!value && value !== '0' && value !== 'false';
 }
