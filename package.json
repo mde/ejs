@@ -32,6 +32,6 @@
     "node": ">=0.10.0"
   },
   "scripts": {
-    "postinstall": "node -e \"console.log('Thank you for installing \\u001b[35mEJS\\u001b[0m: built with the \\u001b[32mJake\\u001b[0m JavaScript build tool (\\u001b[32mhttps://jakejs.com/\\u001b[0m)\\n');\""
+    "postinstall": "node ./postinstall.js"
   }
 }

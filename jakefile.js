@@ -60,6 +60,7 @@ publishTask('ejs', ['build'], function () {
     'README.md',
     'LICENSE',
     'package.json',
+    'postinstall.js',
     'ejs.js',
     'ejs.min.js',
     'lib/**'
