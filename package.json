@@ -32,6 +32,7 @@
     "node": ">=0.10.0"
   },
   "scripts": {
+    "test": "jake test",
     "postinstall": "node ./postinstall.js"
   }
 }
