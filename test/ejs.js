@@ -1242,19 +1242,6 @@ suite('comments', function () {
   });
 });
 
-suite('require', function () {
-
-  // Only works with inline/preprocessor includes
-  test('allow ejs templates to be required as node modules', function () {
-    var file = 'test/fixtures/include_preprocessor.ejs';
-    var template = require(__dirname + '/fixtures/menu_preprocessor.ejs');
-    if (!process.env.running_under_istanbul) {
-      assert.equal(template({filename: file, pets: users}),
-        fixture('menu_preprocessor.html'));
-    }
-  });
-});
-
 suite('test fileloader', function () {
 
   var myFileLoad = function (filePath) {
