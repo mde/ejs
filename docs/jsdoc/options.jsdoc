@@ -17,6 +17,14 @@
  * whose name is specified by {@link module:ejs.localsName} (default to
  * `locals`).
  *
+ * @property {Boolean} [strict=false]
+ * Whether to run in strict mode or not.
+ * Enforces `_with=false`.
+ *
+ * @property {String[]} [destructuredLocals=[]]
+ * An array of local variables that are always destructured from {@link module:ejs.localsName},
+ * available even in strict mode.
+ *
  * @property {Boolean} [rmWhitespace=false]
  * Remove all safe-to-remove whitespace, including leading and trailing
  * whitespace. It also enables a safer version of `-%>` line slurping for all
@@ -70,6 +78,14 @@
  * @property {Boolean} [async=false]
  * Whether or not to create an async function instead of a regular function.
  * This requires language support.
+ *
+ * @property {boolean} [legacyInclude=true]
+ * Whether to enable legacy preprocessor include directives.
+ *
+ * **Example:**
+ * ```ejs
+ * <%- include foo %>
+ * ```
  *
  * @static
  * @global

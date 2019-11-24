@@ -65,7 +65,7 @@ The content of the tag can be any valid JavaScript operators, so tags like
 
 ##### EJS
 
-```html
+```ejs
 <p>Hello, <%= name %>.</p>
 <p>Hello, <%= 'the Most Honorable ' + name %>.</p>
 ```
@@ -97,7 +97,7 @@ cross-site scripting (XSS) attacks.
 
 ##### EJS
 
-```html
+```ejs
 <p>Hello, <%- myHtml %>.</p>
 <p>Hello, <%= myHtml %>.</p>
 
@@ -138,7 +138,7 @@ example below. You can trim it using the `-%>` ending tag.
 
 ##### EJS
 
-```html
+```ejs
 <div>
 <%# comment %>
 </div>
@@ -171,7 +171,7 @@ All types of JavaScript comments are allowed, although it is preferable to use
 the `<%#` tag for comments. For example, the following three code blocks are
 equivalent, though `<%#` is the shortest.
 
-```js
+```ejs
 <%# comment %>
 <%/* comment */%>
 <%// comment %>
@@ -185,7 +185,7 @@ statements, but the behavior is undefined and subject to change.
 
 It is not necessary to use curly brackets for scriptlet-only code.
 
-```html
+```ejs
 <%# Bad practice %>
 <% if (true) %>
   <p>Yay it's true!</p>
@@ -196,7 +196,7 @@ It is not necessary to use curly brackets for scriptlet-only code.
 <% } %>
 ```
 
-```js
+```ejs
 <%# These are all valid statements %>
 <% var output
      , exclamation = ''
@@ -223,7 +223,7 @@ Line breaks are allowed in `<%` tags.
 Unless the statement involves mixing EJS and JavaScript scriptlet, always put
 complete statements in a tag. For example, the following works:
 
-```js
+```ejs
 <% var stringToShow = thisIsABooleanVariableWithAVeryLongName
                     ? 'OK'
                     : 'not OK' %>
@@ -231,7 +231,7 @@ complete statements in a tag. For example, the following works:
 
 While the following does not:
 
-```js
+```ejs
 <% var stringToShow = thisIsABooleanVariableWithAVeryLongName %>
 <%                  ? 'OK'                                    %>
 <%                  : 'not OK'                                %>
@@ -258,7 +258,7 @@ It does *not* mean that we recommend mixing coding styles in your own project.
 
 ##### EJS
 
-```html
+```ejs
 <dl>
 <%for (var i = 0; i < users.length; i++) {    %><%
   var user = users[i]
@@ -314,7 +314,7 @@ This tag is the same as a Scriptlet, except that it removes all whitespace befor
 
 ##### EJS
 
-```html
+```ejs
 <ul>
   <% users.forEach(function(user, i, arr){ -%>
     <li><%= user %></li>
@@ -362,7 +362,7 @@ not have any effect on output tags.
 
 ##### EJS
 
-```html
+```ejs
 Beginning of template
 <%  'this is a statement'
  + ' that is long'
@@ -412,7 +412,7 @@ escape `<` or `>` at all.
 
 ##### EJS
 
-```html
+```ejs
 <pre>This is literal: <%%</pre>
 <pre>This is literal too: <%% %></pre>
 <pre>This is literal as well: %%></pre>
@@ -461,13 +461,13 @@ directive, as it trims the whitespace after the included file.
 
 ##### included.ejs
 
-```html
+```ejs
 <li><%= pet.name %></li>
 ```
 
 ##### main.ejs
 
-```html
+```ejs
 <ul>
 <% pets.forEach(function (pet) { -%>
   <% include included %>
@@ -495,7 +495,7 @@ directive, as it trims the whitespace after the included file.
 
 ##### “Preprocessor" output
 
-```js
+```ejs
 <ul>
 <% pets.forEach(function (pet) { -%>
   <li><%= pet.name %></li>
@@ -542,13 +542,13 @@ This has the exact same effect as the example for the `include` directive.
 
 ##### included.ejs
 
-```html
+```ejs
 <li><%= pet.name %></li>
 ```
 
 ##### main.ejs
 
-```html
+```ejs
 <ul>
 <%  pets.forEach(function (pet) { -%>
   <%- include('included', {

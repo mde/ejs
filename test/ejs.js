@@ -52,6 +52,15 @@ users.push({name: 'geddy'});
 users.push({name: 'neil'});
 users.push({name: 'alex'});
 
+/** Used to test code that depends on async functions being supported. */
+var testAsync = test.skip;
+try {
+  eval('(async function() {})');
+  testAsync = test;
+} catch (e) {
+  // ignore
+}
+
 suite('ejs.compile(str, options)', function () {
   test('compile to a function', function () {
     var fn = ejs.compile('<p>yay</p>');
@@ -124,18 +133,32 @@ suite('ejs.compile(str, options)', function () {
     assert.equal(ejs.render(fixture('strict.ejs'), {}, {strict: true}), 'true');
   });
 
-  test('can compile to an async function', function (done) {
-    try {
-      eval('(async function() {})');
-    } catch (e) {
-      if (e instanceof SyntaxError) {
-        done();
-        return;
-      } else {
-        throw e;
-      }
-    }
+  test('destructuring works in strict mode as an alternative to `with`', function () {
+    var locals = Object.create(null);
+    locals.foo = 'bar';
+    assert.equal(ejs.render(fixture('strict-destructuring.ejs'), locals, {
+      strict: true,
+      destructuredLocals: Object.keys(locals),
+      _with: true
+    }), locals.foo);
+  });
 
+  testAsync('destructuring works in strict and async mode', function (done) {
+    var locals = Object.create(null);
+    locals.foo = 'bar';
+    ejs.render(fixture('strict-destructuring.ejs'), locals, {
+      strict: true,
+      async: true,
+      destructuredLocals: Object.keys(locals),
+    }).then(function (value) {
+      assert.equal(value, locals.foo);
+    }).then(
+      () => done(),
+      e => done(e)
+    );
+  });
+
+  testAsync('can compile to an async function', function (done) {
     ejs.compile('<%= await "Hi" %>', {async: true})().then(function (value) {
       try {
         assert.equal(value, 'Hi');
@@ -146,6 +169,39 @@ suite('ejs.compile(str, options)', function () {
 
       done();
     });
+  });
+
+  testAsync('Non-async error message mentions `async: true`', function (done) {
+    try {
+      ejs.compile('<%= await "Hi" %>');
+    }
+    catch (err) {
+      if (err instanceof SyntaxError) {
+        assert.ok(err.message.indexOf('async: true') > -1);
+        return done();
+      } else {
+        throw err;
+      }
+    }
+    throw new Error('no error reported when there should be');
+  });
+
+  var testFuncName = typeof Object.defineProperty === 'function' ? test : test.skip;
+
+  testFuncName('Compiled function name matches `filename` without the extension', function (done) {
+    var func = ejs.compile('<%= "Foo" %>', {
+      filename: 'foo.ejs'
+    });
+
+    assert.ok(func.name === 'foo');
+    return done();
+  });
+
+  testFuncName('Compiled function name defaults to "anonymous" when `filename` is unspecified', function (done) {
+    var func = ejs.compile('<%= "Foo" %>');
+
+    assert.ok(func.name === 'anonymous');
+    return done();
   });
 });
 
@@ -1167,6 +1223,16 @@ suite('preprocessor include', function () {
     throw new Error('expected inclusion error');
   });
 
+  test('legacy includes are a syntax error when disabled', function() {
+    try {
+      ejs.render('<%- include is-syntax-error %>', null, {legacyInclude: false});
+    }
+    catch (err) {
+      assert.ok(err.message.indexOf('missing ) after argument list') > -1);
+      return;
+    }
+    throw new Error('expected SyntaxError from legacy include being disabled');
+  });
 });
 
 suite('comments', function () {

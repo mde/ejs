@@ -18,8 +18,8 @@ task('clean', ['clobber'], function () {
 });
 
 desc('Lints the source code');
-task('lint', function () {
-  exec('./node_modules/.bin/eslint "**/*.js" Jakefile');
+task('lint', ['clean'], function () {
+  exec('./node_modules/.bin/eslint "**/*.js"');
   console.log('Linting completed.');
 });
 
@@ -33,6 +33,7 @@ task('minify', function () {
   console.log('Minification completed.');
 });
 
+desc('Generates the EJS API docs');
 task('doc', function (dev) {
   jake.rmRf('out');
   var p = dev ? '-p' : '';
@@ -40,6 +41,7 @@ task('doc', function (dev) {
   console.log('Documentation generated.');
 });
 
+desc('Publishes the EJS API docs');
 task('docPublish', ['doc'], function () {
   fs.writeFileSync('out/CNAME', 'api.ejs.co');
   console.log('Pushing docs to gh-pages...');
@@ -47,16 +49,18 @@ task('docPublish', ['doc'], function () {
   console.log('Docs published to gh-pages.');
 });
 
+desc('Runs the EJS test suite');
 task('test', ['lint'], function () {
   exec('./node_modules/.bin/mocha');
 });
 
 publishTask('ejs', ['build'], function () {
   this.packageFiles.include([
-    'Jakefile',
+    'jakefile.js',
     'README.md',
     'LICENSE',
     'package.json',
+    'postinstall.js',
     'ejs.js',
     'ejs.min.js',
     'lib/**'
