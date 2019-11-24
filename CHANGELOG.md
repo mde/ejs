@@ -1,3 +1,8 @@
+## v3.0.1: 2019-11-23
+  * Removed require.extensions (@mde)
+  * Removed legacy preprocessor include (@mde)
+  * Removed support for EOL Nodes 4 and 6 (@mde)
+
 ## v2.7.1: 2019-09-02
   * Added deprecation notice for use of require.extensions (@mde)
 
