@@ -3,6 +3,29 @@
   * Removed legacy preprocessor include (@mde)
   * Removed support for EOL Nodes 4 and 6 (@mde)
 
+## v2.7.4: 2019-11-19
+### Bug fixes
+
+- Fixed Node 4 support, which broke in v2.7.3 ([`5e42d6c`](https://github.com/mde/ejs/commit/5e42d6cef15ae6f2c7d29ef55a455e8e49b5e76e), [@mde](https://github.com/mde))
+
+## v2.7.3: 2019-11-19
+### Bug fixes
+
+- Made the post-install message more discreet by following the example of [opencollective-postinstall](https://github.com/opencollective/opencollective-postinstall) ([`228d8e4`](https://github.com/mde/ejs/commit/228d8e45b7ced2afd3e596c13d44aed464e57e43), [@mde](https://github.com/mde))
+
+## v2.7.2: 2019-11-13
+### Features
+
+- Added support for destructuring locals ([#452](https://github.com/mde/ejs/pull/452), [@ExE-Boss](https://github.com/ExE-Boss))
+- Added support for disabling legacy `include` directives ([#458](https://github.com/mde/ejs/pull/458), [#459](https://github.com/mde/ejs/pull/459), [@ExE-Boss](https://github.com/ExE-Boss))
+- Compiled functions are now shown in the debugger ([#456](https://github.com/mde/ejs/pull/456), [@S2-](https://github.com/S2-))
+- `function.name` is now set to the file base name in environments that support this ([#466](https://github.com/mde/ejs/pull/466), [@ExE-Boss](https://github.com/ExE-Boss))
+
+### Bug Fixes
+
+- The error message when `async != true` now correctly mention the existence of the `async` option ([#460](https://github.com/mde/ejs/pull/460), [@ExE-Boss](https://github.com/ExE-Boss))
+- Improved performance of HTML output generation ([#470](https://github.com/mde/ejs/pull/470), [@nwoltman](https://github.com/nwoltman))
+
 ## v2.7.1: 2019-09-02
   * Added deprecation notice for use of require.extensions (@mde)
 
