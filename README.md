@@ -136,7 +136,7 @@ top-level data object are available to all your includes, but local variables
 need to be passed down.
 
 NOTE: Include preprocessor directives (`<% include user/show %>`) are
-still supported.
+not supported in v3.0+.
 
 ## Custom delimiters
 
