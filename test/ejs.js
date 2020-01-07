@@ -1151,7 +1151,7 @@ suite('preprocessor include', function () {
   test('tracks dependency correctly', function () {
     var file = 'test/fixtures/menu_preprocessor.ejs';
     var fn = ejs.compile(fixture('menu_preprocessor.ejs'), {filename: file});
-    assert(fn.dependencies.length);
+    assert.ok(fn.dependencies.length > 0);
   });
 
   test('include arbitrary files as-is', function () {
@@ -1232,6 +1232,35 @@ suite('preprocessor include', function () {
       return;
     }
     throw new Error('expected SyntaxError from legacy include being disabled');
+  });
+});
+
+suite('tracks dependency', function () {
+  test('tracks transitive dependency correctly - with parenthesis', function () {
+    var file = 'test/fixtures/track-dependencies-with-parenthesis.ejs';
+    var fn = ejs.compile(fixture('track-dependencies-with-parenthesis.ejs'), { filename: file });
+    // only 2 dependencies : simple.ejs and simple-with-parenthesis.ejs
+    assert.equal(fn.dependencies.length, 2);
+    assert.ok(fn.dependencies.indexOf(__dirname + '/fixtures/includes/simple.ejs') > -1);
+    assert.ok(fn.dependencies.indexOf(__dirname + '/fixtures/includes/simple-with-parenthesis.ejs') > -1);
+  });
+
+  test('tracks transitive dependency correctly - without parenthesis (legacy include)', function () {
+    var file = 'test/fixtures/track-dependencies-without-parenthesis.ejs';
+    var fn = ejs.compile(fixture('track-dependencies-without-parenthesis.ejs'), { filename: file });
+    // only 2 dependencies : simple.ejs and simple-without-parenthesis.ejs
+    assert.equal(fn.dependencies.length, 2);
+    assert.ok(fn.dependencies.indexOf(__dirname + '/fixtures/includes/simple.ejs') > -1);
+    assert.ok(fn.dependencies.indexOf(__dirname + '/fixtures/includes/simple-without-parenthesis.ejs') > -1);
+  });
+
+  test('tracks transitive dependency correctly - without duplicates', function () {
+    var file = 'test/fixtures/track-dependencies-without-duplicates.ejs';
+    var fn = ejs.compile(fixture('track-dependencies-without-duplicates.ejs'), { filename: file });
+    // only 2 dependencies : simple.ejs and simple-with-parenthesis.ejs
+    assert.equal(fn.dependencies.length, 2);
+    assert.ok(fn.dependencies.indexOf(__dirname + '/fixtures/includes/simple.ejs') > -1);
+    assert.ok(fn.dependencies.indexOf(__dirname + '/fixtures/includes/simple-with-parenthesis.ejs') > -1);
   });
 });
 
