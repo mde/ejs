@@ -58,7 +58,8 @@
  * @param {Error}  err      Error object
  * @param {String} str      full EJS source
  * @param {String} filename file name of the EJS file
- * @param {String} lineno   line number of the error
+ * @param {Number} lineno   line number of the error
+ * @param {EscapeCallback} esc
  * @static
  * @global
  */
