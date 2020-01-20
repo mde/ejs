@@ -86,6 +86,8 @@ Therefore, we do not recommend using this shortcut.
     output inside scriptlet tags.
   - `async`                 When `true`, EJS will use an async function for rendering. (Depends
     on async/await support in the JS runtime.
+  - `beautify`              Make sure to set this to 'false' in order to skip UglifyJS parsing,
+    when using ES6 features (`const`, etc) as UglifyJS doesn't understand them.
 
 This project uses [JSDoc](http://usejsdoc.org/). For the full public API
 documentation, clone the repository and run `npm run doc`. This will run JSDoc
