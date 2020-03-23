@@ -61,6 +61,7 @@ Therefore, we do not recommend using this shortcut.
   - `filename`              The name of the file being rendered. Not required if you
     are using `renderFile()`. Used by `cache` to key caches, and for includes.
   - `root`                  Set project root for includes with an absolute path (/file.ejs).
+    Can be array to try to resolve include from multiple directories.
   - `context`               Function execution context
   - `compileDebug`          When `false` no debug instrumentation is compiled
   - `client`                When `true`, compiles a function that can be rendered
