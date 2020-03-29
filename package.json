@@ -32,6 +32,6 @@
   },
   "scripts": {
     "test": "mocha",
-    "postinstall": "node ./postinstall.js"
+    "postinstall": "node --harmony ./postinstall.js"
   }
 }
