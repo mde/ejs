@@ -22,3 +22,4 @@ coverage/
 /ejs.min.js
 out/
 pkg/
+/package-lock.json
