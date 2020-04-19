@@ -9,6 +9,9 @@
   "version": "3.0.2",
   "author": "Matthew Eernisse <mde@fleegix.org> (http://fleegix.org)",
   "license": "Apache-2.0",
+  "bin": {
+    "ejs": "./bin/cli.js"
+  },
   "main": "./lib/ejs.js",
   "repository": {
     "type": "git",
