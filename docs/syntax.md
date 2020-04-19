@@ -14,7 +14,7 @@ Table of contents
   - `<%-`: Unescaped output
   - `<%#`: Comments
   - `<%`: Scriptlet
-  - `<%_`: Scriptlet, removes all preceeding whitespace
+  - `<%_`: Scriptlet, removes all preceding whitespace
 - Ending tags
   - `%>`: Regular ending tag
   - `-%>`: Removes trailing newline
