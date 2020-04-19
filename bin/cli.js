@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /*
- * EJS: Embedded JavaScript templating language
+ * EJS Embedded JavaScript templates
  * Copyright 2112 Matthew Eernisse (mde@fleegix.org)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,6 +19,7 @@
 
 let program = require('jake').program;
 delete global.jake; // NO NOT WANT
+program.setTaskNames = function (n) { this.taskNames = n; };
 
 let ejs = require('../lib/ejs');
 let fs = require('fs');
@@ -26,23 +27,25 @@ let args = process.argv.slice(2);
 let usage = fs.readFileSync(`${__dirname}/../usage.txt`).toString();
 
 const CLI_OPTS = [
-  { full: 'debug',
-    abbr: 'd',
-    expectValue: false,
-    allowValue: false,
-    passThrough: true,
+  { full: 'output-file',
+    abbr: 'o',
+    expectValue: true,
+  },
+  { full: 'data-file',
+    abbr: 'f',
+    expectValue: true,
   },
   { full: 'delimiter',
     abbr: 'm',
     expectValue: true,
     passThrough: true,
   },
-  { full: 'openDelimiter',
-    abbr: 'o',
+  { full: 'open-delimiter',
+    abbr: 'p',
     expectValue: true,
     passThrough: true,
   },
-  { full: 'closeDelimiter',
+  { full: 'close-delimiter',
     abbr: 'c',
     expectValue: true,
     passThrough: true,
@@ -53,34 +56,27 @@ const CLI_OPTS = [
     allowValue: false,
     passThrough: true,
   },
-  { full: 'noWith',
+  { full: 'no-with',
     abbr: 'n',
     expectValue: false,
     allowValue: false,
   },
-  { full: 'localsName',
+  { full: 'locals-name',
     abbr: 'l',
     expectValue: true,
     passThrough: true,
   },
-  { full: 'rmWhitespace',
+  { full: 'rm-whitespace',
     abbr: 'w',
     expectValue: false,
     allowValue: false,
     passThrough: true,
   },
-  { full: 'outputFile',
-    abbr: 'f',
-    expectValue: true,
-  },
-  { full: 'root',
-    abbr: 'r',
-    expectValue: true,
+  { full: 'debug',
+    abbr: 'd',
+    expectValue: false,
+    allowValue: false,
     passThrough: true,
-  },
-  { full: 'dataFile',
-    abbr: 'a',
-    expectValue: true,
   },
   { full: 'help',
     abbr: 'h',
@@ -120,7 +116,7 @@ function run() {
 
   // Same-named 'passthrough' opts
   CLI_OPTS.forEach((opt) => {
-    let optName = opt.full;
+    let optName = opt.full.replace(/-[a-z]/g, (match) => { return match[1].toUpperCase(); });
     if (opt.passThrough && typeof pOpts[optName] != 'undefined') {
       opts[optName] = pOpts[optName];
     }
@@ -133,6 +129,11 @@ function run() {
     }
   }
 
+  // Ensure there's a template to render
+  if (!templatePath) {
+    throw new Error('Please provide a template path. (Run ejs -h for help)');
+  }
+
   if (opts.strict) {
     pOpts.noWith = true;
   }
@@ -141,8 +142,8 @@ function run() {
   }
 
   // Read the data from any data file
-  if (pOpts.dataFile) {
-    vals = JSON.parse(fs.readFileSync(pOpts.dataFile).toString())
+  if (pOpts['data-file']) {
+    vals = JSON.parse(fs.readFileSync(pOpts['data-file']).toString())
   }
   // Override / set any values passed from the command line
   for (p in pVals) {
@@ -155,7 +156,7 @@ function run() {
     fs.writeFileSync(pOpts.outputFile, output);
   }
   else {
-    console.log(output);
+    process.stdout.write(output);
   }
 }
 
