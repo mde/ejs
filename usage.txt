@@ -1,15 +1,22 @@
-EJS: Embedded JavaScript templating
-{Usage}: ejs [options ...] templateFile [data variables ...]
+EJS Embedded JavaScript templates
+{Usage}: ejs [options ...] template-file [data variables ...]
 
 {Options}:
-  -f,     --jakefile FILE            Use FILE as the Jakefile.
-  -C,     --directory DIRECTORY      Change to DIRECTORY before running tasks.
-  -q,     --quiet                    Do not log messages to standard output.
-  -B,     --always-make              Unconditionally make all targets.
-  -T/ls,  --tasks                 Display the tasks (matching optional PATTERN) with descriptions, then exit.
-  -J,     --jakelibdir JAKELIBDIR    Auto-import any .jake files in JAKELIBDIR. (default is \'jakelib\')
-  -h,     --help                     Display this help message.
-  -V/v,   --version                  Display the Jake version.
-  -ar,    --allow-rejection          Keep running even after unhandled promise rejection
+  -o,     --output-file FILE            Write the rendered output to FILE rather than stdout.
+  -f,     --data-file FILE              Must be JSON-formatted. Use parsed input from FILE as data for rendering.
+  -m,     --delimiter CHARACTER         Use CHARACTER with angle brackets for open/close (defaults to %).
+  -p,     --open-delimiter CHARACTER    Use CHARACTER instead of left angle bracket to open.
+  -c,     --close-delimiter CHARACTER   Use CHARACTER instead of right angle bracket to close.
+  -s,     --strict                      Run the emplate-rendering function in strict mode.
+  -n      --no-with                     Use 'locals' object for vars rather than using `with` (implies --strict).
+  -l      --locals-name                 Name to use for the object storing local variables when not using `with`.
+  -w      --rm-whitespace               Remove all safe-to-remove whitespace, including leading and trailing whitespace.
+  -h,     --help                        Display this help message.
+  -V/v,   --version                     Display the EJS version.
 
-
+{Examples}:
+  ejs -m $ ./test/fixtures/user.ejs -f ./user_data.json
+  ejs -m $ ./test/fixtures/user.ejs name=Juan
+  ejs -p [ -c ] ./template_file.ejs -o ./output.html
+  ejs -n -l _ ./some_template.ejs -f ./data_file.json
+  ejs -w ./template_with_whitspace.ejs -o ./output_file.html
