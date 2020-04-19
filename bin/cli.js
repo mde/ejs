@@ -143,10 +143,10 @@ function run() {
 
   // Read the data from any data file
   if (pOpts['data-file']) {
-    vals = JSON.parse(fs.readFileSync(pOpts['data-file']).toString())
+    vals = JSON.parse(fs.readFileSync(pOpts['data-file']).toString());
   }
   // Override / set any values passed from the command line
-  for (p in pVals) {
+  for (let p in pVals) {
     vals[p] = pVals[p];
   }
 

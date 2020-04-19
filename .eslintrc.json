@@ -4,6 +4,10 @@
         "commonjs": true,
         "node": true
     },
+    "globals": {
+      "suite": "readonly",
+      "test": "readonly"
+    },
     "parserOptions": {
         "ecmaVersion": 6
     },
