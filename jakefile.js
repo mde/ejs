@@ -64,6 +64,7 @@ publishTask('ejs', ['build'], function () {
     'ejs.js',
     'ejs.min.js',
     'lib/**'
+    'bin/**'
   ]);
 });
 
