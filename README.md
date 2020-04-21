@@ -156,10 +156,10 @@ ejs.render('<p>[?= users.join(" | "); ?]</p>', {users: users}, {delimiter: '?', 
 // => '<p>geddy | neil | alex</p>'
 
 // Or globally
-ejs.delimiter = '#';
+ejs.delimiter = '?';
 ejs.openDelimiter = '[';
 ejs.closeDelimiter = ']';
-ejs.render('<p>[#= users.join(" | "); #]</p>', {users: users});
+ejs.render('<p>[?= users.join(" | "); ?]</p>', {users: users});
 // => '<p>geddy | neil | alex</p>'
 ```
 
