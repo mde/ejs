@@ -152,8 +152,8 @@ function run() {
 
   let template = fs.readFileSync(templatePath).toString();
   let output = ejs.render(template, vals, opts);
-  if (pOpts.outputFile) {
-    fs.writeFileSync(pOpts.outputFile, output);
+  if (pOpts['output-file']) {
+    fs.writeFileSync(pOpts['output-file'], output);
   }
   else {
     process.stdout.write(output);
