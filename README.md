@@ -17,7 +17,7 @@ $ npm install ejs
   * Unescaped raw output with `<%- %>`
   * Newline-trim mode ('newline slurping') with `-%>` ending tag
   * Whitespace-trim mode (slurp all whitespace) for control flow with `<%_ _%>`
-  * Custom delimiters (e.g., use `<? ?>` instead of `<% %>`)
+  * Custom delimiters (e.g., use `[? ?]` instead of `<% %>`)
   * Includes
   * Client-side support
   * Static caching of intermediate JavaScript
@@ -69,7 +69,7 @@ Therefore, we do not recommend using this shortcut.
   - `client`                When `true`, compiles a function that can be rendered
     in the browser without needing to load the EJS Runtime
     ([ejs.min.js](https://github.com/mde/ejs/releases/latest)).
-  - `delimiter`             Character to use with angle brackets for open/close, by default '%'
+  - `delimiter`             Character to use for inner delimiter, by default '%'
   - `openDelimiter`         Character to use for opening delimiter, by default '<'
   - `closeDelimiter`        Character to use for closing delimiter, by default '>'
   - `debug`                 Output generated function body
@@ -152,23 +152,7 @@ let ejs = require('ejs'),
     users = ['geddy', 'neil', 'alex'];
 
 // Just one template
-ejs.render('<?= users.join(" | "); ?>', {users: users}, {delimiter: '?'});
-// => 'geddy | neil | alex'
-
-// Or globally
-ejs.delimiter = '$';
-ejs.render('<$= users.join(" | "); $>', {users: users});
-// => 'geddy | neil | alex'
-```
-
-The open and close delimiters can be customised as well:
-
-```javascript
-let ejs = require('ejs'),
-    users = ['geddy', 'neil', 'alex'];
-
-// Just one template
-ejs.render('<p>[#= users.join(" | "); #]</p>', {users: users}, {delimiter: '#', openDelimiter: '[', closeDelimiter: ']'});
+ejs.render('<p>[?= users.join(" | "); ?]</p>', {users: users}, {delimiter: '?', openDelimiter: '[', closeDelimiter: ']'});
 // => '<p>geddy | neil | alex</p>'
 
 // Or globally
