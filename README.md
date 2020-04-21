@@ -69,7 +69,9 @@ Therefore, we do not recommend using this shortcut.
   - `client`                When `true`, compiles a function that can be rendered
     in the browser without needing to load the EJS Runtime
     ([ejs.min.js](https://github.com/mde/ejs/releases/latest)).
-  - `delimiter`             Character to use with angle brackets for open/close
+  - `delimiter`             Character to use with angle brackets for open/close, by default '%'
+  - `openDelimiter`         Character to use for opening delimiter, by default '<'
+  - `closeDelimiter`        Character to use for closing delimiter, by default '>'
   - `debug`                 Output generated function body
   - `strict`                When set to `true`, generated function is in strict mode
   - `_with`                 Whether or not to use `with() {}` constructs. If `false`
@@ -157,6 +159,24 @@ ejs.render('<?= users.join(" | "); ?>', {users: users}, {delimiter: '?'});
 ejs.delimiter = '$';
 ejs.render('<$= users.join(" | "); $>', {users: users});
 // => 'geddy | neil | alex'
+```
+
+The open and close delimiters can be customised as well:
+
+```javascript
+let ejs = require('ejs'),
+    users = ['geddy', 'neil', 'alex'];
+
+// Just one template
+ejs.render('<p>[#= users.join(" | "); #]</p>', {users: users}, {delimiter: '#', openDelimiter: '[', closeDelimiter: ']'});
+// => '<p>geddy | neil | alex</p>'
+
+// Or globally
+ejs.delimiter = '#';
+ejs.openDelimiter = '[';
+ejs.closeDelimiter = ']';
+ejs.render('<p>[#= users.join(" | "); #]</p>', {users: users});
+// => '<p>geddy | neil | alex</p>'
 ```
 
 ## Caching
