@@ -20,7 +20,7 @@
   "bugs": "https://github.com/mde/ejs/issues",
   "homepage": "https://github.com/mde/ejs",
   "dependencies": {
-    "jake": "^10.5.2"
+    "jake": "^10.6.1"
   },
   "devDependencies": {
     "browserify": "^16.5.1",

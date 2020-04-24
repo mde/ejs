@@ -107,16 +107,21 @@ function run() {
   program.availableOpts = CLI_OPTS;
   program.parseArgs(args);
 
-  let pOpts = program.opts;
-  let pVals = program.envVars;
   let templatePath = program.taskNames[0];
+  let pVals = program.envVars;
+  let pOpts = {};
+
+  for (let p in program.opts) {
+    let name = p.replace(/-[a-z]/g, (match) => { return match[1].toUpperCase(); });
+    pOpts[name] = program.opts[p];
+  }
 
   let opts = {};
   let vals = {};
 
   // Same-named 'passthrough' opts
   CLI_OPTS.forEach((opt) => {
-    let optName = opt.full.replace(/-[a-z]/g, (match) => { return match[1].toUpperCase(); });
+    let optName = opt.full;
     if (opt.passThrough && typeof pOpts[optName] != 'undefined') {
       opts[optName] = pOpts[optName];
     }
@@ -142,8 +147,8 @@ function run() {
   }
 
   // Read the data from any data file
-  if (pOpts['data-file']) {
-    vals = JSON.parse(fs.readFileSync(pOpts['data-file']).toString());
+  if (pOpts.dataFile) {
+    vals = JSON.parse(fs.readFileSync(pOpts.dataFile).toString());
   }
   // Override / set any values passed from the command line
   for (let p in pVals) {
@@ -152,8 +157,8 @@ function run() {
 
   let template = fs.readFileSync(templatePath).toString();
   let output = ejs.render(template, vals, opts);
-  if (pOpts['output-file']) {
-    fs.writeFileSync(pOpts['output-file'], output);
+  if (pOpts.outputFile) {
+    fs.writeFileSync(pOpts.outputFile, output);
   }
   else {
     process.stdout.write(output);
