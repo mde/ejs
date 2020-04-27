@@ -26,11 +26,6 @@ suite('cli', function () {
     assert.equal(o, '<h1>zerb</h1>\n');
   });
 
-  test('rendering, custom delimiter, data from stdin / file redirect', function () {
-    let o = run('./bin/cli.js -m $ ./test/fixtures/user.ejs < test/fixtures/user_data.json');
-    assert.equal(o, '<h1>zerb</h1>\n');
-  });
-
   test('rendering, custom delimiter, passed data overrides file', function () {
     let o = run('./bin/cli.js -m $ -f ./test/fixtures/user_data.json ./test/fixtures/user.ejs name=frang');
     assert.equal(o, '<h1>frang</h1>\n');
