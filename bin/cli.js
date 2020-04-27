@@ -17,6 +17,7 @@
  *
 */
 
+
 let program = require('jake').program;
 delete global.jake; // NO NOT WANT
 program.setTaskNames = function (n) { this.taskNames = n; };
@@ -33,6 +34,10 @@ const CLI_OPTS = [
   },
   { full: 'data-file',
     abbr: 'f',
+    expectValue: true,
+  },
+  { full: 'data-input',
+    abbr: 'i',
     expectValue: true,
   },
   { full: 'delimiter',
@@ -102,6 +107,15 @@ let preempts = {
   }
 };
 
+let stdin = '';
+process.stdin.setEncoding('utf8');
+process.stdin.on('readable', () => {
+  let chunk;
+  while ((chunk = process.stdin.read()) !== null) {
+    stdin += chunk;
+  }
+});
+
 function run() {
 
   program.availableOpts = CLI_OPTS;
@@ -146,11 +160,35 @@ function run() {
     opts._with = false;
   }
 
-  // Read the data from any data file
-  if (pOpts.dataFile) {
-    vals = JSON.parse(fs.readFileSync(pOpts.dataFile).toString());
+  // Grab and parse any input data, in order of precedence:
+  // 1. Stdin
+  // 2. CLI arg via -i
+  // 3. Data file via -f
+  // Any individual vals passed at the end (e.g., foo=bar) will override
+  // any vals previously set
+  let input;
+  let err = new Error('Please do not pass data multiple ways. Pick one of stdin, -f, or -i.');
+  if (stdin) {
+    input = stdin;
   }
-  // Override / set any values passed from the command line
+  else if (pOpts.dataInput) {
+    if (input) {
+      throw err;
+    }
+    input = decodeURIComponent(pOpts.dataInput);
+  }
+  else if (pOpts.dataFile) {
+    if (input) {
+      throw err;
+    }
+    input = fs.readFileSync(pOpts.dataFile).toString();
+  }
+
+  if (input) {
+    vals = JSON.parse(input);
+  }
+
+  // Override / set any individual values passed from the command line
   for (let p in pVals) {
     vals[p] = pVals[p];
   }
@@ -163,6 +201,8 @@ function run() {
   else {
     process.stdout.write(output);
   }
+  process.exit();
 }
 
-run();
+// Defer execution so that stdin can be read if necessary
+setImmediate(run);
