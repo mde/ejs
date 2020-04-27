@@ -34,7 +34,7 @@ $ npm install ejs
 
 Try EJS online at: https://ionicabizau.github.io/ejs-playground/.
 
-## Usage
+## Basic usage
 
 ```javascript
 let template = ejs.compile(str, options);
@@ -55,15 +55,14 @@ for all the passed options. However, be aware that your code could break if we
 add an option with the same name as one of your data object's properties.
 Therefore, we do not recommend using this shortcut.
 
-## Options
+### Options
 
   - `cache`                 Compiled functions are cached, requires `filename`
   - `filename`              The name of the file being rendered. Not required if you
     are using `renderFile()`. Used by `cache` to key caches, and for includes.
-  - `root`                  Set project root for includes with an absolute path (/file.ejs).
+  - `root`                  Set project root for includes with an absolute path (e.g, /file.ejs).
     Can be array to try to resolve include from multiple directories.
-  - `views`                 An array of paths that EJS can look in to attempt to resolve
-    includes with relative paths.
+  - `views`                 An array of paths to use when resolving includes with relative paths.
   - `context`               Function execution context
   - `compileDebug`          When `false` no debug instrumentation is compiled
   - `client`                When `true`, compiles a function that can be rendered
@@ -72,7 +71,7 @@ Therefore, we do not recommend using this shortcut.
   - `delimiter`             Character to use for inner delimiter, by default '%'
   - `openDelimiter`         Character to use for opening delimiter, by default '<'
   - `closeDelimiter`        Character to use for closing delimiter, by default '>'
-  - `debug`                 Output generated function body
+  - `debug`                 Outputs generated function body
   - `strict`                When set to `true`, generated function is in strict mode
   - `_with`                 Whether or not to use `with() {}` constructs. If `false`
     then the locals will be stored in the `locals` object. Set to `false` in strict mode.
@@ -91,15 +90,13 @@ Therefore, we do not recommend using this shortcut.
     output inside scriptlet tags.
   - `async`                 When `true`, EJS will use an async function for rendering. (Depends
     on async/await support in the JS runtime.
-  - `beautify`              Make sure to set this to 'false' in order to skip UglifyJS parsing,
-    when using ES6 features (`const`, etc) as UglifyJS doesn't understand them.
 
 This project uses [JSDoc](http://usejsdoc.org/). For the full public API
 documentation, clone the repository and run `npm run doc`. This will run JSDoc
 with the proper options and output the documentation to `out/`. If you want
 the both the public & private API docs, run `npm run devdoc` instead.
 
-## Tags
+### Tags
 
   - `<%`              'Scriptlet' tag, for control-flow, no output
   - `<%_`             'Whitespace Slurping' Scriptlet tag, strips all whitespace before it
@@ -114,7 +111,7 @@ the both the public & private API docs, run `npm run devdoc` instead.
 
 For the full syntax documentation, please see [docs/syntax.md](https://github.com/mde/ejs/blob/master/docs/syntax.md).
 
-## Includes
+### Includes
 
 Includes either have to be an absolute path, or, if not, are assumed as
 relative to the template with the `include` call. For example if you are
@@ -163,7 +160,7 @@ ejs.render('<p>[?= users.join(" | "); ?]</p>', {users: users});
 // => '<p>geddy | neil | alex</p>'
 ```
 
-## Caching
+### Caching
 
 EJS ships with a basic in-process cache for caching the intermediate JavaScript
 functions used to render templates. It's easy to plug in LRU caching using
@@ -179,7 +176,7 @@ If you want to clear the EJS cache, call `ejs.clearCache`. If you're using the
 LRU cache and need a different limit, simple reset `ejs.cache` to a new instance
 of the LRU.
 
-## Custom file loader
+### Custom file loader
 
 The default file loader is `fs.readFileSync`, if you want to customize it, you can set ejs.fileLoader.
 
@@ -194,7 +191,7 @@ ejs.fileLoader = myFileLoad;
 
 With this feature, you can preprocess the template before reading it.
 
-## Layouts
+### Layouts
 
 EJS does not specifically support blocks, but layouts can be implemented by
 including headers and footers, like so:
@@ -255,7 +252,66 @@ Most of EJS will work as expected; however, there are a few things to note:
 
 See the [examples folder](https://github.com/mde/ejs/tree/master/examples) for more details.
 
-### IDE Integration with Syntax Highlighting
+## CLI
+
+EJS ships with a full-featured CLI. Available options are similar to those passed
+to EJS rendering in JavaScript:
+
+  - `-o / --output-file FILE`            Write the rendered output to FILE rather than stdout.
+  - `-f / --data-file FILE`              Must be JSON-formatted. Use parsed input from FILE as data for rendering.
+  - `-i / --data-input STRING`           Must be JSON-formatted and URI-encoded. Use parsed input from STRING as data for rendering.
+  - `-m / --delimiter CHARACTER`         Use CHARACTER with angle brackets for open/close (defaults to %).
+  - `-p / --open-delimiter CHARACTER`    Use CHARACTER instead of left angle bracket to open.
+  - `-c / --close-delimiter CHARACTER`   Use CHARACTER instead of right angle bracket to close.
+  - `-s / --strict`                      When set to `true`, generated function is in strict mode
+  - `-n / --no-with`                     Use 'locals' object for vars rather than using `with` (implies --strict).
+  - `-l / --locals-name`                 Name to use for the object storing local variables when not using `with`.
+  - `-w / --rm-whitespace`               Remove all safe-to-remove whitespace, including leading and trailing whitespace.
+  - `-d / --debug`                       Outputs generated function body
+  - `-h / --help`                        Display this help message.
+  - `-V/v / --version`                   Display the EJS version.
+
+Here are some examples of usage:
+
+```shell
+$ ejs -p [ -c ] ./template_file.ejs -o ./output.html
+```
+
+### Data input
+
+There is a variety of way to pass the CLI data for rendering.
+
+Stdin:
+
+```shell
+$ ./test/fixtures/user_data.json | ./bin/cli.js ./test/fixtures/user.ejs
+$ ./bin/cli.js ./test/fixtures/user.ejs < test/fixtures/user_data.json
+```
+
+A data file:
+
+```shell
+$ ejs ./test/fixtures/user.ejs -f ./user_data.json
+```
+
+A command-line option (must be URI-encoded):
+
+```shell
+./bin/cli.js -i %7B%22name%22%3A%20%22foo%22%7D ./test/fixtures/user.ejs
+```
+
+Or, passing values directly at the end of the invocation:
+
+```shell
+./bin/cli.js -m $ ./test/fixtures/user.ejs name=foo
+```
+
+### Output
+
+The CLI by default send output to stdout, but you can use the `-o` or `--output-file`
+flag to specify a target file to send the output to.
+
+## IDE Integration with Syntax Highlighting
 
 VSCode:Javascript EJS by *DigitalBrainstem*
 
