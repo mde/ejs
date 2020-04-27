@@ -254,8 +254,7 @@ See the [examples folder](https://github.com/mde/ejs/tree/master/examples) for m
 
 ## CLI
 
-EJS ships with a full-featured CLI. Available options are similar to those passed
-to EJS rendering in JavaScript:
+EJS ships with a full-featured CLI. Available options are similar to those used in JavaScript code:
 
   - `-o / --output-file FILE`            Write the rendered output to FILE rather than stdout.
   - `-f / --data-file FILE`              Must be JSON-formatted. Use parsed input from FILE as data for rendering.
@@ -281,7 +280,7 @@ $ ejs -n -l _ ./some_template.ejs -f ./data_file.json
 
 ### Data input
 
-There is a variety of way to pass the CLI data for rendering.
+There is a variety of ways to pass the CLI data for rendering.
 
 Stdin:
 
