@@ -18,7 +18,7 @@ EJS Embedded JavaScript templates
 
 {Examples}:
   ejs -m $ ./test/fixtures/user.ejs -f ./user_data.json
-  ejs -m $ ./test/fixtures/user.ejs name=Juan
+  ejs -m $ ./test/fixtures/user.ejs name=Lerxst
   ejs -p [ -c ] ./template_file.ejs -o ./output.html
   ejs -n -l _ ./some_template.ejs -f ./data_file.json
   ejs -w ./template_with_whitspace.ejs -o ./output_file.html

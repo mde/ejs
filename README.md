@@ -275,6 +275,8 @@ Here are some examples of usage:
 
 ```shell
 $ ejs -p [ -c ] ./template_file.ejs -o ./output.html
+$ ejs ./test/fixtures/user.ejs name=Lerxst
+$ ejs -n -l _ ./some_template.ejs -f ./data_file.json
 ```
 
 ### Data input
@@ -292,7 +294,6 @@ A data file:
 
 ```shell
 $ ejs ./test/fixtures/user.ejs -f ./user_data.json
-$ ejs -p [ -c ] ./template_file.ejs -o ./output.html
 ```
 
 A command-line option (must be URI-encoded):
