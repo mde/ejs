@@ -15,6 +15,7 @@ var data = {
 };
 
 var ret = ejs.compile(read(path, 'utf8'), {
+  root: [join(__dirname, '..'), __dirname],
   filename: path,
   outputFunctionName: 'echo'
 })(data);

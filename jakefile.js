@@ -63,7 +63,8 @@ publishTask('ejs', ['build'], function () {
     'postinstall.js',
     'ejs.js',
     'ejs.min.js',
-    'lib/**'
+    'lib/**',
+    'bin/**'
   ]);
 });
 

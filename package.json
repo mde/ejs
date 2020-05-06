@@ -6,9 +6,12 @@
     "engine",
     "ejs"
   ],
-  "version": "3.0.1",
+  "version": "3.1.2",
   "author": "Matthew Eernisse <mde@fleegix.org> (http://fleegix.org)",
   "license": "Apache-2.0",
+  "bin": {
+    "ejs": "./bin/cli.js"
+  },
   "main": "./lib/ejs.js",
   "repository": {
     "type": "git",
@@ -16,15 +19,16 @@
   },
   "bugs": "https://github.com/mde/ejs/issues",
   "homepage": "https://github.com/mde/ejs",
-  "dependencies": {},
+  "dependencies": {
+    "jake": "^10.6.1"
+  },
   "devDependencies": {
-    "browserify": "^13.1.1",
-    "eslint": "^4.14.0",
+    "browserify": "^16.5.1",
+    "eslint": "^6.8.0",
     "git-directory-deploy": "^1.5.1",
-    "jake": "^10.3.1",
-    "jsdoc": "^3.4.0",
+    "jsdoc": "^3.6.4",
     "lru-cache": "^4.0.1",
-    "mocha": "^5.0.5",
+    "mocha": "^7.1.1",
     "uglify-js": "^3.3.16"
   },
   "engines": {
@@ -32,6 +36,6 @@
   },
   "scripts": {
     "test": "mocha",
-    "postinstall": "node ./postinstall.js"
+    "postinstall": "node --harmony ./postinstall.js"
   }
 }
