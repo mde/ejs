@@ -90,6 +90,10 @@ Therefore, we do not recommend using this shortcut.
     output inside scriptlet tags.
   - `async`                 When `true`, EJS will use an async function for rendering. (Depends
     on async/await support in the JS runtime.
+  - `includer`              Custom function to handle EJS includes, receives `(url, prev)` parameters,
+    where `url` is the path in include as-is and `prev` is the previously resolved path. Should
+    return an object `{ filename, template }`, you may return only one of the properties,
+    where `filename` is the final parsed path and `template` is the included content.
 
 This project uses [JSDoc](http://usejsdoc.org/). For the full public API
 documentation, clone the repository and run `npm run doc`. This will run JSDoc
