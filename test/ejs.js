@@ -1017,7 +1017,7 @@ suite('include()', function () {
   test('include ejs with includer returning template', function () {
     var file = 'test/fixtures/include-root.ejs';
     var inc = function (original, prev) {
-      if (original === '/include.ejs') {
+      if (prev === '/include.ejs') {
         return {
           template: '<p>Hello template!</p>\n'
         };
