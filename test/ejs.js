@@ -1001,8 +1001,8 @@ suite('include()', function () {
 
   test('include ejs with custom includer function', function () {
     var file = 'test/fixtures/include-root.ejs';
-    var inc = function (url, prev) {
-      if (url.charAt(0) === '/') {
+    var inc = function (original, prev) {
+      if (original.charAt(0) === '/') {
         return {
           filename: path.join(__dirname, 'fixtures', prev)
         };
@@ -1016,8 +1016,8 @@ suite('include()', function () {
 
   test('include ejs with includer returning template', function () {
     var file = 'test/fixtures/include-root.ejs';
-    var inc = function (url, prev) {
-      if (prev === '/include.ejs') {
+    var inc = function (original, prev) {
+      if (original === '/include.ejs') {
         return {
           template: '<p>Hello template!</p>\n'
         };
