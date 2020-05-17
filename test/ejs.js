@@ -999,6 +999,36 @@ suite('include()', function () {
       fixture('include.html'));
   });
 
+  test('include ejs with custom includer function', function () {
+    var file = 'test/fixtures/include-root.ejs';
+    var inc = function (original, prev) {
+      if (original.charAt(0) === '/') {
+        return {
+          filename: path.join(__dirname, 'fixtures', prev)
+        };
+      } else {
+        return prev;
+      }
+    };
+    assert.equal(ejs.render(fixture('include-root.ejs'), {pets: users}, {filename: file, delimiter: '@', includer: inc}),
+      fixture('include.html'));
+  });
+
+  test('include ejs with includer returning template', function () {
+    var file = 'test/fixtures/include-root.ejs';
+    var inc = function (original, prev) {
+      if (prev === '/include.ejs') {
+        return {
+          template: '<p>Hello template!</p>\n'
+        };
+      } else {
+        return prev;
+      }
+    };
+    assert.equal(ejs.render(fixture('include-root.ejs'), {pets: users}, {filename: file, delimiter: '@', includer: inc}),
+      fixture('hello-template.html'));
+  });
+
   test('work when nested', function () {
     var file = 'test/fixtures/menu.ejs';
     assert.equal(ejs.render(fixture('menu.ejs'), {pets: users}, {filename: file}),
