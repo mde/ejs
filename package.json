@@ -13,7 +13,6 @@
     "ejs": "./bin/cli.js"
   },
   "main": "./lib/ejs.js",
-  "browser": "ejs.min.js",
   "jsdelivr": "ejs.min.js",
   "unpkg": "ejs.min.js",
   "repository": {
