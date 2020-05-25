@@ -6,13 +6,15 @@
     "engine",
     "ejs"
   ],
-  "version": "3.1.2",
+  "version": "3.1.3",
   "author": "Matthew Eernisse <mde@fleegix.org> (http://fleegix.org)",
   "license": "Apache-2.0",
   "bin": {
     "ejs": "./bin/cli.js"
   },
   "main": "./lib/ejs.js",
+  "jsdelivr": "ejs.min.js",
+  "unpkg": "ejs.min.js",
   "repository": {
     "type": "git",
     "url": "git://github.com/mde/ejs.git"
