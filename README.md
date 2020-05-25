@@ -254,7 +254,7 @@ See the [examples folder](https://github.com/mde/ejs/tree/master/examples) for m
 
 ## CLI
 
-EJS ships with a full-featured CLI. Available options are similar to those used in JavaScript code:
+EJS ships with a full-featured CLI. Options are similar to those used in JavaScript code:
 
   - `-o / --output-file FILE`            Write the rendered output to FILE rather than stdout.
   - `-f / --data-file FILE`              Must be JSON-formatted. Use parsed input from FILE as data for rendering.
@@ -285,8 +285,8 @@ There is a variety of ways to pass the CLI data for rendering.
 Stdin:
 
 ```shell
-$ ./test/fixtures/user_data.json | ./bin/cli.js ./test/fixtures/user.ejs
-$ ./bin/cli.js ./test/fixtures/user.ejs < test/fixtures/user_data.json
+$ ./test/fixtures/user_data.json | ejs ./test/fixtures/user.ejs
+$ ejs ./test/fixtures/user.ejs < test/fixtures/user_data.json
 ```
 
 A data file:
