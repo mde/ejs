@@ -148,6 +148,9 @@ function run() {
     }
   }
 
+  // Default to having views relative from the current working directory
+  opts.views = ['.'];
+
   // Ensure there's a template to render
   if (!templatePath) {
     throw new Error('Please provide a template path. (Run ejs -h for help)');
