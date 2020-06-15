@@ -23,6 +23,7 @@ delete global.jake; // NO NOT WANT
 program.setTaskNames = function (n) { this.taskNames = n; };
 
 let ejs = require('../lib/ejs');
+let { hyphenToCamel } = require('../lib/utils');
 let fs = require('fs');
 let args = process.argv.slice(2);
 let usage = fs.readFileSync(`${__dirname}/../usage.txt`).toString();
@@ -126,7 +127,7 @@ function run() {
   let pOpts = {};
 
   for (let p in program.opts) {
-    let name = p.replace(/-[a-z]/g, (match) => { return match[1].toUpperCase(); });
+    let name = hyphenToCamel(p);
     pOpts[name] = program.opts[p];
   }
 
@@ -135,7 +136,7 @@ function run() {
 
   // Same-named 'passthrough' opts
   CLI_OPTS.forEach((opt) => {
-    let optName = opt.full;
+    let optName = hyphenToCamel(opt.full);
     if (opt.passThrough && typeof pOpts[optName] != 'undefined') {
       opts[optName] = pOpts[optName];
     }
