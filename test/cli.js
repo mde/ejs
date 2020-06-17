@@ -1,4 +1,5 @@
 let exec = require('child_process').execSync;
+let fs = require('fs');
 let assert = require('assert');
 
 function run(cmd) {
@@ -29,6 +30,11 @@ suite('cli', function () {
   test('rendering, custom delimiter, passed data overrides file', function () {
     let o = run('./bin/cli.js -m $ -f ./test/fixtures/user_data.json ./test/fixtures/user.ejs name=frang');
     assert.equal(o, '<h1>frang</h1>\n');
+  });
+
+  test('rendering, remove whitespace option (hyphen case)', function () {
+    let o = run('./bin/cli.js --rm-whitespace ./test/fixtures/rmWhitespace.ejs');
+    assert.equal(o, fs.readFileSync('test/fixtures/rmWhitespace.html', 'utf-8'));
   });
 
 });
