@@ -2,7 +2,7 @@
   <ul>
     <% names.forEach(function (name) { %>
       <%# Notice how the single quotation mark is escaped in the output HTML %>
-      <li foo='<%= name + "'" %>'><%= name %></li>
+      <li foo='<%= [name].push("\'").join('') %>'><%= name %></li>
     <% }) %>
   </ul>
 <% } %>
