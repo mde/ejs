@@ -1107,6 +1107,26 @@ suite('include()', function () {
 
 });
 
+suite('transitive dependency', function () {
+  test('tracks transitive dependency correctly - with parenthesis', function () {
+    var file = 'test/fixtures/track-dependencies-with-parenthesis.ejs';
+    var fn = ejs.compile(fixture('track-dependencies-with-parenthesis.ejs'), { filename: file, trackDependencies: true });
+    // only 2 dependencies : simple.ejs and simple-with-parenthesis.ejs
+    assert.equal(fn.dependencies.length, 2);
+    assert.ok(fn.dependencies.indexOf(__dirname + '/fixtures/includes/simple.ejs') > -1);
+    assert.ok(fn.dependencies.indexOf(__dirname + '/fixtures/includes/simple-with-parenthesis.ejs') > -1);
+  });
+
+  test('tracks transitive dependency correctly - without duplicates', function () {
+    var file = 'test/fixtures/track-dependencies-without-duplicates.ejs';
+    var fn = ejs.compile(fixture('track-dependencies-without-duplicates.ejs'), { filename: file, trackDependencies: true });
+    // only 2 dependencies : simple.ejs and simple-with-parenthesis.ejs
+    assert.equal(fn.dependencies.length, 2);
+    assert.ok(fn.dependencies.indexOf(__dirname + '/fixtures/includes/simple.ejs') > -1);
+    assert.ok(fn.dependencies.indexOf(__dirname + '/fixtures/includes/simple-with-parenthesis.ejs') > -1);
+  });
+});
+
 suite('comments', function () {
   test('fully render with comments removed', function () {
     assert.equal(ejs.render(fixture('comments.ejs')),
