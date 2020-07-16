@@ -1,5 +1,6 @@
 'use strict';
 
+
 var ejs = require('..');
 var path = require('path');
 
