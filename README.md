@@ -97,9 +97,9 @@ Therefore, we do not recommend using this shortcut.
     is the included content.
 
 This project uses [JSDoc](http://usejsdoc.org/). For the full public API
-documentation, clone the repository and run `npm run doc`. This will run JSDoc
+documentation, clone the repository and run `jake doc`. This will run JSDoc
 with the proper options and output the documentation to `out/`. If you want
-the both the public & private API docs, run `npm run devdoc` instead.
+the both the public & private API docs, run `jake devdoc` instead.
 
 ### Tags
 

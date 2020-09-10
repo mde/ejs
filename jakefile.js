@@ -33,12 +33,18 @@ task('minify', function () {
   console.log('Minification completed.');
 });
 
-desc('Generates the EJS API docs');
+desc('Generates the EJS API docs for the public API');
 task('doc', function (dev) {
   jake.rmRf('out');
-  var p = dev ? '-p' : '';
-  exec('./node_modules/.bin/jsdoc ' + p + ' -c jsdoc.json lib/* docs/jsdoc/*');
-  console.log('Documentation generated.');
+  exec('./node_modules/.bin/jsdoc --verbose -c jsdoc.json lib/* docs/jsdoc/*');
+  console.log('Documentation generated in ./out.');
+});
+
+desc('Generates the EJS API docs for the public and private API');
+task('devdoc', function () {
+  jake.rmRf('out');
+  exec('./node_modules/.bin/jsdoc --verbose -p -c jsdoc.json lib/* docs/jsdoc/*');
+  console.log('Documentation generated in ./out.');
 });
 
 desc('Publishes the EJS API docs');
