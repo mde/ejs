@@ -62,6 +62,7 @@ Therefore, we do not recommend using this shortcut.
     are using `renderFile()`. Used by `cache` to key caches, and for includes.
   - `root`                  Set project root for includes with an absolute path (e.g, /file.ejs).
     Can be array to try to resolve include from multiple directories.
+  - `ext`                   Extension, by default 'ejs'
   - `views`                 An array of paths to use when resolving includes with relative paths.
   - `context`               Function execution context
   - `compileDebug`          When `false` no debug instrumentation is compiled
