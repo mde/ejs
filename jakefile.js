@@ -34,7 +34,7 @@ task('minify', function () {
 });
 
 desc('Generates the EJS API docs for the public API');
-task('doc', function (dev) {
+task('doc', function () {
   jake.rmRf('out');
   exec('./node_modules/.bin/jsdoc --verbose -c jsdoc.json lib/* docs/jsdoc/*');
   console.log('Documentation generated in ./out.');
