@@ -999,6 +999,12 @@ suite('include()', function () {
       fixture('include.html'));
   });
 
+  test('include ejs with set ext', function () {
+    var viewsPath = path.join(__dirname, 'fixtures');
+    assert.equal(ejs.render(fixture('include-root.ejs'), {}, {delimiter: '@', root:viewsPath, ext: 'html'}),
+      fixture('include.html'));
+  });
+
   test('include ejs with custom includer function', function () {
     var file = 'test/fixtures/include-root.ejs';
     var inc = function (original, prev) {
