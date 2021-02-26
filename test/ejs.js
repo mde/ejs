@@ -11,6 +11,7 @@ var read = fs.readFileSync;
 var assert = require('assert');
 var path = require('path');
 var LRU = require('lru-cache');
+let lf = process.platform !== 'win32' ? '\n' : '\r\n';
 
 try {
   fs.mkdirSync(__dirname + '/tmp');
@@ -383,7 +384,7 @@ suite('ejs.renderFile(path, [data], [options], [fn])', function () {
       if (err) {
         return done(err);
       }
-      assert.equal(html, '<p>hey</p>\n');
+      assert.equal(html, '<p>hey</p>'+lf);
       done();
     });
   });
@@ -392,7 +393,7 @@ suite('ejs.renderFile(path, [data], [options], [fn])', function () {
     var AsyncCtor;
     var func;
     function checkResult(html) {
-      assert.equal(html, '<p>hey</p>\n');
+      assert.equal(html, '<p>hey</p>'+lf);
     }
     // Environments without Promise support -- should throw
     // when no callback provided
@@ -440,7 +441,7 @@ suite('ejs.renderFile(path, [data], [options], [fn])', function () {
       if (err) {
         return done(err);
       }
-      assert.equal(html, '<h1>fonebone</h1>\n');
+      assert.equal(html, '<h1>fonebone</h1>'+lf);
       done();
     });
   });
@@ -457,7 +458,7 @@ suite('ejs.renderFile(path, [data], [options], [fn])', function () {
         doneCount = 2;
         return done(err);
       }
-      assert.equal(html, '<h1>fonebone</h1>\n');
+      assert.equal(html, '<h1>fonebone</h1>'+lf);
       doneCount++;
       if (doneCount === 2) {
         done();
@@ -538,7 +539,7 @@ suite('ejs.renderFile(path, [data], [options], [fn])', function () {
       if (err) {
         return done(err);
       }
-      assert.equal(html, ctxt.foo + '\n');
+      assert.equal(html, ctxt.foo + lf);
       done();
     });
 
@@ -557,7 +558,7 @@ suite('ejs.renderFile(path, [data], [options], [fn])', function () {
     };
     ejs.renderFile(path.join(__dirname, 'fixtures/views.ejs'), data, function(error, data){
       assert.ifError(error);
-      assert.equal('<div><p>global test</p>\n</div>\n', data);
+      assert.equal('<div><p>global test</p>'+lf+'</div>'+lf, data);
       done();
     });
 
@@ -576,7 +577,7 @@ suite('ejs.renderFile(path, [data], [options], [fn])', function () {
     };
     ejs.renderFile(path.join(__dirname, 'fixtures/views.ejs'), data, function(error, data){
       assert.ifError(error);
-      assert.equal('<div><p>custom test</p>\n</div>\n', data);
+      assert.equal('<div><p>custom test</p>'+lf+'</div>'+lf, data);
       done();
     });
 
@@ -849,7 +850,10 @@ suite('exceptions', function () {
     }
     catch (err) {
       assert.equal(err.path, 'error.ejs');
-      assert.equal(err.stack.split('\n').slice(0, 8).join('\n'), fixture('error.out'));
+      var errstck = err.stack.split('\n').slice(0, 8).join('\n');
+      errstck = errstck.replace(/\n/g,lf);
+      errstck = errstck.replace(/\r\r\n/g,lf);
+      assert.equal(errstck, fixture('error.out'));
       return;
     }
     throw new Error('no error reported when there should be');
@@ -864,7 +868,10 @@ suite('exceptions', function () {
     }
     catch (err) {
       assert.ok(!err.path);
-      assert.notEqual(err.stack.split('\n').slice(0, 8).join('\n'), fixture('error.out'));
+      var errstck = err.stack.split('\n').slice(0, 8).join('\n');
+      errstck = errstck.replace(/\n/g,lf);
+      errstck = errstck.replace(/\r\r\n/g,lf);
+      assert.notEqual(errstck, fixture('error.out'));
       return;
     }
     throw new Error('no error reported when there should be');
@@ -915,8 +922,8 @@ suite('exceptions', function () {
 
 suite('rmWhitespace', function () {
   test('works', function () {
-    assert.equal(ejs.render(fixture('rmWhitespace.ejs'), {}, {rmWhitespace: true}),
-      fixture('rmWhitespace.html'));
+    var outp = ejs.render(fixture('rmWhitespace.ejs'), {}, {rmWhitespace: true});
+    assert.equal(outp.replace(/\n/g,lf), fixture('rmWhitespace.html'));
   });
 });
 
@@ -975,7 +982,7 @@ suite('include()', function () {
     assert.equal(
       ejs.render('<%- include("fixtures/includes/bom.ejs") %>',
         {}, {filename: path.join(__dirname, 'f.ejs')}),
-      '<p>This is a file with BOM.</p>\n');
+      '<p>This is a file with BOM.</p>'+lf);
   });
 
   test('include ejs with locals', function () {
@@ -1003,8 +1010,10 @@ suite('include()', function () {
     var file = 'test/fixtures/include-root.ejs';
     var inc = function (original, prev) {
       if (original.charAt(0) === '/') {
+        // original: '/include'         (windows)
+        // prev:     'D:\include.ejs'   (windows)
         return {
-          filename: path.join(__dirname, 'fixtures', prev)
+          filename: path.join(__dirname, 'fixtures', original+'.ejs')
         };
       } else {
         return prev;
@@ -1017,9 +1026,11 @@ suite('include()', function () {
   test('include ejs with includer returning template', function () {
     var file = 'test/fixtures/include-root.ejs';
     var inc = function (original, prev) {
-      if (prev === '/include.ejs') {
+      // original: '/include'         (windows)
+      // prev:     'D:\include.ejs'   (windows)
+      if (original === '/include') {
         return {
-          template: '<p>Hello template!</p>\n'
+          template: '<p>Hello template!</p>'+lf
         };
       } else {
         return prev;
@@ -1073,10 +1084,10 @@ suite('include()', function () {
     var file = 'test/fixtures/include_cache.ejs';
     var options = {filename: file};
     var out = ejs.compile(fixture('include_cache.ejs'), options);
-    assert.equal(out(), '<p>Old</p>\n');
+    assert.equal(out(), '<p>Old</p>'+lf);
 
     fs.writeFileSync(__dirname + '/tmp/include.ejs', '<p>New</p>');
-    assert.equal(out(), '<p>New</p>\n');
+    assert.equal(out(), '<p>New</p>'+lf);
   });
 
   test('support caching', function () {
@@ -1126,7 +1137,7 @@ suite('test fileloader', function () {
       if (err) {
         return done(err);
       }
-      assert.equal(html, 'myFileLoad: <p>hey</p>\n');
+      assert.equal(html, 'myFileLoad: <p>hey</p>'+lf);
       done();
     });
 
