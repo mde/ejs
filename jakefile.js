@@ -1,4 +1,5 @@
 var fs = require('fs');
+var path = require('path');
 var execSync = require('child_process').execSync;
 var exec = function (cmd) {
   execSync(cmd, {stdio: 'inherit'});
@@ -19,31 +20,36 @@ task('clean', ['clobber'], function () {
 
 desc('Lints the source code');
 task('lint', ['clean'], function () {
-  exec('./node_modules/.bin/eslint "**/*.js"');
+  var epath = path.join('./node_modules/.bin/eslint');
+  exec(epath+' "**/*.js"');
   console.log('Linting completed.');
 });
 
 task('browserify', function () {
-  exec('./node_modules/browserify/bin/cmd.js --standalone ejs lib/ejs.js > ejs.js');
+  var epath = path.join('./node_modules/browserify/bin/cmd.js');
+  exec(epath+' --standalone ejs lib/ejs.js > ejs.js');
   console.log('Browserification completed.');
 });
 
 task('minify', function () {
-  exec('./node_modules/uglify-js/bin/uglifyjs ejs.js > ejs.min.js');
+  var epath = path.join('./node_modules/uglify-js/bin/uglifyjs');
+  exec(epath+' ejs.js > ejs.min.js');
   console.log('Minification completed.');
 });
 
 desc('Generates the EJS API docs for the public API');
 task('doc', function () {
   jake.rmRf('out');
-  exec('./node_modules/.bin/jsdoc --verbose -c jsdoc.json lib/* docs/jsdoc/*');
+  var epath = path.join('./node_modules/.bin/jsdoc');
+  exec(epath+' --verbose -c jsdoc.json lib/* docs/jsdoc/*');
   console.log('Documentation generated in ./out.');
 });
 
 desc('Generates the EJS API docs for the public and private API');
 task('devdoc', function () {
   jake.rmRf('out');
-  exec('./node_modules/.bin/jsdoc --verbose -p -c jsdoc.json lib/* docs/jsdoc/*');
+  var epath = path.join('./node_modules/.bin/jsdoc');
+  exec(epath+' --verbose -p -c jsdoc.json lib/* docs/jsdoc/*');
   console.log('Documentation generated in ./out.');
 });
 
@@ -51,13 +57,14 @@ desc('Publishes the EJS API docs');
 task('docPublish', ['doc'], function () {
   fs.writeFileSync('out/CNAME', 'api.ejs.co');
   console.log('Pushing docs to gh-pages...');
-  exec('./node_modules/.bin/git-directory-deploy --directory out/');
+  var epath = path.join('./node_modules/.bin/git-directory-deploy');
+  exec(epath+' --directory out/');
   console.log('Docs published to gh-pages.');
 });
 
 desc('Runs the EJS test suite');
 task('test', ['lint'], function () {
-  exec('./node_modules/.bin/mocha');
+  exec(path.join('./node_modules/.bin/mocha'));
 });
 
 publishTask('ejs', ['build'], function () {
