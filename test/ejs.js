@@ -1178,3 +1178,29 @@ suite('meta information', function () {
     assert.strictEqual(ejs.name, 'ejs');
   });
 });
+
+suite('identifier validation', function () {
+  test('invalid outputFunctionName', function() {
+    assert.throws(function() {
+      ejs.compile('<p>yay</p>', {outputFunctionName: 'x;console.log(1);x'});
+    }, /outputFunctionName is not a valid JS identifier/)
+  });
+
+  test('invalid localsName', function() {
+    var locals = Object.create(null);
+    assert.throws(function() {
+      ejs.compile('<p>yay</p>', {
+        localsName: 'function(){console.log(1);return locals;}()'});
+    }, /localsName is not a valid JS identifier/)
+  });
+
+  test('invalid destructuredLocals', function() {
+    var locals = {};
+    assert.throws(function() {
+      ejs.compile('<p>yay</p>', {
+        destructuredLocals: [
+          'console.log(1); //'
+        ]});
+    }, /destructuredLocals\[0\] is not a valid JS identifier/)
+  });
+});
