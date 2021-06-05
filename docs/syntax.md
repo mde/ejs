@@ -21,7 +21,6 @@ Table of contents
   - `_%>`: Removes all trailing whitespace
 - Literal tags
 - Including other files
-  - “Preprocessor” directive
   - JavaScript `include()` function
 - Copyright
 
@@ -439,18 +438,6 @@ template.
 The behavior of resolving included file path can be overridden using the
 `ejs.resolveInclude` function.
 
-### “Preprocessor” directive
-
-As a compatibility layer with EJS version 1, it is possible to use the
-`include` directive in an unescaped output tag to directly “yank” the
-text from another file, just like including a C header. However, as it is done
-as a simple inclusion, you cannot pass arguments to the included template. You
-can however make variables available in the parent template, that will be
-visible to the child template as well.
-
-This flavor of `include` is **static**, which means that the resulting
-function contains the copy of the included file as when it was compiled, so
-if you changed the file after compilation, the changes are not reflected.
 
 #### Whitespace control
 
