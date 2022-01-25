@@ -17,13 +17,8 @@
  *
 */
 
-
-let program = require('jake').program;
-delete global.jake; // NO NOT WANT
-program.setTaskNames = function (n) { this.taskNames = n; };
-
 let ejs = require('../lib/ejs');
-let { hyphenToCamel } = require('../lib/utils');
+let { hyphenToCamel, parseArgs } = require('../lib/utils');
 let fs = require('fs');
 let args = process.argv.slice(2);
 let usage = fs.readFileSync(`${__dirname}/../usage.txt`).toString();
@@ -99,13 +94,22 @@ const CLI_OPTS = [
   },
 ];
 
+function die(msg) {
+  console.log(msg);
+  process.stdout.write('', function () {
+    process.stderr.write('', function () {
+      process.exit();
+    });
+  });
+}
+
 let preempts = {
   version: function () {
-    program.die(ejs.VERSION);
+    die(ejs.VERSION);
   },
   help: function () {
-    program.die(usage);
-  }
+    die(usage);
+  },
 };
 
 let stdin = '';
@@ -118,10 +122,7 @@ process.stdin.on('readable', () => {
 });
 
 function run() {
-
-  program.availableOpts = CLI_OPTS;
-  program.parseArgs(args);
-
+  let program = parseArgs(CLI_OPTS, args);
   let templatePath = program.taskNames[0];
   let pVals = program.envVars;
   let pOpts = {};
