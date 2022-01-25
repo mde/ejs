@@ -21,13 +21,12 @@
   },
   "bugs": "https://github.com/mde/ejs/issues",
   "homepage": "https://github.com/mde/ejs",
-  "dependencies": {
-    "jake": "^10.6.1"
-  },
+  "dependencies": {},
   "devDependencies": {
     "browserify": "^16.5.1",
     "eslint": "^6.8.0",
     "git-directory-deploy": "^1.5.1",
+    "jake": "^10.6.1",
     "jsdoc": "^3.6.7",
     "lru-cache": "^4.0.1",
     "mocha": "^7.1.1",
