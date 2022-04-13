@@ -231,9 +231,8 @@ suite('unit testing exported functions of module \'utils.js\'', function () {
    *  Unit testing of exported function 'hyphenToCamel'
    */
   suite('unit testing function \'hyphenToCamel\' of module \'utils.js\'', function () {
-    test('it should be callable without parameters', function () {
-      const message = 'Cannot read property \'replace\' of undefined';
-      assert.throws(() => { utils.hyphenToCamel(); }, { name: 'TypeError', message });
+    test('it should not be callable without parameters', function () {
+      assert.throws(() => { utils.hyphenToCamel(); }, { name: 'TypeError' });
     });
     test('it should be callable with parameter \'str\' {string}', function () {
       const str = 'some string';
