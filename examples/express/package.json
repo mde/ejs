@@ -5,7 +5,7 @@
     "start": "node ./app.js"
   },
   "dependencies": {
-    "ejs": "^2.6.1",
+    "ejs": "^3.1.8",
     "express": "~4.16.0"
   }
 }
