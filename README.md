@@ -55,6 +55,9 @@ for all the passed options. However, be aware that your code could break if we
 add an option with the same name as one of your data object's properties.
 Therefore, we do not recommend using this shortcut.
 
+### Important
+You should never give end-users unfettered access to the EJS render method, If you do so you are using EJS in an inherently un-secure way. 
+
 ### Options
 
   - `cache`                 Compiled functions are cached, requires `filename`
