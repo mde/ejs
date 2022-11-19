@@ -63,7 +63,7 @@ You should never give end-users unfettered access to the EJS render method, If y
   - `cache`                 Compiled functions are cached, requires `filename`
   - `filename`              The name of the file being rendered. Not required if you
     are using `renderFile()`. Used by `cache` to key caches, and for includes.
-  - `root`                  Set project root for includes with an absolute path (e.g, /file.ejs).
+  - `root`                  Set template root(s) for includes with an absolute path (e.g, /file.ejs).
     Can be array to try to resolve include from multiple directories.
   - `views`                 An array of paths to use when resolving includes with relative paths.
   - `context`               Function execution context
