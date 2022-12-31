@@ -30,7 +30,7 @@
     "git-directory-deploy": "^1.5.1",
     "jsdoc": "^3.6.7",
     "lru-cache": "^4.0.1",
-    "mocha": "^7.1.1",
+    "mocha": "^10.2.0",
     "uglify-js": "^3.3.16"
   },
   "engines": {
