@@ -272,8 +272,8 @@ suite('client mode', function () {
 
   test('supports error handler in client mode', function () {
     assert.equal(ejs.render('<%= it.does.not.exist %>', {}, {
-      client: true, error: function(e,escapeFn){return (e instanceof ReferenceError) + escapeFn('&')}
-    }), "true&amp;");
+      client: true, error: function(e,escapeFn){return (e instanceof ReferenceError) + escapeFn('&');}
+    }), 'true&amp;');
   });
 });
 
@@ -925,17 +925,17 @@ suite('exceptions', function () {
   });
 
   test('catches errors in expressions in escaped mode', function () {
-    assert.equal(ejs.render('<%= it.does.not.exist %>', {}, {error: function(){return 'error'}}),
-      "error");
+    assert.equal(ejs.render('<%= it.does.not.exist %>', {}, {error: function(){return 'error';}}),
+      'error');
   });
 
   testAsync('catches errors in expressions in escaped mode with async', function (done) {
     ejs.render('<%= await it.does.not.exist %><%=await Promise.resolve(42)%><%=await Promise.reject(0)%>', {}, {
-      async: true, 
-      error: function(){return 'error'}
+      async: true,
+      error: function(){return 'error';}
     }).then(function(value) {
       try {
-        assert.equal(value, "error42error");
+        assert.equal(value, 'error42error');
       }
       finally {
         done();
@@ -944,27 +944,27 @@ suite('exceptions', function () {
   });
 
   test('passes the escapeFn to the error handler in escaped mode', function () {
-    assert.equal(ejs.render('<%= it.does.not.exist %>', {}, {error: function(_, escapeFn){return escapeFn("&")}}),
-      "&amp;");
+    assert.equal(ejs.render('<%= it.does.not.exist %>', {}, {error: function(_, escapeFn){return escapeFn('&');}}),
+      '&amp;');
   });
 
   test('passes the error object to the error handler in escaped mode', function () {
-    assert.equal(ejs.render('<%= it.does.not.exist %>', {}, {error: function(e){return e instanceof ReferenceError}}),
-      "true");
+    assert.equal(ejs.render('<%= it.does.not.exist %>', {}, {error: function(e){return e instanceof ReferenceError;}}),
+      'true');
   });
 
   test('catches errors in expressions in raw mode', function () {
-    assert.equal(ejs.render('<%- it.does.not.exist %>', {}, {error: function(){return 'error'}}),
-      "error");
+    assert.equal(ejs.render('<%- it.does.not.exist %>', {}, {error: function(){return 'error';}}),
+      'error');
   });
 
   testAsync('catches errors in expressions in raw mode with async', function (done) {
     ejs.render('<%- await it.does.not.exist %><%-await Promise.resolve(42)%><%-await Promise.reject(0)%>', {}, {
-      async: true, 
-      error: function(){return 'error'}
+      async: true,
+      error: function(){return 'error';}
     }).then(function(value) {
       try {
-        assert.equal(value, "error42error");
+        assert.equal(value, 'error42error');
       }
       finally {
         done();
@@ -973,13 +973,13 @@ suite('exceptions', function () {
   });
 
   test('passes the escapeFn to the error handler in raw mode', function () {
-    assert.equal(ejs.render('<%- it.does.not.exist %>', {}, {error: function(_, escapeFn){return escapeFn("&")}}),
-      "&amp;");
+    assert.equal(ejs.render('<%- it.does.not.exist %>', {}, {error: function(_, escapeFn){return escapeFn('&');}}),
+      '&amp;');
   });
 
   test('passes the error object to the error handler in raw mode', function () {
-    assert.equal(ejs.render('<%- it.does.not.exist %>', {}, {error: function(e){return e instanceof ReferenceError}}),
-      "true");
+    assert.equal(ejs.render('<%- it.does.not.exist %>', {}, {error: function(e){return e instanceof ReferenceError;}}),
+      'true');
   });
 
   teardown(function() {
