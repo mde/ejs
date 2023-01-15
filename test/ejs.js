@@ -204,6 +204,15 @@ suite('ejs.compile(str, options)', function () {
     assert.ok(func.name === 'anonymous');
     return done();
   });
+
+  test('allow custom function ctor', function () {
+    var fn = ejs.compile('', {
+      functionClass: function(){
+        return function(){ return 'potato'; }
+      }
+    });
+    assert.equal(fn(), 'potato');
+  });
 });
 
 suite('client mode', function () {

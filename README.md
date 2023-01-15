@@ -98,6 +98,7 @@ You should never give end-users unfettered access to the EJS render method, If y
     previously resolved path. Should return an object `{ filename, template }`,
     you may return only one of the properties, where `filename` is the final parsed path and `template`
     is the included content.
+  - `functionClass`         Custom [function constructor](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/Function) replacement for a scenario where you would want to add hooks or provide a different execution backend.
 
 This project uses [JSDoc](http://usejsdoc.org/). For the full public API
 documentation, clone the repository and run `jake doc`. This will run JSDoc
