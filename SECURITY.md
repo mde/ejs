@@ -18,5 +18,5 @@ To ensure the timely response to your report, please ensure that the entirety of
 
 The EJS team will then evaluate your report and will reply with the next steps in handling your report and may ask for additional information or guidance.
 
-## out of scope vulnerabilities
+## Out-of-Scope Vulnerabilities
 If you give end-users unfettered access to the EJS render method, you are using EJS in an inherently un-secure way. Please do not report security issues that stem from doing that. EJS is effectively a JavaScript runtime. Its entire job is to execute JavaScript. If you run the EJS render method without checking the inputs yourself, you are responsible for the results.
