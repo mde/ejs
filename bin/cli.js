@@ -17,6 +17,7 @@
  *
 */
 
+let path = require('path');
 
 let program = require('jake').program;
 delete global.jake; // NO NOT WANT
@@ -149,9 +150,6 @@ function run() {
     }
   }
 
-  // Default to having views relative from the current working directory
-  opts.views = ['.'];
-
   // Ensure there's a template to render
   if (!templatePath) {
     throw new Error('Please provide a template path. (Run ejs -h for help)');
@@ -197,7 +195,8 @@ function run() {
     vals[p] = pVals[p];
   }
 
-  let template = fs.readFileSync(templatePath).toString();
+  opts.filename = path.resolve(process.cwd(), templatePath);
+  let template = fs.readFileSync(opts.filename).toString();
   let output = ejs.render(template, vals, opts);
   if (pOpts.outputFile) {
     fs.writeFileSync(pOpts.outputFile, output);
