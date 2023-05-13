@@ -54,4 +54,12 @@ suite('cli', function () {
     assert.equal(o.replace(/\n/g, lf), c);
   });
 
+  test('relative path in nested include', function () {
+    let x = path.join('./bin/cli.js');
+    let u = path.join('test/fixtures/include-simple.ejs');
+    let o = run(os+x+' '+u);
+    let c = fs.readFileSync('test/fixtures/include-simple.html', 'utf-8');
+    assert.equal(o, c);
+  });
+
 });
