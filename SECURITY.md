@@ -18,5 +18,25 @@ To ensure the timely response to your report, please ensure that the entirety of
 
 The EJS team will then evaluate your report and will reply with the next steps in handling your report and may ask for additional information or guidance.
 
-## out of scope vulnerabilities
-If you give end-users unfettered access to the EJS render method, you are using EJS in an inherently un-secure way. Please do not report security issues that stem from doing that. EJS is effectively a JavaScript runtime. Its entire job is to execute JavaScript. If you run the EJS render method without checking the inputs yourself, you are responsible for the results.
+## Out-of-Scope Vulnerabilities
+If you give end-users unfettered access to the EJS render method, you are using EJS in an inherently un-secure way. Please do not report security issues that stem from doing that.
+
+EJS is effectively a JavaScript runtime. Its entire job is to execute JavaScript. If you run the EJS render method without checking the inputs yourself, you are responsible for the results.
+
+In short, DO NOT send reports including this snippet of code:
+
+```javascript
+const express = require('express');
+const app = express();
+const PORT = 3000;
+app.set('views', __dirname);
+app.set('view engine', 'ejs');
+
+app.get('/', (req, res) => {
+    res.render('index', req.query);
+});
+
+app.listen(PORT, ()=> {
+    console.log(`Server is running on ${PORT}`);
+});
+```
