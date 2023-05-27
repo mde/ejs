@@ -1,8 +1,20 @@
 Embedded JavaScript templates<br/>
-[![Build Status](https://img.shields.io/travis/mde/ejs/master.svg?style=flat)](https://travis-ci.org/mde/ejs)
-[![Developing Dependencies](https://img.shields.io/david/dev/mde/ejs.svg?style=flat)](https://david-dm.org/mde/ejs?type=dev)
 [![Known Vulnerabilities](https://snyk.io/test/npm/ejs/badge.svg?style=flat)](https://snyk.io/test/npm/ejs)
 =============================
+
+Security professionals, before reporting any security issues, please reference the
+<a href="https://github.com/mde/ejs/blob/main/SECURITY.md">SECURITY.md</a>
+in this project, in particular, the following: "EJS is effectively a JavaScript runtime.
+Its entire job is to execute JavaScript. If you run the EJS render method without
+checking the inputs yourself, you are responsible for the results."
+
+In short, DO NOT submit 'vulnerabilities' that include this snippet of code:
+
+```javascript
+app.get('/', (req, res) => {
+  res.render('index', req.query);
+});
+```
 
 ## Installation
 
