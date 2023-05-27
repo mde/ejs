@@ -2,6 +2,8 @@ Embedded JavaScript templates<br/>
 [![Known Vulnerabilities](https://snyk.io/test/npm/ejs/badge.svg?style=flat)](https://snyk.io/test/npm/ejs)
 =============================
 
+## Security
+
 Security professionals, before reporting any security issues, please reference the
 <a href="https://github.com/mde/ejs/blob/main/SECURITY.md">SECURITY.md</a>
 in this project, in particular, the following: "EJS is effectively a JavaScript runtime.
