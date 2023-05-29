@@ -158,9 +158,11 @@ if (runCompile) {
   console.log(fill('name: ',30), fill('avg',10), fill('med',10), fill('med/avg',10), fill('min',10), fill('max',10), fillR('loops',15));
 
   benchCompile('single tmpl compile',         'bench1', {compileDebug: false}, { loopFactor: 2 });
+  benchCompile('single tmpl compile (error)', 'bench1', {compileDebug: false, error: function(){}}, { loopFactor: 2 });
   benchCompile('single tmpl compile (debug)', 'bench1', {compileDebug: true}, { loopFactor: 2 });
 
   benchCompile('large tmpl compile',         'bench2', {compileDebug: false}, { loopFactor: 0.1 });
+  benchCompile('large tmpl compile (error)', 'bench2', {compileDebug: false, error: function(){}}, { loopFactor: 0.1 });
 
   benchCompile('include-1 compile',  'include1', {compileDebug: false}, { loopFactor: 2 });
   console.log('-');
@@ -170,12 +172,13 @@ if (runCompile) {
 
 if (runCache) {
   benchRender('single tmpl cached',           'bench1', data, {cache:true, compileDebug: false}, { loopFactor: 5 });
+  benchRender('single tmpl cached (error)',   'bench1', data, {cache:true, compileDebug: false, error: function(){}}, { loopFactor: 5 });
   benchRender('single tmpl cached (debug)',   'bench1', data, {cache:true, compileDebug: true}, { loopFactor: 5 });
 
   benchRender('large tmpl cached',           'bench2', data, {cache:true, compileDebug: false}, { loopFactor: 0.4 });
+  benchRender('large tmpl cached (error)',   'bench2', data, {cache:true, compileDebug: false, error: function(){}}, { loopFactor: 0.4 });
   benchRender('include-1 cached',    'include1', data, {cache:true, compileDebug: false}, { loopFactor: 2 });
   benchRender('include-2 cached',    'include2', data, {cache:true, compileDebug: false}, { loopFactor: 2 });
-
 
   benchRender('locals tmpl cached "with"',    'locals1', data, {cache:true, compileDebug: false, _with: true}, { loopFactor: 3 });
   benchRender('locals tmpl cached NO-"with"', 'locals1', data, {cache:true, compileDebug: false, _with: false}, { loopFactor: 3 });
@@ -186,9 +189,11 @@ if (runCache) {
 
 if (runNoCache) {
   benchRender('single tmpl NO-cache',         'bench1', data, {cache:false, compileDebug: false});
+  benchRender('single tmpl NO-cache (error)', 'bench1', data, {cache:false, compileDebug: false, error: function(){}});
   benchRender('single tmpl NO-cache (debug)', 'bench1', data, {cache:false, compileDebug: true});
 
   benchRender('large tmpl NO-cache',         'bench2', data, {cache:false, compileDebug: false}, { loopFactor: 0.1 });
+  benchRender('large tmpl NO-cache (error)', 'bench2', data, {cache:false, compileDebug: false, error: function(){}}, { loopFactor: 0.1 });
 
   benchRender('include-1 NO-cache',  'include1', data, {cache:false, compileDebug: false});
   benchRender('include-2 NO-cache',  'include2', data, {cache:false, compileDebug: false});
