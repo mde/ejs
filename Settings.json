@@ -1,0 +1,84 @@
+{
+    "Apps": [],
+    "App Settings": [],
+    "Preferences": [
+        {
+            "name": "translate_force_trigger_on_english_count_for_backoff_1",
+            "value": "-1"
+},
+        {
+            "name": "translate_denied_count_for_language",
+            "value": "{\"af\":0,\"eu\":0,\"fr\":0,\"sw\":0}"
+},
+        {
+            "name": "translate_site_blocklist_with_time",
+            "value": "{}"
+},
+        {
+            "name": "intl.selected_languages",
+            "value": "\"en-US,en\""
+},
+        {
+            "name": "translate_site_blacklist",
+            "value": "[]"
+},
+        {
+            "name": "translate_allowlists",
+            "value": "{\"sw\":\"en\"}"
+},
+        {
+            "name": "translate_site_blacklist_with_time",
+            "value": "{}"
+},
+        {
+            "name": "translate_accepted_count",
+            "value": "{\"af\":1,\"eu\":1,\"fr\":1,\"sw\":3}"
+},
+        {
+            "name": "translate_recent_target",
+            "value": "\"en\""
+},
+        {
+            "name": "sync.demographics_birth_year_offset",
+            "value": "-1"
+},
+        {
+            "name": "translate_ignored_count_for_language",
+            "value": "{\"af\":0,\"eu\":0,\"fr\":0,\"sw\":0}"
+},
+        {
+            "name": "safebrowsing.enabled",
+            "value": "true"
+},
+        {
+            "name": "ios.ntp.supervised.content_suggestions_enabled",
+            "value": "true"
+}
+    ],
+    "Priority Preferences": [
+        {"preference": {
+            "name": "credentials_password_manager_warm_welcome_last_seen",
+            "value": "2024-01-31T10:47:29.529381Z"
+}},
+        {"preference": {
+            "name": "credentials_last_password_checkup_time",
+            "value": "2024-02-04T19:04:05.679072Z"
+}},
+        {"preference": {
+            "name": "safebrowsing.aesb_update_time_windows_epoch_micros",
+            "value": "\"13351171629053089\""
+}},
+        {"preference": {
+            "name": "sync.demographics",
+            "value": "{\"gender\":2,\"birth_year\":1992}"
+}},
+        {"preference": {
+            "name": "profile.credentials_last_password_checkup_time",
+            "value": "\"13351623084429930\""
+}}
+    ],
+    "Themes": [],
+    "App Lists": [],
+    "Web Apps": [],
+    "Search Engines": []
+}

@@ -1,0 +1,17 @@
+2024-02-20T02:48:50.3459209Z ##[group]Run npm run lint-content -- --errors-only --paths $CHANGED_FILES
+2024-02-20T02:48:50.3460452Z [36;1mnpm run lint-content -- --errors-only --paths $CHANGED_FILES[0m
+2024-02-20T02:48:50.3496718Z shell: /usr/bin/bash -e {0}
+2024-02-20T02:48:50.3497423Z env:
+2024-02-20T02:48:50.3498502Z   CHANGED_FILES: content/codespaces/managing-your-codespaces/managing-repository-access-for-your-codespaces.md
+2024-02-20T02:48:50.3499745Z ##[endgroup]
+2024-02-20T02:48:50.6202552Z 
+2024-02-20T02:48:50.6203400Z > lint-content
+2024-02-20T02:48:50.6205913Z > node src/content-linter/scripts/lint-content.js --errors-only --paths content/codespaces/managing-your-codespaces/managing-repository-access-for-your-codespaces.md
+2024-02-20T02:48:50.6207487Z 
+2024-02-20T02:48:51.5554619Z - Running content linter
+2024-02-20T02:48:51.5555464Z 
+2024-02-20T02:48:51.5555477Z 
+2024-02-20T02:48:51.7305384Z 
+2024-02-20T02:48:51.7305606Z 
+2024-02-20T02:48:51.7310258Z ℹ 🕦 Markdownlint finished in 174.0 ms
+2024-02-20T02:48:51.7311818Z ✔ No errors found
