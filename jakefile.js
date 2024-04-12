@@ -64,7 +64,7 @@ task('docPublish', ['doc'], function () {
 
 desc('Runs the EJS test suite');
 task('test', ['lint'], function () {
-  exec(path.join('./node_modules/.bin/mocha'));
+  exec(path.join('./node_modules/.bin/mocha --u tdd'));
 });
 
 publishTask('ejs', ['build'], function () {

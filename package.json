@@ -37,6 +37,6 @@
     "node": ">=0.10.0"
   },
   "scripts": {
-    "test": "mocha -u tdd"
+    "test": "npx jake test"
   }
 }
