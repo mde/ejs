@@ -22,7 +22,8 @@
   "bugs": "https://github.com/mde/ejs/issues",
   "homepage": "https://github.com/mde/ejs",
   "dependencies": {
-    "jake": "^10.8.5"
+    "jake": "^10.8.5",
+    "typescript": "^5.4.5"
   },
   "devDependencies": {
     "browserify": "^16.5.1",
