@@ -23,8 +23,8 @@ let program = require('jake').program;
 delete global.jake; // NO NOT WANT
 program.setTaskNames = function (n) { this.taskNames = n; };
 
-let ejs = require('../lib/ejs');
-let { hyphenToCamel } = require('../lib/utils');
+let ejs = require('../lib/cjs/ejs');
+let { hyphenToCamel } = require('../lib/cjs/utils');
 let fs = require('fs');
 let args = process.argv.slice(2);
 let usage = fs.readFileSync(`${__dirname}/../usage.txt`).toString();
