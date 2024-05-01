@@ -27,7 +27,10 @@ task('compile', function () {
   exec('npx tsc');
   let source = fs.readFileSync('lib/cjs/ejs.js', 'utf8').toString();
   source = source.replace(FILE_SHIM, ''); // remove ESM shim for __filename and __dirname
-  source = source.replace(/let /g, 'var '); // replace `let` in code-generation strings
+  source = source.replace(
+    "var DECLARATION_KEYWORD = 'let';",
+    "var DECLARATION_KEYWORD = 'var';"
+  ); // replace `let` in code-generation strings
   fs.writeFileSync('lib/cjs/ejs.js', source);
   fs.writeFileSync('lib/cjs/package.json', '{"type":"commonjs"}');
 });
