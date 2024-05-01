@@ -49,8 +49,11 @@ task('lint', ['clean'], function () {
 });
 
 task('browserify', function () {
-  let epath = path.join('./node_modules/browserify/bin/cmd.js');
-  exec(epath+' --standalone ejs lib/cjs/ejs.js > ejs.js');
+  const currentDir = process.cwd();
+  process.chdir('./lib/cjs');
+  let epath = path.join('../../node_modules/browserify/bin/cmd.js');
+  exec(epath+' --standalone ejs ejs.js > ../../ejs.js');
+  process.chdir(currentDir);
   console.log('Browserification completed.');
 });
 
