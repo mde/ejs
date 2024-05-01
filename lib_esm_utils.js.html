@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: lib/utils.js</title>
+    <title>JSDoc: Source: lib/esm/utils.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: lib/utils.js</h1>
+    <h1 class="page-title">Source: lib/esm/utils.js</h1>
 
     
 
@@ -52,7 +52,10 @@
 
 'use strict';
 
+const utils = {};
 var regExpChars = /[|\\{}()[\]^$+*?.]/g;
+var hasOwnProperty = Object.prototype.hasOwnProperty;
+var hasOwn = function (obj, key) { return hasOwnProperty.apply(obj, [key]); };
 
 /**
  * Escape characters reserved in regular expressions.
@@ -64,7 +67,7 @@ var regExpChars = /[|\\{}()[\]^$+*?.]/g;
  * @static
  * @private
  */
-exports.escapeRegExpChars = function (string) {
+utils.escapeRegExpChars = function (string) {
   // istanbul ignore if
   if (!string) {
     return '';
@@ -119,15 +122,31 @@ var escapeFuncStr =
  * @private
  */
 
-exports.escapeXML = function (markup) {
+utils.escapeXML = function (markup) {
   return markup == undefined
     ? ''
     : String(markup)
       .replace(_MATCH_HTML, encode_char);
 };
-exports.escapeXML.toString = function () {
+
+function escapeXMLToString() {
   return Function.prototype.toString.call(this) + ';\n' + escapeFuncStr;
-};
+}
+
+try {
+  if (typeof Object.defineProperty === 'function') {
+  // If the Function prototype is frozen, the "toString" property is non-writable. This means that any objects which inherit this property
+  // cannot have the property changed using an assignment. If using strict mode, attempting that will cause an error. If not using strict
+  // mode, attempting that will be silently ignored.
+  // However, we can still explicitly shadow the prototype's "toString" property by defining a new "toString" property on this object.
+    Object.defineProperty(utils.escapeXML, 'toString', { value: escapeXMLToString });
+  } else {
+    // If Object.defineProperty() doesn't exist, attempt to shadow this property using the assignment operator.
+    utils.escapeXML.toString = escapeXMLToString;
+  }
+} catch (err) {
+  console.warn('Unable to set escapeXML.toString (is the Function prototype frozen?)');
+}
 
 /**
  * Naive copy of properties from one object to another.
@@ -140,10 +159,18 @@ exports.escapeXML.toString = function () {
  * @static
  * @private
  */
-exports.shallowCopy = function (to, from) {
+utils.shallowCopy = function (to, from) {
   from = from || {};
-  for (var p in from) {
-    to[p] = from[p];
+  if ((to !== null) &amp;&amp; (to !== undefined)) {
+    for (var p in from) {
+      if (!hasOwn(from, p)) {
+        continue;
+      }
+      if (p === '__proto__' || p === 'constructor') {
+        continue;
+      }
+      to[p] = from[p];
+    }
   }
   return to;
 };
@@ -160,11 +187,21 @@ exports.shallowCopy = function (to, from) {
  * @static
  * @private
  */
-exports.shallowCopyFromList = function (to, from, list) {
-  for (var i = 0; i &lt; list.length; i++) {
-    var p = list[i];
-    if (typeof from[p] != 'undefined') {
-      to[p] = from[p];
+utils.shallowCopyFromList = function (to, from, list) {
+  list = list || [];
+  from = from || {};
+  if ((to !== null) &amp;&amp; (to !== undefined)) {
+    for (var i = 0; i &lt; list.length; i++) {
+      var p = list[i];
+      if (typeof from[p] != 'undefined') {
+        if (!hasOwn(from, p)) {
+          continue;
+        }
+        if (p === '__proto__' || p === 'constructor') {
+          continue;
+        }
+        to[p] = from[p];
+      }
     }
   }
   return to;
@@ -174,11 +211,11 @@ exports.shallowCopyFromList = function (to, from, list) {
  * Simple in-process cache implementation. Does not implement limits of any
  * sort.
  *
- * @implements Cache
+ * @implements {Cache}
  * @static
  * @private
  */
-exports.cache = {
+utils.cache = {
   _data: {},
   set: function (key, val) {
     this._data[key] = val;
@@ -193,6 +230,65 @@ exports.cache = {
     this._data = {};
   }
 };
+
+/**
+ * Transforms hyphen case variable into camel case.
+ *
+ * @param {String} string Hyphen case string
+ * @return {String} Camel case string
+ * @static
+ * @private
+ */
+utils.hyphenToCamel = function (str) {
+  return str.replace(/-[a-z]/g, function (match) { return match[1].toUpperCase(); });
+};
+
+/**
+ * Returns a null-prototype object in runtimes that support it
+ *
+ * @return {Object} Object, prototype will be set to null where possible
+ * @static
+ * @private
+ */
+utils.createNullProtoObjWherePossible = (function () {
+  if (typeof Object.create == 'function') {
+    return function () {
+      return Object.create(null);
+    };
+  }
+  if (!({__proto__: null} instanceof Object)) {
+    return function () {
+      return {__proto__: null};
+    };
+  }
+  // Not possible, just pass through
+  return function () {
+    return {};
+  };
+})();
+
+/**
+ * Copies own-properties from one object to a null-prototype object for basic
+ * protection against prototype pollution
+ *
+ * @return {Object} Object with own-properties of input object
+ * @static
+ * @private
+ */
+utils.hasOwnOnlyObject = function (obj) {
+  var o = utils.createNullProtoObjWherePossible();
+  for (var p in obj) {
+    if (hasOwn(obj, p)) {
+      o[p] = obj[p];
+    }
+  }
+  return o;
+};
+
+if (typeof exports != 'undefined') {
+  module.exports = utils;
+}
+export default utils;
 </code></pre>
         </article>
     </section>
@@ -209,7 +305,7 @@ exports.cache = {
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Mon Sep 02 2019 12:31:27 GMT-0700 (Pacific Daylight Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Wed May 01 2024 10:49:53 GMT-0700 (Pacific Daylight Time)
 </footer>
 
 <script> prettyPrint(); </script>

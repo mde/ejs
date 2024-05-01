@@ -229,6 +229,8 @@ can be read a file by path, return a string after processing</p>
 
 
 
+
+
 <h5>Returns:</h5>
 
         
@@ -279,7 +281,7 @@ can be read a file by path, return a string after processing</p>
 
 
 <div class="description">
-    <p>This type of function is returned from <a href="module-ejs.html#.compile"><code>module:ejs.compile</code></a>, when
+    <p>This type of function is returned from <code>module:ejs.compile</code>, when
 <a href="global.html#Options"><code>Options</code></a><code>.client</code> is true.</p>
 <p>This is also used internally to generate a
 <a href="global.html#TemplateFunction"><code>TemplateFunction</code></a>.</p>
@@ -355,7 +357,7 @@ can be read a file by path, return a string after processing</p>
             
 
             <td class="description last"><p>an object of data to be passed into the template. The name of this variable
-is adjustable through <a href="module-ejs.html#.localsName"><code>module:ejs.localsName</code></a>.</p></td>
+is adjustable through <code>module:ejs.localsName</code>.</p></td>
         </tr>
 
     
@@ -534,6 +536,8 @@ is adjustable through <a href="module-ejs.html#.localsName"><code>module:ejs.loc
 
 
 
+
+
 <h5>Returns:</h5>
 
         
@@ -681,6 +685,8 @@ is adjustable through <a href="module-ejs.html#.localsName"><code>module:ejs.loc
 
     
 </dl>
+
+
 
 
 
@@ -871,7 +877,7 @@ is adjustable through <a href="module-ejs.html#.localsName"><code>module:ejs.loc
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="docs_jsdoc_template-functions.jsdoc.html">docs/jsdoc/template-functions.jsdoc</a>, <a href="docs_jsdoc_template-functions.jsdoc.html#line66">line 66</a>
+        <a href="docs_jsdoc_template-functions.jsdoc.html">docs/jsdoc/template-functions.jsdoc</a>, <a href="docs_jsdoc_template-functions.jsdoc.html#line67">line 67</a>
     </li></ul></dd>
     
 
@@ -881,6 +887,8 @@ is adjustable through <a href="module-ejs.html#.localsName"><code>module:ejs.loc
 
     
 </dl>
+
+
 
 
 
@@ -1085,8 +1093,84 @@ functions.</p></td>
 
             <td class="description last"><p>Whether or not to use <code>with () {}</code> construct in the generated template
 functions. If set to <code>false</code>, data is still accessible through the object
-whose name is specified by <a href="module-ejs.html#.localsName"><code>module:ejs.localsName</code></a> (default to
+whose name is specified by <code>module:ejs.localsName</code> (default to
 <code>locals</code>).</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>strict</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last"><p>Whether to run in strict mode or not.
+Enforces <code>_with=false</code>.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>destructuredLocals</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;String></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    []
+                
+                </td>
+            
+
+            <td class="description last"><p>An array of local variables that are always destructured from <code>module:ejs.localsName</code>,
+available even in strict mode.</p></td>
         </tr>
 
     
@@ -1239,7 +1323,7 @@ and is <code>.toString()</code>ed in the generation of client functions.</p></td
             
 
             <td class="description last"><p>The filename of the template. Required for inclusion and caching unless
-you are using <a href="module-ejs.html#.renderFile"><code>module:ejs.renderFile</code></a>. Also used for error reporting.</p></td>
+you are using <code>module:ejs.renderFile</code>. Also used for error reporting.</p></td>
         </tr>
 
     
@@ -1253,6 +1337,9 @@ you are using <a href="module-ejs.html#.renderFile"><code>module:ejs.renderFile<
             
                 
 <span class="param-type">String</span>
+|
+
+<span class="param-type">Array.&lt;String></span>
 
 
             
@@ -1274,8 +1361,8 @@ you are using <a href="module-ejs.html#.renderFile"><code>module:ejs.renderFile<
                 </td>
             
 
-            <td class="description last"><p>The path to the project root. When this is set, absolute paths for includes
-(/filename.ejs) will be relative to the project root.</p></td>
+            <td class="description last"><p>The path to the template root(s). When this is set, absolute paths for includes
+(/filename.ejs) will be relative to the template root(s).</p></td>
         </tr>
 
     
@@ -1604,7 +1691,7 @@ This requires language support.</p></td>
     
 
     
-    <h4 class="name" id="RenderFileCallback"><span class="type-signature"></span>RenderFileCallback<span class="signature">(err<span class="signature-attributes">nullable</span>, str<span class="signature-attributes">nullable</span>)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="RenderFileCallback"><span class="type-signature"></span>RenderFileCallback<span class="signature">(err<span class="signature-attributes">nullable</span>, str<span class="signature-attributes">opt, nullable</span>)</span><span class="type-signature"></span></h4>
     
 
     
@@ -1612,7 +1699,7 @@ This requires language support.</p></td>
 
 
 <div class="description">
-    <p>Callback for receiving data from <a href="module-ejs.html#.renderFile"><code>module:ejs.renderFile</code></a>.</p>
+    <p>Callback for receiving data from <code>module:ejs.renderFile</code>.</p>
 </div>
 
 
@@ -1698,6 +1785,8 @@ This requires language support.</p></td>
             
                 <td class="attributes">
                 
+                    &lt;optional><br>
+                
 
                 
                     &lt;nullable><br>
@@ -1709,7 +1798,7 @@ This requires language support.</p></td>
 
             
 
-            <td class="description last"><p>output string, is <code>null</code> if there is an error</p></td>
+            <td class="description last"><p>output string, is <code>null</code> or <code>undefined</code> if there is an error</p></td>
         </tr>
 
     
@@ -1778,13 +1867,15 @@ This requires language support.</p></td>
 
 
 
+
+
             
                 
 
     
 
     
-    <h4 class="name" id="RethrowCallback"><span class="type-signature"></span>RethrowCallback<span class="signature">(err, str, filename, lineno)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="RethrowCallback"><span class="type-signature"></span>RethrowCallback<span class="signature">(err, str, filename, lineno, esc)</span><span class="type-signature"></span></h4>
     
 
     
@@ -1905,7 +1996,7 @@ rethrow an error in a better-formatted way.</p>
             <td class="type">
             
                 
-<span class="param-type">String</span>
+<span class="param-type">Number</span>
 
 
             
@@ -1916,6 +2007,29 @@ rethrow an error in a better-formatted way.</p>
             
 
             <td class="description last"><p>line number of the error</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>esc</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="global.html#EscapeCallback">EscapeCallback</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
         </tr>
 
     
@@ -1984,6 +2098,8 @@ rethrow an error in a better-formatted way.</p>
 
 
 
+
+
             
                 
 
@@ -1998,7 +2114,7 @@ rethrow an error in a better-formatted way.</p>
 
 
 <div class="description">
-    <p>This type of function is returned from <a href="module-ejs.html#.compile"><code>module:ejs.compile</code></a>, when
+    <p>This type of function is returned from <code>module:ejs.compile</code>, when
 <a href="global.html#Options"><code>Options</code></a><code>.client</code> is false.</p>
 </div>
 
@@ -2135,6 +2251,8 @@ rethrow an error in a better-formatted way.</p>
 
 
 
+
+
 <h5>Returns:</h5>
 
         
@@ -2185,7 +2303,7 @@ rethrow an error in a better-formatted way.</p>
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Mon Sep 02 2019 12:31:27 GMT-0700 (Pacific Daylight Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Wed May 01 2024 10:49:53 GMT-0700 (Pacific Daylight Time)
 </footer>
 
 <script> prettyPrint(); </script>
