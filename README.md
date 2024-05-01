@@ -24,6 +24,26 @@ app.get('/', (req, res) => {
 $ npm install ejs
 ```
 
+### Usage
+
+Supports both CommonJS and ES Modules.
+
+```javascript
+import ejs from 'ejs';
+// Or
+const ejs = require('ejs');
+```
+
+### Compatibility
+
+Server: CommonJS approach (`require`) supports Node versions back to 0.12. ES
+Modules approach (`import`) requires a Node version that supports ESM.
+
+CLI: Requires Node v8 or newer.
+
+Browser: EJS supports all modern browsers, but is very likely to work even
+in very, very old browsers. Your mileage may vary.
+
 ## Features
 
   * Control flow with `<% %>`
@@ -132,26 +152,6 @@ the both the public & private API docs, run `jake devdoc` instead.
   - `_%>`             'Whitespace Slurping' ending tag, removes all whitespace after it
 
 For the full syntax documentation, please see [docs/syntax.md](https://github.com/mde/ejs/blob/master/docs/syntax.md).
-
-### Usage
-
-Supports both CommonJS and ES Modules.
-
-```javascript
-import ejs from 'ejs';
-// Or
-const ejs = require('ejs');
-```
-
-### Compatibility
-
-Server: CommonJS approach (`require`) supports Node versions back to 0.12. ES
-Modules approach (`import`) requires a Node version that supports ESM.
-
-CLI: Requires Node v8 or newer.
-
-Browser: EJS supports all modern browsers, but is very likely to work even
-in very, very old browsers. Your mileage may vary.
 
 ### Includes
 
