@@ -252,7 +252,7 @@ suite('client mode', function () {
     str = fn.toString();
     if (!process.env.running_under_istanbul) {
       eval('var preFn = ' + str);
-      assert.equal(preFn({name: 'world'}), 'HELLO WORLD'); // eslint-disable-line no-undef
+      assert.equal(preFn({name: 'world'}), 'HELLO WORLD');
     }
   });
 

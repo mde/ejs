@@ -12,7 +12,7 @@
   "bin": {
     "ejs": "./bin/cli.js"
   },
-  "main": "./lib/ejs.js",
+  "main": "./lib/esm/ejs.js",
   "jsdelivr": "ejs.min.js",
   "unpkg": "ejs.min.js",
   "repository": {
@@ -26,8 +26,9 @@
     "typescript": "^5.4.5"
   },
   "devDependencies": {
+    "@babel/eslint-parser": "^7.24.5",
     "browserify": "^16.5.1",
-    "eslint": "^6.8.0",
+    "eslint": "^9.1.1",
     "git-directory-deploy": "^1.5.1",
     "jsdoc": "^4.0.2",
     "lru-cache": "^4.0.1",
