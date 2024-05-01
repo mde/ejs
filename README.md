@@ -24,7 +24,7 @@ app.get('/', (req, res) => {
 $ npm install ejs
 ```
 
-### Usage
+### Import or require
 
 Supports both CommonJS and ES Modules.
 
