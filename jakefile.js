@@ -68,7 +68,7 @@ desc('Generates the EJS API docs for the public API');
 task('doc', function () {
   jake.rmRf('out');
   let epath = path.join('./node_modules/.bin/jsdoc');
-  exec(epath+' --verbose -c jsdoc.json lib/* docs/jsdoc/*');
+  exec(epath+' --verbose -c jsdoc.json lib/esm/* docs/jsdoc/*');
   console.log('Documentation generated in ./out.');
 });
 
@@ -76,7 +76,7 @@ desc('Generates the EJS API docs for the public and private API');
 task('devdoc', function () {
   jake.rmRf('out');
   let epath = path.join('./node_modules/.bin/jsdoc');
-  exec(epath+' --verbose -p -c jsdoc.json lib/* docs/jsdoc/*');
+  exec(epath+' --verbose -p -c jsdoc.json lib/esm/* docs/jsdoc/*');
   console.log('Documentation generated in ./out.');
 });
 
