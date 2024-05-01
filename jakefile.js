@@ -90,7 +90,7 @@ task('docPublish', ['doc'], function () {
 });
 
 desc('Runs the EJS test suite');
-task('test', [], function () {
+task('test', ['build'], function () {
   exec(path.join('./node_modules/.bin/mocha --u tdd'));
 });
 
