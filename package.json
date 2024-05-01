@@ -34,7 +34,7 @@
   "devDependencies": {
     "typescript": "^5.4.5",
     "@babel/eslint-parser": "^7.24.5",
-    "browserify": "^16.5.1",
+    "browserify": "^17.0.0",
     "eslint": "^9.1.1",
     "git-directory-deploy": "^1.5.1",
     "jsdoc": "^4.0.2",
