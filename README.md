@@ -36,8 +36,9 @@ const ejs = require('ejs');
 
 ### Compatibility
 
-Server: CommonJS approach (`require`) supports Node versions back to 0.12. ES
-Modules approach (`import`) requires a Node version that supports ESM.
+Server: CommonJS approach (`require`) supports Node versions at least
+back to v0.12, likely older versions too. ES Modules approach (`import`)
+requires a Node version that supports ESM.
 
 CLI: Requires Node v8 or newer.
 
