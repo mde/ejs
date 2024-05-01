@@ -44,7 +44,7 @@ task('lint', ['clean'], function () {
   let epath = path.join('./node_modules/.bin/eslint');
   // Handle both ESM and CJS files in project
   exec(epath+' --config ./eslint.config_esm.mjs "lib/esm/*.js"');
-  exec(epath+' --config ./eslint.config_cjs.mjs "test/*.js" "jakefile.js"');
+  exec(epath+' --config ./eslint.config_cjs.mjs "test/*.js" "bin/cli.js" "jakefile.js"');
   console.log('Linting completed.');
 });
 
@@ -86,7 +86,7 @@ task('docPublish', ['doc'], function () {
 });
 
 desc('Runs the EJS test suite');
-task('test', ['lint'], function () {
+task('test', [], function () {
   exec(path.join('./node_modules/.bin/mocha --u tdd'));
 });
 
