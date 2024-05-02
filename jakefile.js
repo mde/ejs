@@ -26,11 +26,18 @@ task('compile', function () {
   // Compile CJS version
   exec('npx tsc');
   let source = fs.readFileSync('lib/cjs/ejs.js', 'utf8').toString();
+  // Browerify chokes on the 'node:' prefix in require statements
+  // Added the 'node:' prefix to ESM for Deno compat
+  ['fs', 'path', 'url'].forEach((mod) => {
+    source = source.replace(`require("node:${mod}")`, `require("${mod}")`);
+    source = source.replace(new RegExp(`node_${mod}_1`, 'g'), `${mod}_1`);
+  });
   source = source.replace(FILE_SHIM, ''); // remove ESM shim for __filename and __dirname
+  // replace `let` in code-generation strings
   source = source.replace(
     "var DECLARATION_KEYWORD = 'let';",
     "var DECLARATION_KEYWORD = 'var';"
-  ); // replace `let` in code-generation strings
+  );
   fs.writeFileSync('lib/cjs/ejs.js', source);
   fs.writeFileSync('lib/cjs/package.json', '{"type":"commonjs"}');
 });
