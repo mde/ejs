@@ -29,7 +29,7 @@
   "bugs": "https://github.com/mde/ejs/issues",
   "homepage": "https://github.com/mde/ejs",
   "dependencies": {
-    "jake": "^10.8.5"
+    "jake": "^10.9.1"
   },
   "devDependencies": {
     "typescript": "^5.4.5",
