@@ -17,8 +17,32 @@ if (typeof __dirname == 'undefined') {
 }
 `.trim();
 
-task('build', ['lint', 'clean', 'compile', 'browserify', 'minify'], function () {
+let _gotNewVersion = false;
+
+jake.on('finished', function (ev) {
+
+  // Get updated version number -- do only once
+  if (!_gotNewVersion) {
+    _gotNewVersion = true;
+    let pkg = fs.readFileSync(path.join(process.cwd(), 'package.json'), 'utf-8');
+    pkg = JSON.parse(pkg);
+    console.log(pkg.version);
+  }
+
+  console.log('finished', ev.name);
+
+  if (ev.name === 'publish') {
+    console.log('Updating hosted docs...');
+    console.log('If this fails, run jake docPublish to re-try.');
+    jake.Task.docPublish.invoke();
+  }
+  else if (ev.name === '') {
+  }
+
 });
+
+desc('Builds the EJS library');
+task('build', ['lint', 'clean', 'compile', 'browserify', 'minify']);
 
 desc('Compiles ESM to CJS source files');
 task('compile', function () {
@@ -119,12 +143,3 @@ publishTask('ejs', ['build'], function () {
   ]);
 });
 
-jake.on('finished', function (ev) {
-  console.log('finished', ev.name);
-});
-
-jake.Task.publish.on('complete', function () {
-  console.log('Updating hosted docs...');
-  console.log('If this fails, run jake docPublish to re-try.');
-  jake.Task.docPublish.invoke();
-});
