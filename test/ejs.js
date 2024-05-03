@@ -1171,7 +1171,7 @@ suite('examples', function () {
 
 suite('meta information', function () {
   test('has a version', function () {
-    assert.strictEqual(ejs.VERSION, require('../package.json').version);
+    assert.strictEqual(ejs.VERSION, '<DEV_VERSION>');
   });
 
   test('had a name', function () {

@@ -7,18 +7,54 @@ let exec = function (cmd) {
 
 /* global jake, task, desc, publishTask */
 
-const FILE_SHIM = `
-var __filename, __dirname;
-if (typeof __filename == 'undefined') {
-    __filename = (0, url_1.fileURLToPath)(import.meta.url);
-}
-if (typeof __dirname == 'undefined') {
-    __dirname = path_1.default.dirname(__filename);
-}
-`.trim();
+const BUILT_EJS_FILES = [
+  'ejs.js',
+  'ejs.min.js',
+  'lib/esm/ejs.js',
+  'lib/cjs/ejs.js',
+];
 
-task('build', ['lint', 'clean', 'compile', 'browserify', 'minify'], function () {
+function getVersionString () {
+  let pkg = fs.readFileSync(path.join(process.cwd(), 'package.json'), 'utf-8');
+  pkg = JSON.parse(pkg);
+  return pkg.version;
+}
+let currentVerson = getVersionString(); // May be updated during the publish process
+
+// Hook into some of the publish lifecycle events
+jake.on('finished', function (ev) {
+
+  const currPkg = path.join(`pkg/ejs-v${currentVerson}`);
+
+  switch (ev.name) {
+  case 'publish':
+    console.log('Updating hosted docs...');
+    console.log('If this fails, run jake docPublish to re-try.');
+    jake.Task.docPublish.invoke();
+    break;
+    // Update the version string to be baked in the packaged EJS files
+  case 'publish:pushVersion':
+    currentVerson = getVersionString();
+    break;
+    // Bake the version string into the packaged EJS files
+    // currPkg is the name of the FileTask that creates the package directory
+  case currPkg:
+    BUILT_EJS_FILES.forEach((file) => {
+      const pkgDir = path.join(process.cwd(), currPkg);
+      const pkgFile = path.join(pkgDir, file);
+      let source = fs.readFileSync(pkgFile, 'utf8').toString();
+      source = source.replace('<DEV_VERSION>', currentVerson);
+      fs.writeFileSync(pkgFile, source);
+    });
+    break;
+  default:
+      // Do nothing
+  }
+
 });
+
+desc('Builds the EJS library');
+task('build', ['lint', 'clean', 'compile', 'browserify', 'minify']);
 
 desc('Compiles ESM to CJS source files');
 task('compile', function () {
@@ -31,7 +67,6 @@ task('compile', function () {
     source = source.replace(`require("node:${mod}")`, `require("${mod}")`);
     source = source.replace(new RegExp(`node_${mod}_1`, 'g'), `${mod}_1`);
   });
-  source = source.replace(FILE_SHIM, ''); // remove ESM shim for __filename and __dirname
   // replace `let` in code-generation strings
   source = source.replace(
     "var DECLARATION_KEYWORD = 'let';",
@@ -119,12 +154,3 @@ publishTask('ejs', ['build'], function () {
   ]);
 });
 
-jake.on('finished', function (ev) {
-  console.log('finished', ev.name);
-});
-
-jake.Task.publish.on('complete', function () {
-  console.log('Updating hosted docs...');
-  console.log('If this fails, run jake docPublish to re-try.');
-  jake.Task.docPublish.invoke();
-});
