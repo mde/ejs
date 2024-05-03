@@ -18,7 +18,6 @@ if (typeof __dirname == 'undefined') {
 `.trim();
 
 task('build', ['lint', 'clean', 'compile', 'browserify', 'minify'], function () {
-  console.log('Build completed.');
 });
 
 desc('Compiles ESM to CJS source files');
@@ -118,6 +117,10 @@ publishTask('ejs', ['build'], function () {
     'bin/**',
     'usage.txt'
   ]);
+});
+
+jake.on('finished', function (ev) {
+  console.log('finished', ev.name);
 });
 
 jake.Task.publish.on('complete', function () {
