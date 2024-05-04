@@ -14,38 +14,14 @@ const BUILT_EJS_FILES = [
   'lib/cjs/ejs.js',
 ];
 
-function getVersionString () {
-  let pkg = fs.readFileSync(path.join(process.cwd(), 'package.json'), 'utf-8');
-  pkg = JSON.parse(pkg);
-  return pkg.version;
-}
-let currentVerson = getVersionString(); // May be updated during the publish process
-
 // Hook into some of the publish lifecycle events
 jake.on('finished', function (ev) {
-
-  const currPkg = path.join(`pkg/ejs-v${currentVerson}`);
 
   switch (ev.name) {
   case 'publish':
     console.log('Updating hosted docs...');
     console.log('If this fails, run jake docPublish to re-try.');
     jake.Task.docPublish.invoke();
-    break;
-    // Update the version string to be baked in the packaged EJS files
-  case 'publish:pushVersion':
-    currentVerson = getVersionString();
-    break;
-    // Bake the version string into the packaged EJS files
-    // currPkg is the name of the FileTask that creates the package directory
-  case currPkg:
-    BUILT_EJS_FILES.forEach((file) => {
-      const pkgDir = path.join(process.cwd(), currPkg);
-      const pkgFile = path.join(pkgDir, file);
-      let source = fs.readFileSync(pkgFile, 'utf8').toString();
-      source = source.replace('<DEV_VERSION>', currentVerson);
-      fs.writeFileSync(pkgFile, source);
-    });
     break;
   default:
       // Do nothing

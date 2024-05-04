@@ -1169,16 +1169,6 @@ suite('examples', function () {
   });
 });
 
-suite('meta information', function () {
-  test('has a version', function () {
-    assert.strictEqual(ejs.VERSION, '<DEV_VERSION>');
-  });
-
-  test('had a name', function () {
-    assert.strictEqual(ejs.name, 'ejs');
-  });
-});
-
 suite('identifier validation', function () {
   test('invalid outputFunctionName', function() {
     assert.throws(function() {
