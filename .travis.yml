@@ -1,6 +1,10 @@
 language: node_js
 sudo: false
 node_js:
+  - "18"
+  - "20"
+  - "22"
+  # Remove support on next major update
   - "8"
   - "10"
   - "12"
