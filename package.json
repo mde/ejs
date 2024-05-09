@@ -49,6 +49,7 @@
   },
   "scripts": {
     "build": "jake --jakefile=jakefile.cjs build",
-    "test": "jake --jakefile=jakefile.cjs test"
+    "test": "jake --jakefile=jakefile.cjs test",
+    "lint": "eslint"
   }
 }
