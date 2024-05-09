@@ -37,6 +37,7 @@
     "node": ">=0.10.0"
   },
   "scripts": {
-    "test": "npx jake test"
+    "test": "npx jake test",
+    "lint": "eslint ."
   }
 }
