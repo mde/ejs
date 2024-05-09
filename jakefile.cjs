@@ -30,7 +30,7 @@ jake.on('finished', function (ev) {
 });
 
 desc('Builds the EJS library');
-task('build', ['lint', 'clean', 'compile', 'browserify', 'minify']);
+task('build', ['clean', 'compile', 'browserify', 'minify']);
 
 desc('Compiles ESM to CJS source files');
 task('compile', function () {
@@ -58,12 +58,6 @@ task('clean', ['clobber'], function () {
   jake.rmRf('./ejs.min.js');
   jake.rmRf('./lib/cjs');
   console.log('Cleaned up compiled files.');
-});
-
-desc('Lints the source code');
-task('lint', ['clean'], function () {
-  exec('./node_modules/.bin/eslint');
-  console.log('Linting completed.');
 });
 
 task('browserify', function () {
