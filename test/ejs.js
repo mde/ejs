@@ -7,7 +7,6 @@
 
 var ejs = require('..');
 var fs = require('fs');
-var read = fs.readFileSync;
 var assert = require('assert');
 var path = require('path');
 var LRU = require('lru-cache');
@@ -41,7 +40,7 @@ function hook_stdio(stream, callback) {
  */
 
 function fixture(name) {
-  return read('test/fixtures/' + name, 'utf8');
+  return readFileSync('test/fixtures/' + name, 'utf8');
 }
 
 /**
