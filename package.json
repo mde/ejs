@@ -46,6 +46,7 @@
     "node": ">=0.12.18"
   },
   "scripts": {
+    "build": "jake build",
     "test": "npx jake test"
   }
 }
