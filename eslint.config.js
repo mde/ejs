@@ -2,6 +2,7 @@ import babelParser from "@babel/eslint-parser";
 
 export default [
   {
+    files: [ '*.js', '*.mjs', '*.cjs' ],
     languageOptions: {
       parser: babelParser,
       globals: {
@@ -10,7 +11,6 @@ export default [
       },
       "parserOptions": {
         "ecmaVersion": 6,
-        "sourceType": "script",
         "requireConfigFile": false,
       },
     },
@@ -43,7 +43,19 @@ export default [
         "no-console": 0,
         "no-useless-escape": 0
     }
-  }
+  },
+  {
+    files: [ '*.js', '*.mjs' ],
+    languageOptions: {
+      sourceType: 'module',
+    },
+  },
+  {
+    files: [ '*.cjs' ],
+    languageOptions: {
+      sourceType: 'commonjs',
+    },
+  },
 ]
 
 
