@@ -48,6 +48,6 @@
   },
   "scripts": {
     "build": "jake build",
-    "test": "npx jake test"
+    "test": "jake test"
   }
 }
