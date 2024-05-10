@@ -32,7 +32,6 @@
     "jake": "^10.9.1"
   },
   "devDependencies": {
-    "typescript": "^5.4.5",
     "@babel/eslint-parser": "^7.24.5",
     "browserify": "^17.0.0",
     "eslint": "^9.1.1",
@@ -40,6 +39,7 @@
     "jsdoc": "^4.0.2",
     "lru-cache": "^4.0.1",
     "mocha": "^10.2.0",
+    "typescript": "^5.4.5",
     "uglify-js": "^3.3.16"
   },
   "engines": {
