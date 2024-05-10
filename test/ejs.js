@@ -1,5 +1,3 @@
-/* eslint-env node, mocha */
-
 /**
  * Module dependencies.
  */
