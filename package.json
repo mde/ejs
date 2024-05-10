@@ -33,7 +33,6 @@
     "jake": "^10.9.1"
   },
   "devDependencies": {
-    "@babel/eslint-parser": "^7.24.5",
     "browserify": "^17.0.0",
     "eslint": "^9.1.1",
     "git-directory-deploy": "^1.5.1",

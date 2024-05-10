@@ -1,10 +1,7 @@
-import babelParser from "@babel/eslint-parser";
-
 export default [
   {
     files: [ '*.js', '*.mjs', '*.cjs' ],
     languageOptions: {
-      parser: babelParser,
       globals: {
         "suite": "readonly",
         "test": "readonly"
