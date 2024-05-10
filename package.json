@@ -10,6 +10,7 @@
   "version": "4.0.0",
   "author": "Matthew Eernisse <matthew.eernisse@gmail.com>",
   "license": "Apache-2.0",
+  "type": "module",
   "bin": {
     "ejs": "./bin/cli.js"
   },
@@ -47,7 +48,7 @@
     "npm": ">=10"
   },
   "scripts": {
-    "build": "jake build",
-    "test": "jake test"
+    "build": "jake --jakefile=jakefile.cjs build",
+    "test": "jake --jakefile=jakefile.cjs test"
   }
 }
