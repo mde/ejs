@@ -62,10 +62,7 @@ task('clean', ['clobber'], function () {
 
 desc('Lints the source code');
 task('lint', ['clean'], function () {
-  let epath = path.join('./node_modules/.bin/eslint');
-  // Handle both ESM and CJS files in project
-  exec(epath+' --config ./eslint.config_esm.mjs "lib/esm/*.js"');
-  exec(epath+' --config ./eslint.config_cjs.mjs "test/*.js" "bin/cli.js" "jakefile.js"');
+  exec('./node_modules/.bin/eslint');
   console.log('Linting completed.');
 });
 
