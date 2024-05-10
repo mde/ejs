@@ -43,9 +43,11 @@
     "uglify-js": "^3.3.16"
   },
   "engines": {
-    "node": ">=0.12.18"
+    "node": ">=18",
+    "npm": ">=10"
   },
   "scripts": {
-    "test": "npx jake test"
+    "build": "jake build",
+    "test": "jake test"
   }
 }
