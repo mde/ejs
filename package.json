@@ -33,6 +33,7 @@
     "jake": "^10.9.1"
   },
   "devDependencies": {
+    "@stylistic/eslint-plugin-js": "^2.1.0",
     "browserify": "^17.0.0",
     "eslint": "^9.1.1",
     "git-directory-deploy": "^1.5.1",

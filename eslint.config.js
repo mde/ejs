@@ -1,3 +1,5 @@
+import stylisticJs from '@stylistic/eslint-plugin-js';
+
 export default [
   {
     files: [ '*.js', '*.mjs', '*.cjs' ],
@@ -11,17 +13,20 @@ export default [
         "requireConfigFile": false,
       },
     },
+    plugins: {
+      '@stylistic/js': stylisticJs
+    },
     rules: {
-        "linebreak-style": [
+        "@stylistic/js/linebreak-style": [
             "error",
             "unix"
         ],
-        "no-trailing-spaces": 2,
-        "indent": [
+        "@stylistic/js/no-trailing-spaces": 2,
+        "@stylistic/js/indent": [
           "error",
           2
         ],
-        "quotes": [
+        "@stylistic/js/quotes": [
             "error",
             "single",
             {
@@ -29,11 +34,11 @@ export default [
               "allowTemplateLiterals": true
             }
         ],
-        "semi": [
+        "@stylistic/js/semi": [
             "error",
             "always"
         ],
-        "comma-style": [
+        "@stylistic/js/comma-style": [
             "error",
             "last"
         ],
