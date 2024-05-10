@@ -1,5 +1,5 @@
 import { execSync as exec } from 'child_process';
-import { readFileSync } from 'fs';
+import { readFile } from 'fs/promises';
 import { join } from 'path';
 import { equal } from 'assert';
 let os = process.platform !== 'win32' ? '' : 'node ';
@@ -46,19 +46,19 @@ suite('cli', function () {
     equal(o, '<h1>frang</h1>'+lf);
   });
 
-  test('rendering, remove whitespace option (hyphen case)', function () {
+  test('rendering, remove whitespace option (hyphen case)', async function () {
     let x = join('./bin/cli.js');
     let f = join('./test/fixtures/rmWhitespace.ejs');
     let o = run(os+x+' --rm-whitespace '+f);
-    let c = readFileSync('test/fixtures/rmWhitespace.html', 'utf-8');
+    let c = await readFile('test/fixtures/rmWhitespace.html', 'utf-8');
     equal(o.replace(/\n/g, lf), c);
   });
 
-  test('relative path in nested include', function () {
+  test('relative path in nested include', async function () {
     let x = join('./bin/cli.js');
     let u = join('test/fixtures/include-simple.ejs');
     let o = run(os+x+' '+u);
-    let c = readFileSync('test/fixtures/include-simple.html', 'utf-8');
+    let c = await readFile('test/fixtures/include-simple.html', 'utf-8');
     equal(o, c);
   });
 
