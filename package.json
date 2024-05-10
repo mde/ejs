@@ -10,6 +10,7 @@
   "version": "4.0.0",
   "author": "Matthew Eernisse <matthew.eernisse@gmail.com>",
   "license": "Apache-2.0",
+  "type": "module",
   "bin": {
     "ejs": "./bin/cli.js"
   },
@@ -32,20 +33,23 @@
     "jake": "^10.9.1"
   },
   "devDependencies": {
-    "typescript": "^5.4.5",
-    "@babel/eslint-parser": "^7.24.5",
+    "@stylistic/eslint-plugin-js": "^2.1.0",
     "browserify": "^17.0.0",
     "eslint": "^9.1.1",
     "git-directory-deploy": "^1.5.1",
     "jsdoc": "^4.0.2",
     "lru-cache": "^4.0.1",
     "mocha": "^10.2.0",
+    "typescript": "^5.4.5",
     "uglify-js": "^3.3.16"
   },
   "engines": {
-    "node": ">=0.12.18"
+    "node": ">=18",
+    "npm": ">=10"
   },
   "scripts": {
-    "test": "npx jake test"
+    "build": "jake --jakefile=jakefile.cjs build",
+    "test": "jake --jakefile=jakefile.cjs test",
+    "lint": "eslint"
   }
 }
