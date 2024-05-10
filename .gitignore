@@ -18,6 +18,10 @@ npm-debug.log
 doc/
 test/tmp
 coverage/
+
+# CommonJS code compiled from ES Modules
+/lib/cjs/
+
 /ejs.js
 /ejs.min.js
 out/
