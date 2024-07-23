@@ -106,7 +106,7 @@ You should never give end-users unfettered access to the EJS render method, If y
   - `outputFunctionName`    Set to a string (e.g., 'echo' or 'print') for a function to print
     output inside scriptlet tags.
   - `async`                 When `true`, EJS will use an async function for rendering. (Depends
-    on async/await support in the JS runtime.
+    on async/await support in the JS runtime).
   - `includer`              Custom function to handle EJS includes, receives `(originalPath, parsedPath)`
     parameters, where `originalPath` is the path in include as-is and `parsedPath` is the
     previously resolved path. Should return an object `{ filename, template }`,
