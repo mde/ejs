@@ -190,8 +190,8 @@ Node's `lru-cache` library:
 
 ```javascript
 let ejs = require('ejs'),
-    LRU = require('lru-cache');
-ejs.cache = LRU(100); // LRU cache with 100-item limit
+    { LRUCache } = require('lru-cache');
+ejs.cache = LRUCache(100); // LRU cache with 100-item limit
 ```
 
 If you want to clear the EJS cache, call `ejs.clearCache`. If you're using the
