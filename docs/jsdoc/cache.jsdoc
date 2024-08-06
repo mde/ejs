@@ -33,5 +33,5 @@
  * Erases the entire cache. Called by {@link module:ejs.clearCache}
  *
  * @function
- * @name Cache#reset
+ * @name Cache#clear
  */
