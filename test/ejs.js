@@ -10,7 +10,7 @@ var fs = require('fs');
 var read = fs.readFileSync;
 var assert = require('assert');
 var path = require('path');
-var LRU = require('lru-cache');
+var { LRUCache : LRU } = require('lru-cache');
 let lf = process.platform !== 'win32' ? '\n' : '\r\n';
 
 try {

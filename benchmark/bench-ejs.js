@@ -112,7 +112,7 @@ function log(name, runTimes, totalLoops) {
 }
 
 function benchRender(name, file, data, opts, benchOpts) {
-  ejs.cache.reset();
+  ejs.cache.clear();
   var runTimes = [];
   opts = opts || {};
   benchOpts = benchOpts || {};
@@ -133,7 +133,7 @@ function benchRender(name, file, data, opts, benchOpts) {
 }
 
 function benchCompile(name, file, opts, benchOpts) {
-  ejs.cache.reset();
+  ejs.cache.clear();
   var runTimes = [];
   opts = opts || {};
   benchOpts = benchOpts || {};

@@ -239,9 +239,9 @@ function encode_char(c) {
         assert.ok(utils.cache.get('key')===undefined);
       });
     });
-    suite('unit testing function \'reset\' of object \'cache\'', function () {
+    suite('unit testing function \'clear\' of object \'cache\'', function () {
       test('it should be callable without parameters', function () {
-        assert.doesNotThrow(() => { utils.cache.reset(); });
+        assert.doesNotThrow(() => { utils.cache.clear(); });
       });
     });
   });
