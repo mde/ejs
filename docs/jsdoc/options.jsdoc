@@ -79,6 +79,25 @@
  * Whether or not to create an async function instead of a regular function.
  * This requires language support.
  *
+ * @property {ErrorCallback} [error=undefined]
+ * The error handler function used for the `<%=` construct and `<%-` construct.
+ * When an error is thrown within these constructs, the error handler is called.
+ * It receives two arguments: `err` (type `unknown`), which is the error object
+ * that was thrown; and `escapeFn` (type `(text: string) => string`), which is
+ * the current function for escaping literal text. The error function may return
+ * a `string`, and if it does, that value is inserted into the template instead.
+ *
+ * @property {ProcessSourceCallback} [processSource=undefined]
+ * Callback that is invoked with the generated source code of the template,
+ * without the header and footer added by EJS. Can be used to transform the
+ * source. The callback receives two arguments: `source` (`string`), which is
+ * the generated source text; and `outputVar` (type `string`), which is the name
+ * of the variable that contains the template text and can be appended to. The
+ * callback must return a value of type `string`, which is the transformed
+ * source. One use case for this callback is to wrap all individual top-level
+ * statements in try-catch-blocks (e.g. by using a parser such as `acorn` and a
+ * stringifier such as `astring`) for improved error resilience.
+ *
  * @static
  * @global
  */

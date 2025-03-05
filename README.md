@@ -103,6 +103,12 @@ You should never give end-users unfettered access to the EJS render method, If y
   - `escape`                The escaping function used with `<%=` construct. It is
     used in rendering and is `.toString()`ed in the generation of client functions.
     (By default escapes XML).
+  - `error`                 The error handler function used for the `<%=` construct and
+    `<%-` construct. When an error is thrown within these constructs, the error handler is
+    called. It receives two arguments: `err` (type `unknown`), which is the error object
+    that was thrown; and `escapeFn` (type `(text: string) => string`), which is the current
+    function for escaping literal text. The error function may return a `string`, and if it
+    does, that value is inserted into the template instead.
   - `outputFunctionName`    Set to a string (e.g., 'echo' or 'print') for a function to print
     output inside scriptlet tags.
   - `async`                 When `true`, EJS will use an async function for rendering. (Depends
@@ -112,6 +118,14 @@ You should never give end-users unfettered access to the EJS render method, If y
     previously resolved path. Should return an object `{ filename, template }`,
     you may return only one of the properties, where `filename` is the final parsed path and `template`
     is the included content.
+  - `processSource`         Callback that is invoked with the generated source code of the
+    template, without the header and footer added by EJS. Can be used to transform the source.
+    The callback receives two arguments: `source` (`string`), which is the generated source text;
+    and `outputVar` (type `string`), which is the name of the variable that contains the template
+    text and can be appended to. The callback must return a value of type `string`, which is the
+    transformed source. One use case for this callback is to wrap all individual top-level statements
+    in try-catch-blocks (e.g. by using a parser such as `acorn` and a stringifier such as `astring`)
+    for improved error resilience.
 
 This project uses [JSDoc](https://jsdoc.app/). For the full public API
 documentation, clone the repository and run `jake doc`. This will run JSDoc
@@ -273,6 +287,72 @@ Most of EJS will work as expected; however, there are a few things to note:
   ```
 
 See the [examples folder](https://github.com/mde/ejs/tree/master/examples) for more details.
+
+## Error handling
+
+In an ideal world, all templates are valid and all JavaScript code they contain
+never throws an error. Unfortunately, this is not always the case in the real
+world. By default, when any JavaScript code in a template throws an error, the
+entire templates fails and not text is rendered. Sometimes you might want to
+ignore errors and still render the rest of the template.
+
+You can use the `error` option to handle errors within expressions (the `<%=%>`
+and `<%-%>` tags). This is a callback that is invoked when an unhandled error
+is thrown:
+
+```javascript
+const ejs = require('ejs');
+
+ejs.render('<%= valid %> <%= i.am.invalid %>', { valid: 2 }, {
+  error: function(err, escapeFn) {
+    console.error(err);
+    return escapeFn("ERROR");
+  }
+});
+```
+
+The code above logs the error to the console and renders the text `2 ERROR`.
+
+Note that this only applies to expression, not to other control blocks such
+as `<%if (something.invalid) { %> ... <% } %>`. To handle errors in these cases,
+you e.g. can use the `processSource` option to wrap individual top-level
+statements in try-catch blocks. For example, by using `acorn` and `astring`
+for processing JavaScript source code:
+
+```javascript
+const ejs = require('ejs');
+const acorn = require('acorn');
+const astring = require('astring');
+
+ejs.render('<%= valid %> <%if (something.invalid) { %> foo <% } %>',
+  { valid: 2 },
+  {
+    // Wrap all individual top-level statement in a try-catch block
+    processSource: function(source, outputVar) {
+      const ast = acorn.parse(source, {
+        allowAwaitOutsideFunction: true,
+        allowReturnOutsideFunction: true,
+        ecmaVersion: 2020,
+      });
+      return ast.body
+        .filter(node => node.type !== "EmptyStatement")
+        .map(node => {
+          const statement = astring.generate(node, { indent: "", lineEnd: "" });
+          switch (node.type) {
+            case "ReturnStatement":
+            case "TryStatement":
+            case "EmptyStatement":
+              return statement;
+            default:
+              return `try{${statement}}catch(e){console.error(e);${outputVar}+='STATEMENT_ERROR'}`;
+          }
+        })
+        .join("\n");
+  },
+});
+```
+
+The above code logs the error to the console and renders the text `2 STATEMENT_ERROR`.
 
 ## CLI
 
