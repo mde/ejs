@@ -148,6 +148,11 @@ function run() {
     vals[p] = envVars[p];
   }
 
+  // strict implies no-with
+  if (argv['strict']) {
+    argv['no-with'] = true;
+  }
+
   let opts = {
     filename: path.resolve(process.cwd(), templatePath),
     rmWhitespace: argv['rm-whitespace'],
@@ -157,13 +162,8 @@ function run() {
     delimiter: argv['delimiter'],
     openDelimiter: argv['open-delimiter'],
     closeDelimiter: argv['close-delimiter'],
+    _with: !argv['no-with'],
   };
-  if (opts['strict']) {
-    opts.noWith = true;
-  }
-  if (argv['no-with']) {
-    opts._with = false;
-  }
 
   let template = fs.readFileSync(opts.filename).toString();
   let output = ejs.render(template, vals, opts);
