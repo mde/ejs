@@ -94,21 +94,25 @@ function run() {
     process.exit(0);
   }
 
-  const templatePath = argv._[0];
-  // Ensure there's a template to render, throw if not
+  // Parse out any environment variables passed after the template path
+  // Based on jake parseArgs envVars implementation to ensure non-breaking changes in jake migration
+  // @see https://github.com/jakejs/jake/blob/main/lib/parseargs.js#L111
+  let envVars = {};
+  let templatePaths = [];
+  argv._.map(v => v.split('=')).forEach(pair => {
+    if (pair.length > 1) {
+      envVars[pair[0]] = pair[1];
+    } else {
+      templatePaths.push(pair[0]);
+    }
+  });
+
+  // Template path is always is first positional argument without "="
+  // Template path is required and we will throw an error if it is not provided
+  let templatePath = templatePaths[0];
   if (!templatePath) {
     throw new Error('Please provide a template path. (Run ejs -h for help)');
   }
-
-  // Parse out any environment variables passed after the template path
-  // Based on jake parseArgs envVars implementation
-  // @see https://github.com/jakejs/jake/blob/main/lib/parseargs.js#L111
-  let envVars = {};
-  argv._.slice(1).map(v => v.split('=')).forEach(pair => {
-    if (pair.length > 1) {
-      envVars[pair[0]] = pair[1];
-    }
-  });
 
   // Grab and parse any input data, in order of precedence:
   // 1. Stdin
