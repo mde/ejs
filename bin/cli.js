@@ -16,98 +16,10 @@
  * limitations under the License.
  *
 */
-
-let path = require('path');
-
-let program = require('jake').program;
-delete global.jake; // NO NOT WANT
-program.setTaskNames = function (n) { this.taskNames = n; };
-
-let ejs = require('../lib/ejs');
-let { hyphenToCamel } = require('../lib/utils');
+let parseArgs = require('minimist');
 let fs = require('fs');
-let args = process.argv.slice(2);
-let usage = fs.readFileSync(`${__dirname}/../usage.txt`).toString();
-
-const CLI_OPTS = [
-  { full: 'output-file',
-    abbr: 'o',
-    expectValue: true,
-  },
-  { full: 'data-file',
-    abbr: 'f',
-    expectValue: true,
-  },
-  { full: 'data-input',
-    abbr: 'i',
-    expectValue: true,
-  },
-  { full: 'delimiter',
-    abbr: 'm',
-    expectValue: true,
-    passThrough: true,
-  },
-  { full: 'open-delimiter',
-    abbr: 'p',
-    expectValue: true,
-    passThrough: true,
-  },
-  { full: 'close-delimiter',
-    abbr: 'c',
-    expectValue: true,
-    passThrough: true,
-  },
-  { full: 'strict',
-    abbr: 's',
-    expectValue: false,
-    allowValue: false,
-    passThrough: true,
-  },
-  { full: 'no-with',
-    abbr: 'n',
-    expectValue: false,
-    allowValue: false,
-  },
-  { full: 'locals-name',
-    abbr: 'l',
-    expectValue: true,
-    passThrough: true,
-  },
-  { full: 'rm-whitespace',
-    abbr: 'w',
-    expectValue: false,
-    allowValue: false,
-    passThrough: true,
-  },
-  { full: 'debug',
-    abbr: 'd',
-    expectValue: false,
-    allowValue: false,
-    passThrough: true,
-  },
-  { full: 'help',
-    abbr: 'h',
-    passThrough: true,
-  },
-  { full: 'version',
-    abbr: 'V',
-    passThrough: true,
-  },
-  // Alias lowercase v
-  { full: 'version',
-    abbr: 'v',
-    passThrough: true,
-  },
-];
-
-let preempts = {
-  version: function () {
-    program.die(ejs.VERSION);
-  },
-  help: function () {
-    program.die(usage);
-  }
-};
+let path = require('path');
+let ejs = require('../lib/ejs');
 
 let stdin = '';
 process.stdin.setEncoding('utf8');
@@ -118,48 +30,88 @@ process.stdin.on('readable', () => {
   }
 });
 
+function printUsage() {
+  const usagePath = path.join(__dirname, '../usage.txt');
+  let usageText = fs.readFileSync(usagePath).toString();
+  console.log(usageText);
+}
+
+function printVersion() {
+  console.log(ejs.VERSION);
+}
+
+
 function run() {
-
-  program.availableOpts = CLI_OPTS;
-  program.parseArgs(args);
-
-  let templatePath = program.taskNames[0];
-  let pVals = program.envVars;
-  let pOpts = {};
-
-  for (let p in program.opts) {
-    let name = hyphenToCamel(p);
-    pOpts[name] = program.opts[p];
-  }
-
-  let opts = {};
-  let vals = {};
-
-  // Same-named 'passthrough' opts
-  CLI_OPTS.forEach((opt) => {
-    let optName = hyphenToCamel(opt.full);
-    if (opt.passThrough && typeof pOpts[optName] != 'undefined') {
-      opts[optName] = pOpts[optName];
+  let args = process.argv.slice(2);
+  let argv = parseArgs(args, {
+    alias: {
+      'o': 'output-file',
+      'f': 'data-file',
+      'i': 'data-input',
+      'm': 'delimiter',
+      'p': 'open-delimiter',
+      'c': 'close-delimiter',
+      's': 'strict',
+      'n': 'no-with',
+      'l': 'locals-name',
+      'w': 'rm-whitespace',
+      'd': 'debug',
+      'h': 'help',
+      'V': 'version',
+      'v': 'version',
+    },
+    boolean: [
+      'help',
+      'version',
+      'debug',
+      'rm-whitespace',
+      'strict',
+      'no-with'
+    ],
+    string: [
+      'output-file',
+      'data-file',
+      'data-input',
+      'delimiter',
+      'open-delimiter',
+      'close-delimiter',
+      'locals-name'
+    ],
+    default: {
+      'delimiter': '%',
+      'close-delimiter': '>',
+      'open-delimiter': '<',
     }
   });
 
-  // Bail out for help/version
-  for (let p in opts) {
-    if (preempts[p]) {
-      return preempts[p]();
-    }
+
+  if (argv.help) {
+    printUsage();
+    process.exit(0);
+  }
+  if (argv.version) {
+    printVersion();
+    process.exit(0);
   }
 
-  // Ensure there's a template to render
+  // Parse out any environment variables passed after the template path
+  // Based on jake parseArgs envVars implementation to ensure non-breaking changes in jake migration
+  // @see https://github.com/jakejs/jake/blob/main/lib/parseargs.js#L111
+  let envVars = {};
+  let templatePaths = [];
+  argv._.map(v => v.split('=')).forEach(pair => {
+    if (pair.length > 1) {
+      envVars[pair[0]] = pair[1];
+    } else {
+      templatePaths.push(pair[0]);
+    }
+  });
+
+  // Template path is always is first positional argument without "="
+  // Template path is required and we will throw an error if it is not provided
+  let templatePath = templatePaths[0];
   if (!templatePath) {
     throw new Error('Please provide a template path. (Run ejs -h for help)');
-  }
-
-  if (opts.strict) {
-    pOpts.noWith = true;
-  }
-  if (pOpts.noWith) {
-    opts._with = false;
   }
 
   // Grab and parse any input data, in order of precedence:
@@ -173,38 +125,63 @@ function run() {
   if (stdin) {
     input = stdin;
   }
-  else if (pOpts.dataInput) {
+  else if (argv['data-input']) {
+    if(Array.isArray(argv['data-input'])) {
+      throw new Error('Please provide a single string for data input. (Run ejs -h for help)');
+    }
     if (input) {
       throw err;
     }
-    input = decodeURIComponent(pOpts.dataInput);
+    input = decodeURIComponent(argv['data-input']);
   }
-  else if (pOpts.dataFile) {
+  else if (argv['data-file']) {
+    if (Array.isArray(argv['data-file'])) {
+      throw new Error('Please provide a single string for data file. (Run ejs -h for help)');
+    }
     if (input) {
       throw err;
     }
-    input = fs.readFileSync(pOpts.dataFile).toString();
+    input = fs.readFileSync(argv['data-file']).toString();
   }
-
+  let vals = {};
   if (input) {
     vals = JSON.parse(input);
   }
-
-  // Override / set any individual values passed from the command line
-  for (let p in pVals) {
-    vals[p] = pVals[p];
+  // Override set any individual values passed from the command line
+  for (let p in envVars) {
+    vals[p] = envVars[p];
   }
 
-  opts.filename = path.resolve(process.cwd(), templatePath);
+  // strict implies no-with
+  if (argv['strict']) {
+    argv['no-with'] = true;
+  }
+
+  let opts = {
+    filename: path.resolve(process.cwd(), templatePath),
+    rmWhitespace: argv['rm-whitespace'],
+    strict: argv['strict'],
+    debug: argv['debug'],
+    localsName: argv['locals-name'],
+    delimiter: argv['delimiter'],
+    openDelimiter: argv['open-delimiter'],
+    closeDelimiter: argv['close-delimiter'],
+    _with: !argv['no-with'],
+  };
+
   let template = fs.readFileSync(opts.filename).toString();
   let output = ejs.render(template, vals, opts);
-  if (pOpts.outputFile) {
-    fs.writeFileSync(pOpts.outputFile, output);
+  if (argv['output-file']) {
+    if (Array.isArray(argv['output-file'])) {
+      throw new Error('Please provide a single string for output file. (Run ejs -h for help)');
+    }
+    fs.writeFileSync(argv['output-file'], output);
   }
   else {
     process.stdout.write(output);
   }
-  process.exit();
+  process.exit(0);
+
 }
 
 // Defer execution so that stdin can be read if necessary

@@ -22,7 +22,7 @@
   "bugs": "https://github.com/mde/ejs/issues",
   "homepage": "https://github.com/mde/ejs",
   "dependencies": {
-    "jake": "^10.8.5"
+    "minimist": "^1.2.8"
   },
   "devDependencies": {
     "browserify": "^16.5.1",
@@ -31,7 +31,8 @@
     "jsdoc": "^4.0.2",
     "lru-cache": "^4.0.1",
     "mocha": "^10.2.0",
-    "uglify-js": "^3.3.16"
+    "uglify-js": "^3.3.16", 
+    "jake": "^10.8.5"
   },
   "engines": {
     "node": ">=0.10.0"
