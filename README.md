@@ -134,7 +134,7 @@ You should never give end-users unfettered access to the EJS render method, If y
     you may return only one of the properties, where `filename` is the final parsed path and `template`
     is the included content.
 
-This project uses [JSDoc](http://usejsdoc.org/). For the full public API
+This project uses [JSDoc](https://jsdoc.app/). For the full public API
 documentation, clone the repository and run `jake doc`. This will run JSDoc
 with the proper options and output the documentation to `out/`. If you want
 the both the public & private API docs, run `jake devdoc` instead.
