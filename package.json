@@ -7,7 +7,7 @@
     "engine",
     "ejs"
   ],
-  "version": "4.0.0",
+  "version": "4.0.1",
   "author": "Matthew Eernisse <matthew.eernisse@gmail.com>",
   "license": "Apache-2.0",
   "bin": {
