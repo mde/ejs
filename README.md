@@ -24,6 +24,27 @@ app.get('/', (req, res) => {
 $ npm install ejs
 ```
 
+### Import or require
+
+Supports both CommonJS and ES Modules.
+
+```javascript
+import ejs from 'ejs';
+// Or
+const ejs = require('ejs');
+```
+
+### Compatibility
+
+Server: CommonJS approach (`require`) supports Node versions at least
+back to v0.12, likely older versions too. ES Modules approach (`import`)
+requires a Node version that supports ESM.
+
+CLI: Requires Node v8 or newer.
+
+Browser: EJS supports all modern browsers, but is very likely to work even
+in very, very old browsers. Your mileage may vary.
+
 ## Features
 
   * Control flow with `<% %>`
@@ -51,7 +72,7 @@ Try EJS online at: https://ionicabizau.github.io/ejs-playground/.
 ## Basic usage
 
 ```javascript
-let template = ejs.compile(str, options);
+const template = ejs.compile(str, options);
 template(data);
 // => Rendered HTML string
 
@@ -70,7 +91,7 @@ add an option with the same name as one of your data object's properties.
 Therefore, we do not recommend using this shortcut.
 
 ### Important
-You should never give end-users unfettered access to the EJS render method, If you do so you are using EJS in an inherently un-secure way. 
+You should never give end-users unfettered access to the EJS render method, If you do so you are using EJS in an inherently un-secure way.
 
 ### Options
 
@@ -167,8 +188,8 @@ not supported in v3.0+.
 Custom delimiters can be applied on a per-template basis, or globally:
 
 ```javascript
-let ejs = require('ejs'),
-    users = ['geddy', 'neil', 'alex'];
+import ejs from 'ejs';
+const users = ['geddy', 'neil', 'alex'];
 
 // Just one template
 ejs.render('<p>[?= users.join(" | "); ?]</p>', {users: users}, {delimiter: '?', openDelimiter: '[', closeDelimiter: ']'});
@@ -189,9 +210,10 @@ functions used to render templates. It's easy to plug in LRU caching using
 Node's `lru-cache` library:
 
 ```javascript
-let ejs = require('ejs'),
-    LRU = require('lru-cache');
-ejs.cache = LRU(100); // LRU cache with 100-item limit
+import ejs from 'ejs';
+import { LRUCache } from 'lru-cache';
+
+ejs.cache = LRUCache({max: 100}); // LRU cache with 100-item limit
 ```
 
 If you want to clear the EJS cache, call `ejs.clearCache`. If you're using the
@@ -203,8 +225,9 @@ of the LRU.
 The default file loader is `fs.readFileSync`, if you want to customize it, you can set ejs.fileLoader.
 
 ```javascript
-let ejs = require('ejs');
-let myFileLoad = function (filePath) {
+import ejs from 'ejs';
+
+const myFileLoad = function (filePath) {
   return 'myFileLoad: ' + fs.readFileSync(filePath);
 };
 
@@ -217,7 +240,6 @@ With this feature, you can preprocess the template before reading it.
 
 EJS does not specifically support blocks, but layouts can be implemented by
 including headers and footers, like so:
-
 
 ```ejs
 <%- include('header') -%>
@@ -234,7 +256,7 @@ including headers and footers, like so:
 
 Go to the [Latest Release](https://github.com/mde/ejs/releases/latest), download
 `./ejs.js` or `./ejs.min.js`. Alternately, you can compile it yourself by cloning
-the repository and running `jake build` (or `$(npm bin)/jake build` if jake is
+the repository and running `jake build` (or `npx jake build` if jake is
 not installed globally).
 
 Include one of these files on your page, and `ejs` should be available globally.

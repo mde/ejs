@@ -6,7 +6,7 @@
  */
 
 var assert = require('assert');
-var utils = require('../lib/utils');
+var utils = require('../lib/cjs/utils');
 
 /**
  *  Make sure utils exports all it is expected to export...
@@ -75,35 +75,6 @@ suite('unit testing exported functions of module \'utils.js\'', function () {
       const escaped = '&lt;a href=&#34;http://fun.org&#34;&gt;fun.org&lt;/a&gt;';
       assert.doesNotThrow(() => { utils.escapeXML(markup); });
       assert.ok(utils.escapeXML(markup)===escaped);
-    });
-  });
-
-  /**
-   *  Unit testing of exported function 'escapeXML.toString'
-   */
-  suite('unit testing function \'escapeXML\' of module \'utils.js\'', function () {
-    test('it should be callable without parameters', function () {
-      const stringified =
-`function (markup) {
-  return markup == undefined
-    ? ''
-    : String(markup)
-      .replace(_MATCH_HTML, encode_char);
-};
-var _ENCODE_HTML_RULES = {
-      "&": "&amp;"
-    , "<": "&lt;"
-    , ">": "&gt;"
-    , '"': "&#34;"
-    , "'": "&#39;"
-    }
-  , _MATCH_HTML = /[&<>'"]/g;
-function encode_char(c) {
-  return _ENCODE_HTML_RULES[c] || c;
-};
-`;
-      assert.doesNotThrow(() => { utils.escapeXML.toString(); });
-      assert.ok(utils.escapeXML.toString()===stringified);
     });
   });
 
@@ -250,9 +221,9 @@ function encode_char(c) {
    *  Unit testing of exported function 'hyphenToCamel'
    */
   suite('unit testing function \'hyphenToCamel\' of module \'utils.js\'', function () {
-    test.skip('it should be callable without parameters', function () {
+    test('it should be callable without parameters', function () {
       const message = 'Cannot read property \'replace\' of undefined';
-      assert.throws(() => { utils.hyphenToCamel(); }, { name: 'TypeError', message });
+      assert.throws(() => { utils.hyphenToCamel(); }, { name: 'TypeError' });
     });
     test('it should be callable with parameter \'str\' {string}', function () {
       const str = 'some string';

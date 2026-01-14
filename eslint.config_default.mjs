@@ -1,18 +1,20 @@
-{
-    "env": {
-        "browser": true,
-        "commonjs": true,
-        "node": true
+import babelParser from "@babel/eslint-parser";
+
+export default [
+  {
+    languageOptions: {
+      parser: babelParser,
+      globals: {
+        "suite": "readonly",
+        "test": "readonly"
+      },
+      "parserOptions": {
+        "ecmaVersion": 6,
+        "sourceType": "script",
+        "requireConfigFile": false,
+      },
     },
-    "globals": {
-      "suite": "readonly",
-      "test": "readonly"
-    },
-    "parserOptions": {
-        "ecmaVersion": 6
-    },
-    "extends": "eslint:recommended",
-    "rules": {
+    rules: {
         "linebreak-style": [
             "error",
             "unix"
@@ -38,11 +40,10 @@
             "error",
             "last"
         ],
-        "one-var": [
-            "error",
-            "never"
-        ],
         "no-console": 0,
         "no-useless-escape": 0
     }
-}
+  }
+]
+
+
