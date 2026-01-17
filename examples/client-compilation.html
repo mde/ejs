@@ -119,22 +119,13 @@
           fn = ejs.compile(templ.value, options);
         }, 'when compiling');
 
-        // Put HTML/client JavaScript into the output textarea
-        if (options.client) {
-          // Put generated JavaScript function into the text area
-
-          // In EJS v3 the returned function will be in string form, so that
-          // you don't need to `.toString()` anymore.
-          output.textContent = fn.toString();
-          outputTitle.innerHTML = 'Output JS';
-        }
-        else {
-          // Put the rendered HTML into the text area
-          handleError(function () {
-            output.textContent = fn(locals);
-            outputTitle.innerHTML = 'Output HTML';
-          }, 'when executing template function');
-        }
+        // Put the rendered HTML into the output textarea
+        handleError(function () {
+          output.textContent = fn(locals);
+          outputTitle.innerHTML = 'Output HTML';
+        }, 'when executing template function');
+        
+        // Note: To get the compiled function source code, use fn.toString()
       }
     </script>
   </body>

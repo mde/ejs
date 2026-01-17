@@ -8,7 +8,6 @@ app.set('view engine', 'ejs');
 
 function compileEjsTemplate(name, template) {
   const compiledTemplate = ejs.compile(template, {
-    client: true,
     outputFunctionName: name
   });
   return function compileEjsTemplate(req, res, next) {

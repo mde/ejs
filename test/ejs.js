@@ -206,64 +206,6 @@ suite('ejs.compile(str, options)', function () {
   });
 });
 
-suite('client mode', function () {
-
-  test('have a working client option', function () {
-    var fn;
-    var str;
-    var preFn;
-    fn = ejs.compile('<p><%= foo %></p>', {client: true});
-    str = fn.toString();
-    if (!process.env.running_under_istanbul) {
-      eval('var preFn = ' + str);
-      assert.equal(preFn({foo: 'bar'}), '<p>bar</p>');
-    }
-  });
-
-  test('support client mode without locals', function () {
-    var fn;
-    var str;
-    var preFn;
-    fn = ejs.compile('<p><%= "foo" %></p>', {client: true});
-    str = fn.toString();
-    if (!process.env.running_under_istanbul) {
-      eval('var preFn = ' + str);
-      assert.equal(preFn(), '<p>foo</p>');
-    }
-  });
-
-  test('not include rethrow() in client mode if compileDebug is false', function () {
-    var fn = ejs.compile('<p><%= "foo" %></p>', {
-      client: true,
-      compileDebug: false
-    });
-    // There could be a `rethrow` in the function declaration
-    assert((fn.toString().match(/rethrow/g) || []).length <= 1);
-  });
-
-  test('support custom escape function in client mode', function () {
-    var customEscape;
-    var fn;
-    var str;
-    customEscape = function customEscape(str) {
-      return !str ? '' : str.toUpperCase();
-    };
-    fn = ejs.compile('HELLO <%= name %>', {escape: customEscape, client: true});
-    str = fn.toString();
-    if (!process.env.running_under_istanbul) {
-      eval('var preFn = ' + str);
-      assert.equal(preFn({name: 'world'}), 'HELLO WORLD');
-    }
-  });
-
-  test('escape filename in errors in client mode', function () {
-    assert.throws(function () {
-      var fn = ejs.compile('<% throw new Error("whoops"); %>', {client: true, filename: '<script>'});
-      fn();
-    }, /Error: &lt;script&gt;/);
-  });
-});
-
 /* Old API -- remove when this shim goes away */
 suite('ejs.render(str, dataAndOpts)', function () {
   test('render the template with data/opts passed together', function () {

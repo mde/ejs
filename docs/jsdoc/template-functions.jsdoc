@@ -1,40 +1,12 @@
 /**
- * This type of function is returned from {@link module:ejs.compile}, when
- * {@link Options}`.client` is false.
+ * This type of function is returned from {@link module:ejs.compile}.
  *
  * @callback TemplateFunction
  * @param {Object}          [locals={}]
- * an object of data to be passed into the template.
- * @return {(String|Promise<String>)}
- * Return type depends on {@link Options}`.async`.
- * @static
- * @global
- */
-
-/**
- * This type of function is returned from {@link module:ejs.compile}, when
- * {@link Options}`.client` is true.
- *
- * This is also used internally to generate a
- * {@link TemplateFunction}.
- *
- * @callback ClientFunction
- * @param {Object}          [locals={}]
  * an object of data to be passed into the template. The name of this variable
  * is adjustable through {@link module:ejs.localsName}.
- *
- * @param {EscapeCallback}  [escape={@link Options}.escape]
- * callback used to escape variables
- *
- * @param {IncludeCallback} [include]
- * callback used to include files at runtime with `include()`
- *
- * @param {RethrowCallback} [rethrow={@link module:ejs-internal.rethrow}]
- * callback used to handle and rethrow errors
- *
  * @return {(String|Promise<String>)}
  * Return type depends on {@link Options}`.async`.
- *
  * @static
  * @global
  */
@@ -65,7 +37,7 @@
  */
 
 /**
- * The callback called by {@link ClientFunction} to include files at runtime with `include()`
+ * The callback used to include files at runtime with `include()`
  *
  * @callback IncludeCallback
  * @param  {String} path      Path to be included

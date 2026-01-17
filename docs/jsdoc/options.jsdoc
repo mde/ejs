@@ -31,14 +31,8 @@
  * scriptlet tags (it does not strip new lines of tags in the middle of a
  * line).
  *
- * @property {Boolean} [client=false]
- * Whether or not to compile a {@link ClientFunction} that can be rendered
- * in the browser without depending on ejs.js. Otherwise, a {@link TemplateFunction}
- * will be compiled.
- *
  * @property {EscapeCallback} [escape={@link module:utils.escapeXML}]
- * The escaping function used with `<%=` construct. It is used in rendering
- * and is `.toString()`ed in the generation of client functions.
+ * The escaping function used with `<%=` construct.
  *
  * @property {String}  [filename=undefined]
  * The filename of the template. Required for inclusion and caching unless
@@ -64,8 +58,8 @@
  * @property {Boolean} [cache=false]
  * Whether or not to enable caching of template functions. Beware that
  * the options of compilation are not checked as being the same, so
- * special handling is required if, for example, you want to cache client
- * and regular functions of the same file.
+ * special handling is required if, for example, you want to cache
+ * functions compiled with different options for the same file.
  *
  * Requires `filename` to be set. Only works with rendering function.
  *
