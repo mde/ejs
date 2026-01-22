@@ -67,8 +67,6 @@ in very, very old browsers. Your mileage may vary.
 <% } %>
 ```
 
-Try EJS online at: https://ionicabizau.github.io/ejs-playground/.
-
 ## Basic usage
 
 ```javascript
