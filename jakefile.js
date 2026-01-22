@@ -80,7 +80,7 @@ task('browserify', function () {
 
 task('minify', function () {
   let epath = path.join('./node_modules/uglify-js/bin/uglifyjs');
-  exec(epath+' ./lib/cjs/ejs.js > ejs.min.js');
+  exec(epath+' ./ejs.js > ejs.min.js');
   console.log('Minification completed.');
 });
 
