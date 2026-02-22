@@ -7,7 +7,7 @@ The current supported version.
 
 | Version | Supported          |
 | ------- | ------------------ |
-| 3.x.x   | :white_check_mark: |
+| 4.x.x   | :white_check_mark: |
 
 ## Reporting a Vulnerability
 The EJS team and community take all security bugs in EJS seriously. 
