@@ -19,15 +19,22 @@
 
 let path = require('path');
 
-let program = require('jake').program;
-delete global.jake; // NO NOT WANT
-program.setTaskNames = function (n) { this.taskNames = n; };
+let { Parser } = require('../lib/cjs/parseargs');
 
 let ejs = require('../lib/cjs/ejs');
 let { hyphenToCamel } = require('../lib/cjs/utils');
 let fs = require('fs');
 let args = process.argv.slice(2);
 let usage = fs.readFileSync(`${__dirname}/../usage.txt`).toString();
+
+function die(msg) {
+  console.log(msg);
+  process.stdout.write('', function () {
+    process.stderr.write('', function () {
+      process.exit();
+    });
+  });
+}
 
 const CLI_OPTS = [
   { full: 'output-file',
@@ -102,10 +109,10 @@ const CLI_OPTS = [
 
 let preempts = {
   version: function () {
-    program.die(ejs.VERSION);
+    die(ejs.VERSION);
   },
   help: function () {
-    program.die(usage);
+    die(usage);
   }
 };
 
@@ -120,16 +127,16 @@ process.stdin.on('readable', () => {
 
 function run() {
 
-  program.availableOpts = CLI_OPTS;
-  program.parseArgs(args);
+  let parser = new Parser(CLI_OPTS);
+  let result = parser.parse(args);
 
-  let templatePath = program.taskNames[0];
-  let pVals = program.envVars;
+  let templatePath = result.taskNames[0];
+  let pVals = result.envVars;
   let pOpts = {};
 
-  for (let p in program.opts) {
+  for (let p in result.opts) {
     let name = hyphenToCamel(p);
-    pOpts[name] = program.opts[p];
+    pOpts[name] = result.opts[p];
   }
 
   let opts = {};

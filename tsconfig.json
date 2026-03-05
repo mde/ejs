@@ -107,5 +107,5 @@
     "skipLibCheck": true,                                 /* Skip type checking all .d.ts files. */
     "ignoreDeprecations": "5.0"
   },
-  "include": ["./lib/esm/ejs.js"]
+  "include": ["./lib/esm/ejs.js", "./lib/esm/parseargs.js"]
 }
