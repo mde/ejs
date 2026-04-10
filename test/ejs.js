@@ -643,6 +643,28 @@ suite('<%=', function () {
       'THE JONES\'S'
     );
   });
+
+  test('should not allow data properties to shadow escapeFn (GH-803)', function () {
+    // If data.escapeFn could shadow the internal escape function,
+    // setting it to String would bypass HTML escaping
+    var output = ejs.render('<%= userInput %>', {
+      userInput: '<script>alert(1)</script>',
+      escapeFn: String
+    });
+    assert.equal(output, '&lt;script&gt;alert(1)&lt;/script&gt;');
+  });
+
+  test('should not allow data properties to shadow include or rethrow (GH-803)', function () {
+    // Ensure other internal names are also not shadowable
+    var output = ejs.render('<%= val %>', {
+      val: '<img onerror=alert(1)>',
+      include: 'evil',
+      rethrow: 'evil',
+      __output: 'evil',
+      __append: 'evil'
+    });
+    assert.equal(output, '&lt;img onerror=alert(1)&gt;');
+  });
 });
 
 suite('<%-', function () {
