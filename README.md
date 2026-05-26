@@ -121,8 +121,8 @@ You should never give end-users unfettered access to the EJS render method, If y
   - `unsafePrototypeLocals` When `true`, allows templates to resolve identifiers
     through the prototype chain of the locals object. Required if you pass class
     instances or `Object.create(...)` results as locals and rely on inherited
-    properties at the top level. Defaults to `false`; enabling it makes EJS usable
-    as a gadget in prototype-pollution attacks.
+    properties at the top level. Defaults to `false`; enabling it disables the
+    v6 prototype-pollution mitigation.
   - `destructuredLocals`    An array of local variables that are always destructured from
     the locals object, available even in strict mode.
   - `localsName`            Name to use for the object storing local variables when not using
