@@ -1164,3 +1164,60 @@ suite('identifier validation', function () {
     }, /destructuredLocals\[0\] is not a valid JS identifier/);
   });
 });
+
+suite('prototype pollution hardening', function () {
+  // Helper to safely run a test while Object.prototype is polluted, ensuring
+  // cleanup so the rest of the suite isn't poisoned.
+  function withPollution(props, fn) {
+    var keys = Object.keys(props);
+    keys.forEach(function (k) { Object.prototype[k] = props[k]; });
+    try { fn(); }
+    finally { keys.forEach(function (k) { delete Object.prototype[k]; }); }
+  }
+
+  test('escapeFn cannot be hijacked via Object.prototype', function () {
+    withPollution({ escapeFn: function (x) { return '[HIJACKED] ' + x; } }, function () {
+      var out = ejs.render('<%= name %>', { name: '<script>alert(1)</script>' });
+      assert.equal(out, '&lt;script&gt;alert(1)&lt;/script&gt;');
+    });
+  });
+
+  test('include cannot be hijacked via Object.prototype', function () {
+    var called = false;
+    withPollution({ include: function () { called = true; return '[HIJACKED]'; } }, function () {
+      try {
+        ejs.render('<%- include("hello-world") %>', {}, {
+          filename: __dirname + '/fixtures/anything.ejs'
+        });
+      } catch (e) { /* fixture-resolution can fail; we only care that the polluted include wasn't invoked */ }
+      assert.equal(called, false, 'polluted include must not be invoked');
+    });
+  });
+
+  test('__append cannot be hijacked via Object.prototype', function () {
+    var called = false;
+    withPollution({ __append: function () { called = true; } }, function () {
+      var out = ejs.render('<%= name %>', { name: 'foo' });
+      assert.equal(out, 'foo');
+      assert.equal(called, false, 'polluted __append must not be invoked');
+    });
+  });
+
+  test('unsafePrototypeLocals: true restores prototype-chain lookup', function () {
+    function Data() {}
+    Data.prototype.greeting = 'hi';
+    var out = ejs.render('<%= greeting %>', new Data(),
+      { unsafePrototypeLocals: true });
+    assert.equal(out, 'hi');
+  });
+
+  test('Object.prototype.unsafePrototypeLocals cannot enable opt-in', function () {
+    withPollution({
+      unsafePrototypeLocals: true,
+      escapeFn: function (x) { return '[HIJACKED] ' + x; }
+    }, function () {
+      var out = ejs.render('<%= name %>', { name: '<x>' });
+      assert.equal(out, '&lt;x&gt;');
+    });
+  });
+});
