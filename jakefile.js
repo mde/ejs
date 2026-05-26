@@ -53,6 +53,10 @@ task('compile', function () {
   utilsSource = utilsSource.replace(/^exports\.default = utils;\s*$/m,
     'module.exports = utils;');
   fs.writeFileSync('lib/cjs/utils.js', utilsSource);
+  let parseargsSource = fs.readFileSync('lib/cjs/parseargs.js', 'utf8').toString();
+  parseargsSource = parseargsSource.replace(/^exports\.default = parseargs;\s*$/m,
+    'module.exports = parseargs;');
+  fs.writeFileSync('lib/cjs/parseargs.js', parseargsSource);
   fs.writeFileSync('lib/cjs/package.json', '{"type":"commonjs"}');
 });
 
