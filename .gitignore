@@ -20,6 +20,7 @@ test/tmp
 coverage/
 /ejs.js
 /ejs.min.js
+lib/cjs/
 out/
 pkg/
 /package-lock.json

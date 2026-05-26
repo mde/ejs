@@ -29,7 +29,7 @@
   "bugs": "https://github.com/mde/ejs/issues",
   "homepage": "https://github.com/mde/ejs",
   "devDependencies": {
-    "jake": "^10.9.1",
+    "jake": "^12.10.1",
     "typescript": "^5.4.5",
     "@babel/eslint-parser": "^7.24.5",
     "browserify": "^17.0.0",

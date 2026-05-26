@@ -1,18 +1,13 @@
 let fs = require('fs');
 let path = require('path');
-let execSync = require('child_process').execSync;
+let os = require('os');
+let proc = require('child_process');
+let execSync = proc.execSync;
 let exec = function (cmd) {
   execSync(cmd, {stdio: 'inherit'});
 };
 
-/* global jake, task, desc, publishTask */
-
-const BUILT_EJS_FILES = [
-  'ejs.js',
-  'ejs.min.js',
-  'lib/esm/ejs.js',
-  'lib/cjs/ejs.js',
-];
+/* global jake, task, desc, namespace, publishTask */
 
 // Hook into some of the publish lifecycle events
 jake.on('finished', function (ev) {
@@ -54,9 +49,9 @@ task('compile', function () {
 
 desc('Cleans browerified/minified files and package files');
 task('clean', ['clobber'], function () {
-  jake.rmRf('./ejs.js');
-  jake.rmRf('./ejs.min.js');
-  jake.rmRf('./lib/cjs');
+  fs.rmSync('./ejs.js', {force: true});
+  fs.rmSync('./ejs.min.js', {force: true});
+  fs.rmSync('./lib/cjs', {recursive: true, force: true});
   console.log('Cleaned up compiled files.');
 });
 
@@ -86,7 +81,7 @@ task('minify', function () {
 
 desc('Generates the EJS API docs for the public API');
 task('doc', function () {
-  jake.rmRf('out');
+  fs.rmSync('out', {recursive: true, force: true});
   let epath = path.join('./node_modules/.bin/jsdoc');
   exec(epath+' --verbose -c jsdoc.json lib/esm/* docs/jsdoc/*');
   console.log('Documentation generated in ./out.');
@@ -94,7 +89,7 @@ task('doc', function () {
 
 desc('Generates the EJS API docs for the public and private API');
 task('devdoc', function () {
-  jake.rmRf('out');
+  fs.rmSync('out', {recursive: true, force: true});
   let epath = path.join('./node_modules/.bin/jsdoc');
   exec(epath+' --verbose -p -c jsdoc.json lib/esm/* docs/jsdoc/*');
   console.log('Documentation generated in ./out.');
@@ -110,10 +105,77 @@ task('docPublish', ['doc'], function () {
 });
 
 desc('Runs the EJS test suite');
-task('test', ['build', 'testOnly'], function () {});
+task('test', ['test:unit'], function () {});
 
+desc('Runs the EJS test suite without rebuilding');
 task('testOnly', function () {
   exec(path.join('./node_modules/.bin/mocha --u tdd'));
+});
+
+namespace('test', function () {
+  desc('Runs the EJS unit test suite');
+  task('unit', ['build', 'testOnly'], function () {});
+
+  desc('Runs package compatibility tests against the release tarball');
+  task('packaging', ['publish:package'], function () {
+    let version = require('./package.json').version;
+    let packagePath = path.resolve('pkg', 'ejs-v' + version + '.tar.gz');
+    let fixtureDir = fs.mkdtempSync(path.join(os.tmpdir(), 'ejs-package-test-'));
+    let npmCmd = process.platform === 'win32' ? 'npm.cmd' : 'npm';
+
+    if (!fs.existsSync(packagePath)) {
+      throw new Error('Package tarball not found: ' + packagePath);
+    }
+
+    try {
+      fs.writeFileSync(path.join(fixtureDir, 'package.json'), JSON.stringify({
+        private: true,
+        type: 'module'
+      }, null, 2));
+
+      proc.execFileSync(npmCmd, ['install', '--no-audit', '--no-fund', packagePath],
+        {cwd: fixtureDir, stdio: 'inherit'});
+
+      fs.writeFileSync(path.join(fixtureDir, 'cjs-smoke.cjs'), [
+        'const assert = require("assert");',
+        'const ejs = require("ejs");',
+        'assert.equal(typeof ejs.render, "function");',
+        'assert.equal(ejs.render("<%= name %>", {name: "<>&"}), "&lt;&gt;&amp;");',
+        ''
+      ].join('\n'));
+      proc.execFileSync(process.execPath, ['cjs-smoke.cjs'],
+        {cwd: fixtureDir, stdio: 'inherit'});
+
+      fs.writeFileSync(path.join(fixtureDir, 'esm-smoke.mjs'), [
+        'import assert from "node:assert/strict";',
+        'import ejs from "ejs";',
+        'assert.equal(typeof ejs.render, "function");',
+        'assert.equal(ejs.render("<%= name %>", {name: "<>&"}), "&lt;&gt;&amp;");',
+        ''
+      ].join('\n'));
+      proc.execFileSync(process.execPath, ['esm-smoke.mjs'],
+        {cwd: fixtureDir, stdio: 'inherit'});
+
+      fs.writeFileSync(path.join(fixtureDir, 'template.ejs'), 'Hello <%= name %>');
+      let cliOutput = proc.execFileSync(process.execPath, [
+        path.join(fixtureDir, 'node_modules/ejs/bin/cli.js'),
+        'template.ejs',
+        'name=EJS'
+      ], {cwd: fixtureDir}).toString();
+
+      if (cliOutput !== 'Hello EJS') {
+        throw new Error('Unexpected CLI output: ' + cliOutput);
+      }
+    }
+    finally {
+      fs.rmSync(fixtureDir, {recursive: true, force: true});
+    }
+
+    console.log('Package compatibility tests completed.');
+  });
+
+  desc('Runs all EJS tests');
+  task('full', ['test:unit', 'test:packaging'], function () {});
 });
 
 publishTask('ejs', ['build'], function () {
@@ -129,4 +191,3 @@ publishTask('ejs', ['build'], function () {
     'usage.txt'
   ]);
 });
-
