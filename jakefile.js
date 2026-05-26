@@ -43,7 +43,16 @@ task('compile', function () {
     "var DECLARATION_KEYWORD = 'let';",
     "var DECLARATION_KEYWORD = 'var';"
   );
+  // Preserve `require('ejs') === ejs` (and same for utils) by rewriting
+  // tsc's `exports.default = X` to `module.exports = X` in the CJS build.
+  // The ESM source no longer carries a dual-export hack (bundlers and
+  // strict-ESM runtimes choke on `module.exports` in an ESM file).
+  source = source.replace(/^exports\.default = ejs;\s*$/m, 'module.exports = ejs;');
   fs.writeFileSync('lib/cjs/ejs.js', source);
+  let utilsSource = fs.readFileSync('lib/cjs/utils.js', 'utf8').toString();
+  utilsSource = utilsSource.replace(/^exports\.default = utils;\s*$/m,
+    'module.exports = utils;');
+  fs.writeFileSync('lib/cjs/utils.js', utilsSource);
   fs.writeFileSync('lib/cjs/package.json', '{"type":"commonjs"}');
 });
 
