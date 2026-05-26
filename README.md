@@ -45,6 +45,16 @@ CLI: Requires Node v8 or newer.
 Browser: EJS supports all modern browsers, but is very likely to work even
 in very, very old browsers. Your mileage may vary.
 
+Bundlers and alternate runtimes: as of v6.0, the published package imports
+cleanly under Rollup, Rolldown, tsdown, esbuild, Webpack, Vite, Browserify,
+Bun, and Deno. Earlier versions emitted `module.exports = ejs;` from inside
+the ESM source as a dual-mode shim; modern ESM-aware bundlers and Bun
+treated this as malformed ESM. The shim has been removed from
+`lib/esm/*.js` and moved into the `lib/cjs/*` compile step, so the
+published CJS surface (`require('ejs')`) is unchanged. For Browserify,
+pass `--node` so it picks the `main` entry instead of the prebuilt UMD
+bundle pointed to by the `browser` field.
+
 ## Features
 
   * Control flow with `<% %>`
@@ -108,6 +118,11 @@ You should never give end-users unfettered access to the EJS render method, If y
   - `strict`                When set to `true`, generated function is in strict mode
   - `_with`                 Whether or not to use `with() {}` constructs. If `false`
     then the locals will be stored in the `locals` object. Set to `false` in strict mode.
+  - `unsafePrototypeLocals` When `true`, allows templates to resolve identifiers
+    through the prototype chain of the locals object. Required if you pass class
+    instances or `Object.create(...)` results as locals and rely on inherited
+    properties at the top level. Defaults to `false`; enabling it makes EJS usable
+    as a gadget in prototype-pollution attacks.
   - `destructuredLocals`    An array of local variables that are always destructured from
     the locals object, available even in strict mode.
   - `localsName`            Name to use for the object storing local variables when not using
