@@ -1,5 +1,4 @@
 /* jshint mocha: true */
-/* eslint-env node, mocha */
 
 var parseargs = require('../lib/cjs/parseargs');
 var assert = require('assert');

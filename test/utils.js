@@ -1,5 +1,4 @@
 /* jshint mocha: true */
-/* eslint-env node, mocha */
 
 /**
  * Module dependencies.
