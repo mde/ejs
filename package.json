@@ -24,7 +24,7 @@
   "unpkg": "ejs.min.js",
   "repository": {
     "type": "git",
-    "url": "git://github.com/mde/ejs.git"
+    "url": "git+https://github.com/mde/ejs.git"
   },
   "bugs": "https://github.com/mde/ejs/issues",
   "homepage": "https://github.com/mde/ejs",
