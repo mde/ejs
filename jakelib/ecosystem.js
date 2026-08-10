@@ -47,7 +47,7 @@ function runBundlerSmoke(opts) {
         fs.writeFileSync(path.join(fixtureDir, name), opts.files[name]);
       }
 
-      let bin = path.join(fixtureDir, 'node_modules/.bin/', opts.bin);
+      let bin = path.join(fixtureDir, 'node_modules/.bin/', path.basename(opts.bin));
       let result = proc.spawnSync(bin, opts.args,
         {cwd: fixtureDir, encoding: 'utf8'});
 
