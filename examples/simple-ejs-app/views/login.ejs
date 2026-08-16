@@ -1,0 +1,39 @@
+<%- include('./partials/head')-%>
+
+<body class="container">
+  <%- include('./partials/header')-%>
+
+  <form action="/profile" method="POST">
+    <div class="text-center">
+      <input
+        type="email"
+        class="ghost-input"
+        id="email"
+        name="email"
+        aria-describedby="emailHelp"
+        placeholder="Email Address"
+      />
+    </div>
+    <div class="text-center">
+      <input
+        type="text"
+        class="ghost-input"
+        id="username"
+        name="username"
+        placeholder="Username"
+      />
+    </div>
+    <div class="text-center">
+      <input
+        type="password"
+        class="ghost-input"
+        id="password"
+        name="password"
+        placeholder="Password"
+      />
+    </div>
+    <button type="submit" class="btn btn-primary">Login</button>
+  </form>
+
+  <%- include('./partials/footer')-%>
+</body>
