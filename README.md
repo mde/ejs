@@ -132,7 +132,9 @@ You should never give end-users unfettered access to the EJS render method, If y
     slurping for all scriptlet tags (it does not strip new lines of tags in
     the middle of a line).
   - `escape`                The escaping function used with `<%=` construct.
-    (By default escapes XML).
+    (By default escapes XML.) See [Escaping and output
+    context](#escaping-and-output-context) for when the default is not the right
+    choice.
   - `outputFunctionName`    Set to a string (e.g., 'echo' or 'print') for a function to print
     output inside scriptlet tags.
   - `async`                 When `true`, EJS will use an async function for rendering. (Depends
@@ -162,6 +164,31 @@ the both the public & private API docs, run `jake devdoc` instead.
   - `_%>`             'Whitespace Slurping' ending tag, removes all whitespace after it
 
 For the full syntax documentation, please see [docs/syntax.md](https://github.com/mde/ejs/blob/master/docs/syntax.md).
+
+### Escaping and output context
+
+1. EJS is most often used to generate HTML.
+2. `<%= %>` reflects that. It escapes for HTML content and quoted attribute
+   values.
+3. EJS also generates arbitrary strings for other contexts, and knows nothing
+   about where its output ends up.
+4. You can replace the default escaping.
+5. Outside HTML content, you should.
+
+```javascript
+ejs.render(template, data, {escape: myEscapeFunction});
+app.set('view options', {escape: myEscapeFunction});  // Express, app-wide
+```
+
+`escape` must go in the options argument. It cannot be set on `ejs` globally or
+passed in with the data. For a template that mixes contexts, escape per value
+with `<%- myEscapeFunction(name) %>` instead.
+
+The usual mistake is `<%= %>` inside a `<script>` block. Browsers do not decode
+HTML entities there, so the default escaping neither renders correctly nor
+protects you. Pass the value through an attribute and `JSON.parse` it instead of
+splicing it into JavaScript source. (`JSON.stringify` output is not safe there
+either. A `</script>` anywhere in your data ends the block early.)
 
 ### Includes
 
