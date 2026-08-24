@@ -163,8 +163,6 @@ the both the public & private API docs, run `jake devdoc` instead.
   - `-%>`             Trim-mode ('newline slurp') tag, trims following newline
   - `_%>`             'Whitespace Slurping' ending tag, removes all whitespace after it
 
-For the full syntax documentation, please see [docs/syntax.md](https://github.com/mde/ejs/blob/master/docs/syntax.md).
-
 ### Escaping and output context
 
 1. EJS is most often used to generate HTML.
