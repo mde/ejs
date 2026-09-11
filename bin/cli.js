@@ -41,6 +41,10 @@ const CLI_OPTS = [
     abbr: 'o',
     expectValue: true,
   },
+  { full: 'skip-unchanged',
+    expectValue: false,
+    allowValue: false,
+  },
   { full: 'data-file',
     abbr: 'f',
     expectValue: true,
@@ -206,6 +210,18 @@ function run() {
   let template = fs.readFileSync(opts.filename).toString();
   let output = ejs.render(template, vals, opts);
   if (pOpts.outputFile) {
+    if (pOpts.skipUnchanged) {
+      try {
+        if (fs.readFileSync(pOpts.outputFile).equals(Buffer.from(output))) {
+          return;
+        }
+      }
+      catch (err) {
+        if (err.code !== 'ENOENT') {
+          throw err;
+        }
+      }
+    }
     fs.writeFileSync(pOpts.outputFile, output);
   }
   else {

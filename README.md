@@ -308,6 +308,7 @@ See the [examples folder](https://github.com/mde/ejs/tree/master/examples) for m
 EJS ships with a full-featured CLI. Options are similar to those used in JavaScript code:
 
   - `-o / --output-file FILE`            Write the rendered output to FILE rather than stdout.
+  - `--skip-unchanged`                  Preserve the output file when its contents have not changed (used with `-o`).
   - `-f / --data-file FILE`              Must be JSON-formatted. Use parsed input from FILE as data for rendering.
   - `-i / --data-input STRING`           Must be JSON-formatted and URI-encoded. Use parsed input from STRING as data for rendering.
   - `-m / --delimiter CHARACTER`         Use CHARACTER with angle brackets for open/close (defaults to %).
