@@ -55,6 +55,11 @@ published CJS surface (`require('ejs')`) is unchanged. For Browserify,
 pass `--node` so it picks the `main` entry instead of the prebuilt UMD
 bundle pointed to by the `browser` field.
 
+Browser-targeted bundlers that support conditional exports select the prebuilt
+bundle through the `browser` export condition. Use this bundle to compile and
+render template strings; loading templates from the filesystem with `renderFile`
+requires the Node entry point.
+
 ## Features
 
   * Control flow with `<% %>`
