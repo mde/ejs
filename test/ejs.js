@@ -206,28 +206,31 @@ suite('ejs.compile(str, options)', function () {
 });
 
 suite('ejs.renderFile(path, data, options, cb)', function () {
+  // If inherited settings were honored, 'view cache' would cache the first
+  // render and the second would return stale output.
   test('does not read settings from the prototype chain', function (done) {
     var template = path.join(__dirname, 'tmp', 'prototype-settings.ejs');
-    var polluted = {user: 'mde'};
+    var data = {user: 'mde'};
 
     fs.writeFileSync(template, '<p><%= user %></p>');
-    Object.prototype.settings = {
-      'view options': {
-        escape: function (markup) {
-          return 'polluted:' + markup;
-        }
-      }
-    };
+    Object.prototype.settings = {'view cache': true};
 
-    ejs.renderFile(template, polluted, function (err, str) {
-      delete Object.prototype.settings;
-
+    ejs.renderFile(template, data, function (err, first) {
       if (err) {
+        delete Object.prototype.settings;
         return done(err);
       }
-
-      assert.equal(str, '<p>mde</p>');
-      done();
+      fs.writeFileSync(template, '<p>changed <%= user %></p>');
+      ejs.renderFile(template, data, function (err, second) {
+        delete Object.prototype.settings;
+        ejs.clearCache();
+        if (err) {
+          return done(err);
+        }
+        assert.equal(first, '<p>mde</p>');
+        assert.equal(second, '<p>changed mde</p>');
+        done();
+      });
     });
   });
 
