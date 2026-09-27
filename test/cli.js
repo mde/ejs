@@ -206,9 +206,11 @@ suite('cli errors and edges', function () {
 
   // ---- output not truncated on exit (Codex #4) -----------------------------
   // 100k > pipe buffer; process.exit() mid-write would truncate. Compare full length.
+  // The payload goes through stdin: argv is size-limited (Linux 128 KiB per
+  // argument, Windows ~32 KiB total).
   test('large output is not truncated', function () {
     let big = 'x'.repeat(100000);
-    let r = cli(['-m', '$', USER, 'name=' + big]);
+    let r = cli(['-m', '$', USER], { input: JSON.stringify({ name: big }) });
     assert.equal(r.status, 0);
     assert.equal(r.stdout.trim(), '<h1>' + big + '</h1>');
   });
@@ -220,8 +222,10 @@ suite('cli errors and edges', function () {
 // (not setImmediate) and that help exits without waiting on stdin.
 suite('cli stdin timing', function () {
 
-  function spawnCli(args) {
-    return spawn(process.execPath, ['./bin/cli.js'].concat(args));
+  function spawnCli(args, done) {
+    let child = spawn(process.execPath, ['./bin/cli.js'].concat(args));
+    child.on('error', done); // e.g. spawn failure: fail the test, don't throw
+    return child;
   }
 
   function collect(child, cb) {
@@ -232,7 +236,7 @@ suite('cli stdin timing', function () {
   }
 
   test('waits for delayed stdin data', function (done) {
-    let child = spawnCli(['-m', '$', USER]);
+    let child = spawnCli(['-m', '$', USER], done);
     collect(child, function (code, out) {
       try {
         assert.equal(code, 0);
@@ -244,7 +248,7 @@ suite('cli stdin timing', function () {
   });
 
   test('reassembles split stdin chunks', function (done) {
-    let child = spawnCli(['-m', '$', USER]);
+    let child = spawnCli(['-m', '$', USER], done);
     collect(child, function (code, out) {
       try {
         assert.equal(code, 0);
@@ -257,7 +261,7 @@ suite('cli stdin timing', function () {
   });
 
   test('help exits promptly without waiting for stdin EOF', function (done) {
-    let child = spawnCli(['-h']);
+    let child = spawnCli(['-h'], done);
     let finished = false;
     let deadline = setTimeout(function () {
       if (!finished) { child.kill('SIGKILL'); done(new Error('help blocked on open stdin')); }
@@ -277,7 +281,7 @@ suite('cli stdin timing', function () {
   // A closed consumer pipe (e.g. `ejs ... | head`) must not dump a stack trace.
   test('closed stdout pipe does not produce a stack trace', function (done) {
     let big = 'x'.repeat(200000);
-    let child = spawn(process.execPath, ['./bin/cli.js', '-m', '$', USER, 'name=' + big]);
+    let child = spawnCli(['-m', '$', USER], done);
     let err = '';
     child.stderr.on('data', function (d) { err += d; });
     child.stdout.on('data', function () { child.stdout.destroy(); }); // close early
@@ -287,6 +291,7 @@ suite('cli stdin timing', function () {
         done();
       } catch (e) { done(e); }
     });
+    child.stdin.end(JSON.stringify({ name: big }));
   });
 
 });
