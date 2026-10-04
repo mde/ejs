@@ -230,20 +230,62 @@ suite('ejs.renderFile(path, data, options, cb)', function () {
       done();
     });
   });
-});
 
-/* Old API -- remove when this shim goes away */
-suite('ejs.render(str, dataAndOpts)', function () {
-  test('render the template with data/opts passed together', function () {
-    assert.equal(ejs.render('<p><?= foo ?></p>', {foo: 'yay', delimiter: '?'}),
-      '<p>yay</p>');
+  // user.ejs is $-delimited, so output stays literal unless '$' is applied.
+  test('does not read options from data', function (done) {
+    ejs.renderFile('test/fixtures/user.ejs', {name: 'x', delimiter: '$'}, function (err, html) {
+      if (err) { return done(err); }
+      assert.equal(html, '<h1><$= name $></h1>' + lf);
+      done();
+    });
   });
 
-  test('disallow unsafe opts passed along in data', function () {
-    assert.equal(ejs.render('<p><?= locals.foo ?></p>',
-      // localsName should not get reset because it's blacklisted
-      {_with: false, foo: 'yay', delimiter: '?', localsName: '_'}),
-    '<p>yay</p>');
+  test("ignores settings['view options'] (Express 2)", function (done) {
+    var data = {name: 'x', settings: {'view options': {delimiter: '$'}}};
+    ejs.renderFile('test/fixtures/user.ejs', data, function (err, html) {
+      if (err) { return done(err); }
+      assert.equal(html, '<h1><$= name $></h1>' + lf);
+      done();
+    });
+  });
+
+  test('`cache` in data does not enable caching', function (done) {
+    var file = path.join(__dirname, 'tmp', 'no-cache-in-data.ejs');
+    fs.writeFileSync(file, '<p>Old</p>');
+    ejs.renderFile(file, {cache: true}, function (err, out) {
+      if (err) { return done(err); }
+      assert.equal(out, '<p>Old</p>');
+      fs.writeFileSync(file, '<p>New</p>');
+      ejs.renderFile(file, {cache: true}, function (err, out2) {
+        if (err) { return done(err); }
+        assert.equal(out2, '<p>New</p>');
+        done();
+      });
+    });
+  });
+
+  test("honors settings['view cache'] (Express 3+)", function (done) {
+    var file = path.join(__dirname, 'tmp', 'view-cache.ejs');
+    var data = {settings: {'view cache': true}};
+    fs.writeFileSync(file, '<p>Old</p>');
+    ejs.renderFile(file, data, function (err) {
+      if (err) { return done(err); }
+      fs.writeFileSync(file, '<p>New</p>');
+      ejs.renderFile(file, data, function (err, out) {
+        ejs.clearCache();
+        if (err) { return done(err); }
+        assert.equal(out, '<p>Old</p>');
+        done();
+      });
+    });
+  });
+});
+
+suite('ejs.render: options are never read from data', function () {
+  test('option-named keys in data are plain locals, not options', function () {
+    assert.equal(ejs.render('<p><?= foo ?></p>', {foo: 'yay', delimiter: '?'}),
+      '<p><?= foo ?></p>');
+    assert.equal(ejs.render('<%= delimiter %>', {delimiter: '?'}), '?');
   });
 });
 

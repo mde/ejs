@@ -23,9 +23,6 @@ suite('unit testing for completeness of module \'utils.js\' exports', function (
   test('expect \'shallowCopy\' to be exported', function () {
     assert.ok(typeof(utils.shallowCopy)==='function');
   });
-  test('expect \'shallowCopyFromList\' to be exported', function () {
-    assert.ok(typeof(utils.shallowCopyFromList)==='function');
-  });
   test('expect \'cache\' to be exported', function () {
     assert.ok(typeof(utils.cache)==='object');
   });
@@ -110,49 +107,6 @@ suite('unit testing exported functions of module \'utils.js\'', function () {
       const from = { 'foo': 'bar', 'baz': [ '1', '2' ], 'bah': { 'hurz': 'gnarf' }};
       assert.doesNotThrow(() => { utils.shallowCopy(to, from); });
       assert.ok(JSON.stringify(utils.shallowCopy(to, from))===JSON.stringify(from));
-    });
-  });
-
-  /**
-   *  Unit testing of exported function 'shallowCopyFromList'
-   */
-  suite('unit testing function \'shallowCopyFromList\' of module \'utils.js\'', function () {
-    test('it should be callable without parameters', function () {
-      assert.doesNotThrow(() => { utils.shallowCopyFromList(); });
-      assert.ok(utils.shallowCopyFromList()===undefined);
-    });
-    test('it should be callable parameters \'to\' {undefined} and \'from\' {null}', function () {
-      assert.doesNotThrow(() => { utils.shallowCopyFromList(undefined, null); });
-      assert.ok(utils.shallowCopyFromList(undefined, null)===undefined);
-    });
-    test('it should be callable parameters \'to\' {undefined}, \'from\' {null} and \'list\' {null}', function () {
-      assert.doesNotThrow(() => { utils.shallowCopyFromList(undefined, null, null); });
-      assert.ok(utils.shallowCopyFromList(undefined, null, null)===undefined);
-    });
-    test('it should be callable parameters \'to\' {undefined}, \'from\' {null} and \'list\' {Array}', function () {
-      const list = [ 'foo', 'bar' ];
-      assert.doesNotThrow(() => { utils.shallowCopyFromList(undefined, null, list); });
-      assert.ok(utils.shallowCopyFromList(undefined, null, list)===undefined);
-    });
-    test('it should be callable parameters \'to\' {null} and \'from\' {null}', function () {
-      assert.doesNotThrow(() => { utils.shallowCopyFromList(null, null); });
-      assert.ok(utils.shallowCopyFromList(null, null)===null);
-    });
-    test('it should be callable parameters \'to\' {undefined}, \'from\' {null} and \'list\' {null}', function () {
-      assert.doesNotThrow(() => { utils.shallowCopyFromList(null, null, null); });
-      assert.ok(utils.shallowCopyFromList(null, null, null)===null);
-    });
-    test('it should be callable parameters \'to\' {null}, \'from\' {null} and \'list\' {Array}', function () {
-      const list = [ 'foo', 'bar' ];
-      assert.doesNotThrow(() => { utils.shallowCopyFromList(null, null, list); });
-      assert.ok(utils.shallowCopyFromList(null, null, list)===null);
-    });
-    test('it should be callable parameters \'to\' { }, \'from\' {...} and \'list\' {Array}', function () {
-      const list = [ 'foo', 'bar' ];
-      const to = {};
-      const from = { 'foo': 'bar', 'baz': [ '1', '2' ], 'bah': { 'hurz': 'gnarf' }};
-      assert.doesNotThrow(() => { utils.shallowCopyFromList(to, from, list); });
-      assert.ok(JSON.stringify(utils.shallowCopyFromList(to, from, list))===JSON.stringify({ 'foo': 'bar' }));
     });
   });
 
