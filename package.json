@@ -17,6 +17,7 @@
   "module": "./lib/esm/ejs.js",
   "browser": "./ejs.min.js",
   "exports": {
+    "browser": "./ejs.min.js",
     "import": "./lib/esm/ejs.js",
     "require": "./lib/cjs/ejs.js"
   },
