@@ -169,6 +169,32 @@ namespace('test', function () {
       proc.execFileSync(process.execPath, ['esm-smoke.mjs'],
         {cwd: fixtureDir, stdio: 'inherit'});
 
+      // Browser-targeted bundlers select the "browser" export condition; it must
+      // resolve to the prebuilt bundle in the published package.
+      fs.writeFileSync(path.join(fixtureDir, 'browser-cjs-smoke.cjs'), [
+        'const assert = require("assert");',
+        'const path = require("path");',
+        'const bundle = path.join("node_modules", "ejs", "ejs.min.js");',
+        'assert.ok(require.resolve("ejs").endsWith(bundle), require.resolve("ejs"));',
+        'const ejs = require("ejs");',
+        'assert.equal(ejs.render("<%= name %>", {name: "<>&"}), "&lt;&gt;&amp;");',
+        ''
+      ].join('\n'));
+      proc.execFileSync(process.execPath, ['--conditions=browser', 'browser-cjs-smoke.cjs'],
+        {cwd: fixtureDir, stdio: 'inherit'});
+
+      fs.writeFileSync(path.join(fixtureDir, 'browser-esm-smoke.mjs'), [
+        'import assert from "node:assert/strict";',
+        'import ejs from "ejs";',
+        'if (import.meta.resolve) {',
+        '  assert.ok(import.meta.resolve("ejs").endsWith("/node_modules/ejs/ejs.min.js"));',
+        '}',
+        'assert.equal(ejs.render("<%= name %>", {name: "<>&"}), "&lt;&gt;&amp;");',
+        ''
+      ].join('\n'));
+      proc.execFileSync(process.execPath, ['--conditions=browser', 'browser-esm-smoke.mjs'],
+        {cwd: fixtureDir, stdio: 'inherit'});
+
       fs.writeFileSync(path.join(fixtureDir, 'template.ejs'), 'Hello <%= name %>');
       let cliOutput = proc.execFileSync(process.execPath, [
         path.join(fixtureDir, 'node_modules/ejs/bin/cli.js'),
