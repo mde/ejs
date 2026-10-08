@@ -350,34 +350,48 @@ Here are some examples of usage:
 
 ```shell
 $ ejs -p [ -c ] ./template_file.ejs -o ./output.html
-$ ejs ./test/fixtures/user.ejs name=Lerxst
+$ ejs -m $ ./test/fixtures/user.ejs name=Lerxst
 $ ejs -n -l _ ./some_template.ejs -f ./data_file.json
 ```
 
+### Arguments
+
+As of v7:
+
+  - The template file comes first. Any `name=value` data comes after it.
+  - Unknown options are an error.
+  - Short options can be grouped (`-sdw`) and take attached values (`-m$`).
+  - A value that starts with `-` needs `=`: `-o=-out.html`.
+  - `--` ends options, for example when a template's name starts with `-`.
+  - Exit status is 0 on success, 2 for a usage error, and 1 for a runtime error.
+
 ### Data input
 
-There is a variety of ways to pass the CLI data for rendering.
+Pass JSON data one way: stdin, a data file (`-f`), or a command-line option
+(`-i`). Using `-f` and `-i` together is an error. Stdin is only read when there's
+no `-f`, `-i`, or `name=value` data.
 
 Stdin:
 
 ```shell
-$ ./test/fixtures/user_data.json | ejs ./test/fixtures/user.ejs
-$ ejs ./test/fixtures/user.ejs < test/fixtures/user_data.json
+$ cat ./test/fixtures/user_data.json | ejs -m $ ./test/fixtures/user.ejs
+$ ejs -m $ ./test/fixtures/user.ejs < test/fixtures/user_data.json
 ```
 
 A data file:
 
 ```shell
-$ ejs ./test/fixtures/user.ejs -f ./user_data.json
+$ ejs -m $ ./test/fixtures/user.ejs -f ./test/fixtures/user_data.json
 ```
 
 A command-line option (must be URI-encoded):
 
 ```shell
-./bin/cli.js -i %7B%22name%22%3A%20%22foo%22%7D ./test/fixtures/user.ejs
+./bin/cli.js -m $ -i %7B%22name%22%3A%20%22foo%22%7D ./test/fixtures/user.ejs
 ```
 
-Or, passing values directly at the end of the invocation:
+Or, passing `name=value` pairs after the template. These override values from
+`-f` or `-i`, and are always strings:
 
 ```shell
 ./bin/cli.js -m $ ./test/fixtures/user.ejs name=foo
@@ -385,8 +399,8 @@ Or, passing values directly at the end of the invocation:
 
 ### Output
 
-The CLI by default send output to stdout, but you can use the `-o` or `--output-file`
-flag to specify a target file to send the output to.
+The CLI sends output to stdout by default. Use `-o` or `--output-file` to write
+it to a file instead.
 
 ## IDE Integration with Syntax Highlighting
 
