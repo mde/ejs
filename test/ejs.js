@@ -826,6 +826,18 @@ suite('<%_ and _%>', function () {
     assert.equal(ejs.render(fixture('space-and-tab-slurp.ejs'), {users: users}),
       fixture('space-and-tab-slurp.html'));
   });
+
+  test('does not truncate a trailing underscore in an expression', function () {
+    var data = {foo: 'WRONG', foo_: 'RIGHT'};
+    // `foo_%>` must read `foo_` and keep its whitespace, like `foo_ %>` does.
+    assert.equal(ejs.render('<%= foo_ %>   END', data), 'RIGHT   END');
+    assert.equal(ejs.render('<%= foo_%>   END', data), 'RIGHT   END');
+  });
+
+  test('still treats a real `_%>` as a whitespace-slurping close', function () {
+    assert.equal(ejs.render('<p>  <%_ var x = 1; _%>  \n<%= x %></p>'), '<p>1</p>');
+    assert.equal(ejs.render('<%= 1 _%>   END'), '1END');
+  });
 });
 
 suite('single quotes', function () {
