@@ -392,6 +392,52 @@ suite('ejs.render(str, data, opts)', function () {
 });
 
 suite('ejs.renderFile(path, [data], [options], [fn])', function () {
+  [null, undefined].forEach(function (data) {
+    test('render a file with ' + data + ' data and a callback', function (done) {
+      ejs.renderFile('test/fixtures/para.ejs', data, function (err, html) {
+        if (err) { return done(err); }
+        assert.equal(html, '<p>hey</p>' + lf);
+        done();
+      });
+    });
+
+    test('render a file with ' + data + ' data and a Promise', function () {
+      return ejs.renderFile('test/fixtures/para.ejs', data).then(function (html) {
+        assert.equal(html, '<p>hey</p>' + lf);
+      });
+    });
+
+    test('report file errors to the callback with ' + data + ' data', function (done) {
+      ejs.renderFile('test/fixtures/missing-null-data.ejs', data, function (err, html) {
+        assert.equal(err.code, 'ENOENT');
+        assert.strictEqual(html, undefined);
+        done();
+      });
+    });
+
+    test('reject the Promise on file errors with ' + data + ' data', function () {
+      return ejs.renderFile('test/fixtures/missing-null-data.ejs', data).then(function () {
+        assert.fail('Expected a missing-file error');
+      }, function (err) {
+        assert.equal(err.code, 'ENOENT');
+      });
+    });
+
+    test('accept explicit options with ' + data + ' data and a callback', function (done) {
+      ejs.renderFile('test/fixtures/para.ejs', data, {strict: true}, function (err, html) {
+        if (err) { return done(err); }
+        assert.equal(html, '<p>hey</p>' + lf);
+        done();
+      });
+    });
+
+    test('accept explicit options with ' + data + ' data and a Promise', function () {
+      return ejs.renderFile('test/fixtures/para.ejs', data, {strict: true}).then(function (html) {
+        assert.equal(html, '<p>hey</p>' + lf);
+      });
+    });
+  });
+
   test('render a file', function(done) {
     ejs.renderFile('test/fixtures/para.ejs', function(err, html) {
       if (err) {
