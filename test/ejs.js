@@ -821,6 +821,32 @@ suite('%%>', function () {
   });
 });
 
+suite('literal tags with custom delimiters', function () {
+  [
+    {delimiter: '"'},
+    {delimiter: '\\'},
+    {openDelimiter: '"'},
+    {openDelimiter: '\\'},
+    {closeDelimiter: '"'},
+    {closeDelimiter: '\\'},
+    {openDelimiter: '$', delimiter: '&'},
+    {delimiter: '$', closeDelimiter: '&'}
+  ].forEach(function (options) {
+    test('preserves literal tags with ' + JSON.stringify(options), function () {
+      var open = options.openDelimiter || '<';
+      var delimiter = options.delimiter || '%';
+      var close = options.closeDelimiter || '>';
+      assert.equal(ejs.render(open + delimiter + delimiter, {}, options),
+        open + delimiter);
+      assert.equal(ejs.render(delimiter + delimiter + close, {}, options),
+        delimiter + close);
+      assert.equal(ejs.render('before' + open + delimiter + delimiter + 'value'
+        + delimiter + delimiter + close + 'after', {}, options),
+      'before' + open + delimiter + 'value' + delimiter + close + 'after');
+    });
+  });
+});
+
 suite('<%_ and _%>', function () {
   test('slurps spaces and tabs', function () {
     assert.equal(ejs.render(fixture('space-and-tab-slurp.ejs'), {users: users}),
