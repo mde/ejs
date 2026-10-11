@@ -1053,6 +1053,71 @@ suite('include()', function () {
       fixture('hello-template.html'));
   });
 
+  test('include ejs with includer returning an empty template', function () {
+    assert.equal(ejs.render('before<%- include("empty") %>after', {}, {
+      includer: function () { return {template: ''}; }
+    }), 'beforeafter');
+  });
+
+  [false, true].forEach(function (cache) {
+    test('empty includer template overrides a file with cache=' + cache, function () {
+      ejs.clearCache();
+      try {
+        assert.equal(ejs.render('before<%- include("empty") %>after', {}, {
+          filename: 'parent.ejs',
+          cache: cache,
+          includer: function () {
+            return {filename: 'test/fixtures/hello-world.ejs', template: ''};
+          }
+        }), 'beforeafter');
+      }
+      finally {
+        ejs.clearCache();
+      }
+    });
+  });
+
+  test('reuse cached empty includer templates', function () {
+    var includeTemplate = true;
+    var options = {
+      filename: 'parent.ejs',
+      cache: true,
+      includer: function () {
+        return includeTemplate ? {filename: 'empty.ejs', template: ''} : {filename: 'empty.ejs'};
+      }
+    };
+    ejs.clearCache();
+    try {
+      assert.equal(ejs.render('before<%- include("empty") %>after', {}, options), 'beforeafter');
+      var cached = ejs.cache.get('empty.ejs');
+      assert.equal(typeof cached, 'function');
+      includeTemplate = false;
+      assert.equal(ejs.render('before<%- include("empty") %>after', {}, options), 'beforeafter');
+      assert.strictEqual(ejs.cache.get('empty.ejs'), cached);
+    }
+    finally {
+      ejs.clearCache();
+    }
+  });
+
+  test('include nested empty includer templates', function () {
+    assert.equal(ejs.render('before<%- include("outer") %>after', {}, {
+      includer: function (name) {
+        return {template: name === 'outer' ? '<%- include("empty") %>' : ''};
+      }
+    }), 'beforeafter');
+  });
+
+  test('keep file fallback for missing and other falsy includer templates', function () {
+    [{}, {template: undefined}, {template: null}, {template: false}, {template: 0}]
+      .forEach(function (result) {
+        result.filename = 'test/fixtures/hello-world.ejs';
+        assert.equal(ejs.render('<%- include("file") %>', {}, {
+          includer: function () { return result; }
+        }), fixture('hello-world.ejs'));
+      });
+  });
+
   test('work when nested', function () {
     var file = 'test/fixtures/menu.ejs';
     assert.equal(ejs.render(fixture('menu.ejs'), {pets: users}, {filename: file}),
