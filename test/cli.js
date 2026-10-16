@@ -138,6 +138,16 @@ suite('cli errors and edges', function () {
     assert.equal(r.stderr, '');
   });
 
+  // --version / -V / -v print the package version, not "undefined".
+  ['--version', '-V', '-v'].forEach(function (flag) {
+    test('version: ' + flag + ' prints the package version, exit 0', function () {
+      let r = cli([flag]);
+      assert.equal(r.status, 0);
+      assert.equal(r.stdout, require('../package.json').version + '\n');
+      assert.equal(r.stderr, '');
+    });
+  });
+
   // ---- data sources: conflict + first-'=' split (Codex #6) -----------------
 
   // stdin is the fallback base: an explicit -f wins and stdin is not read

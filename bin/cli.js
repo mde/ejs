@@ -149,7 +149,7 @@ function main() {
     return;
   }
   if (opts['version']) {
-    process.stdout.write(ejs.VERSION + '\n');
+    process.stdout.write(require('../package.json').version + '\n');
     return;
   }
   if (parsed.errors.length) {
