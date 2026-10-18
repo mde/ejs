@@ -836,6 +836,25 @@ suite('%%>', function () {
   });
 });
 
+suite('literal tags with unusual custom delimiters', function () {
+  // Delimiters that are special in JS strings or in String#replace patterns
+  ['"', '\\'].forEach(function (ch) {
+    test('<' + ch + ch + ' and ' + ch + ch + '> output literally with delimiter ' + ch, function () {
+      var tpl = '<' + ch + ch + ' x ' + ch + ch + '>';
+      assert.equal(ejs.render(tpl, {}, {delimiter: ch}), '<' + ch + ' x ' + ch + '>');
+    });
+  });
+
+  test('open delimiter $ with delimiter & (a $& replacement token)', function () {
+    assert.equal(ejs.render('$&& x', {}, {openDelimiter: '$', delimiter: '&'}), '$& x');
+  });
+
+  test('custom open/close delimiters that need escaping', function () {
+    var opts = {openDelimiter: '"', closeDelimiter: '\\'};
+    assert.equal(ejs.render('"%% x %%\\', {}, opts), '"% x %\\');
+  });
+});
+
 suite('<%_ and _%>', function () {
   test('slurps spaces and tabs', function () {
     assert.equal(ejs.render(fixture('space-and-tab-slurp.ejs'), {users: users}),
