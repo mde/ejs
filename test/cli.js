@@ -138,6 +138,17 @@ suite('cli errors and edges', function () {
     assert.equal(r.stderr, '');
   });
 
+  test('-h and --help print the usage text, exit 0', function () {
+    let text = require('fs').readFileSync('./usage.txt', 'utf8');
+    assert.ok(!/[{}]/.test(text), 'usage.txt has unrendered {placeholders}');
+    ['-h', '--help'].forEach(function (flag) {
+      let r = cli([flag]);
+      assert.equal(r.status, 0, flag);
+      assert.equal(r.stdout, text, flag);
+      assert.equal(r.stderr, '', flag);
+    });
+  });
+
   test('-V, -v and --version print the package version, exit 0', function () {
     let version = require('../package.json').version;
     ['-V', '-v', '--version'].forEach(function (flag) {

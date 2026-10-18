@@ -214,6 +214,15 @@ namespace('test', function () {
       if (versionOutput !== version + '\n') {
         throw new Error('Unexpected CLI --version output: ' + versionOutput);
       }
+
+      let helpOutput = proc.execFileSync(process.execPath, [
+        path.join(fixtureDir, 'node_modules/ejs/bin/cli.js'),
+        '--help'
+      ], {cwd: fixtureDir}).toString();
+
+      if (!/^Usage: ejs /m.test(helpOutput) || /[{}]/.test(helpOutput)) {
+        throw new Error('Unexpected CLI --help output: ' + helpOutput);
+      }
     }
     finally {
       fs.rmSync(fixtureDir, {recursive: true, force: true});

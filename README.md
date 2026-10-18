@@ -338,9 +338,9 @@ EJS ships with a full-featured CLI. Options are similar to those used in JavaScr
   - `-m / --delimiter CHARACTER`         Use CHARACTER with angle brackets for open/close (defaults to %).
   - `-p / --open-delimiter CHARACTER`    Use CHARACTER instead of left angle bracket to open.
   - `-c / --close-delimiter CHARACTER`   Use CHARACTER instead of right angle bracket to close.
-  - `-s / --strict`                      When set to `true`, generated function is in strict mode
-  - `-n / --no-with`                     Use 'locals' object for vars rather than using `with` (implies --strict).
-  - `-l / --locals-name`                 Name to use for the object storing local variables when not using `with`.
+  - `-s / --strict`                      Generate the function in strict mode (implies --no-with).
+  - `-n / --no-with`                     Use 'locals' object for vars rather than using `with`.
+  - `-l / --locals-name NAME`            Name to use for the object storing local variables when not using `with`.
   - `-w / --rm-whitespace`               Remove all safe-to-remove whitespace, including leading and trailing whitespace.
   - `-d / --debug`                       Outputs generated function body
   - `-h / --help`                        Display this help message.
