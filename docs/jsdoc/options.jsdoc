@@ -26,10 +26,9 @@
  * available even in strict mode.
  *
  * @property {Boolean} [rmWhitespace=false]
- * Remove all safe-to-remove whitespace, including leading and trailing
- * whitespace. It also enables a safer version of `-%>` line slurping for all
- * scriptlet tags (it does not strip new lines of tags in the middle of a
- * line).
+ * Remove all safe-to-remove whitespace: leading and trailing whitespace on
+ * each line, and blank lines. Because trailing spaces are removed first,
+ * `-%>` reliably trims the newline after a tag.
  *
  * @property {EscapeCallback} [escape={@link module:utils.escapeXML}]
  * The escaping function used with `<%=` construct.

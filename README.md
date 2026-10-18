@@ -66,7 +66,7 @@ requires the Node entry point.
   * Escaped output with `<%= %>` (escape function configurable)
   * Unescaped raw output with `<%- %>`
   * Newline-trim mode ('newline slurping') with `-%>` ending tag
-  * Whitespace-trim mode (slurp all whitespace) for control flow with `<%_ _%>`
+  * Whitespace-trim mode (slurp surrounding spaces and tabs) for control flow with `<%_ _%>`
   * Custom delimiters (e.g. `[? ?]` instead of `<% %>`)
   * Includes
   * Client-side support
@@ -126,10 +126,9 @@ You should never give end-users unfettered access to the EJS render method, If y
     the locals object, available even in strict mode.
   - `localsName`            Name to use for the object storing local variables when not using
     `with` Defaults to `locals`
-  - `rmWhitespace`          Remove all safe-to-remove whitespace, including leading
-    and trailing whitespace. It also enables a safer version of `-%>` line
-    slurping for all scriptlet tags (it does not strip new lines of tags in
-    the middle of a line).
+  - `rmWhitespace`          Remove all safe-to-remove whitespace: leading and
+    trailing whitespace on each line, and blank lines. Because trailing spaces
+    are removed first, `-%>` reliably trims the newline after a tag.
   - `escape`                The escaping function used with `<%=` construct.
     (By default escapes XML.) See [Escaping and output
     context](#escaping-and-output-context) for when the default is not the right
@@ -152,15 +151,15 @@ the both the public & private API docs, run `jake devdoc` instead.
 ### Tags
 
   - `<%`              'Scriptlet' tag, for control-flow, no output
-  - `<%_`             'Whitespace Slurping' Scriptlet tag, strips all whitespace before it
+  - `<%_`             'Whitespace Slurping' Scriptlet tag, strips spaces and tabs before it
   - `<%=`             Outputs the value into the template (escaped)
   - `<%-`             Outputs the unescaped value into the template
   - `<%#`             Comment tag, no execution, no output
   - `<%%`             Outputs a literal '<%'
   - `%%>`             Outputs a literal '%>'
   - `%>`              Plain ending tag
-  - `-%>`             Trim-mode ('newline slurp') tag, trims following newline
-  - `_%>`             'Whitespace Slurping' ending tag, removes all whitespace after it
+  - `-%>`             Trim-mode ('newline slurp') tag, trims a newline directly after it
+  - `_%>`             'Whitespace Slurping' ending tag, removes spaces and tabs after it, then one newline
 
 ### Escaping and output context
 
