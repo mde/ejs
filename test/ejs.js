@@ -1053,6 +1053,14 @@ suite('include()', function () {
       fixture('hello-template.html'));
   });
 
+  test('includer returning an empty template renders nothing', function () {
+    var inc = function () {
+      // filename points at a real file; the empty template must still win
+      return {filename: 'test/fixtures/hello-world.ejs', template: ''};
+    };
+    assert.equal(ejs.render('[<%- include("x") %>]', {}, {includer: inc}), '[]');
+  });
+
   test('work when nested', function () {
     var file = 'test/fixtures/menu.ejs';
     assert.equal(ejs.render(fixture('menu.ejs'), {pets: users}, {filename: file}),
