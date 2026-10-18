@@ -205,6 +205,15 @@ namespace('test', function () {
       if (cliOutput !== 'Hello EJS') {
         throw new Error('Unexpected CLI output: ' + cliOutput);
       }
+
+      let versionOutput = proc.execFileSync(process.execPath, [
+        path.join(fixtureDir, 'node_modules/ejs/bin/cli.js'),
+        '--version'
+      ], {cwd: fixtureDir}).toString();
+
+      if (versionOutput !== version + '\n') {
+        throw new Error('Unexpected CLI --version output: ' + versionOutput);
+      }
     }
     finally {
       fs.rmSync(fixtureDir, {recursive: true, force: true});

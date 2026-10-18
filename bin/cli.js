@@ -23,6 +23,7 @@ let path = require('path');
 let fs = require('fs');
 let { Parser } = require('../lib/cjs/parseargs');
 let ejs = require('../lib/cjs/ejs');
+let pkg = require('../package.json');
 
 let hasOwn = function (obj, key) { return Object.prototype.hasOwnProperty.call(obj, key); };
 
@@ -149,7 +150,7 @@ function main() {
     return;
   }
   if (opts['version']) {
-    process.stdout.write(ejs.VERSION + '\n');
+    process.stdout.write(pkg.version + '\n');
     return;
   }
   if (parsed.errors.length) {
