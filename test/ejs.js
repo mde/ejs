@@ -392,6 +392,21 @@ suite('ejs.render(str, data, opts)', function () {
 });
 
 suite('ejs.renderFile(path, [data], [options], [fn])', function () {
+  test('null or undefined data is treated as no data', function () {
+    return Promise.all([null, undefined].map(function (data) {
+      return ejs.renderFile('test/fixtures/para.ejs', data).then(function (html) {
+        assert.equal(html, '<p>hey</p>'+lf);
+      });
+    }));
+  });
+
+  test('null data with a callback reports errors to the callback', function (done) {
+    ejs.renderFile('test/fixtures/does-not-exist.ejs', null, function (err) {
+      assert.equal(err.code, 'ENOENT');
+      done();
+    });
+  });
+
   test('render a file', function(done) {
     ejs.renderFile('test/fixtures/para.ejs', function(err, html) {
       if (err) {
