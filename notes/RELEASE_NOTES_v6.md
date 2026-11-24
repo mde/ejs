@@ -42,10 +42,9 @@ bundlers and runtimes, and adds packaging and ecosystem tests to the build.
 ## Breaking Changes
 
 ### Prototype-chain locals
-- **What changed**: Identifiers in a template resolve only against the data
-  object's own properties. Inherited properties, including class getters and
-  methods and anything from `Object.create(proto)`, are `undefined` at the top
-  level.
+- **What changed**: Only the data object's own properties become locals.
+  Inherited properties, including class getters and methods and anything from
+  `Object.create(proto)`, are `undefined` at the top level.
 - **Who is affected**: Code that passes a class instance or an
   `Object.create(...)` result as the data object and uses its inherited
   properties directly, as in `<%= greet %>`.
