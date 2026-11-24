@@ -57,3 +57,15 @@ Use the `escape` option to supply escaping that fits your output. See [Escaping
 and output
 context](https://github.com/mde/ejs/blob/main/README.md#escaping-and-output-context)
 in the README.
+
+### Prototype pollution or other prior compromise
+Reports that require `Object.prototype` (or any other built-in) to already be
+polluted are out of scope. So are reports that require any other prior
+compromise of the process. An attacker who can modify built-ins can already
+change the behavior of every piece of JavaScript in the process. EJS reading an
+inherited value after that point is a consequence of the pollution, not a
+vulnerability in EJS. The vulnerability is whatever allowed the pollution.
+
+We may still harden EJS against these cases, as ordinary changes on our own
+schedule. That hardening is not treated as a security fix: no advisory, CVE,
+or reporter credit.
